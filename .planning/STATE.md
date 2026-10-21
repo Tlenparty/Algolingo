@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-10-21T12:34:25.635Z"
-last_activity: 2026-10-21 -- Phase 01.1 planning complete
+last_updated: "2026-10-21T12:48:24.128Z"
+last_activity: 2026-10-21
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 6
-  completed_plans: 2
+  completed_plans: 3
   percent: 17
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-21)
 
 **Core value:** Быстро, с телефона, без клавиатуры прорешать алгоритмическую задачу: собрать решение из облачков, нажать «Проверить» и сразу понять, где грабли.
-**Current focus:** Phase 01.1 — knowledge base
+**Current focus:** Phase 01.1 — knowledge-base
 
 ## Current Position
 
-Phase: 01.1
-Plan: Not started
+Phase: 01.1 (knowledge-base) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-10-21 -- Phase 01.1 planning complete
+Last activity: 2026-10-21
 
-Progress: [██████████] 100%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -82,6 +82,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-21T11:22:03.805Z
+Last session: 2026-10-21T12:48:24.123Z
 Stopped at: Phase 3 UI-SPEC approved
 Resume file: None
