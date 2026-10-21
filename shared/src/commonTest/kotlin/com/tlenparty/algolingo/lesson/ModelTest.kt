@@ -71,6 +71,15 @@ class ModelTest {
         assertEquals(emptyList(), validate(lessonOf(e1, everyHole, code = same)))
     }
 
+    @Test fun wrongWhyKeys() {
+        fun withWhy(vararg w: Pair<String, String>) =
+            lessonOf(x1(), x2().copy(holes = listOf(Hole(listOf("X"), wrongWhy = mapOf(*w)), Hole(listOf("Y")))), code = same)
+        assertEquals(emptyList(), validate(withWhy("Y" to "w")))
+        assertErr(withWhy("Q" to "w"), "wrongWhy key 'Q' not in bank")
+        assertErr(withWhy("X" to "w"), "wrongWhy key 'X' is a correct answer")
+        assertErr(withWhy("Y" to ""), "wrongWhy for 'Y' is blank")
+    }
+
     @Test fun bankTooBig() {
         val bad = x2().copy(bank = x2().bank + List(8) { Chip("D$it", "w") })
         assertErr(lessonOf(x1(), bad, code = same), "max 10")

@@ -87,6 +87,12 @@ fun validate(lesson: Lesson): List<String> {
                 used += t
                 if (t !in bankTexts) errors += "$e: hole $h text '$t' missing from bank"
             }
+            // map keys escape strict decoding: catch typos and entries check() can never reach
+            hole.wrongWhy.forEach { (k, v) ->
+                if (k !in bankTexts) errors += "$e: hole $h wrongWhy key '$k' not in bank"
+                if (k in hole.ok || hole.acceptable.any { it.text == k }) errors += "$e: hole $h wrongWhy key '$k' is a correct answer"
+                if (v.isBlank()) errors += "$e: hole $h wrongWhy for '$k' is blank"
+            }
         }
         // multiset assignability of reference answers
         val need = ex.holes.mapNotNull { it.ok.getOrNull(0) }.groupingBy { it }.eachCount()
