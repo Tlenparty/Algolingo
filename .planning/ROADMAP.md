@@ -139,6 +139,6 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 1. Project Skeleton | 2/2 | Complete    | 2026-10-21 |
 | 01.1 Knowledge Base | 4/4 | Complete    | 2026-10-21 |
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
-| 3. Lesson & Exercise UI | 2/8 | In Progress|  |
+| 3. Lesson & Exercise UI | 3/8 | In Progress|  |
 | 4. Progress & Review | 0/TBD | Not started | - |
 | 5. Level 0 Content & End-to-End | 0/TBD | Not started | - |
