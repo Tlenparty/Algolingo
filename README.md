@@ -49,6 +49,14 @@ xcrun simctl launch <sim-udid> com.tlenparty.algolingo
 ./gradlew :shared:testAndroidHostTest
 ```
 
+Полный прогон (Android host + iOS-симулятор): `./gradlew :shared:allTests`.
+
+### Урок и шрифты
+
+- Урок 0.4 открывается с главной: узел «0.4» → «Начать» (теория → упражнения → итог).
+- UI набран Nunito, код — JetBrains Mono (обе SIL OFL 1.1). Шрифты лежат в `design/src/commonMain/composeResources/font/`, лицензии — в `third_party/fonts/`.
+- Команды пересборки статических начертаний Nunito — в `third_party/fonts/README.md`.
+
 ### Обновление заметок базы знаний
 
 ```bash

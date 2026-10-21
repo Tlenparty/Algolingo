@@ -1,6 +1,6 @@
 # Fonts (SIL OFL 1.1)
 
-Bundled in `shared/src/commonMain/composeResources/font/`:
+Bundled in `design/src/commonMain/composeResources/font/`:
 
 - `jetbrains_mono_regular.ttf`, `jetbrains_mono_bold.ttf` - JetBrains Mono, from
   https://github.com/JetBrains/JetBrainsMono (`fonts/ttf/`). License: `OFL-JetBrainsMono.txt`.
