@@ -25,9 +25,8 @@ import com.tlenparty.algolingo.kb.ui.inlineText
 import com.tlenparty.algolingo.lesson.PanelItem
 import com.tlenparty.algolingo.lesson.PanelKind
 import com.tlenparty.algolingo.lesson.PanelModel
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
-import com.tlenparty.algolingo.ui.theme.highlight
+import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.highlight
 
 /** `code` and **bold** markup from lesson content. */
 @Composable
@@ -35,8 +34,8 @@ internal fun richText(s: String): AnnotatedString = inlineText(parseInline(s))
 
 @Composable
 fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifier: Modifier = Modifier) {
-    val c = LocalAppColors.current
-    val t = LocalAppText.current
+    val c = AlgoTheme.colors
+    val t = AlgoTheme.typography
     val style = when (model.kind) {
         PanelKind.Success -> ChunkyStyle.Primary
         PanelKind.Amber -> ChunkyStyle.Amber
@@ -71,8 +70,8 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
 
 @Composable
 private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color) {
-    val c = LocalAppColors.current
-    val t = LocalAppText.current
+    val c = AlgoTheme.colors
+    val t = AlgoTheme.typography
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(highlight(item.chip, c), style = t.codeBold, color = ink, softWrap = false)
         Text(richText(item.text), style = t.body, color = MaterialTheme.colorScheme.onBackground)

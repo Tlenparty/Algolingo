@@ -19,10 +19,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.tlenparty.algolingo.ui.components.ChunkyBox
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
+import com.tlenparty.algolingo.design.AlgoTheme
 
 private data class HomeLesson(val id: String, val caption: String)
 
@@ -31,9 +29,9 @@ private val lessons = listOf(HomeLesson("l0.4", "0.4 Бинарный поиск
 
 @Composable
 fun HomeScreen(onStart: (String) -> Unit) {
-    val c = LocalAppColors.current
+    val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
-    val t = LocalAppText.current
+    val t = AlgoTheme.typography
     Box(Modifier.fillMaxSize().background(s.background), contentAlignment = Alignment.Center) {
         Column(
             Modifier.widthIn(max = 600.dp).padding(16.dp),
@@ -50,7 +48,7 @@ fun HomeScreen(onStart: (String) -> Unit) {
                         Modifier.semantics { contentDescription = l.caption },
                     ) {
                         Box(Modifier.size(72.dp), contentAlignment = Alignment.Center) {
-                            Text("▶", color = s.onPrimary, fontSize = 28.sp)
+                            Text("▶", color = s.onPrimary, fontSize = AlgoTheme.typography.nodeEmoji)
                         }
                     }
                     Text(

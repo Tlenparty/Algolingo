@@ -27,8 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
+import com.tlenparty.algolingo.design.AlgoTheme
 
 enum class ChunkyStyle { Primary, Secondary, Danger, Amber }
 
@@ -75,7 +74,7 @@ fun ChunkyButton(
     enabled: Boolean = true,
     style: ChunkyStyle = ChunkyStyle.Primary,
 ) {
-    val c = LocalAppColors.current
+    val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
     val ink = s.onPrimary
     // face, ledge, border, label
@@ -87,6 +86,6 @@ fun ChunkyButton(
         else -> listOf(s.background, s.outline, s.outline, s.onBackground)
     }
     ChunkyBox(face!!, ledge, border, 16.dp, 52.dp, enabled, onClick, modifier.fillMaxWidth()) {
-        Text(text, color = label!!, style = LocalAppText.current.button, textAlign = TextAlign.Center)
+        Text(text, color = label!!, style = AlgoTheme.typography.button, textAlign = TextAlign.Center)
     }
 }

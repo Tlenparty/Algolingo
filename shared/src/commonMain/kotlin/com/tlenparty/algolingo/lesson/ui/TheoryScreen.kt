@@ -19,13 +19,12 @@ import com.tlenparty.algolingo.lesson.TheoryCard
 import com.tlenparty.algolingo.ui.components.ChunkyButton
 import com.tlenparty.algolingo.ui.components.CodeBlock
 import com.tlenparty.algolingo.ui.components.richText
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
+import com.tlenparty.algolingo.design.AlgoTheme
 
 @Composable
 fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modifier) {
-    val t = LocalAppText.current
-    val cap = LocalAppColors.current.secondaryText
+    val t = AlgoTheme.typography
+    val cap = AlgoTheme.colors.secondaryText
     Column(modifier.fillMaxSize()) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp)) {
             Surface(
@@ -61,6 +60,6 @@ fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modi
 @Composable
 private fun Bullets(items: List<String>) {
     for (s in items) {
-        Text(richText("• $s"), style = LocalAppText.current.body, color = MaterialTheme.colorScheme.onBackground)
+        Text(richText("• $s"), style = AlgoTheme.typography.body, color = MaterialTheme.colorScheme.onBackground)
     }
 }

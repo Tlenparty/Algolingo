@@ -1,4 +1,4 @@
-package com.tlenparty.algolingo.ui.theme
+package com.tlenparty.algolingo.design
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -13,7 +13,7 @@ private val keywords = setOf(
 // Alternation order gives precedence: comment and string match before keywords/numbers inside them.
 private val tokenRe = Regex("""//[^\n]*|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|\b\d+(?:\.\d+)?[LlFf]?\b|\b[A-Za-z_]\w*\b""")
 
-fun highlight(code: String, colors: AppColors): AnnotatedString = buildAnnotatedString {
+fun highlight(code: String, colors: AlgoColors): AnnotatedString = buildAnnotatedString {
     append(code)
     for (m in tokenRe.findAll(code)) {
         val v = m.value

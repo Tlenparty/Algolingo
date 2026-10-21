@@ -23,13 +23,12 @@ import com.tlenparty.algolingo.lesson.xpFor
 import com.tlenparty.algolingo.ui.components.ChunkyButton
 import com.tlenparty.algolingo.ui.components.CodeBlock
 import com.tlenparty.algolingo.ui.components.richText
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
+import com.tlenparty.algolingo.design.AlgoTheme
 
 @Composable
 fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit, modifier: Modifier = Modifier) {
-    val t = LocalAppText.current
-    val c = LocalAppColors.current
+    val t = AlgoTheme.typography
+    val c = AlgoTheme.colors
     val ink = MaterialTheme.colorScheme.onBackground
     val id = state.queue.firstOrNull()
     val ex = state.lesson.exercises.firstOrNull { it.id == id }
@@ -65,7 +64,7 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
 @Composable
 private fun Section(title: String, content: @Composable () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(title, style = LocalAppText.current.heading, color = MaterialTheme.colorScheme.onBackground)
+        Text(title, style = AlgoTheme.typography.heading, color = MaterialTheme.colorScheme.onBackground)
         content()
     }
 }
@@ -73,6 +72,6 @@ private fun Section(title: String, content: @Composable () -> Unit) {
 @Composable
 private fun Bullets(items: List<String>) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        for (s in items) Text(richText("• $s"), style = LocalAppText.current.body, color = MaterialTheme.colorScheme.onBackground)
+        for (s in items) Text(richText("• $s"), style = AlgoTheme.typography.body, color = MaterialTheme.colorScheme.onBackground)
     }
 }

@@ -22,8 +22,7 @@ import com.tlenparty.algolingo.lesson.Lesson
 import com.tlenparty.algolingo.lesson.LessonViewModel
 import com.tlenparty.algolingo.lesson.loadLesson
 import com.tlenparty.algolingo.ui.components.ChunkyButton
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
+import com.tlenparty.algolingo.design.AlgoTheme
 import kotlin.time.Clock
 
 @Composable
@@ -44,7 +43,7 @@ fun LessonHost(id: String, onHome: () -> Unit) {
 
 @Composable
 private fun LessonErrorScreen(onHome: () -> Unit) {
-    val t = LocalAppText.current
+    val t = AlgoTheme.typography
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.TopCenter) {
         Column(Modifier.fillMaxSize().widthIn(max = 600.dp)) {
             Column(
@@ -55,7 +54,7 @@ private fun LessonErrorScreen(onHome: () -> Unit) {
                 Text("Не удалось открыть урок", style = t.heading, color = MaterialTheme.colorScheme.onBackground, textAlign = TextAlign.Center)
                 Text(
                     "Файл урока повреждён или отсутствует. Попробуй другой урок или переустанови приложение.",
-                    style = t.body, color = LocalAppColors.current.secondaryText, textAlign = TextAlign.Center,
+                    style = t.body, color = AlgoTheme.colors.secondaryText, textAlign = TextAlign.Center,
                 )
             }
             ChunkyButton("На главную", onHome, Modifier.padding(16.dp))

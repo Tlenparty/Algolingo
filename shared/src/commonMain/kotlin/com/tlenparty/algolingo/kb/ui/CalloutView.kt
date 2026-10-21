@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.kb.Block
 import com.tlenparty.algolingo.kb.Callout
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
+import com.tlenparty.algolingo.design.AlgoTheme
 
 private fun typeWord(type: String) = when (type.lowercase()) {
     "question" -> "Вопрос"
@@ -34,7 +34,7 @@ private fun typeWord(type: String) = when (type.lowercase()) {
 
 @Composable
 fun CalloutView(c: Callout, noteId: String, index: Int, content: @Composable (Block) -> Unit) {
-    val a = LocalAppColors.current
+    val a = AlgoTheme.colors
     val (tint, accent) = when (c.type.lowercase()) {
         "question", "info" -> a.focusTint to a.focusText
         "success", "tip" -> a.successTint to a.successText

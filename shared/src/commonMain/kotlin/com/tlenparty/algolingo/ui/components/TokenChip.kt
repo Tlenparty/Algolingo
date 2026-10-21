@@ -8,9 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
-import com.tlenparty.algolingo.ui.theme.highlight
+import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.highlight
 
 enum class ChipState { Normal, Ghost }
 
@@ -30,8 +29,8 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
         modifier = if (ghost) modifier.clearAndSetSemantics {} else modifier,
     ) {
         Text(
-            highlight(text, LocalAppColors.current),
-            style = LocalAppText.current.codeChip,
+            highlight(text, AlgoTheme.colors),
+            style = AlgoTheme.typography.codeChip,
             color = if (ghost) Color.Transparent else s.onBackground,
             softWrap = false,
             maxLines = 1,

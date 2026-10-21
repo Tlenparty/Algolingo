@@ -45,10 +45,9 @@ import com.tlenparty.algolingo.kb.Quote
 import com.tlenparty.algolingo.kb.Rule
 import com.tlenparty.algolingo.kb.Table
 import com.tlenparty.algolingo.kb.parseInline
-import com.tlenparty.algolingo.ui.theme.highlight
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalCodeFont
-import com.tlenparty.algolingo.ui.theme.NO_LIGATURES
+import com.tlenparty.algolingo.design.highlight
+import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.NO_LIGATURES
 import com.tlenparty.algolingo.kb.Text as PlainText
 
 @Composable
@@ -58,8 +57,8 @@ fun inlineText(
     onLink: (String, String?) -> Unit = { _, _ -> },
 ): AnnotatedString {
     val bg = MaterialTheme.colorScheme.surfaceVariant
-    val link = LocalAppColors.current.focusText
-    val mono = LocalCodeFont.current
+    val link = AlgoTheme.colors.focusText
+    val mono = AlgoTheme.typography.code
     return buildAnnotatedString {
         for (n in inlines) when (n) {
             is PlainText -> append(n.v)
@@ -116,8 +115,8 @@ fun BlockView(
             Inl(block.text, resolvable = resolvable, onLink = onLink)
         }
         is Code -> {
-            val colors = LocalAppColors.current
-            val mono = LocalCodeFont.current
+            val colors = AlgoTheme.colors
+            val mono = AlgoTheme.typography.code
             Surface(pad.fillMaxWidth(), shape = RoundedCornerShape(8.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
                 Text(
                     if (block.lang == "kotlin") highlight(block.text, colors) else AnnotatedString(block.text),

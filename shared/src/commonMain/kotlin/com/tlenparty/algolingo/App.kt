@@ -25,7 +25,7 @@ import com.tlenparty.algolingo.kb.KbRepository
 import com.tlenparty.algolingo.kb.ui.KbListScreen
 import com.tlenparty.algolingo.kb.ui.NoteScreen
 import com.tlenparty.algolingo.lesson.ui.LessonHost
-import com.tlenparty.algolingo.ui.theme.AppTheme
+import com.tlenparty.algolingo.design.AlgoTheme
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -53,7 +53,7 @@ data class LessonRoute(val id: String)
 @Composable
 @Preview
 fun App() {
-    AppTheme {
+    AlgoTheme {
         val repo = remember { KbRepository() }
         val loaded by produceState(false) { repo.load(); value = true }
         val nav = rememberNavController()

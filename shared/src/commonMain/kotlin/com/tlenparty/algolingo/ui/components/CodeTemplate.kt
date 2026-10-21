@@ -34,9 +34,8 @@ import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.HoleVisual
 import com.tlenparty.algolingo.lesson.Piece
 import com.tlenparty.algolingo.lesson.templateLines
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
-import com.tlenparty.algolingo.ui.theme.highlight
+import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.highlight
 
 @Composable
 fun CodeTemplate(
@@ -47,8 +46,8 @@ fun CodeTemplate(
     enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val colors = LocalAppColors.current
-    val t = LocalAppText.current
+    val colors = AlgoTheme.colors
+    val t = AlgoTheme.typography
     val lines = templateLines(segments)
     Box(modifier.background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp)).padding(16.dp)) {
         // One scroll for all lines; no fillMaxWidth inside (infinite width constraint).
@@ -75,7 +74,7 @@ fun CodeTemplate(
 
 @Composable
 private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean) {
-    val c = LocalAppColors.current
+    val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
     // fill, border, text color
     val target = when (visual) {
@@ -113,7 +112,7 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
             Crossfade(text, animationSpec = tween(100)) { shown ->
                 if (shown != null) {
                     Text(
-                        highlight(shown, c), style = LocalAppText.current.codeBold, color = ink,
+                        highlight(shown, c), style = AlgoTheme.typography.codeBold, color = ink,
                         softWrap = false, maxLines = 1,
                     )
                 }

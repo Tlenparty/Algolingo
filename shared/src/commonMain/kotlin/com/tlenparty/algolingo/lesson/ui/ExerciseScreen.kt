@@ -42,8 +42,7 @@ import com.tlenparty.algolingo.ui.components.CodeTemplate
 import com.tlenparty.algolingo.ui.components.ResultPanel
 import com.tlenparty.algolingo.ui.components.TokenChip
 import com.tlenparty.algolingo.ui.components.richText
-import com.tlenparty.algolingo.ui.theme.LocalAppColors
-import com.tlenparty.algolingo.ui.theme.LocalAppText
+import com.tlenparty.algolingo.design.AlgoTheme
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -54,8 +53,8 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
     val phase = state.phase
     val check = (phase as? Phase.Feedback)?.check
     val solving = phase is Phase.Solving
-    val t = LocalAppText.current
-    val c = LocalAppColors.current
+    val t = AlgoTheme.typography
+    val c = AlgoTheme.colors
     val outline = MaterialTheme.colorScheme.outline
     val shown = (state.hintsShown[ex.id] ?: 0).coerceIn(0, ex.hints.size)
     val scroll = rememberScrollState()
