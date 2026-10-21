@@ -1,16 +1,11 @@
 package com.tlenparty.algolingo
 
 import algolingo.shared.generated.resources.Res
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.NavigationBar
@@ -25,9 +20,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.tlenparty.algolingo.home.HomeScreen
 import com.tlenparty.algolingo.kb.KbRepository
 import com.tlenparty.algolingo.kb.ui.KbListScreen
 import com.tlenparty.algolingo.kb.ui.NoteScreen
+import com.tlenparty.algolingo.lesson.ui.LessonHost
 import com.tlenparty.algolingo.ui.theme.AppTheme
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -50,6 +47,9 @@ object KbList
 @Serializable
 data class NoteRoute(val id: String, val anchor: String? = null)
 
+@Serializable
+data class LessonRoute(val id: String)
+
 @Composable
 @Preview
 fun App() {
@@ -61,7 +61,7 @@ fun App() {
         val dest = entry?.destination
         Scaffold(
             bottomBar = {
-                if (dest?.hasRoute<NoteRoute>() != true) {
+                if (dest?.hasRoute<NoteRoute>() != true && dest?.hasRoute<LessonRoute>() != true) {
                     NavigationBar {
                         NavigationBarItem(
                             selected = dest?.hasRoute<Home>() == true,
@@ -80,7 +80,10 @@ fun App() {
             },
         ) { pad ->
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
-                composable<Home> { HomeStub() }
+                composable<Home> { entry -> HomeScreen { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } } }
+                composable<LessonRoute> { entry ->
+                    LessonHost(entry.toRoute<LessonRoute>().id) { entry.ifResumed { nav.popBackStack() } }
+                }
                 composable<KbList> { entry ->
                     if (loaded) KbListScreen(repo.notes, { n -> entry.ifResumed { nav.navigate(NoteRoute(n.id)) } }, search = repo::search) else Text("…")
                 }
@@ -111,18 +114,4 @@ private fun androidx.navigation.NavController.switchTab(route: Any) = navigate(r
     popUpTo(Home) { saveState = true }
     launchSingleTop = true
     restoreState = true
-}
-
-@Composable
-private fun HomeStub() {
-    val hello by produceState<Hello?>(null) { value = loadHello() }
-    Column(
-        Modifier.safeContentPadding().fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(hello?.title ?: "…", style = MaterialTheme.typography.headlineMedium)
-        Text(hello?.subtitle ?: "")
-        Text(getPlatform().name)
-        Text("Скоро уроки")
-    }
 }
