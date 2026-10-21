@@ -16,7 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.kb.Note
 import com.tlenparty.algolingo.kb.findAnchorIndex
 import com.tlenparty.algolingo.kb.parseBlocks
@@ -47,7 +47,7 @@ fun NoteScreen(
         if (t.startsWith("#")) local(t)?.let { scope.launch { listState.animateScrollToItem(it) } } else onLink(t, a)
         Unit
     }
-    Column(modifier.padding(horizontal = 16.dp)) {
+    Column(modifier.padding(horizontal = AlgoTheme.spacing.md)) {
         TextButton(onClick = onBack) { Text("Назад") }
         LazyColumn(state = listState) {
             itemsIndexed(blocks) { i, b -> BlockView(b, note.id, i, canOpen, open) }

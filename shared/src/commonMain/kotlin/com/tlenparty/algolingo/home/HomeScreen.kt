@@ -18,7 +18,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.design.components.ChunkyBox
 import com.tlenparty.algolingo.design.AlgoTheme
 
@@ -34,26 +33,26 @@ fun HomeScreen(onStart: (String) -> Unit) {
     val t = AlgoTheme.typography
     Box(Modifier.fillMaxSize().background(s.background), contentAlignment = Alignment.Center) {
         Column(
-            Modifier.widthIn(max = 600.dp).padding(16.dp),
+            Modifier.widthIn(max = AlgoTheme.sizes.contentMaxWidth).padding(AlgoTheme.spacing.md),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(32.dp),
+            verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xl),
         ) {
             lessons.forEach { l ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ChunkyBox(s.primary, c.greenLedge, null, AlgoTheme.shapes.pill, 40.dp, true, { onStart(l.id) }) {
-                        Text("Начать", style = t.button, color = s.onPrimary, modifier = Modifier.padding(horizontal = 20.dp))
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
+                    ChunkyBox(s.primary, c.greenLedge, null, AlgoTheme.shapes.pill, AlgoTheme.sizes.pillFace, true, { onStart(l.id) }) {
+                        Text("Начать", style = t.button, color = s.onPrimary, modifier = Modifier.padding(horizontal = AlgoTheme.spacing.pillX))
                     }
                     ChunkyBox(
-                        s.primary, c.greenLedge, null, AlgoTheme.shapes.node, 72.dp, true, { onStart(l.id) },
+                        s.primary, c.greenLedge, null, AlgoTheme.shapes.node, AlgoTheme.sizes.node, true, { onStart(l.id) },
                         Modifier.semantics { contentDescription = l.caption },
                     ) {
-                        Box(Modifier.size(72.dp), contentAlignment = Alignment.Center) {
+                        Box(Modifier.size(AlgoTheme.sizes.node), contentAlignment = Alignment.Center) {
                             Text("▶", color = s.onPrimary, fontSize = AlgoTheme.typography.nodeEmoji)
                         }
                     }
                     Text(
                         l.caption, style = t.label, color = c.secondaryText, textAlign = TextAlign.Center,
-                        maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(160.dp),
+                        maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(AlgoTheme.sizes.nodeCaption),
                     )
                 }
             }

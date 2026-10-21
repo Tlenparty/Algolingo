@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -97,11 +96,11 @@ fun BlockView(
     resolvable: (String) -> Boolean = { false },
     onLink: (String, String?) -> Unit = { _, _ -> },
 ) {
-    val pad = Modifier.padding(vertical = 4.dp)
+    val pad = Modifier.padding(vertical = AlgoTheme.spacing.xs)
     when (block) {
         is Heading -> Text(
             inlineText(parseInline(block.text), resolvable, onLink),
-            pad.padding(top = 8.dp),
+            pad.padding(top = AlgoTheme.spacing.sm),
             style = when (block.level) {
                 1 -> MaterialTheme.typography.headlineMedium
                 2 -> MaterialTheme.typography.titleLarge
@@ -110,17 +109,17 @@ fun BlockView(
             fontWeight = FontWeight.Bold,
         )
         is Paragraph -> Inl(block.text, pad, resolvable = resolvable, onLink = onLink)
-        is ListItem -> Row(pad.padding(start = (block.depth * 16).dp)) {
-            Text(if (block.ordered) "${block.number}." else "•", Modifier.width(24.dp))
+        is ListItem -> Row(pad.padding(start = AlgoTheme.spacing.md * block.depth)) {
+            Text(if (block.ordered) "${block.number}." else "•", Modifier.width(AlgoTheme.sizes.listMarker))
             Inl(block.text, resolvable = resolvable, onLink = onLink)
         }
         is Code -> {
             val colors = AlgoTheme.colors
             val mono = AlgoTheme.typography.code
-            Surface(pad.fillMaxWidth(), shape = RoundedCornerShape(8.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
+            Surface(pad.fillMaxWidth(), shape = AlgoTheme.shapes.small, color = MaterialTheme.colorScheme.surfaceVariant) {
                 Text(
                     if (block.lang == "kotlin") highlight(block.text, colors) else AnnotatedString(block.text),
-                    Modifier.horizontalScroll(rememberScrollState()).padding(12.dp),
+                    Modifier.horizontalScroll(rememberScrollState()).padding(AlgoTheme.spacing.smd),
                     fontFamily = mono,
                     style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = NO_LIGATURES),
                     softWrap = false,
@@ -135,7 +134,7 @@ fun BlockView(
             }
             for ((r, row) in all.withIndex()) {
                 Row {
-                    for ((c, cell) in row.withIndex()) Inl(cell, Modifier.width(widths[c]).padding(4.dp), bold = r == 0, resolvable = resolvable, onLink = onLink)
+                    for ((c, cell) in row.withIndex()) Inl(cell, Modifier.width(widths[c]).padding(AlgoTheme.spacing.xs), bold = r == 0, resolvable = resolvable, onLink = onLink)
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outline)
             }
@@ -151,8 +150,8 @@ private fun QuoteBox(
     blocks: List<Block>, noteId: String,
     resolvable: (String) -> Boolean, onLink: (String, String?) -> Unit,
 ) {
-    Row(Modifier.padding(vertical = 4.dp).height(IntrinsicSize.Min)) {
-        Box(Modifier.width(3.dp).fillMaxHeight().background(MaterialTheme.colorScheme.outline))
-        Column(Modifier.padding(start = 8.dp)) { blocks.forEach { BlockView(it, noteId, 0, resolvable, onLink) } }
+    Row(Modifier.padding(vertical = AlgoTheme.spacing.xs).height(IntrinsicSize.Min)) {
+        Box(Modifier.width(AlgoTheme.sizes.quoteBar).fillMaxHeight().background(MaterialTheme.colorScheme.outline))
+        Column(Modifier.padding(start = AlgoTheme.spacing.sm)) { blocks.forEach { BlockView(it, noteId, 0, resolvable, onLink) } }
     }
 }
