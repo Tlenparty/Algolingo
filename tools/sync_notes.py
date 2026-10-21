@@ -6,6 +6,7 @@ Usage: python3 tools/sync_notes.py <vault_dir>   (or env ALGOLINGO_VAULT)
 import json
 import os
 import re
+import shutil
 import sys
 import unicodedata
 from pathlib import Path
@@ -42,18 +43,30 @@ def main():
         print(f"vault not found: {vault}")
         return 1
     out = Path(__file__).resolve().parent.parent / "shared/src/commonMain/composeResources/files/kb"
-    out.mkdir(parents=True, exist_ok=True)
-    for old in list(out.glob("n*.md")) + [out / "index.json"]:
-        old.unlink(missing_ok=True)
 
+    # Read everything first: a decode error must not leave the bundle half-deleted.
     notes = sorted(((nfc(p.stem), nfc(p.read_text(encoding="utf-8"))) for p in vault.glob("*.md")))
+    if not notes:
+        print(f"no notes found in {vault}")
+        return 1
+
+    # Build the new bundle in a sibling temp dir, then swap it in.
+    tmp = out.with_name(out.name + ".tmp")
+    shutil.rmtree(tmp, ignore_errors=True)
+    tmp.mkdir(parents=True)
     entries = []
     for i, (title, text) in enumerate(notes):
         nid = f"n{i:02d}"
-        (out / f"{nid}.md").write_bytes(text.replace("\r\n", "\n").encode("utf-8"))
+        (tmp / f"{nid}.md").write_bytes(text.replace("\r\n", "\n").encode("utf-8"))
         entries.append({"id": nid, "title": title, "section": SECTIONS[section_of(title)], "file": f"{nid}.md"})
     entries.sort(key=lambda e: SECTIONS.index(e["section"]))  # stable: title order kept
-    (out / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    (tmp / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    old = out.with_name(out.name + ".old")
+    shutil.rmtree(old, ignore_errors=True)
+    if out.exists():
+        out.rename(old)
+    tmp.rename(out)
+    shutil.rmtree(old, ignore_errors=True)
 
     titles = {t.lower() for t, _ in notes}
     broken = set()
