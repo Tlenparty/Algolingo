@@ -1,11 +1,10 @@
 package com.tlenparty.algolingo.lesson.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -22,9 +21,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.Dp
+import com.tlenparty.algolingo.lesson.CheckResult
 import com.tlenparty.algolingo.lesson.LessonAction
 import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.Phase
@@ -103,7 +105,8 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
             Column(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background)) {
                 Column(Modifier.fillMaxWidth().height(AlgoTheme.sizes.border).background(outline)) {}
                 if (check != null) {
-                    // Keep the last check during exit animation so the panel does not blank out.
+                    // No exit animation here: the panel leaves with its page, the outgoing AnimatedContent
+                    // snapshot still holds the old check.
                     ResultPanelHost(check, maxBody) { on(LessonAction.Continue(screenKey(state))) }
                 } else {
                     Column(Modifier.padding(AlgoTheme.spacing.md)) {
@@ -129,13 +132,12 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
 }
 
 @Composable
-private fun ResultPanelHost(check: com.tlenparty.algolingo.lesson.CheckResult, maxBody: androidx.compose.ui.unit.Dp, onNext: () -> Unit) {
+private fun ResultPanelHost(check: CheckResult, maxBody: Dp, onNext: () -> Unit) {
     // Enter animation: visible flips to true on first composition.
-    val visible = androidx.compose.runtime.remember { androidx.compose.animation.core.MutableTransitionState(false).apply { targetState = true } }
+    val visible = remember { MutableTransitionState(false).apply { targetState = true } }
     AnimatedVisibility(
         visibleState = visible,
         enter = slideInVertically(tween(250)) { it } + fadeIn(tween(250)),
-        exit = slideOutVertically(tween(200)) { it } + fadeOut(tween(200)),
     ) {
         // Solving -> Feedback keeps the same screen key, so a second tap on «Проверить» could land on the
         // panel button as it slides in; ignore taps until the enter animation has settled (CR-01).
