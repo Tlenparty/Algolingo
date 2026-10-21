@@ -41,3 +41,11 @@ xcrun simctl launch <sim-udid> com.tlenparty.algolingo
 ```bash
 ./gradlew :shared:testAndroidHostTest
 ```
+
+### Обновление заметок базы знаний
+
+```bash
+ALGOLINGO_VAULT=<путь к папке Obsidian> python3 tools/sync_notes.py
+```
+
+После этого пересоберите приложение.
