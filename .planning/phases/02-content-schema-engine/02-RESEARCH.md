@@ -386,7 +386,7 @@ class LessonContentTest {
 | A5 | Ladder shape 1 -> 2 -> 4 holes with the chips in the table | l0.4 | Pure content; plan may tune |
 | A6 | XP stays out of Phase 2 (only a tiny optional `xpFor`) | Grade | Phase 3 reveal needs a number; solved by the optional helper |
 
-## Open Questions
+## Open Questions (RESOLVED — see "User Decisions" at the end: Q1 tapHole returns chip, Q2 no ShowAnswer, Acceptable = clean ✅)
 
 1. **Tap on a filled hole: return the chip, or only select the hole?**
    - Known: EXER-04 says tapping an inserted chip returns it; UI-SPEC lists both "tap hole -> selected (empty or filled)" and "tap placed chip in a hole -> returns".
