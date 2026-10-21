@@ -4,7 +4,6 @@ import algolingo.shared.generated.resources.Res
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import org.jetbrains.compose.resources.MissingResourceException
 
 private val json = Json { ignoreUnknownKeys = true }
 
@@ -27,7 +26,7 @@ suspend fun loadLesson(id: String): Result<Lesson> {
         Res.readBytes("files/content/lessons/$id.json").decodeToString()
     } catch (e: CancellationException) {
         throw e
-    } catch (e: MissingResourceException) {
+    } catch (e: Exception) { // missing file, platform IO, resource reader state: all go to the error screen
         return Result.failure(e)
     }
     return parseLesson(text)

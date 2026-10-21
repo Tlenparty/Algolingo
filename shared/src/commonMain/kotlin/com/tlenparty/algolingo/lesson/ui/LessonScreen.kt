@@ -16,7 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +31,8 @@ import com.tlenparty.algolingo.ui.components.LessonTopBar
 
 @Composable
 fun LessonScreen(state: LessonState, on: (LessonAction) -> Unit, onExit: () -> Unit) {
-    var confirm by rememberSaveable { mutableStateOf(false) }
+    // Plain remember: the lesson itself is not saved (restarts after process death), so the dialog must not be either.
+    var confirm by remember { mutableStateOf(false) }
     val done = state.phase == Phase.Done
     // On the summary back is not intercepted: NavHost pops straight to Home.
     ExitBackHandler(enabled = !done, onBack = { confirm = true })
