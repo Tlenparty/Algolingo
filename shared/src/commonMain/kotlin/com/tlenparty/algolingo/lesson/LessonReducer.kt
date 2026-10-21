@@ -1,6 +1,8 @@
 package com.tlenparty.algolingo.lesson
 
 // Pure lesson state machine. No Random.Default, never throws; stray actions return the state unchanged.
+// NextTheory/Continue carry the screen they were issued from, so a double tap (or a tap on the outgoing
+// AnimatedContent page) that arrives after the screen changed is stale and ignored (CR-01).
 // No XP here (Phase 4). No ShowAnswer action: Reveal is entered automatically after a solve or the 3rd miss.
 
 const val MAX_REPEATS = 2
@@ -14,12 +16,12 @@ sealed interface Phase {
 }
 
 sealed interface LessonAction {
-    data object NextTheory : LessonAction
+    data class NextTheory(val index: Int) : LessonAction
     data class TapChip(val id: Int) : LessonAction
     data class TapHole(val h: Int) : LessonAction
     data object Check : LessonAction
     data object Hint : LessonAction
-    data object Continue : LessonAction
+    data class Continue(val from: ScreenKey) : LessonAction
 }
 
 data class LessonState(
@@ -72,7 +74,9 @@ object LessonReducer {
         val ex = exerciseOf(s, id)
         val cur = s.current
         return when {
-            a is LessonAction.NextTheory && p is Phase.Theory -> s.copy(
+            a is LessonAction.Continue && a.from != screenKey(s) -> s
+
+            a is LessonAction.NextTheory && p is Phase.Theory && a.index == p.index -> s.copy(
                 phase = when {
                     p.index + 1 < s.lesson.theory.size -> Phase.Theory(p.index + 1)
                     s.current == null -> Phase.Done // no playable exercise: never strand the UI in Exercise

@@ -22,14 +22,17 @@ class ReducerTest {
 
     private fun run(s: LessonState, vararg a: LessonAction) = a.fold(s) { st, x -> LessonReducer.reduce(st, x) }
     private fun fill(s: LessonState, chip: Int) = run(s, TapChip(chip), Check)
-    private fun failCurrent(s: LessonState) = run(fill(s, 1), Continue)
-    private fun solveCurrent(s: LessonState, chip: Int = 0) = run(fill(s, chip), Continue, Continue)
+    // Actions as the UI issues them: stamped with the screen currently shown.
+    private fun next(s: LessonState) = run(s, NextTheory((s.phase as Phase.Theory).index))
+    private fun cont(s: LessonState) = run(s, Continue(screenKey(s)))
+    private fun failCurrent(s: LessonState) = cont(fill(s, 1))
+    private fun solveCurrent(s: LessonState, chip: Int = 0) = cont(cont(fill(s, chip)))
 
     @Test fun theoryFlow() {
         var s = LessonReducer.start(lessonOf("a", theory = 2), 1)
         assertEquals(Phase.Theory(0), s.phase)
-        s = run(s, NextTheory); assertEquals(Phase.Theory(1), s.phase)
-        s = run(s, NextTheory); assertEquals(Phase.Solving, s.phase)
+        s = next(s); assertEquals(Phase.Theory(1), s.phase)
+        s = next(s); assertEquals(Phase.Solving, s.phase)
         assertEquals(Phase.Solving, LessonReducer.start(lessonOf("a"), 1).phase)
         assertNotNull(LessonReducer.start(lessonOf("a"), 1).current)
     }
@@ -37,7 +40,7 @@ class ReducerTest {
     @Test fun theoryWithoutExercisesEndsInDone() {
         val s = LessonReducer.start(lessonOf(theory = 1), 1)
         assertEquals(Phase.Theory(0), s.phase)
-        assertEquals(Phase.Done, run(s, NextTheory).phase)
+        assertEquals(Phase.Done, next(s).phase)
     }
 
     @Test fun wrongThreeTimesFails() {
@@ -50,11 +53,11 @@ class ReducerTest {
         assertEquals(Phase.Solving, s.phase)
         s = run(fill(s, 1))
         assertEquals(3, s.attempts["a"])
-        s = run(s, Continue)
+        s = cont(s)
         assertEquals(Phase.Reveal(false), s.phase)
         // a 4th attempt is impossible: Check/TapChip do nothing in Reveal
         assertEquals(s, run(s, TapChip(0), Check))
-        s = run(s, Continue)
+        s = cont(s)
         assertEquals(Phase.Done, s.phase)
         assertNull(s.current)
         assertEquals(3, s.attempts["a"])
@@ -105,21 +108,38 @@ class ReducerTest {
 
     @Test fun strayActionsUnchanged() {
         val s = LessonReducer.start(lessonOf("a", theory = 1), 1)
-        assertEquals(s, run(s, TapChip(0), Check, Continue, Hint))
-        var e = run(s, NextTheory)
-        assertEquals(e, run(e, NextTheory, Continue, Check)) // Check with empty hole, Continue in Exercise
+        assertEquals(s, run(s, TapChip(0), Check, Continue(screenKey(s)), Hint))
+        var e = next(s)
+        assertEquals(e, run(e, NextTheory(0), Continue(screenKey(e)), Check)) // Check with empty hole, Continue in Exercise
         e = fill(e, 1)
         assertTrue(e.phase is Phase.Feedback)
-        assertEquals(e, run(e, TapChip(0), TapHole(0), Check, Hint, NextTheory))
+        assertEquals(e, run(e, TapChip(0), TapHole(0), Check, Hint, NextTheory(0)))
         assertEquals(e, run(e, TapChip(99)))
         val done = solveCurrent(LessonReducer.start(lessonOf("a"), 1))
-        assertEquals(done, run(done, Continue, Check, TapChip(0), Hint, NextTheory))
+        assertEquals(done, run(done, Continue(screenKey(done)), Check, TapChip(0), Hint, NextTheory(0)))
+    }
+
+    @Test fun doubleTapNextTheoryShowsEveryCard() {
+        val s = LessonReducer.start(lessonOf("a", theory = 3), 1)
+        assertEquals(Phase.Theory(1), run(s, NextTheory(0), NextTheory(0)).phase)
+    }
+
+    @Test fun doubleTapContinueDoesNotSkipReveal() {
+        val f = fill(LessonReducer.start(lessonOf("a", "b"), 1), 0)
+        val k = Continue(screenKey(f))
+        val s = run(f, k, k)
+        assertEquals(Phase.Reveal(true), s.phase)
+        assertEquals(listOf("a", "b"), s.queue)
+        // a stale Feedback key cannot advance the Reveal either
+        val r = run(s, k)
+        assertEquals(s, r)
+        assertEquals(Phase.Solving, cont(s).phase)
     }
 
     @Test fun deterministicAndSeedMixed() {
-        val acts = arrayOf(TapChip(1), Check, Continue, TapChip(0), Check, Continue, Continue)
         val l = lessonOf("a", "b")
-        assertEquals(run(LessonReducer.start(l, 5), *acts), run(LessonReducer.start(l, 5), *acts))
+        fun play() = solveCurrent(failCurrent(LessonReducer.start(l, 5)))
+        assertEquals(play(), play())
         val orders = (1..8).map { LessonReducer.start(l, it).current!!.order }.toSet()
         assertTrue(orders.size > 1)
     }

@@ -17,6 +17,7 @@ import com.tlenparty.algolingo.lesson.ExerciseResult
 import com.tlenparty.algolingo.lesson.LessonAction
 import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.isLastExercise
+import com.tlenparty.algolingo.lesson.screenKey
 import com.tlenparty.algolingo.lesson.solutionSpans
 import com.tlenparty.algolingo.lesson.xpFor
 import com.tlenparty.algolingo.design.components.ChunkyButton
@@ -56,7 +57,7 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
                 }
             }
         }
-        ChunkyButton("Продолжить", { on(LessonAction.Continue) }, Modifier.padding(AlgoTheme.spacing.md))
+        ChunkyButton("Продолжить", { on(LessonAction.Continue(screenKey(state))) }, Modifier.padding(AlgoTheme.spacing.md))
     }
 }
 

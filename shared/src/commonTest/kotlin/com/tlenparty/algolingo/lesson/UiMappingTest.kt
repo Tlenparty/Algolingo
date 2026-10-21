@@ -116,7 +116,7 @@ class UiMappingTest {
         val feedback = run(solving, TapChip(4), TapChip(1), TapChip(2), TapChip(3), Check) // hole 0 gets wrong chip
         assertTrue(feedback.phase is Phase.Feedback)
         assertEquals(screenKey(solving), screenKey(feedback))
-        val requeued = run(feedback, Continue)
+        val requeued = run(feedback, Continue(screenKey(feedback)))
         assertEquals(Phase.Solving, requeued.phase)
         assertNotEquals(screenKey(solving), screenKey(requeued))
     }
@@ -124,7 +124,7 @@ class UiMappingTest {
     @Test fun screenKeyPhases() {
         val s = LessonReducer.start(lesson.copy(theory = listOf(TheoryCard("c"))), 1)
         assertEquals(ScreenKey.Theory(0), screenKey(s))
-        assertEquals(ScreenKey.Exercise("l.e3", 0), screenKey(run(s, NextTheory)))
+        assertEquals(ScreenKey.Exercise("l.e3", 0), screenKey(run(s, NextTheory(0))))
         assertEquals(ScreenKey.Reveal("l.e3"), screenKey(s.copy(phase = Phase.Reveal(true))))
         assertEquals(ScreenKey.Done, screenKey(s.copy(phase = Phase.Done)))
     }

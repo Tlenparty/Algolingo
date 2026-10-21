@@ -32,6 +32,7 @@ import com.tlenparty.algolingo.lesson.Phase
 import com.tlenparty.algolingo.lesson.Verdict
 import com.tlenparty.algolingo.lesson.holeVisual
 import com.tlenparty.algolingo.lesson.panelModel
+import com.tlenparty.algolingo.lesson.screenKey
 import com.tlenparty.algolingo.design.components.AlgoCard
 import com.tlenparty.algolingo.design.components.ChipState
 import com.tlenparty.algolingo.design.components.ChunkyButton
@@ -104,7 +105,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                 Column(Modifier.fillMaxWidth().height(AlgoTheme.sizes.border).background(outline)) {}
                 if (check != null) {
                     // Keep the last check during exit animation so the panel does not blank out.
-                    ResultPanelHost(check, maxBody) { on(LessonAction.Continue) }
+                    ResultPanelHost(check, maxBody) { on(LessonAction.Continue(screenKey(state))) }
                 } else {
                     Column(Modifier.padding(AlgoTheme.spacing.md)) {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm), verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
@@ -136,5 +137,9 @@ private fun ResultPanelHost(check: com.tlenparty.algolingo.lesson.CheckResult, m
         visibleState = visible,
         enter = slideInVertically(tween(250)) { it } + fadeIn(tween(250)),
         exit = slideOutVertically(tween(200)) { it } + fadeOut(tween(200)),
-    ) { ResultPanel(panelModel(check), maxBody, onNext) }
+    ) {
+        // Solving -> Feedback keeps the same screen key, so a second tap on «Проверить» could land on the
+        // panel button as it slides in; ignore taps until the enter animation has settled (CR-01).
+        ResultPanel(panelModel(check), maxBody, onNext = { if (visible.isIdle && visible.currentState) onNext() })
+    }
 }
