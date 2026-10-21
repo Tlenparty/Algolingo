@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Skeleton | 2/2 | Complete    | 2026-10-21 |
-| 01.1 Knowledge Base | 1/4 | In Progress|  |
+| 01.1 Knowledge Base | 2/4 | In Progress|  |
 | 2. Content Schema & Engine | 0/TBD | Not started | - |
 | 3. Lesson & Exercise UI | 0/TBD | Not started | - |
 | 4. Progress & Review | 0/TBD | Not started | - |
