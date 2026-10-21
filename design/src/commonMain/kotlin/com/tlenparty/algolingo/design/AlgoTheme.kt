@@ -57,17 +57,34 @@ private val DarkApp = AlgoColors(
     Color(0xFF37464F), Color(0xFF52656D), Color(0xFF9AA9B1), Color(0xFF58CC02),
 )
 
-private val LightScheme = lightColorScheme(
-    primary = Color(0xFF58CC02), onPrimary = Color(0xFF131F24), error = Color(0xFFFF4B4B),
-    background = Color(0xFFFFFFFF), surface = Color(0xFFFFFFFF),
-    surfaceVariant = Color(0xFFF7F7F7), outline = Color(0xFFE5E5E5),
-    onBackground = Color(0xFF3C3C3C), onSurface = Color(0xFF3C3C3C), onSurfaceVariant = Color(0xFF3C3C3C),
+// Every M3 slot a stock component can read is set explicitly, so nothing falls back to the purple
+// baseline (NavigationBar container/indicator, AlertDialog container, text fields, tonal elevation).
+private fun algoScheme(
+    dark: Boolean, bg: Color, variant: Color, outline: Color, ink: Color, app: AlgoColors,
+) = (if (dark) darkColorScheme() else lightColorScheme()).copy(
+    primary = Green, onPrimary = OnAccent, primaryContainer = app.successTint, onPrimaryContainer = app.successText,
+    inversePrimary = Green,
+    secondary = Green, onSecondary = OnAccent, secondaryContainer = app.successTint, onSecondaryContainer = app.successText,
+    tertiary = Green, onTertiary = OnAccent, tertiaryContainer = app.successTint, onTertiaryContainer = app.successText,
+    error = app.redFill, onError = OnAccent, errorContainer = app.wrongTint, onErrorContainer = app.wrongText,
+    background = bg, onBackground = ink, surface = bg, onSurface = ink,
+    surfaceVariant = variant, onSurfaceVariant = ink, surfaceTint = bg,
+    inverseSurface = ink, inverseOnSurface = bg,
+    outline = outline, outlineVariant = outline,
+    surfaceBright = bg, surfaceDim = variant,
+    surfaceContainerLowest = bg, surfaceContainerLow = bg, surfaceContainer = bg,
+    surfaceContainerHigh = bg, surfaceContainerHighest = variant,
 )
-private val DarkScheme = darkColorScheme(
-    primary = Color(0xFF58CC02), onPrimary = Color(0xFF131F24), error = Color(0xFFFF4B4B),
-    background = Color(0xFF131F24), surface = Color(0xFF131F24),
-    surfaceVariant = Color(0xFF202F36), outline = Color(0xFF37464F),
-    onBackground = Color(0xFFF1F7FB), onSurface = Color(0xFFF1F7FB), onSurfaceVariant = Color(0xFFF1F7FB),
+
+private val Green = Color(0xFF58CC02)
+private val OnAccent = Color(0xFF131F24)
+private val LightScheme = algoScheme(
+    dark = false, bg = Color(0xFFFFFFFF), variant = Color(0xFFF7F7F7), outline = Color(0xFFE5E5E5),
+    ink = Color(0xFF3C3C3C), app = LightApp,
+)
+private val DarkScheme = algoScheme(
+    dark = true, bg = Color(0xFF131F24), variant = Color(0xFF202F36), outline = Color(0xFF37464F),
+    ink = Color(0xFFF1F7FB), app = DarkApp,
 )
 
 /** JetBrains Mono ligatures turn `<=`/`!=`/`->` into ≤/≠/→; learners must see the real Kotlin tokens. */
