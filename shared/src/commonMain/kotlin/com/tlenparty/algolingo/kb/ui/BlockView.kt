@@ -26,7 +26,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -48,6 +47,7 @@ import com.tlenparty.algolingo.kb.Table
 import com.tlenparty.algolingo.kb.parseInline
 import com.tlenparty.algolingo.ui.theme.highlight
 import com.tlenparty.algolingo.ui.theme.LocalAppColors
+import com.tlenparty.algolingo.ui.theme.LocalCodeFont
 import com.tlenparty.algolingo.kb.Text as PlainText
 
 @Composable
@@ -58,12 +58,13 @@ fun inlineText(
 ): AnnotatedString {
     val bg = MaterialTheme.colorScheme.surfaceVariant
     val link = LocalAppColors.current.focusText
+    val mono = LocalCodeFont.current
     return buildAnnotatedString {
         for (n in inlines) when (n) {
             is PlainText -> append(n.v)
             is Bold -> withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(n.v) }
             is Italic -> withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(n.v) }
-            is InlineCode -> withStyle(SpanStyle(fontFamily = FontFamily.Monospace, background = bg)) { append(n.v) }
+            is InlineCode -> withStyle(SpanStyle(fontFamily = mono, background = bg)) { append(n.v) }
             is Link ->
                 if (resolvable(n.target)) {
                     withLink(
@@ -115,11 +116,12 @@ fun BlockView(
         }
         is Code -> {
             val colors = LocalAppColors.current
+            val mono = LocalCodeFont.current
             Surface(pad.fillMaxWidth(), shape = RoundedCornerShape(8.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
                 Text(
                     if (block.lang == "kotlin") highlight(block.text, colors) else AnnotatedString(block.text),
                     Modifier.horizontalScroll(rememberScrollState()).padding(12.dp),
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = mono,
                     style = MaterialTheme.typography.bodySmall,
                     softWrap = false,
                 )
