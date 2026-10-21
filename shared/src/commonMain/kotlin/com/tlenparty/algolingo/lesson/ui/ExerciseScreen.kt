@@ -10,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +41,6 @@ import com.tlenparty.algolingo.design.components.TokenChip
 import com.tlenparty.algolingo.ui.components.richText
 import com.tlenparty.algolingo.design.AlgoTheme
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Modifier = Modifier) {
     val ex = state.lesson.exercises.firstOrNull { it.id == state.queue.firstOrNull() }
