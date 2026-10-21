@@ -46,10 +46,8 @@ class EngineTest {
     }
 
     @Test fun selectedFilledHoleIsOverwritten() {
-        var s = tapChip(initial(ex, 1), 0)
-        s = tapHole(s, 1); s = tapHole(s, 0) // select filled hole 0 -> clears it
-        s = tapChip(s, 4); s = tapHole(s, 0).copy(selected = 0)
-        s = s.copy(placed = listOf(4, null, null), selected = 0)
+        // hand-built: unreachable via the public API (tapHole clears a filled hole), kept as a guard
+        var s = initial(ex, 1).copy(placed = listOf(4, null, null), selected = 0)
         s = tapChip(s, 1)
         assertEquals(listOf(1, null, null), s.placed)
         assertFalse(s.isPlaced(4))
