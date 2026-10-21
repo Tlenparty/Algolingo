@@ -71,7 +71,7 @@ class UiMappingTest {
 
     @Test fun panelDangerWithoutWhy() {
         val p = panelModel(CheckResult(listOf(HoleResult.Wrong("w", null, "nums[0]"))))
-        assertEquals(PanelItem("w", "Здесь нужно другое. Верно: `nums[0]`", null), p.wrong.single())
+        assertEquals(PanelItem("w", "Здесь нужно другое.", "nums[0]"), p.wrong.single())
     }
 
     @Test fun templateLinesShape() {

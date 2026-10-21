@@ -30,9 +30,9 @@ data class PanelModel(
 
 fun panelModel(check: CheckResult): PanelModel {
     val acc = check.holes.filterIsInstance<HoleResult.Acceptable>().map { PanelItem(it.text, it.note) }
+    // correct goes through PanelItem.correct (rendered as code), never interpolated into markup.
     val wrong = check.holes.filterIsInstance<HoleResult.Wrong>().map {
-        if (it.why != null) PanelItem(it.text, it.why, it.correct)
-        else PanelItem(it.text, "Здесь нужно другое. Верно: `${it.correct}`")
+        PanelItem(it.text, it.why ?: "Здесь нужно другое.", it.correct)
     }
     return when (check.verdict) {
         Verdict.Ok -> PanelModel(PanelKind.Success, "✅ Отлично!", "Дальше", emptyList(), emptyList())
