@@ -21,15 +21,15 @@ class EngineTest {
     )
 
     @Test fun initialState() {
-        val s = initial(ex, 1)
+        val s = initialExerciseState(ex, 1)
         assertEquals(listOf(null, null, null), s.placed)
         assertEquals(0, s.selected)
         assertEquals(ex.bank.indices.toList(), s.order.sorted())
-        assertNull(initial(synth("a", holes = emptyList()), 1).selected)
+        assertNull(initialExerciseState(synth("a", holes = emptyList()), 1).selected)
     }
 
     @Test fun tapChipFillsAndAdvances() {
-        var s = initial(ex, 1)
+        var s = initialExerciseState(ex, 1)
         s = tapChip(s, 0); assertEquals(listOf(0, null, null), s.placed); assertEquals(1, s.selected)
         s = tapChip(s, 1); s = tapChip(s, 2)
         assertEquals(listOf(0, 1, 2), s.placed); assertNull(s.selected)
@@ -37,7 +37,7 @@ class EngineTest {
     }
 
     @Test fun noOps() {
-        val s = tapChip(initial(ex, 1), 0)
+        val s = tapChip(initialExerciseState(ex, 1), 0)
         assertEquals(s, tapChip(s, 0))
         assertEquals(s, tapChip(s, 99))
         assertEquals(s, tapChip(s, -1))
@@ -47,37 +47,37 @@ class EngineTest {
 
     @Test fun selectedFilledHoleIsOverwritten() {
         // hand-built: unreachable via the public API (tapHole clears a filled hole), kept as a guard
-        var s = initial(ex, 1).copy(placed = listOf(4, null, null), selected = 0)
+        var s = initialExerciseState(ex, 1).copy(placed = listOf(4, null, null), selected = 0)
         s = tapChip(s, 1)
         assertEquals(listOf(1, null, null), s.placed)
         assertFalse(s.isPlaced(4))
     }
 
     @Test fun cyclicNextEmpty() {
-        var s = initial(ex, 1).copy(selected = 2)
+        var s = initialExerciseState(ex, 1).copy(selected = 2)
         s = tapChip(s, 0)
         assertEquals(listOf(null, null, 0), s.placed); assertEquals(0, s.selected)
     }
 
     @Test fun removeSelectsHoleThenRefillClearsSelection() {
-        var s = initial(ex, 1)
+        var s = initialExerciseState(ex, 1)
         s = tapChip(tapChip(tapChip(s, 0), 1), 2)
         s = tapHole(s, 1)
         assertEquals(listOf(0, null, 2), s.placed); assertEquals(1, s.selected)
         s = tapChip(s, 1)
         assertNull(s.selected)
         // empty hole: just selects
-        val e = tapHole(initial(ex, 1), 2)
+        val e = tapHole(initialExerciseState(ex, 1), 2)
         assertEquals(2, e.selected); assertEquals(listOf(null, null, null), e.placed)
     }
 
     @Test fun checkNullWhileEmpty() {
-        assertNull(check(ex, initial(ex, 1)))
-        assertNull(check(ex, tapChip(initial(ex, 1), 0)))
+        assertNull(checkExercise(ex, initialExerciseState(ex, 1)))
+        assertNull(checkExercise(ex, tapChip(initialExerciseState(ex, 1), 0)))
     }
 
     @Test fun checkThreeOutcomes() {
-        fun run(vararg ids: Int) = check(ex, initial(ex, 1).copy(placed = ids.toList(), selected = null))!!
+        fun run(vararg ids: Int) = checkExercise(ex, initialExerciseState(ex, 1).copy(placed = ids.toList(), selected = null))!!
         assertEquals(Verdict.Ok, run(0, 1, 2).verdict)
         val acc = run(3, 1, 2)
         assertEquals(Verdict.Acceptable, acc.verdict)
@@ -91,7 +91,7 @@ class EngineTest {
 
     @Test fun perHoleIndependence() {
         val e = synth("mid + 1", "mid - 1", holes = listOf(Hole(ok = listOf("mid + 1")), Hole(ok = listOf("mid - 1"))))
-        val r = check(e, initial(e, 1).copy(placed = listOf(1, 0), selected = null))!!
+        val r = checkExercise(e, initialExerciseState(e, 1).copy(placed = listOf(1, 0), selected = null))!!
         assertTrue(r.holes.all { it is HoleResult.Wrong })
     }
 }

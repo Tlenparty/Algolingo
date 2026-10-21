@@ -7,7 +7,7 @@ const val MAX_REPEATS = 2
 
 sealed interface Phase {
     data class Theory(val index: Int) : Phase
-    data object Exercise : Phase
+    data object Solving : Phase
     data class Feedback(val check: CheckResult) : Phase
     data class Reveal(val solved: Boolean) : Phase
     data object Done : Phase
@@ -50,12 +50,12 @@ object LessonReducer {
     private fun enter(s: LessonState, queue: List<String>, attempts: Map<String, Int>): ExerciseState? {
         val id = queue.firstOrNull() ?: return null
         val ex = exerciseOf(s, id) ?: return null
-        return initial(ex, seedOf(id, attempts[id] ?: 0) xor s.seed)
+        return initialExerciseState(ex, seedOf(id, attempts[id] ?: 0) xor s.seed)
     }
 
     fun start(lesson: Lesson, seed: Int): LessonState {
         val base = LessonState(
-            lesson, Phase.Exercise, lesson.exercises.map { it.id },
+            lesson, Phase.Solving, lesson.exercises.map { it.id },
             emptyMap(), emptyMap(), emptyMap(), null, 0, seed,
         )
         val withCur = base.copy(current = enter(base, base.queue, emptyMap()))
@@ -76,18 +76,18 @@ object LessonReducer {
                 phase = when {
                     p.index + 1 < s.lesson.theory.size -> Phase.Theory(p.index + 1)
                     s.current == null -> Phase.Done // no playable exercise: never strand the UI in Exercise
-                    else -> Phase.Exercise
+                    else -> Phase.Solving
                 }
             )
 
-            a is LessonAction.TapChip && p is Phase.Exercise && cur != null -> s.copy(current = tapChip(cur, a.id))
-            a is LessonAction.TapHole && p is Phase.Exercise && cur != null -> s.copy(current = tapHole(cur, a.h))
+            a is LessonAction.TapChip && p is Phase.Solving && cur != null -> s.copy(current = tapChip(cur, a.id))
+            a is LessonAction.TapHole && p is Phase.Solving && cur != null -> s.copy(current = tapHole(cur, a.h))
 
-            a is LessonAction.Hint && p is Phase.Exercise && ex != null && id != null && ex.hints.isNotEmpty() ->
+            a is LessonAction.Hint && p is Phase.Solving && ex != null && id != null && ex.hints.isNotEmpty() ->
                 s.copy(hintsShown = s.hintsShown + (id to minOf((s.hintsShown[id] ?: 0) + 1, ex.hints.size)))
 
-            a is LessonAction.Check && p is Phase.Exercise && cur != null && ex != null && id != null -> {
-                val r = check(ex, cur) ?: return s
+            a is LessonAction.Check && p is Phase.Solving && cur != null && ex != null && id != null -> {
+                val r = checkExercise(ex, cur) ?: return s
                 s.copy(
                     phase = Phase.Feedback(r),
                     attempts = s.attempts + (id to (s.attempts[id] ?: 0) + 1),
@@ -99,7 +99,7 @@ object LessonReducer {
                 s.solved[id] == true -> s.copy(phase = Phase.Reveal(true))
                 (s.attempts[id] ?: 0) <= MAX_REPEATS -> {
                     val q = s.queue.drop(1) + id
-                    s.copy(phase = Phase.Exercise, queue = q, current = enter(s, q, s.attempts))
+                    s.copy(phase = Phase.Solving, queue = q, current = enter(s, q, s.attempts))
                 }
                 else -> s.copy(phase = Phase.Reveal(false))
             }
@@ -108,7 +108,7 @@ object LessonReducer {
                 val q = s.queue.drop(1)
                 val cr = enter(s, q, s.attempts)
                 s.copy(
-                    phase = if (cr == null) Phase.Done else Phase.Exercise,
+                    phase = if (cr == null) Phase.Done else Phase.Solving,
                     queue = q, done = s.done + 1, current = cr,
                 )
             }

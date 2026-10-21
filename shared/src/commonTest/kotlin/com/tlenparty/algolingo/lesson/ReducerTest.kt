@@ -29,8 +29,8 @@ class ReducerTest {
         var s = LessonReducer.start(lessonOf("a", theory = 2), 1)
         assertEquals(Phase.Theory(0), s.phase)
         s = run(s, NextTheory); assertEquals(Phase.Theory(1), s.phase)
-        s = run(s, NextTheory); assertEquals(Phase.Exercise, s.phase)
-        assertEquals(Phase.Exercise, LessonReducer.start(lessonOf("a"), 1).phase)
+        s = run(s, NextTheory); assertEquals(Phase.Solving, s.phase)
+        assertEquals(Phase.Solving, LessonReducer.start(lessonOf("a"), 1).phase)
         assertNotNull(LessonReducer.start(lessonOf("a"), 1).current)
     }
 
@@ -47,7 +47,7 @@ class ReducerTest {
         s = solveCurrent(s) // b
         assertEquals(listOf("a"), s.queue)
         s = failCurrent(s)
-        assertEquals(Phase.Exercise, s.phase)
+        assertEquals(Phase.Solving, s.phase)
         s = run(fill(s, 1))
         assertEquals(3, s.attempts["a"])
         s = run(s, Continue)

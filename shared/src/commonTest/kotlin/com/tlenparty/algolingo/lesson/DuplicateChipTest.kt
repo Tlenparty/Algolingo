@@ -10,7 +10,7 @@ class DuplicateChipTest {
     )
 
     @Test fun equalTextChipsAreIndependent() {
-        var s = initial(ex, 3)
+        var s = initialExerciseState(ex, 3)
         s = tapChip(s, 2); s = tapChip(s, 3)
         assertEquals(listOf(2, 3, null, null), s.placed)
         assertTrue(s.isPlaced(2) && s.isPlaced(3))
@@ -21,9 +21,9 @@ class DuplicateChipTest {
     }
 
     @Test fun bothCheckOk() {
-        val s = initial(ex, 3).copy(placed = listOf(0, 1, 2, 3), selected = null)
-        assertEquals(Verdict.Ok, check(ex, s)!!.verdict)
+        val s = initialExerciseState(ex, 3).copy(placed = listOf(0, 1, 2, 3), selected = null)
+        assertEquals(Verdict.Ok, checkExercise(ex, s)!!.verdict)
         val swapped = s.copy(placed = listOf(1, 0, 3, 2))
-        assertEquals(Verdict.Ok, check(ex, swapped)!!.verdict)
+        assertEquals(Verdict.Ok, checkExercise(ex, swapped)!!.verdict)
     }
 }

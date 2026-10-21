@@ -8,7 +8,7 @@ data class ExerciseState(val placed: List<Int?>, val selected: Int?, val order: 
     fun isPlaced(id: Int): Boolean = id in placed
 }
 
-fun initial(ex: Exercise, seed: Int) = ExerciseState(
+fun initialExerciseState(ex: Exercise, seed: Int) = ExerciseState(
     placed = List(ex.holes.size) { null },
     selected = if (ex.holes.isEmpty()) null else 0,
     order = seededShuffle(ex.bank.indices.toList(), seed),
@@ -47,7 +47,7 @@ data class CheckResult(val holes: List<HoleResult>) {
         }
 }
 
-fun check(ex: Exercise, s: ExerciseState): CheckResult? {
+fun checkExercise(ex: Exercise, s: ExerciseState): CheckResult? {
     if (s.placed.size != ex.holes.size || s.placed.any { it == null }) return null
     val results = ex.holes.mapIndexed { h, hole ->
         val chip = ex.bank.getOrNull(s.placed[h]!!) ?: return null

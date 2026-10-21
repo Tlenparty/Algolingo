@@ -87,7 +87,7 @@ fun validate(lesson: Lesson): List<String> {
                 used += t
                 if (t !in bankTexts) errors += "$e: hole $h text '$t' missing from bank"
             }
-            // map keys escape strict decoding: catch typos and entries check() can never reach
+            // map keys escape strict decoding: catch typos and entries checkExercise() can never reach
             hole.wrongWhy.forEach { (k, v) ->
                 if (k !in bankTexts) errors += "$e: hole $h wrongWhy key '$k' not in bank"
                 if (k in hole.ok || hole.acceptable.any { it.text == k }) errors += "$e: hole $h wrongWhy key '$k' is a correct answer"
@@ -100,7 +100,7 @@ fun validate(lesson: Lesson): List<String> {
             val have = bankTexts.count { it == t }
             if (have < n && have > 0) errors += "$e: '$t' needed $n times, bank has $have"
         }
-        // check() reads only the placed hole's wrongWhy, then chip.why: a distractor needs a why wherever it can land.
+        // checkExercise() reads only the placed hole's wrongWhy, then chip.why: a distractor needs a why wherever it can land.
         for (c in ex.bank) if (c.text !in used && c.why.isNullOrBlank()) {
             ex.holes.forEachIndexed { h, hole ->
                 if (hole.wrongWhy[c.text].isNullOrBlank()) errors += "$e: distractor '${c.text}' has no why for hole $h"
