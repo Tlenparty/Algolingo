@@ -12,7 +12,7 @@
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 1: Project Skeleton** - KMP + Compose Multiplatform проект запускается на Android и iOS-симуляторе и читает JSON из ресурсов (completed 2026-10-21)
-- [ ] **Phase 01.1: Knowledge Base** (INSERTED) - Все 23 Obsidian-заметки читаются в приложении: разделы, спойлеры, ссылки, поиск
+- [x] **Phase 01.1: Knowledge Base** (INSERTED) - Все 23 Obsidian-заметки читаются в приложении: разделы, спойлеры, ссылки, поиск (completed 2026-10-21)
 - [ ] **Phase 2: Content Schema & Engine** - Чистая модель контента, движок дырок и редьюсер урока, покрытые тестами
 - [ ] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог
 - [ ] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками
@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Skeleton | 2/2 | Complete    | 2026-10-21 |
-| 01.1 Knowledge Base | 3/4 | In Progress|  |
+| 01.1 Knowledge Base | 4/4 | Complete   | 2026-10-21 |
 | 2. Content Schema & Engine | 0/TBD | Not started | - |
 | 3. Lesson & Exercise UI | 0/TBD | Not started | - |
 | 4. Progress & Review | 0/TBD | Not started | - |
