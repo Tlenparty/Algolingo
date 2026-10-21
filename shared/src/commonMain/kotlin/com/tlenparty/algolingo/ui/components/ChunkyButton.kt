@@ -52,7 +52,8 @@ internal fun ChunkyBox(
     val click = if (onClick != null) {
         Modifier.clickable(source, indication = null, enabled = enabled, role = Role.Button, onClick = onClick)
     } else Modifier
-    Box(modifier.then(click)) {
+    // propagateMinConstraints: a fixed/full width on [modifier] reaches the face; wrap-content callers are unaffected.
+    Box(modifier.then(click), propagateMinConstraints = true) {
         if (ledge != null) Box(Modifier.matchParentSize().background(ledge, shape))
         Box(
             Modifier.padding(bottom = 4.dp)
