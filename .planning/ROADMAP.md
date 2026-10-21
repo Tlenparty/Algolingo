@@ -34,12 +34,12 @@
   3. Стартовый экран показывает данные, прочитанные из JSON-файла в `files/` ресурсов, на обеих платформах
   4. `./gradlew` (Android) и `xcodebuild` (iOS-симулятор) успешно собирают проект из чистого клона
 
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Wizard scaffold + pins + hello.json slice, run on Android emulator (PLAT-01)
+- [x] 01-01-PLAN.md — Wizard scaffold + pins + hello.json slice, run on Android emulator (PLAT-01)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -136,7 +136,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Skeleton | 0/TBD | Not started | - |
+| 1. Project Skeleton | 1/2 | In Progress|  |
 | 01.1 Knowledge Base | 0/TBD | Not started | - |
 | 2. Content Schema & Engine | 0/TBD | Not started | - |
 | 3. Lesson & Exercise UI | 0/TBD | Not started | - |
