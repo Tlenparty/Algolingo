@@ -34,6 +34,12 @@ class ReducerTest {
         assertNotNull(LessonReducer.start(lessonOf("a"), 1).current)
     }
 
+    @Test fun theoryWithoutExercisesEndsInDone() {
+        val s = LessonReducer.start(lessonOf(theory = 1), 1)
+        assertEquals(Phase.Theory(0), s.phase)
+        assertEquals(Phase.Done, run(s, NextTheory).phase)
+    }
+
     @Test fun wrongThreeTimesFails() {
         var s = LessonReducer.start(lessonOf("a", "b"), 1)
         s = failCurrent(s)

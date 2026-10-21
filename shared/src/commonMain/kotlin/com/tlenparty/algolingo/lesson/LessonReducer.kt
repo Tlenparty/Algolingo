@@ -72,8 +72,13 @@ object LessonReducer {
         val ex = exerciseOf(s, id)
         val cur = s.current
         return when {
-            a is LessonAction.NextTheory && p is Phase.Theory ->
-                s.copy(phase = if (p.index + 1 < s.lesson.theory.size) Phase.Theory(p.index + 1) else Phase.Exercise)
+            a is LessonAction.NextTheory && p is Phase.Theory -> s.copy(
+                phase = when {
+                    p.index + 1 < s.lesson.theory.size -> Phase.Theory(p.index + 1)
+                    s.current == null -> Phase.Done // no playable exercise: never strand the UI in Exercise
+                    else -> Phase.Exercise
+                }
+            )
 
             a is LessonAction.TapChip && p is Phase.Exercise && cur != null -> s.copy(current = tapChip(cur, a.id))
             a is LessonAction.TapHole && p is Phase.Exercise && cur != null -> s.copy(current = tapHole(cur, a.h))
