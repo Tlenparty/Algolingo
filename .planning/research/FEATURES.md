@@ -8,7 +8,7 @@
 
 ## 0. The user's content and how it maps onto features (read first)
 
-The source notes are in `/Users/user/Yandex.Disk.localized/Матрицы/Алгоритмы/`. They are already close to a lesson spec. A task card in `05 Тренажёр решений` has this structure:
+The source notes are in `$HOME/Yandex.Disk.localized/Матрицы/Алгоритмы/`. They are already close to a lesson spec. A task card in `05 Тренажёр решений` has this structure:
 
 | Note element | Example (level 0) | App feature it feeds |
 |---|---|---|
@@ -207,7 +207,7 @@ Timer on ⏱ ──conflicts──> tap-based skill measurement
 
 ## Sources
 
-- User's notes (read directly, HIGH): `/Users/user/Yandex.Disk.localized/Матрицы/Алгоритмы/` — `05 Тренажёр решений.md` (level 0, progress table, method), `06 Движок «маркеры и дырки».md`, `00 Компас алгоритмов.md`, `04 Маркеры + Заготовки.md` §3/§7, `03 Тренажёр задач.md` level 1
+- User's notes (read directly, HIGH): `$HOME/Yandex.Disk.localized/Матрицы/Алгоритмы/` — `05 Тренажёр решений.md` (level 0, progress table, method), `06 Движок «маркеры и дырки».md`, `00 Компас алгоритмов.md`, `04 Маркеры + Заготовки.md` §3/§7, `03 Тренажёр задач.md` level 1
 - [Distractors Make You Pay Attention (ICER 2024)](https://dl.acm.org/doi/fullHtml/10.1145/3632620.3671114) — HIGH
 - [Distractors in Parsons Problems Decrease Learning Efficiency (Harms et al.)](https://www.researchgate.net/publication/310819145_Distractors_in_Parsons_Problems_Decrease_Learning_Efficiency_for_Young_Novice_Programmers) — HIGH
 - [Parsons Problems and Beyond: systematic review (Ericson et al. 2022)](https://juholeinonen.com/assets/pdf/ericson2022parsons.pdf) — HIGH (paired distractors recommended)

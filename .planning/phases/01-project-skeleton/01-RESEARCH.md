@@ -33,9 +33,9 @@ Verify with the CLI commands in "Code Examples", including screenshots via `simc
 - Offline: no network or backend at runtime (this phase reads only bundled resources).
 - UI/theory in Russian; code in Kotlin.
 - iOS: simulator only for MVP, no Apple Developer signing. Use `CODE_SIGNING_ALLOWED=NO` for CLI builds.
-- Repo: github.com/Tlenparty/Algolingo (private), branch `main`.
+- Repo: github.com/Tlenparty/Algolingo (public), branch `main`.
 - STACK.md guiding principle: minimal dependencies. No DI, no network library, no DB.
-- PITFALLS.md: keep the project at `/Users/user/work/Algolingo`, never under Yandex.Disk. Use only `iosArm64` + `iosSimulatorArm64`. Turn sandboxing off. Put resources in the module that generates `Res`. Record versions in the README.
+- PITFALLS.md: keep the project at `$HOME/work/Algolingo`, never under Yandex.Disk. Use only `iosArm64` + `iosSimulatorArm64`. Turn sandboxing off. Put resources in the module that generates `Res`. Record versions in the README.
 
 <phase_requirements>
 ## Phase Requirements
@@ -158,7 +158,7 @@ Algolingo/
 **How to avoid:** Delete the `toolchainVendor=AZUL` line and keep `toolchainVersion=21`. The Homebrew JDK 21 (registered with `/usr/libexec/java_home`) then matches. Alternatively delete the file and rely on `JAVA_HOME`. After the change, run `./gradlew --stop` and check the daemon JVM in the build output or with `./gradlew -q javaToolchains`. [VERIFIED: observed download in this session; the vendor-line fix is [ASSUMED]. The executor should confirm no new entry appears in `~/.gradle/jdks`.]
 
 ### Pitfall 2: Several adb devices are attached, so commands hit the user's phone
-**What goes wrong:** A physical device (`29211FDH200046`) is connected to this Mac. A bare `adb install` before the emulator came up installed the test APK on the **physical phone**. It was uninstalled right away. Once both are online, a bare `adb` fails with "more than one device".
+**What goes wrong:** A physical device (`<phone-serial>`) is connected to this Mac. A bare `adb install` before the emulator came up installed the test APK on the **physical phone**. It was uninstalled right away. Once both are online, a bare `adb` fails with "more than one device".
 **How to avoid:** Always pass `adb -s emulator-5554 …`. Get the serial from `adb devices | grep emulator`. Wait for `sys.boot_completed` on that serial.
 
 ### Pitfall 3: Catalog sed edits hit the plugin alias
@@ -167,7 +167,7 @@ Algolingo/
 
 ### Pitfall 4: Wrong simulator name
 **What goes wrong:** `name=iPhone 16` (from PITFALLS.md) doesn't exist; only the iOS 26.2 runtime is installed.
-**How to avoid:** Use `name=iPhone 17` (UDID 4461DE0A-043A-4C3B-8D48-DB6418058861 on this machine). Use `xcrun simctl list devices available` to re-check.
+**How to avoid:** Use `name=iPhone 17` (UDID <sim-udid> on this machine). Use `xcrun simctl list devices available` to re-check.
 
 ### Pitfall 5: The Xcode build phase can't find Java / sandboxing
 **What goes wrong:** In GUI Xcode, `JAVA_HOME` isn't inherited, and sandboxing breaks the script.
@@ -178,7 +178,7 @@ Algolingo/
 **How to avoid:** Before the screenshot, wait about 20s after `boot_completed`, or dismiss with `adb -s $E shell input keyevent KEYCODE_BACK` and relaunch. It's cosmetic; don't treat it as an app failure.
 
 ### Pitfall 7: Wizard artifacts that must not be committed
-`local.properties` (empty `sdk.dir=`) is in the zip, so delete it. `ANDROID_HOME=/Users/user/Library/Android/sdk` is set in the environment, and the build worked without the file. `.idea/receipt.json` is covered by `.idea` ignore. Merge the wizard `.gitignore` into the existing one. It adds `**/build/`, `captures`, `*.xcodeproj/*` with `!project.pbxproj` etc. The existing `build/` entry already covers `build/` at any depth.
+`local.properties` (empty `sdk.dir=`) is in the zip, so delete it. `ANDROID_HOME=$HOME/Library/Android/sdk` is set in the environment, and the build worked without the file. `.idea/receipt.json` is covered by `.idea` ignore. Merge the wizard `.gitignore` into the existing one. It adds `**/build/`, `captures`, `*.xcodeproj/*` with `!project.pbxproj` etc. The existing `build/` entry already covers `build/` at any depth.
 
 ### Pitfall 8: Package/bundle id
 The wizard takes `id=` as the package. Choose the final id now (e.g. `com.tlenparty.algolingo` [ASSUMED: user to confirm]). Changing it later touches the package dirs, `applicationId`, the shared namespace, and `PRODUCT_BUNDLE_IDENTIFIER` in `Config.xcconfig` (wizard appends `.Algolingo$(TEAM_ID)`, i.e. `<id>.Algolingo`). The `Res` package depends on the **project name + module** (`algolingo.shared.generated.resources`), not on the id.
@@ -197,7 +197,7 @@ curl -sSf -G -o kmp.zip https://kmp.jetbrains.com/generateKmtProject \
   --data-urlencode 'spec={"template_id":"kmt","targets":{"android":{"ui":["compose"]},"ios":{"ui":["compose"]}},"include_tests":true}'
 unzip -q kmp.zip            # -> ./Algolingo/...
 # copy contents into the repo root, preserving the existing .git, README.md, CLAUDE.md, .planning/
-rsync -a --exclude local.properties --exclude .gitignore --exclude README.md Algolingo/ /Users/user/work/Algolingo/
+rsync -a --exclude local.properties --exclude .gitignore --exclude README.md Algolingo/ $HOME/work/Algolingo/
 ```
 Notes:
 - Adding `buildSystem=gradle` / `locale=en` params returned HTTP 400 in testing, so omit them.
@@ -258,7 +258,7 @@ After deleting `Greeting.kt` / `GreetingUtil.kt`, remove the `compose_multiplatf
 
 ### 4. Verification commands (all verified on this machine)
 ```bash
-cd /Users/user/work/Algolingo
+cd $HOME/work/Algolingo
 # Android build + tests (~2.5 min cold)
 ./gradlew :androidApp:assembleDebug :shared:testAndroidHostTest --console=plain
 # iOS common tests (optional, slower)
@@ -290,7 +290,7 @@ The executor should Read both PNGs and confirm the JSON title and subtitle are v
 
 ### 5. "Clean clone" check (success criterion 4)
 ```bash
-rm -rf /tmp/algolingo-clone && git clone /Users/user/work/Algolingo /tmp/algolingo-clone && cd /tmp/algolingo-clone
+rm -rf /tmp/algolingo-clone && git clone $HOME/work/Algolingo /tmp/algolingo-clone && cd /tmp/algolingo-clone
 ./gradlew --stop && ./gradlew :androidApp:assembleDebug && \
 xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator \
   -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO build
@@ -314,10 +314,10 @@ Cloning from the local repo (after commit) avoids needing GitHub auth.
 | A2 | Package id `com.tlenparty.algolingo` | Pitfall 8 / Example 1 | Renaming later costs about 30 min; ask the user or accept the default |
 | A3 | The `generateKmtProject` endpoint stays stable | Example 1 | Low: browser download fallback gives identical output |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Final applicationId / bundle id.** Recommendation: `com.tlenparty.algolingo` (matches the GitHub owner). The planner can lock it as the default unless the user objects.
-2. **Keep or drop the wizard's device-test config (`withDeviceTestBuilder`) and the sample tests?** Recommendation: keep the sample tests. They are a ready `commonTest` and `androidHostTest` scaffold that Phase 2 uses. Device tests are harmless.
+1. **Final applicationId / bundle id.** RESOLVED: `com.tlenparty.algolingo` (D-01, customer decision). Recommendation: `com.tlenparty.algolingo` (matches the GitHub owner). The planner can lock it as the default unless the user objects.
+2. **Keep or drop the wizard's device-test config (`withDeviceTestBuilder`) and the sample tests?** RESOLVED: keep the sample tests (D-05). Recommendation: keep the sample tests. They are a ready `commonTest` and `androidHostTest` scaffold that Phase 2 uses. Device tests are harmless.
 
 ## Environment Availability
 
@@ -326,14 +326,14 @@ Cloning from the local repo (after commit) avoids needing GitHub auth.
 | JDK 21 | Gradle | ✓ | Homebrew OpenJDK 21.0.10 (+ Zulu 21.0.11 auto-downloaded into ~/.gradle/jdks during research) | — |
 | Gradle 9.7.1 dist | wrapper | ✓ cached | 9.7.1 | — |
 | Android SDK | build/emulator | ✓ `ANDROID_HOME=~/Library/Android/sdk` | platform 37.0, build-tools 36.1 | — |
-| Android emulator AVD | PLAT-01 check | ✓ | `Medium_Phone_API_36.1`, `Pixel_4_XL` | Physical phone `29211FDH200046` (only with explicit `-s`) |
+| Android emulator AVD | PLAT-01 check | ✓ | `Medium_Phone_API_36.1`, `Pixel_4_XL` | Physical phone `<phone-serial>` (only with explicit `-s`) |
 | Xcode | PLAT-02 | ✓ | 26.2 (17C52); verified working | Upgrade to 26.4 only if K/N errors |
 | iOS simulator | PLAT-02 | ✓ | iOS 26.2, iPhone 17 | — |
 | Kotlin/Native toolchain | iOS link | ✓ (2.4.21 was downloaded into ~/.konan during research) | 2.4.21 | — |
 | Android Studio | optional IDE | ✓ at `~/Applications/Android Studio Rabbit 1 2026.2.1 Nightly.app` | Nightly | CLI path works without it |
 | Network | first build (deps) | ✓ | — | Caches are now warm for these exact pins |
 
-The global `~/.gradle/gradle.properties` (preferIPv4Stack, a routeApiUrl) and `init.gradle.kts` (scoped to `/Users/user/work/aura`) are harmless for this project. Verified: the build succeeded with them present.
+The global `~/.gradle/gradle.properties` (preferIPv4Stack, a routeApiUrl) and `init.gradle.kts` (scoped to `$HOME/work/aura`) are harmless for this project. Verified: the build succeeded with them present.
 
 ## Security Domain
 

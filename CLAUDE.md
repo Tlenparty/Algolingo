@@ -13,7 +13,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 - **Offline**: всё работает без сети, без бэкенда — бесплатная версия, ноль инфраструктуры
 - **Content language**: интерфейс и теория на русском; код на Kotlin
 - **iOS**: на этапе MVP достаточно симулятора — нет Apple Developer подписи
-- **Repo**: https://github.com/Tlenparty/Algolingo (private), ветка main
+- **Repo**: https://github.com/Tlenparty/Algolingo (public), ветка main — не коммитить local.properties, секреты и локальные пути
 <!-- GSD:project-end -->
 
 <!-- GSD:stack-start source:research/STACK.md -->

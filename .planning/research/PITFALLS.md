@@ -132,7 +132,7 @@ In the same folder, `05 Тренажёр решений.md` is stored as **NFD**
 - In the generator, `Normalizer.normalize(name, NFC)` for every name and every wikilink before comparing.
 - **Never use file names as content IDs.** The ID is the task number from the header (`0.1`, `0.4`) → `lvl0.binsearch`. These are stable ASCII identifiers.
 - Commit the source `.md` files into the repo (`content-src/`) under ASCII names (`05-trainer.md`), and run the generator only on those. Syncing from Yandex.Disk is a separate manual `cp` step. CI then never touches Cyrillic paths.
-- Don't put the KMP project inside `Yandex.Disk.localized`. Syncing `build/`, `.gradle/`, and DerivedData makes Gradle/Xcode builds unstable, and a path with Cyrillic, spaces, and `«»` is a risk for Xcode shell phases. The project is already in `/Users/user/work/Algolingo`, so keep it there.
+- Don't put the KMP project inside `Yandex.Disk.localized`. Syncing `build/`, `.gradle/`, and DerivedData makes Gradle/Xcode builds unstable, and a path with Cyrillic, spaces, and `«»` is a risk for Xcode shell phases. The project is already in `$HOME/work/Algolingo`, so keep it there.
 
 **Warning signs:**
 "File not found" only in CI. A wikilink resolves for `03` but not for `05`.
@@ -381,7 +381,7 @@ Judge performance only on a real device (or not at all in the MVP). Give state a
 
 ## Sources
 
-- Real notes: `/Users/user/Yandex.Disk.localized/Матрицы/Алгоритмы/05 Тренажёр решений.md`, `06 Движок «маркеры и дырки».md` (callouts, fences, VS16, and Unicode normalization of file names were checked with python `unicodedata` and `xxd`; the 2.4 bug was traced by hand on `[1,2,3,4]`) (HIGH)
+- Real notes: `$HOME/Yandex.Disk.localized/Матрицы/Алгоритмы/05 Тренажёр решений.md`, `06 Движок «маркеры и дырки».md` (callouts, fences, VS16, and Unicode normalization of file names were checked with python `unicodedata` and `xxd`; the 2.4 bug was traced by hand on `[1,2,3,4]`) (HIGH)
 - [What's new in Compose Multiplatform 1.12.2](https://kotlinlang.org/docs/multiplatform/whats-new-compose-112.html), [1.11.1](https://kotlinlang.org/docs/multiplatform/whats-new-compose-111.html) (iosX64 removed, iOS 14 minimum, native text input experimental) (HIGH)
 - [CMP 1.8.0: iOS Stable](https://blog.jetbrains.com/kotlin/2025/05/compose-multiplatform-1-8-0-released-compose-multiplatform-for-ios-is-stable-and-production-ready/) (HIGH)
 - [Gradle issue #27068: Xcode User Script Sandboxing](https://github.com/gradle/gradle/issues/27068), [Kotlin Slack thread on sandbox](https://slack-chats.kotlinlang.org/t/26854439/is-there-a-way-to-opt-out-of-user-script-sandbox-checking-wh) (MEDIUM-HIGH)

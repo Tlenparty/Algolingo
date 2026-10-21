@@ -91,7 +91,7 @@ Algolingo/
 ### Structure Rationale
 
 - **`androidApp` separate:** required by AGP 9. Keep it to `MainActivity` and `setContent { App(graph) }`. Note `androidResources { enable = true }` in the `composeApp` `androidLibrary {}` block. Without it, Compose resources can be packed incorrectly after the migration (one community report, MEDIUM confidence).
-- **Generated JSON committed to git:** the Gradle build must not depend on `/Users/user/Yandex.Disk.localized/...`. CI, a second machine or a Yandex.Disk sync glitch would break builds. Regenerating is an explicit author action, and the diff is reviewable.
+- **Generated JSON committed to git:** the Gradle build must not depend on `$HOME/Yandex.Disk.localized/...`. CI, a second machine or a Yandex.Disk sync glitch would break builds. Regenerating is an explicit author action, and the diff is reviewable.
 - **Sidecar in repo, not in the vault:** the notes stay clean prose for reading in Obsidian. The markup (holes, distractors) is app-specific and versioned with the app.
 - **Tests mostly in commonTest:** the engine and session are pure, so tests run on JVM and iOS without emulators.
 

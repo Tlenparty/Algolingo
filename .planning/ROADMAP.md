@@ -30,7 +30,11 @@
   2. То же приложение (общий Compose UI) открывается на iOS-симуляторе
   3. Стартовый экран показывает данные, прочитанные из JSON-файла в `files/` ресурсов, на обеих платформах
   4. `./gradlew` (Android) и `xcodebuild` (iOS-симулятор) успешно собирают проект из чистого клона
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Wizard scaffold + pins + hello.json slice, run on Android emulator (PLAT-01)
+- [ ] 01-02-PLAN.md — iOS simulator run, README versions, clean-clone builds (PLAT-02)
 
 ### Phase 01.1: Knowledge Base (INSERTED)
 **Goal**: Пользователь может читать и учить всю базу знаний из Obsidian (23 заметки) с телефона — в похожей структуре, со свёрнутыми спойлерами и поиском
