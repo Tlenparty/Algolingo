@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -128,9 +126,14 @@ fun BlockView(
             }
         }
         is Table -> Column(pad.horizontalScroll(rememberScrollState())) {
-            for ((r, row) in (listOf(block.header) + block.rows).withIndex()) {
+            val all = listOf(block.header) + block.rows
+            // One width per column so cells line up across rows. ponytail: width from char count, measure text if it looks off.
+            val widths = (0 until all.maxOf { it.size }).map { c ->
+                (all.maxOf { it.getOrNull(c)?.length ?: 0 } * 8 + 16).coerceIn(80, 240).dp
+            }
+            for ((r, row) in all.withIndex()) {
                 Row {
-                    for (cell in row) Inl(cell, Modifier.widthIn(min = 120.dp, max = 240.dp).padding(4.dp), bold = r == 0, resolvable = resolvable, onLink = onLink)
+                    for ((c, cell) in row.withIndex()) Inl(cell, Modifier.width(widths[c]).padding(4.dp), bold = r == 0, resolvable = resolvable, onLink = onLink)
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outline)
             }
