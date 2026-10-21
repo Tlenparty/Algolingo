@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -44,13 +45,15 @@ fun HomeScreen(onStart: (String) -> Unit) {
                     ChunkyBox(
                         face = s.primary, ledge = c.greenLedge, border = null, shape = AlgoTheme.shapes.pill,
                         faceMinHeight = AlgoTheme.sizes.pillFace, enabled = true, onClick = { onStart(l.id) },
+                        // The one focus stop per lesson: node and caption below are hidden from accessibility.
+                        modifier = Modifier.semantics { contentDescription = "Начать: ${l.caption}" },
                     ) {
                         Text("Начать", style = t.button, color = s.onPrimary, modifier = Modifier.padding(horizontal = AlgoTheme.spacing.pillX))
                     }
                     ChunkyBox(
                         face = s.primary, ledge = c.greenLedge, border = null, shape = AlgoTheme.shapes.node,
                         faceMinHeight = AlgoTheme.sizes.node, enabled = true, onClick = { onStart(l.id) },
-                        modifier = Modifier.semantics { contentDescription = l.caption },
+                        modifier = Modifier.clearAndSetSemantics {},
                     ) {
                         Box(Modifier.size(AlgoTheme.sizes.node), contentAlignment = Alignment.Center) {
                             val ink = s.onPrimary
@@ -61,7 +64,8 @@ fun HomeScreen(onStart: (String) -> Unit) {
                     }
                     Text(
                         l.caption, style = t.label, color = c.secondaryText, textAlign = TextAlign.Center,
-                        maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(AlgoTheme.sizes.nodeCaption),
+                        maxLines = 2, overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.width(AlgoTheme.sizes.nodeCaption).clearAndSetSemantics {},
                     )
                 }
             }

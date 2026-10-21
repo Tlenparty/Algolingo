@@ -93,8 +93,14 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
     val fill by animateColorAsState(target.first, tween(200))
     val border by animateColorAsState(target.second, tween(200))
     val ink by animateColorAsState(target.third, tween(200))
+    val verdict = when (visual) {
+        HoleVisual.Ok -> ": верно"
+        HoleVisual.Acceptable -> ": принято"
+        HoleVisual.Wrong -> ": ошибка"
+        else -> ""
+    }
     val desc = when {
-        text != null -> "Дырка ${index + 1}: $text"
+        text != null -> "Дырка ${index + 1}: $text$verdict"
         visual == HoleVisual.EmptySelected -> "Дырка ${index + 1}: выбрана"
         else -> "Дырка ${index + 1}: пусто"
     }
