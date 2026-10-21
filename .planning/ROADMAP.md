@@ -14,7 +14,7 @@
 - [x] **Phase 1: Project Skeleton** - KMP + Compose Multiplatform проект запускается на Android и iOS-симуляторе и читает JSON из ресурсов (completed 2026-10-21)
 - [x] **Phase 01.1: Knowledge Base** (INSERTED) - Все 23 Obsidian-заметки читаются в приложении: разделы, спойлеры, ссылки, поиск (completed 2026-10-21)
 - [x] **Phase 2: Content Schema & Engine** - Чистая модель контента, движок дырок и редьюсер урока, покрытые тестами (completed 2026-10-21)
-- [ ] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог
+- [x] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог (completed 2026-10-21)
 - [ ] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками
 - [ ] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах
 
@@ -93,7 +93,7 @@ Plans:
   5. В конце урока пользователь видит итог: ✅ / 💡 / ❌ и заработанные XP
   6. Интерфейс в игривом стиле по UI-SPEC, светлая и тёмная тема переключаются вместе с системой
 
-**Plans:** 9/10 plans executed
+**Plans:** 10/10 plans complete
 **UI hint**: yes
 
 Plans:
@@ -106,7 +106,7 @@ Plans:
 - [x] 03-07-PLAN.md — Wire Home -> lesson -> Home
 - [x] 03-09-PLAN.md — :design module with AlgoTheme tokens, fonts, highlight; shared switched to AlgoTheme
 - [x] 03-10-PLAN.md — Reusable components into :design, no raw dp/sp in shared UI
-- [ ] 03-08-PLAN.md — Full build + device walkthrough (human-verify), runs last
+- [x] 03-08-PLAN.md — Full build + device walkthrough (human-verify), runs last
 
 ### Phase 4: Progress & Review
 
@@ -151,6 +151,6 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 1. Project Skeleton | 2/2 | Complete    | 2026-10-21 |
 | 01.1 Knowledge Base | 4/4 | Complete    | 2026-10-21 |
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
-| 3. Lesson & Exercise UI | 9/10 | In Progress|  |
+| 3. Lesson & Exercise UI | 10/10 | Complete   | 2026-10-21 |
 | 4. Progress & Review | 0/TBD | Not started | - |
 | 5. Level 0 Content & End-to-End | 0/TBD | Not started | - |
