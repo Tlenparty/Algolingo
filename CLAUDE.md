@@ -33,7 +33,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 | Xcode | **26.4** | iOS simulator build | This is the Xcode version tested with Kotlin 2.4.20+. A simulator is enough and needs no signing. | HIGH |
 | JDK | 17 (JetBrains Runtime bundled with Android Studio) | Gradle daemon | Android target uses `JvmTarget.JVM_11` as in the official samples. | MEDIUM |
 ### Project Template / Module Layout
-- Use **one shared module**. Do not split into sharedLogic and sharedUI: that split only matters when some app uses native UI, and here none does ([recommended structure](https://kotlinlang.org/docs/multiplatform/multiplatform-project-recommended-structure.html)).
+- Modules: `shared` (app logic + screens: lesson, kb, home, navigation, content loading), `design` (AlgoTheme design tokens — colors, typography, spacing, sizes, shapes — plus fonts, syntax highlight, and reusable components with no lesson/kb domain types), `androidApp`, `iosApp`. `shared` depends on `design`; `design` depends on nothing in the project. Both `shared` and `design` use `com.android.kotlin.multiplatform.library`. UI code in `shared` reads sizes and colors from `AlgoTheme.*` and does not hard-code dp/sp/`Color(0x...)`.
 - The Android config lives in a `kotlin { androidLibrary { namespace = ...; androidResources { enable = true } } }` block. The old `androidTarget()` and `com.android.library` do not work with AGP 9.
 - `debugImplementation(uiTooling)` becomes `androidRuntimeClasspath(...)`, because the new plugin has no build variants.
 ### Supporting Libraries (the complete list)
@@ -79,7 +79,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 ## What NOT to Use
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| `com.android.library` / `com.android.application` inside the KMP module, `androidTarget {}` | Incompatible with the KMP plugin under AGP 9. The legacy flag `android.enableLegacyVariantApi` goes away in AGP 10. | `com.android.kotlin.multiplatform.library` in shared; a separate `androidApp` module |
+| `com.android.library` / `com.android.application` inside the KMP module, `androidTarget {}` | Incompatible with the KMP plugin under AGP 9. The legacy flag `android.enableLegacyVariantApi` goes away in AGP 10. | `com.android.kotlin.multiplatform.library` in shared and design; a separate `androidApp` module |
 | Ktor, Coil, any network library | Offline app, no images from the network | Nothing |
 | Koin/Kodein/kotlin-inject/Metro | A DI container for about 5 objects | Constructor args + one `AppGraph` |
 | Room / SQLDelight for MVP | Schema, KSP/codegen, migrations and a driver per platform, all for a few KB of state | JSON blob in the platform key-value store |
