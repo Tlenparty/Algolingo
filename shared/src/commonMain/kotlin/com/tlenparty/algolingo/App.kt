@@ -17,6 +17,8 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -79,25 +81,30 @@ fun App() {
         ) { pad ->
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
                 composable<Home> { HomeStub() }
-                composable<KbList> {
-                    if (loaded) KbListScreen(repo.notes, { nav.navigate(NoteRoute(it.id)) }, search = repo::search) else Text("…")
+                composable<KbList> { entry ->
+                    if (loaded) KbListScreen(repo.notes, { n -> entry.ifResumed { nav.navigate(NoteRoute(n.id)) } }, search = repo::search) else Text("…")
                 }
-                composable<NoteRoute> {
+                composable<NoteRoute> { entry ->
                     // Reading `loaded` here re-composes this entry once notes arrive (Activity recreation restores NoteRoute first).
                     if (!loaded) { Text("…"); return@composable }
-                    val route = it.toRoute<NoteRoute>()
+                    val route = entry.toRoute<NoteRoute>()
                     val note = repo.byId(route.id)
                     if (note != null) NoteScreen(
                         note, route.anchor,
                         resolvable = { t -> repo.resolve(t) != null },
-                        onLink = { t, a -> repo.resolve(t)?.let { n -> nav.navigate(NoteRoute(n.id, a)) } },
-                        onBack = { nav.popBackStack() },
+                        onLink = { t, a -> entry.ifResumed { repo.resolve(t)?.let { n -> nav.navigate(NoteRoute(n.id, a)) } } },
+                        onBack = { entry.ifResumed { nav.popBackStack() } },
                     )
                     else Text("Заметка не найдена")
                 }
             }
         }
     }
+}
+
+/** Ignores clicks while the entry is transitioning out, so a double tap cannot pop/push twice. */
+private fun NavBackStackEntry.ifResumed(block: () -> Unit) {
+    if (lifecycle.currentState == Lifecycle.State.RESUMED) block()
 }
 
 private fun androidx.navigation.NavController.switchTab(route: Any) = navigate(route) {
