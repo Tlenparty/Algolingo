@@ -101,9 +101,8 @@ class AlgoTypography(ui: FontFamily, val code: FontFamily) {
     val codeBold = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold)
     val codeChip = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Bold)
 
-    /** Emoji glyph sizes: top bar ✕/💡, Home path node ▶, summary hero. */
+    /** Emoji glyph sizes: top bar ✕/💡, summary hero. */
     val iconEmoji: TextUnit = 24.sp
-    val nodeEmoji: TextUnit = 28.sp
     val heroEmoji: TextUnit = 64.sp
 }
 
@@ -132,6 +131,8 @@ data class AlgoSizes(
     val holeMinWidth: Dp = 48.dp,
     val codeLine: Dp = 24.dp,
     val node: Dp = 72.dp,
+    /** Home node ▶, drawn as a path (U+25B6 falls back to the colour emoji on iOS). */
+    val nodeGlyph: Dp = 24.dp,
     val nodeCaption: Dp = 160.dp,
     val contentMaxWidth: Dp = 600.dp,
     val dialogButton: Dp = 140.dp,

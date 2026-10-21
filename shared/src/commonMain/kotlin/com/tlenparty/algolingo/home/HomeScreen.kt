@@ -1,5 +1,6 @@
 package com.tlenparty.algolingo.home
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -47,7 +49,10 @@ fun HomeScreen(onStart: (String) -> Unit) {
                         Modifier.semantics { contentDescription = l.caption },
                     ) {
                         Box(Modifier.size(AlgoTheme.sizes.node), contentAlignment = Alignment.Center) {
-                            Text("▶", color = s.onPrimary, fontSize = AlgoTheme.typography.nodeEmoji)
+                            val ink = s.onPrimary
+                            Canvas(Modifier.size(AlgoTheme.sizes.nodeGlyph)) {
+                                drawPath(Path().apply { moveTo(0f, 0f); lineTo(size.width, size.height / 2); lineTo(0f, size.height); close() }, ink)
+                            }
                         }
                     }
                     Text(
