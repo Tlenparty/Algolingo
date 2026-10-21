@@ -35,6 +35,10 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 - [ ] **EXER-09**: Пользователь может открыть подсказки по одной; каждая снижает оценку; кнопка скрыта, если подсказок нет
 - [ ] **EXER-10**: После решения задачи пользователь видит эталонное решение, сложность (время/память), грабли и вариации
 
+### Visual Style
+
+- [ ] **UI-01**: Игривый стиль в духе Duolingo (яркий акцент, крупные «объёмные» кнопки и облачка); светлая и тёмная тема по системе
+
 ### Progress
 
 - [ ] **PROG-01**: Пользователь получает XP за решённые упражнения (меньше при подсказках/повторах)
@@ -74,7 +78,6 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 ### Content & Platform
 
 - **CNV2-01**: Уровни 1–5 тренажёра и лесенка 06
-- **CNV2-02**: Тёмная тема
 - **CNV2-03**: Запуск реального кода на отдельном VPS (Judge0 / kotlin-compiler-server)
 - **CNV2-04**: Подпись iOS, TestFlight, публикация в сторы (свои формулировки задач, поле `origin`)
 
@@ -99,13 +102,43 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (заполняется при создании roadmap) | | |
+| PLAT-01 | Phase 1 | Pending |
+| PLAT-02 | Phase 1 | Pending |
+| PLAT-03 | Phase 5 | Pending |
+| LESS-01 | Phase 4 | Pending |
+| LESS-02 | Phase 3 | Pending |
+| LESS-03 | Phase 2 | Pending |
+| LESS-04 | Phase 3 | Pending |
+| LESS-05 | Phase 2 | Pending |
+| LESS-06 | Phase 3 | Pending |
+| EXER-01 | Phase 3 | Pending |
+| EXER-02 | Phase 3 | Pending |
+| EXER-03 | Phase 3 | Pending |
+| EXER-04 | Phase 3 | Pending |
+| EXER-05 | Phase 2 | Pending |
+| EXER-06 | Phase 3 | Pending |
+| EXER-07 | Phase 3 | Pending |
+| EXER-08 | Phase 3 | Pending |
+| EXER-09 | Phase 3 | Pending |
+| EXER-10 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Pending |
+| PROG-01 | Phase 4 | Pending |
+| PROG-02 | Phase 4 | Pending |
+| PROG-03 | Phase 4 | Pending |
+| PROG-04 | Phase 4 | Pending |
+| PROG-05 | Phase 4 | Pending |
+| CONT-01 | Phase 5 | Pending |
+| CONT-02 | Phase 5 | Pending |
+| CONT-03 | Phase 5 | Pending |
+| CONT-04 | Phase 5 | Pending |
+| CONT-05 | Phase 5 | Pending |
+| CONT-06 | Phase 5 | Pending |
 
 **Coverage:**
-- v1 requirements: 30 total
-- Mapped to phases: 0
-- Unmapped: 30 ⚠️
+- v1 requirements: 31 total
+- Mapped to phases: 31
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-10-21*
-*Last updated: 2026-10-21 after initial definition*
+*Last updated: 2026-10-21 after roadmap creation*
