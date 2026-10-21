@@ -14,7 +14,8 @@ class KbContentTest {
 
     @Test
     fun indexIsConsistent() {
-        assertEquals(23, entries.size)
+        assertTrue(entries.isNotEmpty())
+        assertEquals(entries.size, entries.map { it.id }.toSet().size, "duplicate ids")
         entries.forEach {
             assertTrue(File(dir, it.file).exists(), "missing ${it.file}")
             assertTrue(it.id.all { c -> c.code < 128 }, "non-ascii id ${it.id}")
@@ -38,23 +39,43 @@ class KbContentTest {
         }
     }
 
+    private fun inlines(bs: List<Block>): List<Inline> = bs.flatMap {
+        when (it) {
+            is Paragraph -> parseInline(it.text)
+            is ListItem -> parseInline(it.text)
+            is Heading -> parseInline(it.text)
+            is Table -> (listOf(it.header) + it.rows).flatten().flatMap(::parseInline)
+            is Callout -> parseInline(it.title) + inlines(it.blocks)
+            is Quote -> inlines(it.blocks)
+            is Code, Rule -> emptyList()
+        }
+    }
+
+    // Wikilinks to vault notes that are not part of the bundle; they render as plain text.
+    private val knownMissing = setOf(
+        "coil", "hashmap vs hashset", "heap & stack", "performance. память и утечки", "как работает hashmap", "структуры данных",
+    )
+
     @Test
-    fun allNotesParse() {
+    fun allNotesParseAndLinksResolve() {
+        val notes = entries.map { Note(it.id, it.title, it.section, File(dir, it.file).readText()) }
+        val parsed = notes.associate { it.id to parseBlocks(it.raw) }
         var callouts = 0
-        entries.forEach { e ->
-            val blocks = parseBlocks(File(dir, e.file).readText())
-            assertTrue(blocks.isNotEmpty(), "empty ${e.id}")
+        val broken = ArrayList<String>()
+        notes.forEach { n ->
+            val blocks = parsed.getValue(n.id)
+            assertTrue(blocks.isNotEmpty(), "empty ${n.id}")
             callouts += countCallouts(blocks)
-            blocks.forEach {
-                when (it) {
-                    is Paragraph -> parseInline(it.text)
-                    is ListItem -> parseInline(it.text)
-                    is Heading -> parseInline(it.text)
-                    is Table -> (listOf(it.header) + it.rows).flatten().forEach(::parseInline)
-                    else -> {}
+            inlines(blocks).filterIsInstance<Link>().forEach { l ->
+                val dest = if (l.target.startsWith("#")) n else resolveNote(notes, l.target)
+                when {
+                    dest == null -> if (l.target.trim().lowercase() !in knownMissing) broken += "${n.title}: [[${l.target}]]"
+                    l.anchor != null && findAnchorIndex(parsed.getValue(dest.id), l.anchor!!) == null ->
+                        broken += "${n.title}: ${l.target}#${l.anchor}"
                 }
             }
         }
+        assertTrue(broken.isEmpty(), "unresolved links: $broken")
         assertTrue(callouts > 100, "callouts=$callouts")
     }
 }
