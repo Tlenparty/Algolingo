@@ -26,10 +26,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.ui)
+            // Public signatures expose Modifier/Color/Shape/Dp/TextStyle/ColumnScope: consumers get them via api.
+            api(libs.compose.runtime)
+            api(libs.compose.foundation)
+            api(libs.compose.material3)
+            api(libs.compose.ui)
             implementation(libs.compose.components.resources)
         }
     }

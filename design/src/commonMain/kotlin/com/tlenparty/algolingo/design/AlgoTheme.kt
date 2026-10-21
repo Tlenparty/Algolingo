@@ -41,20 +41,26 @@ data class AlgoColors(
 )
 
 private val LightApp = AlgoColors(
-    Color(0xFFD7FFB8), Color(0xFF2F7A00), Color(0xFFFFF4CC), Color(0xFF8A5A00),
-    Color(0xFFFFDFE0), Color(0xFFC62828), Color(0xFFDDF4FF), Color(0xFF0B6FA4),
-    Color(0xFFAF00DB), Color(0xFF0B6FA4), Color(0xFFA0522D), Color(0xFF6B6B6B),
-    Color(0xFF58A700), Color(0xFFFF4B4B), Color(0xFFEA2B2B),
-    Color(0xFFFFC800), Color(0xFFE5A500), Color(0xFF1CB0F6),
-    Color(0xFFE5E5E5), Color(0xFFAFAFAF), Color(0xFF6B6B6B), Color(0xFF2F7A00),
+    successTint = Color(0xFFD7FFB8), successText = Color(0xFF2F7A00),
+    acceptableTint = Color(0xFFFFF4CC), acceptableText = Color(0xFF8A5A00),
+    wrongTint = Color(0xFFFFDFE0), wrongText = Color(0xFFC62828),
+    focusTint = Color(0xFFDDF4FF), focusText = Color(0xFF0B6FA4),
+    keyword = Color(0xFFAF00DB), number = Color(0xFF0B6FA4), string = Color(0xFFA0522D), comment = Color(0xFF6B6B6B),
+    greenLedge = Color(0xFF58A700), redFill = Color(0xFFFF4B4B), redLedge = Color(0xFFEA2B2B),
+    amber = Color(0xFFFFC800), amberLedge = Color(0xFFE5A500), focus = Color(0xFF1CB0F6),
+    disabledFace = Color(0xFFE5E5E5), disabledLabel = Color(0xFFAFAFAF),
+    secondaryText = Color(0xFF6B6B6B), xpText = Color(0xFF2F7A00),
 )
 private val DarkApp = AlgoColors(
-    Color(0xFF1F3A1A), Color(0xFF9BE15D), Color(0xFF3A3220), Color(0xFFFFD54A),
-    Color(0xFF3A1F24), Color(0xFFFF8A8A), Color(0xFF1F3A4A), Color(0xFF4FC1FF),
-    Color(0xFFC586C0), Color(0xFF4FC1FF), Color(0xFFCE9178), Color(0xFF9AA9B1),
-    Color(0xFF58A700), Color(0xFFFF4B4B), Color(0xFFEA2B2B),
-    Color(0xFFFFC800), Color(0xFFE5A500), Color(0xFF1CB0F6),
-    Color(0xFF37464F), Color(0xFF52656D), Color(0xFF9AA9B1), Color(0xFF58CC02),
+    successTint = Color(0xFF1F3A1A), successText = Color(0xFF9BE15D),
+    acceptableTint = Color(0xFF3A3220), acceptableText = Color(0xFFFFD54A),
+    wrongTint = Color(0xFF3A1F24), wrongText = Color(0xFFFF8A8A),
+    focusTint = Color(0xFF1F3A4A), focusText = Color(0xFF4FC1FF),
+    keyword = Color(0xFFC586C0), number = Color(0xFF4FC1FF), string = Color(0xFFCE9178), comment = Color(0xFF9AA9B1),
+    greenLedge = Color(0xFF58A700), redFill = Color(0xFFFF4B4B), redLedge = Color(0xFFEA2B2B),
+    amber = Color(0xFFFFC800), amberLedge = Color(0xFFE5A500), focus = Color(0xFF1CB0F6),
+    disabledFace = Color(0xFF37464F), disabledLabel = Color(0xFF52656D),
+    secondaryText = Color(0xFF9AA9B1), xpText = Color(0xFF58CC02),
 )
 
 // Every M3 slot a stock component can read is set explicitly, so nothing falls back to the purple

@@ -41,12 +41,16 @@ fun HomeScreen(onStart: (String) -> Unit) {
         ) {
             lessons.forEach { l ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
-                    ChunkyBox(s.primary, c.greenLedge, null, AlgoTheme.shapes.pill, AlgoTheme.sizes.pillFace, true, { onStart(l.id) }) {
+                    ChunkyBox(
+                        face = s.primary, ledge = c.greenLedge, border = null, shape = AlgoTheme.shapes.pill,
+                        faceMinHeight = AlgoTheme.sizes.pillFace, enabled = true, onClick = { onStart(l.id) },
+                    ) {
                         Text("Начать", style = t.button, color = s.onPrimary, modifier = Modifier.padding(horizontal = AlgoTheme.spacing.pillX))
                     }
                     ChunkyBox(
-                        s.primary, c.greenLedge, null, AlgoTheme.shapes.node, AlgoTheme.sizes.node, true, { onStart(l.id) },
-                        Modifier.semantics { contentDescription = l.caption },
+                        face = s.primary, ledge = c.greenLedge, border = null, shape = AlgoTheme.shapes.node,
+                        faceMinHeight = AlgoTheme.sizes.node, enabled = true, onClick = { onStart(l.id) },
+                        modifier = Modifier.semantics { contentDescription = l.caption },
                     ) {
                         Box(Modifier.size(AlgoTheme.sizes.node), contentAlignment = Alignment.Center) {
                             val ink = s.onPrimary

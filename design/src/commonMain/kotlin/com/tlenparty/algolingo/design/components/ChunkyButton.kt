@@ -65,6 +65,9 @@ fun ChunkyBox(
     }
 }
 
+private data class Look(val face: Color, val ledge: Color?, val border: Color?, val label: Color)
+
+/** Fills the available width; constrain it with e.g. `Modifier.width(...)` in [modifier]. */
 @Composable
 fun ChunkyButton(
     text: String,
@@ -76,15 +79,17 @@ fun ChunkyButton(
     val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
     val ink = s.onPrimary
-    // face, ledge, border, label
-    val (face, ledge, border, label) = when {
-        !enabled -> listOf(c.disabledFace, null, null, c.disabledLabel)
-        style == ChunkyStyle.Primary -> listOf(s.primary, c.greenLedge, null, ink)
-        style == ChunkyStyle.Danger -> listOf(c.redFill, c.redLedge, null, ink)
-        style == ChunkyStyle.Amber -> listOf(c.amber, c.amberLedge, null, ink)
-        else -> listOf(s.background, s.outline, s.outline, s.onBackground)
+    val look = when {
+        !enabled -> Look(c.disabledFace, null, null, c.disabledLabel)
+        style == ChunkyStyle.Primary -> Look(s.primary, c.greenLedge, null, ink)
+        style == ChunkyStyle.Danger -> Look(c.redFill, c.redLedge, null, ink)
+        style == ChunkyStyle.Amber -> Look(c.amber, c.amberLedge, null, ink)
+        else -> Look(s.background, s.outline, s.outline, s.onBackground)
     }
-    ChunkyBox(face!!, ledge, border, AlgoTheme.shapes.large, AlgoTheme.sizes.buttonFace, enabled, onClick, modifier.fillMaxWidth()) {
-        Text(text, color = label!!, style = AlgoTheme.typography.button, textAlign = TextAlign.Center)
+    ChunkyBox(
+        face = look.face, ledge = look.ledge, border = look.border, shape = AlgoTheme.shapes.large,
+        faceMinHeight = AlgoTheme.sizes.buttonFace, enabled = enabled, onClick = onClick, modifier = modifier.fillMaxWidth(),
+    ) {
+        Text(text, color = look.label, style = AlgoTheme.typography.button, textAlign = TextAlign.Center)
     }
 }
