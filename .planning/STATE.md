@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-10-21T11:19:54.300Z"
+last_updated: "2026-10-21T11:19:57.505Z"
 last_activity: 2026-10-21
 progress:
   total_phases: 6
@@ -52,6 +52,7 @@ Progress: [█████░░░░░] 50%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01 P01 | 25min | 3 tasks | 30 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,7 @@ Recent decisions affecting current work:
 
 - [Roadmap]: 5 фаз (coarse); сквозной прогон влит в Phase 5; Phase 5 (контент) зависит только от Phase 2 и может идти параллельно с 3–4
 - [Roadmap]: PLAT-03 (офлайн) проверяется в сквозном прогоне Phase 5; LESS-01 (статусы уроков) — в Phase 4, т.к. зависит от сохранённого прогресса
+- [Phase 01]: [01-01] Homebrew JDK 21 for Gradle daemon (toolchainVendor removed); wizard sample tests kept
 
 ### Pending Todos
 
