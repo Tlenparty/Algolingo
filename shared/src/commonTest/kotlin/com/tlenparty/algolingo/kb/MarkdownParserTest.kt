@@ -76,12 +76,12 @@ class MarkdownParserTest {
     @Test
     fun inline() {
         assertEquals(
-            listOf(Bold("b"), Text(" "), Italic("i"), Text(" "), Code("c"), Text(" t")),
+            listOf(Bold("b"), Text(" "), Italic("i"), Text(" "), InlineCode("c"), Text(" t")),
             parseInline("**b** *i* `c` t"),
         )
         assertEquals(listOf(Link("A", "h", "alias")), parseInline("[[A#h|alias]]"))
         assertEquals(listOf(Link("A", null, "A")), parseInline("[[A]]"))
-        assertEquals(listOf(Code("[[x]]")), parseInline("`[[x]]`"))
+        assertEquals(listOf(InlineCode("[[x]]")), parseInline("`[[x]]`"))
     }
 
     @Test
