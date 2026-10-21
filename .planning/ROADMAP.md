@@ -11,6 +11,7 @@
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [ ] **Phase 1: Project Skeleton** - KMP + Compose Multiplatform проект запускается на Android и iOS-симуляторе и читает JSON из ресурсов
+- [ ] **Phase 01.1: Knowledge Base** (INSERTED) - Все 23 Obsidian-заметки читаются в приложении: разделы, спойлеры, ссылки, поиск
 - [ ] **Phase 2: Content Schema & Engine** - Чистая модель контента, движок дырок и редьюсер урока, покрытые тестами
 - [ ] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог
 - [ ] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками
@@ -30,6 +31,21 @@
   3. Стартовый экран показывает данные, прочитанные из JSON-файла в `files/` ресурсов, на обеих платформах
   4. `./gradlew` (Android) и `xcodebuild` (iOS-симулятор) успешно собирают проект из чистого клона
 **Plans**: TBD
+
+### Phase 01.1: Knowledge Base (INSERTED)
+**Goal**: Пользователь может читать и учить всю базу знаний из Obsidian (23 заметки) с телефона — в похожей структуре, со свёрнутыми спойлерами и поиском
+**Mode:** mvp
+**Depends on**: Phase 1 (тема/шрифты — по 03-UI-SPEC)
+**Requirements**: KB-01, KB-02, KB-03, KB-04, KB-05, KB-06
+**Research**: needed: markdown-рендерер для CMP (multiplatform-markdown-renderer: таблицы, код, кастомные блоки), разбор Obsidian callouts `> [!type]-` и `[[wikilinks]]` (в т.ч. `[[file|alias]]`, `[[file#heading]]`), NFC-нормализация кириллических имён
+**Success Criteria** (what must be TRUE):
+  1. Скрипт `tools/sync_notes` копирует все 23 заметки из папки Obsidian в ресурсы приложения (ASCII-имена, NFC) с индексом разделов; сборка не читает Яндекс.Диск
+  2. Во вкладке «База знаний» заметки сгруппированы по разделам: Навигация (00–04) · Тренажёры (05–06) · Темы · Задачи с собесов
+  3. Заметка открывается с заголовками, таблицами, кодом Kotlin с подсветкой и цветными callout'ами; `[!question]-` / `[!success]-` свёрнуты и раскрываются тапом
+  4. Тап по `[[ссылке]]` открывает связанную заметку, «назад» возвращает обратно; битая ссылка не роняет приложение
+  5. Поиск по названию и тексту заметок находит нужную заметку и открывает её; всё работает офлайн на Android и iOS-симуляторе
+**Plans**: TBD
+**UI hint**: yes
 
 ### Phase 2: Content Schema & Engine
 **Goal**: Схема контента и семантика проверки зафиксированы и доказаны тестами до UI и разметки
@@ -88,11 +104,12 @@
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 (Phase 5 content work may start right after Phase 2)
+Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 content work may start right after Phase 2)
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Skeleton | 0/TBD | Not started | - |
+| 01.1 Knowledge Base | 0/TBD | Not started | - |
 | 2. Content Schema & Engine | 0/TBD | Not started | - |
 | 3. Lesson & Exercise UI | 0/TBD | Not started | - |
 | 4. Progress & Review | 0/TBD | Not started | - |
