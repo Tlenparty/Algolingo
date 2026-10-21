@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: verifying
 stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-10-21T14:35:16.348Z"
+last_updated: "2026-10-21T14:55:58.655Z"
 last_activity: 2026-10-21
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 17
-  completed_plans: 16
+  total_plans: 19
+  completed_plans: 17
   percent: 50
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 ## Current Position
 
 Phase: 3 (lesson-exercise-ui) — EXECUTING
-Plan: 8 of 8
-Status: Ready to execute
+Plan: 9 of 10 (03-09 done; next 03-10)
+Status: In progress — 03-10 (components into :design, dp literals to tokens) next
 Last activity: 2026-10-21
 
-Progress: [█████████░] 94%
+Progress: [█████████░] 89%
 
 ## Performance Metrics
 
@@ -56,6 +56,7 @@ Progress: [█████████░] 94%
 *Updated after each plan completion*
 | Phase 01 P01 | 25min | 3 tasks | 30 files |
 | Phase 03 P07 | 9min | 2 tasks | 6 files |
+| Phase 03 P09 | 15min | 3 tasks | 26 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,7 @@ Recent decisions affecting current work:
 - [Phase 01]: [01-01] Homebrew JDK 21 for Gradle daemon (toolchainVendor removed); wizard sample tests kept
 - [Phase 03]: AnimatedContent targets whole LessonState with contentKey=screenKey (outgoing page keeps its snapshot)
 - [Phase 03]: ChunkyBox propagateMinConstraints so full-width buttons get a full-width face
+- [Phase 03-09]: Separate :design KMP module owns AlgoTheme (colors, typography, spacing, sizes, shapes), fonts, highlight; shared depends on it
 
 ### Pending Todos
 
@@ -87,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-21T14:35:11.910Z
-Stopped at: Phase 3 UI-SPEC approved
+Last session: 2026-10-21T14:55:54.524Z
+Stopped at: Completed 03-09-PLAN.md
 Resume file: None
