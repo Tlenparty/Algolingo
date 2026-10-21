@@ -16,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.TheoryCard
-import com.tlenparty.algolingo.ui.components.ChunkyButton
-import com.tlenparty.algolingo.ui.components.CodeBlock
+import com.tlenparty.algolingo.design.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.CodeBlock
 import com.tlenparty.algolingo.ui.components.richText
 import com.tlenparty.algolingo.design.AlgoTheme
 

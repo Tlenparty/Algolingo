@@ -20,8 +20,8 @@ import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.isLastExercise
 import com.tlenparty.algolingo.lesson.solutionSpans
 import com.tlenparty.algolingo.lesson.xpFor
-import com.tlenparty.algolingo.ui.components.ChunkyButton
-import com.tlenparty.algolingo.ui.components.CodeBlock
+import com.tlenparty.algolingo.design.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.CodeBlock
 import com.tlenparty.algolingo.ui.components.richText
 import com.tlenparty.algolingo.design.AlgoTheme
 

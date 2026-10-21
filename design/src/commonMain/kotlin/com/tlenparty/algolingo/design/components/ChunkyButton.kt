@@ -1,4 +1,4 @@
-package com.tlenparty.algolingo.ui.components
+package com.tlenparty.algolingo.design.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -31,23 +31,22 @@ import com.tlenparty.algolingo.design.AlgoTheme
 
 enum class ChunkyStyle { Primary, Secondary, Danger, Amber }
 
-/** Shared 3D block: [ledge] shows 4dp under the face; pressing slides the face down over it. */
+/** Shared 3D block: [ledge] shows AlgoTheme.sizes.ledge under the face; pressing slides the face down over it. */
 @Composable
-internal fun ChunkyBox(
+fun ChunkyBox(
     face: Color,
     ledge: Color?,
     border: Color?,
-    corner: Dp,
+    shape: Shape,
     faceMinHeight: Dp,
     enabled: Boolean,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val shape = RoundedCornerShape(corner)
     val source = remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
-    val drop by animateDpAsState(if (pressed && enabled && ledge != null) 4.dp else 0.dp, tween(80))
+    val drop by animateDpAsState(if (pressed && enabled && ledge != null) AlgoTheme.sizes.ledge else 0.dp, tween(80))
     val click = if (onClick != null) {
         Modifier.clickable(source, indication = null, enabled = enabled, role = Role.Button, onClick = onClick)
     } else Modifier
@@ -55,11 +54,11 @@ internal fun ChunkyBox(
     Box(modifier.then(click), propagateMinConstraints = true) {
         if (ledge != null) Box(Modifier.matchParentSize().background(ledge, shape))
         Box(
-            Modifier.padding(bottom = 4.dp)
+            Modifier.padding(bottom = AlgoTheme.sizes.ledge)
                 .offset { IntOffset(0, drop.roundToPx()) }
                 .heightIn(min = faceMinHeight)
                 .background(face, shape)
-                .let { if (border != null) it.border(2.dp, border, shape) else it },
+                .let { if (border != null) it.border(AlgoTheme.sizes.border, border, shape) else it },
             contentAlignment = Alignment.Center,
             content = content,
         )
@@ -85,7 +84,7 @@ fun ChunkyButton(
         style == ChunkyStyle.Amber -> listOf(c.amber, c.amberLedge, null, ink)
         else -> listOf(s.background, s.outline, s.outline, s.onBackground)
     }
-    ChunkyBox(face!!, ledge, border, 16.dp, 52.dp, enabled, onClick, modifier.fillMaxWidth()) {
+    ChunkyBox(face!!, ledge, border, AlgoTheme.shapes.large, AlgoTheme.sizes.buttonFace, enabled, onClick, modifier.fillMaxWidth()) {
         Text(text, color = label!!, style = AlgoTheme.typography.button, textAlign = TextAlign.Center)
     }
 }

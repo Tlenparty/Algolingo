@@ -1,4 +1,4 @@
-package com.tlenparty.algolingo.ui.components
+package com.tlenparty.algolingo.design.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.highlight
 
@@ -22,8 +21,8 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
         face = if (ghost) s.outline else s.background,
         ledge = if (ghost) null else s.outline,
         border = if (ghost) null else s.outline,
-        corner = 12.dp,
-        faceMinHeight = 44.dp,
+        shape = AlgoTheme.shapes.medium,
+        faceMinHeight = AlgoTheme.sizes.chipFace,
         enabled = !ghost && onClick != null,
         onClick = if (ghost) null else onClick,
         modifier = if (ghost) modifier.clearAndSetSemantics {} else modifier,
@@ -34,7 +33,7 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
             color = if (ghost) Color.Transparent else s.onBackground,
             softWrap = false,
             maxLines = 1,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = AlgoTheme.spacing.md),
         )
     }
 }

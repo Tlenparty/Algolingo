@@ -21,7 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tlenparty.algolingo.lesson.Lesson
 import com.tlenparty.algolingo.lesson.LessonViewModel
 import com.tlenparty.algolingo.lesson.loadLesson
-import com.tlenparty.algolingo.ui.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlin.time.Clock
 

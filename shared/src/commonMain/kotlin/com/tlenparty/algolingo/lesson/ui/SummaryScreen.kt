@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.Grade
 import com.tlenparty.algolingo.lesson.LessonResult
 import com.tlenparty.algolingo.lesson.xpFor
-import com.tlenparty.algolingo.ui.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.AlgoTheme
 
 @Composable

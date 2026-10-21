@@ -17,6 +17,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.components.LessonProgressBar
 
 /** [hintsRemaining] == null means the exercise has no hints: a spacer replaces the button. */
 @Composable

@@ -1,18 +1,15 @@
-package com.tlenparty.algolingo.ui.components
+package com.tlenparty.algolingo.design.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.highlight
 
@@ -29,10 +26,10 @@ fun CodeBlock(code: String, modifier: Modifier = Modifier, highlightRanges: List
     }
     Text(
         text,
-        style = AlgoTheme.typography.codeRegular.copy(lineHeight = 20.sp),
+        style = AlgoTheme.typography.codeRegular,
         color = MaterialTheme.colorScheme.onBackground,
         softWrap = false,
-        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
-            .horizontalScroll(rememberScrollState()).padding(16.dp),
+        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant, AlgoTheme.shapes.large)
+            .horizontalScroll(rememberScrollState()).padding(AlgoTheme.spacing.md),
     )
 }

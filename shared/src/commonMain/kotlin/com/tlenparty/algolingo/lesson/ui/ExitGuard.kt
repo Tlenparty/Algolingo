@@ -10,8 +10,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
-import com.tlenparty.algolingo.ui.components.ChunkyButton
-import com.tlenparty.algolingo.ui.components.ChunkyStyle
+import com.tlenparty.algolingo.design.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.ChunkyStyle
 
 /**
  * Intercepts system back / iOS edge swipe. Uses CMP common BackHandler; if the iOS swipe is not

@@ -36,11 +36,11 @@ import com.tlenparty.algolingo.lesson.Phase
 import com.tlenparty.algolingo.lesson.Verdict
 import com.tlenparty.algolingo.lesson.holeVisual
 import com.tlenparty.algolingo.lesson.panelModel
-import com.tlenparty.algolingo.ui.components.ChipState
-import com.tlenparty.algolingo.ui.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.ChipState
+import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.ui.components.CodeTemplate
 import com.tlenparty.algolingo.ui.components.ResultPanel
-import com.tlenparty.algolingo.ui.components.TokenChip
+import com.tlenparty.algolingo.design.components.TokenChip
 import com.tlenparty.algolingo.ui.components.richText
 import com.tlenparty.algolingo.design.AlgoTheme
 

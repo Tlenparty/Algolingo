@@ -19,7 +19,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.tlenparty.algolingo.ui.components.ChunkyBox
+import com.tlenparty.algolingo.design.components.ChunkyBox
 import com.tlenparty.algolingo.design.AlgoTheme
 
 private data class HomeLesson(val id: String, val caption: String)
@@ -40,11 +40,11 @@ fun HomeScreen(onStart: (String) -> Unit) {
         ) {
             lessons.forEach { l ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ChunkyBox(s.primary, c.greenLedge, null, 20.dp, 40.dp, true, { onStart(l.id) }) {
+                    ChunkyBox(s.primary, c.greenLedge, null, AlgoTheme.shapes.pill, 40.dp, true, { onStart(l.id) }) {
                         Text("Начать", style = t.button, color = s.onPrimary, modifier = Modifier.padding(horizontal = 20.dp))
                     }
                     ChunkyBox(
-                        s.primary, c.greenLedge, null, 36.dp, 72.dp, true, { onStart(l.id) },
+                        s.primary, c.greenLedge, null, AlgoTheme.shapes.node, 72.dp, true, { onStart(l.id) },
                         Modifier.semantics { contentDescription = l.caption },
                     ) {
                         Box(Modifier.size(72.dp), contentAlignment = Alignment.Center) {

@@ -26,6 +26,8 @@ import com.tlenparty.algolingo.lesson.PanelItem
 import com.tlenparty.algolingo.lesson.PanelKind
 import com.tlenparty.algolingo.lesson.PanelModel
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.components.ChunkyButton
+import com.tlenparty.algolingo.design.components.ChunkyStyle
 import com.tlenparty.algolingo.design.highlight
 
 /** `code` and **bold** markup from lesson content. */
