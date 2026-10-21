@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-10-21T14:55:58.655Z"
+status: executing
+stopped_at: Completed 03-10-PLAN.md; next 03-08
+last_updated: "2026-10-21T15:00:52.785Z"
 last_activity: 2026-10-21
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
   percent: 50
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 ## Current Position
 
 Phase: 3 (lesson-exercise-ui) — EXECUTING
-Plan: 9 of 10 (03-09 done; next 03-10)
-Status: In progress — 03-10 (components into :design, dp literals to tokens) next
+Plan: 10 of 10 (03-10 done; next 03-08)
+Status: Ready to execute
 Last activity: 2026-10-21
 
-Progress: [█████████░] 89%
+Progress: [██████████] 95%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [█████████░] 89%
 | Phase 01 P01 | 25min | 3 tasks | 30 files |
 | Phase 03 P07 | 9min | 2 tasks | 6 files |
 | Phase 03 P09 | 15min | 3 tasks | 26 files |
+| Phase 03 P10 | 25min | 3 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,7 @@ Recent decisions affecting current work:
 - [Phase 03]: AnimatedContent targets whole LessonState with contentKey=screenKey (outgoing page keeps its snapshot)
 - [Phase 03]: ChunkyBox propagateMinConstraints so full-width buttons get a full-width face
 - [Phase 03-09]: Separate :design KMP module owns AlgoTheme (colors, typography, spacing, sizes, shapes), fonts, highlight; shared depends on it
+- [Phase 03]: 03-10: reusable components (ChunkyBox/Button, TokenChip, LessonProgressBar, CodeBlock, AlgoCard) live in :design; CodeTemplate/LessonTopBar/ResultPanel stay in shared (lesson/kb types)
 
 ### Pending Todos
 
@@ -89,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-21T14:55:54.524Z
-Stopped at: Completed 03-09-PLAN.md
+Last session: 2026-10-21T15:00:52.779Z
+Stopped at: Completed 03-10-PLAN.md; next 03-08
 Resume file: None
