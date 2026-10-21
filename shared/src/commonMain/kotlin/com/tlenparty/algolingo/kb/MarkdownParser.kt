@@ -21,6 +21,7 @@ data class Text(val v: String) : Inline
 data class Bold(val v: String) : Inline
 data class Italic(val v: String) : Inline
 data class InlineCode(val v: String) : Inline
+/** [target] is a note title, or `#anchor` for a link within the current note. */
 data class Link(val target: String, val anchor: String?, val label: String) : Inline
 
 private val headingRe = Regex("^(#{1,6})\\s+(.*)$")
@@ -157,6 +158,19 @@ fun parseInline(s: String): List<Inline> {
                     val target = ref.substringBefore('#')
                     out.add(Link(target, ref.substringAfter('#', "").ifEmpty { null }, alias ?: target))
                     i = end + 2
+                    continue
+                }
+            }
+            c == '[' -> {
+                // Standard `[label](url)`: `#anchor` -> same-note link (target "#anchor"), external url -> plain label (offline).
+                val close = s.indexOf(']', i + 1)
+                end = if (close > i + 1 && s.startsWith("(", close + 1)) s.indexOf(')', close + 2) else -1
+                if (end > close + 1) {
+                    flush()
+                    val label = s.substring(i + 1, close)
+                    val url = s.substring(close + 2, end).trim()
+                    out.add(if (url.startsWith("#") && url.length > 1) Link(url, url.drop(1), label) else Text(label))
+                    i = end + 1
                     continue
                 }
             }

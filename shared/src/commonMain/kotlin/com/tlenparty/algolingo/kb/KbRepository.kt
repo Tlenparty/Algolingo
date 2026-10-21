@@ -46,7 +46,14 @@ fun resolveNote(notes: List<Note>, target: String): Note? {
     return notes.firstOrNull { it.title.trim().lowercase() == t }
 }
 
+/** Matches an Obsidian anchor (heading text) or a GitHub-style slug (`#1-hash-map--частоты`). */
 fun findAnchorIndex(blocks: List<Block>, anchor: String): Int? {
     val a = anchor.trim().lowercase()
-    return blocks.indexOfFirst { it is Heading && it.text.trim().lowercase() == a }.takeIf { it >= 0 }
+    return blocks.indexOfFirst {
+        it is Heading && it.text.trim().lowercase().let { h -> h == a || slug(h) == a }
+    }.takeIf { it >= 0 }
 }
+
+/** GitHub slug: drop everything except letters, digits, `-`, `_`, spaces; spaces -> `-`. */
+fun slug(heading: String): String =
+    heading.trim().lowercase().filter { it.isLetterOrDigit() || it == '-' || it == '_' || it == ' ' }.replace(' ', '-')

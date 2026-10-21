@@ -85,6 +85,15 @@ class MarkdownParserTest {
     }
 
     @Test
+    fun markdownLinks() {
+        assertEquals(
+            listOf(Link("#1-hash-map--частоты", "1-hash-map--частоты", "Hash"), Text(" · "), Text("site")),
+            parseInline("[Hash](#1-hash-map--частоты) · [site](https://x.y)"),
+        )
+        assertEquals("[a] (b) [c]", parseInline("[a] (b) [c]").joinToString("") { (it as Text).v })
+    }
+
+    @Test
     fun unclosedIsLiteral() {
         assertEquals("a **b", parseInline("a **b").joinToString("") { (it as Text).v })
         assertEquals("[[x", parseInline("[[x").joinToString("") { (it as Text).v })

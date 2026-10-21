@@ -20,5 +20,9 @@ class KbLinkTest {
     private val blocks = parseBlocks("# T\n\ntext\n\n## Heading\n\nmore")
 
     @Test fun anchorHit() = assertEquals(2, findAnchorIndex(blocks, "heading"))
+    @Test fun anchorBySlug() = assertEquals(
+        0,
+        findAnchorIndex(parseBlocks("## 10. Монотонный стек — ближайший больший/меньший"), "10-монотонный-стек--ближайший-большийменьший"),
+    )
     @Test fun anchorMiss() = assertNull(findAnchorIndex(blocks, "nope"))
 }
