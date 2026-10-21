@@ -95,6 +95,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                         segments = ex.segments,
                         placedText = cur.placed.map { it?.let { i -> ex.bank.getOrNull(i)?.text } },
                         visuals = ex.holes.indices.map { holeVisual(it, cur, check) },
+                        selected = if (solving) cur.selected else null,
                         onHoleTap = { on(LessonAction.TapHole(it)) },
                         enabled = solving,
                     )

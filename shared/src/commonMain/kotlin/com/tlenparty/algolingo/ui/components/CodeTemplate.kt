@@ -40,6 +40,7 @@ fun CodeTemplate(
     segments: List<String>,
     placedText: List<String?>,
     visuals: List<HoleVisual>,
+    selected: Int?,
     onHoleTap: (Int) -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
@@ -47,9 +48,15 @@ fun CodeTemplate(
     val colors = AlgoTheme.colors
     val t = AlgoTheme.typography
     val lines = templateLines(segments)
+    // Hole to keep on screen: the first Wrong after Check, else the selected one. With neither
+    // (last hole filled, or all ok) scroll back to column 0 so the short `}` lines are visible again.
+    val firstBad = visuals.indexOf(HoleVisual.Wrong)
+    val focus = if (firstBad >= 0) firstBad else selected
+    val hScroll = rememberScrollState()
+    LaunchedEffect(focus) { if (focus == null) hScroll.animateScrollTo(0) }
     Box(modifier.background(MaterialTheme.colorScheme.surfaceVariant, AlgoTheme.shapes.large).padding(AlgoTheme.spacing.md)) {
         // One scroll for all lines; no fillMaxWidth inside (infinite width constraint).
-        Column(Modifier.horizontalScroll(rememberScrollState())) {
+        Column(Modifier.horizontalScroll(hScroll)) {
             for (line in lines) {
                 // Only lines with a hole need the sizes.holeLine touch height; plain code lines stay compact.
                 val rowHeight = if (line.any { it is Piece.HoleAt }) AlgoTheme.sizes.holeLine else AlgoTheme.sizes.codeLine
@@ -61,7 +68,7 @@ fun CodeTemplate(
                         )
                         is Piece.HoleAt -> Hole(
                             p.h, placedText.getOrNull(p.h), visuals.getOrNull(p.h) ?: HoleVisual.Empty,
-                            { onHoleTap(p.h) }, enabled,
+                            { onHoleTap(p.h) }, enabled, focused = p.h == focus,
                         )
                     }
                 }
@@ -71,7 +78,7 @@ fun CodeTemplate(
 }
 
 @Composable
-private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean) {
+private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean) {
     val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
     // fill, border, text color
@@ -91,9 +98,9 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
         visual == HoleVisual.EmptySelected -> "Дырка ${index + 1}: выбрана"
         else -> "Дырка ${index + 1}: пусто"
     }
-    // Long lines scroll sideways: keep the hole the next chip will land in on screen.
+    // Long lines scroll sideways: keep the hole the next chip lands in (or the first Wrong one) on screen.
     val inView = remember { BringIntoViewRequester() }
-    LaunchedEffect(visual) { if (visual == HoleVisual.EmptySelected) inView.bringIntoView() }
+    LaunchedEffect(focused) { if (focused) inView.bringIntoView() }
     // Touch area sizes.holeLine x >= sizes.touchTarget; drawn face sizes.holeFace.
     Box(
         Modifier.bringIntoViewRequester(inView).height(AlgoTheme.sizes.holeLine).widthIn(min = AlgoTheme.sizes.touchTarget)
