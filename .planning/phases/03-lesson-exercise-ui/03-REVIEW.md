@@ -44,6 +44,8 @@ findings:
   info: 7
   total: 13
 status: issues_found
+fix_status: all_fixed
+fix_report: .planning/phases/03-lesson-exercise-ui/03-REVIEW-FIX.md
 ---
 
 # Phase 03: Code Review Report
@@ -63,6 +65,26 @@ The main defect is at the boundary between the UI and the reducer. RESEARCH line
 - All three known follow-ups are still open, and each has a specific root cause (see WR-02, WR-03, WR-04).
 - The loader does not catch every error it can hit.
 - The design module's API has some hygiene issues.
+
+## Fix Status
+
+All 13 findings fixed on 2026-10-21 (see `03-REVIEW-FIX.md`).
+
+| ID | Status | Commit |
+|----|--------|--------|
+| CR-01 | fixed: requires human verification | edae97a |
+| WR-01 | fixed | e03e2d0 |
+| WR-02 | fixed: requires human verification | 99d5264 |
+| WR-03 | fixed | f51be1b |
+| WR-04 | fixed | d9b1cb9 |
+| WR-05 | fixed | b34e4ee |
+| IN-01 | fixed | 51fb8d5 |
+| IN-02 | fixed | 05e1eaf |
+| IN-03 | fixed | 6d219ef |
+| IN-04 | fixed | 63d09b2 |
+| IN-05 | fixed (item 4 documented, not changed) | cd072fd |
+| IN-06 | fixed | 4694d60 |
+| IN-07 | fixed | 091d76f |
 
 ## Critical Issues
 
