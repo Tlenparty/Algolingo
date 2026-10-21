@@ -43,7 +43,7 @@ fun KbListScreen(
                 Column(Modifier.fillMaxWidth().clickable { onOpen(h.note) }.padding(16.dp, 12.dp)) {
                     Text(h.note.title)
                     if (h.snippet.isNotEmpty()) {
-                        Text(h.snippet, color = MaterialTheme.colorScheme.outline, style = MaterialTheme.typography.bodySmall)
+                        Text(h.snippet, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f), style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
