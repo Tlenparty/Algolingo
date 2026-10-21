@@ -29,4 +29,32 @@ class KbContentTest {
             entries.map { it.section }.distinct(),
         )
     }
+
+    private fun countCallouts(bs: List<Block>): Int = bs.sumOf {
+        when (it) {
+            is Callout -> 1 + countCallouts(it.blocks)
+            is Quote -> countCallouts(it.blocks)
+            else -> 0
+        }
+    }
+
+    @Test
+    fun allNotesParse() {
+        var callouts = 0
+        entries.forEach { e ->
+            val blocks = parseBlocks(File(dir, e.file).readText())
+            assertTrue(blocks.isNotEmpty(), "empty ${e.id}")
+            callouts += countCallouts(blocks)
+            blocks.forEach {
+                when (it) {
+                    is Paragraph -> parseInline(it.text)
+                    is ListItem -> parseInline(it.text)
+                    is Heading -> parseInline(it.text)
+                    is Table -> (listOf(it.header) + it.rows).flatten().forEach(::parseInline)
+                    else -> {}
+                }
+            }
+        }
+        assertTrue(callouts > 100, "callouts=$callouts")
+    }
 }

@@ -26,6 +26,7 @@ import androidx.navigation.toRoute
 import com.tlenparty.algolingo.kb.KbRepository
 import com.tlenparty.algolingo.kb.ui.KbListScreen
 import com.tlenparty.algolingo.kb.ui.NoteScreen
+import com.tlenparty.algolingo.ui.theme.AppTheme
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -50,7 +51,7 @@ data class NoteRoute(val id: String, val anchor: String? = null)
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    AppTheme {
         val repo = remember { KbRepository() }
         val loaded by produceState(false) { repo.load(); value = true }
         val nav = rememberNavController()
