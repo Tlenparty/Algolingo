@@ -157,3 +157,20 @@ hole.wrongWhy.keys.forEach { k ->
 _Reviewed: 2026-10-21_
 _Reviewer: Claude (gsd-code-reviewer)_
 _Depth: standard_
+
+## Fix Status
+
+See `02-REVIEW-FIX.md` (iteration 1).
+
+| ID | Status | Commit |
+|----|--------|--------|
+| WR-01 | fixed | 931749c |
+| WR-02 | fixed | d8dfa21 |
+| WR-03 | fixed | f54a534 |
+| WR-04 | fixed (content: human review of wording) | 87c2e7e |
+| IN-01 | fixed (content: human review of wording) | d8d4ce3 |
+| IN-02 | fixed (content: human review of wording) | 1ebbd6f |
+| IN-03 | skipped (out of scope) | — |
+| IN-04 | skipped (out of scope) | — |
+| IN-05 | fixed | c4a2d5f |
+| IN-06 | fixed | cccef2b |
