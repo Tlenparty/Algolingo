@@ -83,6 +83,8 @@ fun App() {
                     if (loaded) KbListScreen(repo.notes, { nav.navigate(NoteRoute(it.id)) }, search = repo::search) else Text("…")
                 }
                 composable<NoteRoute> {
+                    // Reading `loaded` here re-composes this entry once notes arrive (Activity recreation restores NoteRoute first).
+                    if (!loaded) { Text("…"); return@composable }
                     val route = it.toRoute<NoteRoute>()
                     val note = repo.byId(route.id)
                     if (note != null) NoteScreen(
