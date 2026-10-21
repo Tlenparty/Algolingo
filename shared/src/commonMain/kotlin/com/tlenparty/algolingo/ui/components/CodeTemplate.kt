@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +21,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,7 +54,9 @@ fun CodeTemplate(
         // One scroll for all lines; no fillMaxWidth inside (infinite width constraint).
         Column(Modifier.horizontalScroll(rememberScrollState())) {
             for (line in lines) {
-                Row(Modifier.height(40.dp), verticalAlignment = Alignment.CenterVertically) {
+                // Only lines with a hole need the 40dp touch height; plain code lines stay compact.
+                val rowHeight = if (line.any { it is Piece.HoleAt }) 40.dp else 24.dp
+                Row(Modifier.height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
                     for (p in line) when (p) {
                         is Piece.Code -> Text(
                             highlight(p.s, colors), style = t.codeRegular,
@@ -88,9 +94,12 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
         visual == HoleVisual.EmptySelected -> "Дырка ${index + 1}: выбрана"
         else -> "Дырка ${index + 1}: пусто"
     }
+    // Long lines scroll sideways: keep the hole the next chip will land in on screen.
+    val inView = remember { BringIntoViewRequester() }
+    LaunchedEffect(visual) { if (visual == HoleVisual.EmptySelected) inView.bringIntoView() }
     // Touch area 40dp x >=48dp; drawn face 32dp.
     Box(
-        Modifier.height(40.dp).widthIn(min = 48.dp)
+        Modifier.bringIntoViewRequester(inView).height(40.dp).widthIn(min = 48.dp)
             .semantics(mergeDescendants = true) { contentDescription = desc }
             .clickable(enabled = enabled, role = Role.Button, onClick = onTap),
         contentAlignment = Alignment.Center,

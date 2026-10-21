@@ -55,6 +55,9 @@ val LocalAppColors = staticCompositionLocalOf { LightApp }
 
 val LocalCodeFont = staticCompositionLocalOf<FontFamily> { FontFamily.Monospace }
 
+/** JetBrains Mono ligatures turn `<=`/`!=`/`->` into ≤/≠/→; learners must see the real Kotlin tokens. */
+const val NO_LIGATURES = "liga 0, calt 0"
+
 /** Exactly two weights app-wide: Normal and Bold (03-UI-SPEC Typography). */
 class AppTextStyles(ui: FontFamily, code: FontFamily) {
     val body = TextStyle(fontFamily = ui, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Normal)
@@ -62,9 +65,9 @@ class AppTextStyles(ui: FontFamily, code: FontFamily) {
     val heading = TextStyle(fontFamily = ui, fontSize = 20.sp, lineHeight = 24.sp, fontWeight = FontWeight.Bold)
     val display = TextStyle(fontFamily = ui, fontSize = 28.sp, lineHeight = 34.sp, fontWeight = FontWeight.Bold)
     val button = TextStyle(fontFamily = ui, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-    val codeRegular = TextStyle(fontFamily = code, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Normal)
-    val codeBold = TextStyle(fontFamily = code, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold)
-    val codeChip = TextStyle(fontFamily = code, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Bold)
+    val codeRegular = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Normal)
+    val codeBold = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold)
+    val codeChip = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Bold)
 }
 
 val LocalAppText = staticCompositionLocalOf<AppTextStyles> { error("AppTheme not provided") }

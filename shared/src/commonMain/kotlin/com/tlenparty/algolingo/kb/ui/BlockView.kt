@@ -48,6 +48,7 @@ import com.tlenparty.algolingo.kb.parseInline
 import com.tlenparty.algolingo.ui.theme.highlight
 import com.tlenparty.algolingo.ui.theme.LocalAppColors
 import com.tlenparty.algolingo.ui.theme.LocalCodeFont
+import com.tlenparty.algolingo.ui.theme.NO_LIGATURES
 import com.tlenparty.algolingo.kb.Text as PlainText
 
 @Composable
@@ -64,7 +65,7 @@ fun inlineText(
             is PlainText -> append(n.v)
             is Bold -> withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(n.v) }
             is Italic -> withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(n.v) }
-            is InlineCode -> withStyle(SpanStyle(fontFamily = mono, background = bg)) { append(n.v) }
+            is InlineCode -> withStyle(SpanStyle(fontFamily = mono, fontFeatureSettings = NO_LIGATURES, background = bg)) { append(n.v) }
             is Link ->
                 if (resolvable(n.target)) {
                     withLink(
@@ -122,7 +123,7 @@ fun BlockView(
                     if (block.lang == "kotlin") highlight(block.text, colors) else AnnotatedString(block.text),
                     Modifier.horizontalScroll(rememberScrollState()).padding(12.dp),
                     fontFamily = mono,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodySmall.copy(fontFeatureSettings = NO_LIGATURES),
                     softWrap = false,
                 )
             }
