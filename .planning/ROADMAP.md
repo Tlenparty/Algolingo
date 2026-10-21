@@ -11,7 +11,7 @@
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Project Skeleton** - KMP + Compose Multiplatform проект запускается на Android и iOS-симуляторе и читает JSON из ресурсов
+- [x] **Phase 1: Project Skeleton** - KMP + Compose Multiplatform проект запускается на Android и iOS-симуляторе и читает JSON из ресурсов (completed 2026-10-21)
 - [ ] **Phase 01.1: Knowledge Base** (INSERTED) - Все 23 Obsidian-заметки читаются в приложении: разделы, спойлеры, ссылки, поиск
 - [ ] **Phase 2: Content Schema & Engine** - Чистая модель контента, движок дырок и редьюсер урока, покрытые тестами
 - [ ] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог
@@ -34,7 +34,7 @@
   3. Стартовый экран показывает данные, прочитанные из JSON-файла в `files/` ресурсов, на обеих платформах
   4. `./gradlew` (Android) и `xcodebuild` (iOS-симулятор) успешно собирают проект из чистого клона
 
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 **Wave 1**
@@ -43,7 +43,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — iOS simulator run, README versions, clean-clone builds (PLAT-02)
+- [x] 01-02-PLAN.md — iOS simulator run, README versions, clean-clone builds (PLAT-02)
 
 ### Phase 01.1: Knowledge Base (INSERTED)
 
@@ -136,7 +136,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Skeleton | 1/2 | In Progress|  |
+| 1. Project Skeleton | 2/2 | Complete   | 2026-10-21 |
 | 01.1 Knowledge Base | 0/TBD | Not started | - |
 | 2. Content Schema & Engine | 0/TBD | Not started | - |
 | 3. Lesson & Exercise UI | 0/TBD | Not started | - |
