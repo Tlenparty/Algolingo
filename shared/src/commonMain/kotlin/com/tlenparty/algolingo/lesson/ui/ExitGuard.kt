@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.unit.dp
+import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.components.ChunkyStyle
 
@@ -32,6 +32,6 @@ fun ExitDialog(onStay: () -> Unit, onLeave: () -> Unit) {
         confirmButton = {
             TextButton(onClick = onLeave) { Text("Выйти", color = MaterialTheme.colorScheme.error) }
         },
-        dismissButton = { ChunkyButton("Остаться", onStay, Modifier.width(140.dp), style = ChunkyStyle.Secondary) },
+        dismissButton = { ChunkyButton("Остаться", onStay, Modifier.width(AlgoTheme.sizes.dialogButton), style = ChunkyStyle.Secondary) },
     )
 }

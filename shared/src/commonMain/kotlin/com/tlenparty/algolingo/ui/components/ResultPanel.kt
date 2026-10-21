@@ -19,7 +19,6 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.kb.parseInline
 import com.tlenparty.algolingo.kb.ui.inlineText
 import com.tlenparty.algolingo.lesson.PanelItem
@@ -47,16 +46,16 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
     val accentC = when (model.kind) { PanelKind.Success -> MaterialTheme.colorScheme.primary; PanelKind.Amber -> c.amber; PanelKind.Danger -> c.redFill }
     val inkC = when (model.kind) { PanelKind.Success -> c.successText; PanelKind.Amber -> c.acceptableText; PanelKind.Danger -> c.wrongText }
     Column(modifier.fillMaxWidth().background(tintC)) {
-        Box(Modifier.fillMaxWidth().height(2.dp).background(accentC))
-        Column(Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp)) {
+        Box(Modifier.fillMaxWidth().height(AlgoTheme.sizes.border).background(accentC))
+        Column(Modifier.padding(start = AlgoTheme.spacing.md, end = AlgoTheme.spacing.md, top = AlgoTheme.spacing.lg, bottom = AlgoTheme.spacing.md)) {
             Text(
                 model.title, style = t.heading, color = inkC,
                 modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
             )
             if (model.wrong.isNotEmpty() || model.acceptable.isNotEmpty()) {
                 Column(
-                    Modifier.padding(top = 12.dp).heightIn(max = maxBodyHeight).verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    Modifier.padding(top = AlgoTheme.spacing.smd).heightIn(max = maxBodyHeight).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.md),
                 ) {
                     for (w in model.wrong) Item(w, inkC)
                     if (model.wrong.isNotEmpty() && model.acceptable.isNotEmpty()) {
@@ -65,7 +64,7 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
                     for (a in model.acceptable) Item(a, inkC)
                 }
             }
-            ChunkyButton(model.button, onNext, Modifier.padding(top = 16.dp), style = style)
+            ChunkyButton(model.button, onNext, Modifier.padding(top = AlgoTheme.spacing.md), style = style)
         }
     }
 }
@@ -74,7 +73,7 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
 private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color) {
     val c = AlgoTheme.colors
     val t = AlgoTheme.typography
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xs)) {
         Text(highlight(item.chip, c), style = t.codeBold, color = ink, softWrap = false)
         Text(richText(item.text), style = t.body, color = MaterialTheme.colorScheme.onBackground)
         if (item.correct != null) {

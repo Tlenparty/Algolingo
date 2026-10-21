@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.HoleVisual
 import com.tlenparty.algolingo.lesson.Piece
 import com.tlenparty.algolingo.lesson.templateLines
@@ -49,12 +47,12 @@ fun CodeTemplate(
     val colors = AlgoTheme.colors
     val t = AlgoTheme.typography
     val lines = templateLines(segments)
-    Box(modifier.background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp)).padding(16.dp)) {
+    Box(modifier.background(MaterialTheme.colorScheme.surfaceVariant, AlgoTheme.shapes.large).padding(AlgoTheme.spacing.md)) {
         // One scroll for all lines; no fillMaxWidth inside (infinite width constraint).
         Column(Modifier.horizontalScroll(rememberScrollState())) {
             for (line in lines) {
-                // Only lines with a hole need the 40dp touch height; plain code lines stay compact.
-                val rowHeight = if (line.any { it is Piece.HoleAt }) 40.dp else 24.dp
+                // Only lines with a hole need the sizes.holeLine touch height; plain code lines stay compact.
+                val rowHeight = if (line.any { it is Piece.HoleAt }) AlgoTheme.sizes.holeLine else AlgoTheme.sizes.codeLine
                 Row(Modifier.height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
                     for (p in line) when (p) {
                         is Piece.Code -> Text(
@@ -96,17 +94,17 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
     // Long lines scroll sideways: keep the hole the next chip will land in on screen.
     val inView = remember { BringIntoViewRequester() }
     LaunchedEffect(visual) { if (visual == HoleVisual.EmptySelected) inView.bringIntoView() }
-    // Touch area 40dp x >=48dp; drawn face 32dp.
+    // Touch area sizes.holeLine x >= sizes.touchTarget; drawn face sizes.holeFace.
     Box(
-        Modifier.bringIntoViewRequester(inView).height(40.dp).widthIn(min = 48.dp)
+        Modifier.bringIntoViewRequester(inView).height(AlgoTheme.sizes.holeLine).widthIn(min = AlgoTheme.sizes.touchTarget)
             .semantics(mergeDescendants = true) { contentDescription = desc }
             .clickable(enabled = enabled, role = Role.Button, onClick = onTap),
         contentAlignment = Alignment.Center,
     ) {
-        val shape = RoundedCornerShape(8.dp)
+        val shape = AlgoTheme.shapes.small
         Box(
-            Modifier.heightIn(min = 32.dp).widthIn(min = 48.dp).background(fill, shape).border(2.dp, border, shape)
-                .padding(horizontal = 8.dp),
+            Modifier.heightIn(min = AlgoTheme.sizes.holeFace).widthIn(min = AlgoTheme.sizes.holeMinWidth).background(fill, shape).border(AlgoTheme.sizes.border, border, shape)
+                .padding(horizontal = AlgoTheme.spacing.sm),
             contentAlignment = Alignment.Center,
         ) {
             Crossfade(text, animationSpec = tween(100)) { shown ->

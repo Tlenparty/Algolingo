@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.ExerciseResult
 import com.tlenparty.algolingo.lesson.LessonAction
 import com.tlenparty.algolingo.lesson.LessonState
@@ -35,8 +34,8 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
     val sol = state.lesson.solution
     Column(modifier.fillMaxSize()) {
         Column(
-            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+            Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = AlgoTheme.spacing.md, vertical = AlgoTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.lg),
         ) {
             if (ex != null) {
                 val head = if (solved) {
@@ -57,13 +56,13 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
                 }
             }
         }
-        ChunkyButton("Продолжить", { on(LessonAction.Continue) }, Modifier.padding(16.dp))
+        ChunkyButton("Продолжить", { on(LessonAction.Continue) }, Modifier.padding(AlgoTheme.spacing.md))
     }
 }
 
 @Composable
 private fun Section(title: String, content: @Composable () -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
         Text(title, style = AlgoTheme.typography.heading, color = MaterialTheme.colorScheme.onBackground)
         content()
     }
@@ -71,7 +70,7 @@ private fun Section(title: String, content: @Composable () -> Unit) {
 
 @Composable
 private fun Bullets(items: List<String>) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xs)) {
         for (s in items) Text(richText("• $s"), style = AlgoTheme.typography.body, color = MaterialTheme.colorScheme.onBackground)
     }
 }

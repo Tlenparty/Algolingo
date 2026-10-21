@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.components.LessonProgressBar
 
@@ -31,19 +30,19 @@ fun LessonTopBar(
 ) {
     val c = AlgoTheme.colors
     val t = AlgoTheme.typography
-    Row(modifier.fillMaxWidth().height(56.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier.fillMaxWidth().height(AlgoTheme.sizes.topBar), verticalAlignment = Alignment.CenterVertically) {
         Box(
-            Modifier.size(48.dp).semantics { contentDescription = "Закрыть урок" }
+            Modifier.size(AlgoTheme.sizes.touchTarget).semantics { contentDescription = "Закрыть урок" }
                 .clickable(role = Role.Button, onClick = onClose),
             contentAlignment = Alignment.Center,
         ) { Text("✕", color = c.secondaryText, fontSize = AlgoTheme.typography.iconEmoji) }
-        LessonProgressBar(progress, Modifier.weight(1f).padding(horizontal = 16.dp))
+        LessonProgressBar(progress, Modifier.weight(1f).padding(horizontal = AlgoTheme.spacing.md))
         if (hintsRemaining == null) {
-            Box(Modifier.size(48.dp))
+            Box(Modifier.size(AlgoTheme.sizes.touchTarget))
         } else {
             val active = hintEnabled && hintsRemaining > 0
             Box(
-                Modifier.size(48.dp).semantics { contentDescription = "Подсказка, осталось $hintsRemaining" }
+                Modifier.size(AlgoTheme.sizes.touchTarget).semantics { contentDescription = "Подсказка, осталось $hintsRemaining" }
                     .clickable(enabled = active, role = Role.Button, onClick = onHint),
                 contentAlignment = Alignment.Center,
             ) {

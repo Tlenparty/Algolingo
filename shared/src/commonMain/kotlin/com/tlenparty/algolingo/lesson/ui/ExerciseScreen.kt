@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -18,10 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,13 +26,13 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.LessonAction
 import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.Phase
 import com.tlenparty.algolingo.lesson.Verdict
 import com.tlenparty.algolingo.lesson.holeVisual
 import com.tlenparty.algolingo.lesson.panelModel
+import com.tlenparty.algolingo.design.components.AlgoCard
 import com.tlenparty.algolingo.design.components.ChipState
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.ui.components.CodeTemplate
@@ -72,9 +69,9 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
     BoxWithConstraints(modifier.fillMaxSize()) {
         val maxBody = maxHeight / 2
         Column(Modifier.fillMaxSize()) {
-            Column(Modifier.weight(1f).verticalScroll(scroll).padding(horizontal = 16.dp)) {
+            Column(Modifier.weight(1f).verticalScroll(scroll).padding(horizontal = AlgoTheme.spacing.md)) {
                 Text(state.lesson.title, style = t.heading, color = MaterialTheme.colorScheme.onBackground)
-                Column(Modifier.padding(top = 8.dp)) {
+                Column(Modifier.padding(top = AlgoTheme.spacing.sm)) {
                     for (line in state.lesson.statement.lines()) {
                         Text(
                             richText(line), style = t.body,
@@ -82,17 +79,15 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                         )
                     }
                 }
-                Column(Modifier.padding(top = 24.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(Modifier.padding(top = AlgoTheme.spacing.lg), verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
                     for (i in 0 until shown) key(i) {
-                        Surface(
-                            color = c.focusTint, shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(2.dp, c.focus), modifier = Modifier.fillMaxWidth(),
+                        AlgoCard(
+                            color = c.focusTint, border = c.focus, shape = AlgoTheme.shapes.medium,
+                            padding = AlgoTheme.spacing.md, modifier = Modifier.fillMaxWidth(), spacing = AlgoTheme.spacing.xs,
                         ) {
-                            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text("Подсказка ${i + 1} из ${ex.hints.size}", style = t.label, color = c.focusText)
-                                Text(richText(ex.hints[i]), style = t.body, color = MaterialTheme.colorScheme.onBackground)
-                                if (i == 0) Text("Подсказка снижает оценку до 💡", style = t.label, color = c.secondaryText)
-                            }
+                            Text("Подсказка ${i + 1} из ${ex.hints.size}", style = t.label, color = c.focusText)
+                            Text(richText(ex.hints[i]), style = t.body, color = MaterialTheme.colorScheme.onBackground)
+                            if (i == 0) Text("Подсказка снижает оценку до 💡", style = t.label, color = c.secondaryText)
                         }
                     }
                     CodeTemplate(
@@ -103,16 +98,16 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                         enabled = solving,
                     )
                 }
-                Column(Modifier.height(16.dp)) {}
+                Column(Modifier.height(AlgoTheme.spacing.md)) {}
             }
             Column(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background)) {
-                Column(Modifier.fillMaxWidth().height(2.dp).background(outline)) {}
+                Column(Modifier.fillMaxWidth().height(AlgoTheme.sizes.border).background(outline)) {}
                 if (check != null) {
                     // Keep the last check during exit animation so the panel does not blank out.
                     ResultPanelHost(check, maxBody) { on(LessonAction.Continue) }
                 } else {
-                    Column(Modifier.padding(16.dp)) {
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(Modifier.padding(AlgoTheme.spacing.md)) {
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm), verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
                             for (id in cur.order) key(id) {
                                 val placed = cur.isPlaced(id)
                                 TokenChip(
@@ -123,7 +118,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                             }
                         }
                         ChunkyButton(
-                            "Проверить", { on(LessonAction.Check) }, Modifier.padding(top = 16.dp),
+                            "Проверить", { on(LessonAction.Check) }, Modifier.padding(top = AlgoTheme.spacing.md),
                             enabled = solving && cur.placed.all { it != null },
                         )
                     }

@@ -15,7 +15,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tlenparty.algolingo.lesson.Lesson
@@ -45,10 +44,10 @@ fun LessonHost(id: String, onHome: () -> Unit) {
 private fun LessonErrorScreen(onHome: () -> Unit) {
     val t = AlgoTheme.typography
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.TopCenter) {
-        Column(Modifier.fillMaxSize().widthIn(max = 600.dp)) {
+        Column(Modifier.fillMaxSize().widthIn(max = AlgoTheme.sizes.contentMaxWidth)) {
             Column(
-                Modifier.weight(1f).padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+                Modifier.weight(1f).padding(AlgoTheme.spacing.md),
+                verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.smd, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text("Не удалось открыть урок", style = t.heading, color = MaterialTheme.colorScheme.onBackground, textAlign = TextAlign.Center)
@@ -57,7 +56,7 @@ private fun LessonErrorScreen(onHome: () -> Unit) {
                     style = t.body, color = AlgoTheme.colors.secondaryText, textAlign = TextAlign.Center,
                 )
             }
-            ChunkyButton("На главную", onHome, Modifier.padding(16.dp))
+            ChunkyButton("На главную", onHome, Modifier.padding(AlgoTheme.spacing.md))
         }
     }
 }

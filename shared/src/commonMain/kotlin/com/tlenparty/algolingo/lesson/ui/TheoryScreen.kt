@@ -1,21 +1,17 @@
 package com.tlenparty.algolingo.lesson.ui
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.lesson.TheoryCard
+import com.tlenparty.algolingo.design.components.AlgoCard
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.components.CodeBlock
 import com.tlenparty.algolingo.ui.components.richText
@@ -26,34 +22,34 @@ fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modi
     val t = AlgoTheme.typography
     val cap = AlgoTheme.colors.secondaryText
     Column(modifier.fillMaxSize()) {
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp)) {
-            Surface(
+        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(AlgoTheme.spacing.md)) {
+            AlgoCard(
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(2.dp, MaterialTheme.colorScheme.outline),
+                border = MaterialTheme.colorScheme.outline,
+                shape = AlgoTheme.shapes.large,
+                padding = AlgoTheme.spacing.lg,
                 modifier = Modifier.fillMaxWidth(),
+                spacing = AlgoTheme.spacing.smd,
             ) {
-                Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(card.title, style = t.heading, color = MaterialTheme.colorScheme.onBackground)
-                    if (card.signals.isNotEmpty()) {
-                        Text("Сигналы", style = t.label, color = cap)
-                        Bullets(card.signals)
-                    }
-                    if (card.skeleton != null) {
-                        Text("Скелет", style = t.label, color = cap)
-                        CodeBlock(card.skeleton)
-                    }
-                    if (card.body.isNotBlank()) {
-                        Text(richText(card.body), style = t.body, color = MaterialTheme.colorScheme.onBackground)
-                    }
-                    if (card.pitfalls.isNotEmpty()) {
-                        Text("⚠️ Грабли", style = t.label, color = cap)
-                        Bullets(card.pitfalls)
-                    }
+                Text(card.title, style = t.heading, color = MaterialTheme.colorScheme.onBackground)
+                if (card.signals.isNotEmpty()) {
+                    Text("Сигналы", style = t.label, color = cap)
+                    Bullets(card.signals)
+                }
+                if (card.skeleton != null) {
+                    Text("Скелет", style = t.label, color = cap)
+                    CodeBlock(card.skeleton)
+                }
+                if (card.body.isNotBlank()) {
+                    Text(richText(card.body), style = t.body, color = MaterialTheme.colorScheme.onBackground)
+                }
+                if (card.pitfalls.isNotEmpty()) {
+                    Text("⚠️ Грабли", style = t.label, color = cap)
+                    Bullets(card.pitfalls)
                 }
             }
         }
-        ChunkyButton("Дальше", onNext, Modifier.padding(16.dp))
+        ChunkyButton("Дальше", onNext, Modifier.padding(AlgoTheme.spacing.md))
     }
 }
 

@@ -20,7 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.lesson.LessonAction
 import com.tlenparty.algolingo.lesson.LessonReducer
 import com.tlenparty.algolingo.lesson.LessonState
@@ -36,7 +36,7 @@ fun LessonScreen(state: LessonState, on: (LessonAction) -> Unit, onExit: () -> U
     // On the summary back is not intercepted: NavHost pops straight to Home.
     ExitBackHandler(enabled = !done, onBack = { confirm = true })
     Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background), contentAlignment = Alignment.TopCenter) {
-        Column(Modifier.fillMaxSize().widthIn(max = 600.dp)) {
+        Column(Modifier.fillMaxSize().widthIn(max = AlgoTheme.sizes.contentMaxWidth)) {
             if (!done) {
                 val id = state.queue.firstOrNull()
                 val ex = state.lesson.exercises.firstOrNull { it.id == id }
