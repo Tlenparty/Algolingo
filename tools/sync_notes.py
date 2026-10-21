@@ -3,6 +3,7 @@
 
 Usage: python3 tools/sync_notes.py <vault_dir>   (or env ALGOLINGO_VAULT)
 """
+import hashlib
 import json
 import os
 import re
@@ -55,8 +56,9 @@ def main():
     shutil.rmtree(tmp, ignore_errors=True)
     tmp.mkdir(parents=True)
     entries = []
-    for i, (title, text) in enumerate(notes):
-        nid = f"n{i:02d}"
+    for title, text in notes:
+        # Stable, ASCII-only id: adding/renaming other notes never remaps this one.
+        nid = "n" + hashlib.sha1(title.encode("utf-8")).hexdigest()[:8]
         (tmp / f"{nid}.md").write_bytes(text.replace("\r\n", "\n").encode("utf-8"))
         entries.append({"id": nid, "title": title, "section": SECTIONS[section_of(title)], "file": f"{nid}.md"})
     entries.sort(key=lambda e: SECTIONS.index(e["section"]))  # stable: title order kept

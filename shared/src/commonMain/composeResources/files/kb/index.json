@@ -1,140 +1,140 @@
 [
  {
-  "id": "n00",
+  "id": "n08afb307",
   "title": "00 Компас алгоритмов",
   "section": "Навигация",
-  "file": "n00.md"
+  "file": "n08afb307.md"
  },
  {
-  "id": "n01",
+  "id": "nb2db8dca",
   "title": "01 Ключи и сигналы",
   "section": "Навигация",
-  "file": "n01.md"
+  "file": "nb2db8dca.md"
  },
  {
-  "id": "n02",
+  "id": "n9e62f72d",
   "title": "02 Шаблон решения",
   "section": "Навигация",
-  "file": "n02.md"
+  "file": "n9e62f72d.md"
  },
  {
-  "id": "n03",
+  "id": "n87d0fd88",
   "title": "03 Тренажёр задач",
   "section": "Навигация",
-  "file": "n03.md"
+  "file": "n87d0fd88.md"
  },
  {
-  "id": "n04",
+  "id": "n3cf4f903",
   "title": "04 Маркеры + Заготовки",
   "section": "Навигация",
-  "file": "n04.md"
+  "file": "n3cf4f903.md"
  },
  {
-  "id": "n05",
+  "id": "n07ed966c",
   "title": "05 Тренажёр решений",
   "section": "Тренажёры",
-  "file": "n05.md"
+  "file": "n07ed966c.md"
  },
  {
-  "id": "n06",
+  "id": "n17006052",
   "title": "06 Движок «маркеры и дырки»",
   "section": "Тренажёры",
-  "file": "n06.md"
+  "file": "n17006052.md"
  },
  {
-  "id": "n10",
+  "id": "n054ccc1e",
   "title": "Алгоритмы Avito",
   "section": "Задачи с собесов",
-  "file": "n10.md"
+  "file": "n054ccc1e.md"
  },
  {
-  "id": "n11",
+  "id": "n3aa07ae9",
   "title": "Алгоритмы Glovo",
   "section": "Задачи с собесов",
-  "file": "n11.md"
+  "file": "n3aa07ae9.md"
  },
  {
-  "id": "n19",
+  "id": "n9e814012",
   "title": "Задача от Яндекс со станциями",
   "section": "Задачи с собесов",
-  "file": "n19.md"
+  "file": "n9e814012.md"
  },
  {
-  "id": "n20",
+  "id": "nef21c1e1",
   "title": "Задачи с Avito",
   "section": "Задачи с собесов",
-  "file": "n20.md"
+  "file": "nef21c1e1.md"
  },
  {
-  "id": "n07",
+  "id": "n4e5e7ef4",
   "title": "BIG O",
   "section": "Темы",
-  "file": "n07.md"
+  "file": "n4e5e7ef4.md"
  },
  {
-  "id": "n08",
+  "id": "n0875a2bf",
   "title": "LRU Cache",
   "section": "Темы",
-  "file": "n08.md"
+  "file": "n0875a2bf.md"
  },
  {
-  "id": "n09",
+  "id": "nde479513",
   "title": "Алгоритмические сложности",
   "section": "Темы",
-  "file": "n09.md"
+  "file": "nde479513.md"
  },
  {
-  "id": "n12",
+  "id": "n056e6b1c",
   "title": "Бинарный поиск",
   "section": "Темы",
-  "file": "n12.md"
+  "file": "n056e6b1c.md"
  },
  {
-  "id": "n13",
+  "id": "ned5215b7",
   "title": "Бублесорт",
   "section": "Темы",
-  "file": "n13.md"
+  "file": "ned5215b7.md"
  },
  {
-  "id": "n14",
+  "id": "n6f3f2844",
   "title": "Динамическое программирование",
   "section": "Темы",
-  "file": "n14.md"
+  "file": "n6f3f2844.md"
  },
  {
-  "id": "n15",
+  "id": "n3f836927",
   "title": "Если слово палиндром",
   "section": "Темы",
-  "file": "n15.md"
+  "file": "n3f836927.md"
  },
  {
-  "id": "n16",
+  "id": "n3f4be5ed",
   "title": "Задача на 2 указателя",
   "section": "Темы",
-  "file": "n16.md"
+  "file": "n3f4be5ed.md"
  },
  {
-  "id": "n17",
+  "id": "n87785994",
   "title": "Задача на stack и map",
   "section": "Темы",
-  "file": "n17.md"
+  "file": "n87785994.md"
  },
  {
-  "id": "n18",
+  "id": "ne8e12a31",
   "title": "Задача на поиск в ширину",
   "section": "Темы",
-  "file": "n18.md"
+  "file": "ne8e12a31.md"
  },
  {
-  "id": "n21",
+  "id": "nd0ce2057",
   "title": "Поиск в глубину (DFS)",
   "section": "Темы",
-  "file": "n21.md"
+  "file": "nd0ce2057.md"
  },
  {
-  "id": "n22",
+  "id": "n20407d85",
   "title": "Проверка является ли слово анаграммой",
   "section": "Темы",
-  "file": "n22.md"
+  "file": "n20407d85.md"
  }
 ]
