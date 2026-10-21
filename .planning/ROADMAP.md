@@ -93,8 +93,20 @@ Plans:
   5. В конце урока пользователь видит итог: ✅ / 💡 / ❌ и заработанные XP
   6. Интерфейс в игривом стиле по UI-SPEC, светлая и тёмная тема переключаются вместе с системой
 
-**Plans**: TBD
+**Plans:** 7/10 plans complete
 **UI hint**: yes
+
+Plans:
+- [x] 03-01-PLAN.md — Fonts (Nunito + JetBrains Mono) and theme text styles
+- [x] 03-02-PLAN.md — TDD pure UI-state functions (hole visuals, panel model, XP)
+- [x] 03-03-PLAN.md — Back-handling spike and lesson plumbing
+- [x] 03-04-PLAN.md — Shared components (ChunkyButton, TokenChip, CodeTemplate, ...)
+- [x] 03-05-PLAN.md — Theory and exercise screens
+- [x] 03-06-PLAN.md — Reveal and summary screens
+- [x] 03-07-PLAN.md — Wire Home -> lesson -> Home
+- [ ] 03-09-PLAN.md — :design module with AlgoTheme tokens, fonts, highlight; shared switched to AlgoTheme
+- [ ] 03-10-PLAN.md — Reusable components into :design, no raw dp/sp in shared UI
+- [ ] 03-08-PLAN.md — Full build + device walkthrough (human-verify), runs last
 
 ### Phase 4: Progress & Review
 
