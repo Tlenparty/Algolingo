@@ -14,6 +14,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 
 - ✓ Каркас KMP + Compose Multiplatform: одно приложение запускается на Android и iOS-симуляторе и читает JSON из ресурсов — Phase 1
 - ✓ База знаний: все 23 Obsidian-заметки читаются в приложении по разделам, со свёрнутыми спойлерами, кликабельными [[ссылками]] и поиском — Validated in Phase 01.1: Knowledge Base
+- ✓ Схема урока (JSON) и движок «дырок»: проверка каждой дырки ok / «принято, но…» / wrong с объяснением, облачка-дубликаты как отдельные объекты, редьюсер урока с повторами (≤2), перемешиванием по seed и оценкой ✅/💡/❌ — Validated in Phase 2: Content Schema & Engine
 
 ### Active
 
@@ -93,4 +94,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-10-21 after Phase 01.1*
+*Last updated: 2026-10-21 after Phase 2*
