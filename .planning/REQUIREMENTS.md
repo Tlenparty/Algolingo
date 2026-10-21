@@ -37,7 +37,7 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 
 ### Visual Style
 
-- [ ] **UI-01**: Игривый стиль в духе Duolingo (яркий акцент, крупные «объёмные» кнопки и облачка); светлая и тёмная тема по системе
+- [x] **UI-01**: Игривый стиль в духе Duolingo (яркий акцент, крупные «объёмные» кнопки и облачка); светлая и тёмная тема по системе
 
 ### Knowledge Base
 
@@ -131,7 +131,7 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | EXER-08 | Phase 3 | Pending |
 | EXER-09 | Phase 3 | Pending |
 | EXER-10 | Phase 3 | Pending |
-| UI-01 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Complete |
 | KB-01 | Phase 01.1 | Complete |
 | KB-02 | Phase 01.1 | Complete |
 | KB-03 | Phase 01.1 | Complete |
