@@ -94,9 +94,10 @@ fun validate(lesson: Lesson): List<String> {
             val have = bankTexts.count { it == t }
             if (have < n && have > 0) errors += "$e: '$t' needed $n times, bank has $have"
         }
-        for (c in ex.bank) {
-            if (c.text !in used && c.why == null && ex.holes.none { it.wrongWhy.containsKey(c.text) }) {
-                errors += "$e: distractor '${c.text}' has no why"
+        // check() reads only the placed hole's wrongWhy, then chip.why: a distractor needs a why wherever it can land.
+        for (c in ex.bank) if (c.text !in used && c.why.isNullOrBlank()) {
+            ex.holes.forEachIndexed { h, hole ->
+                if (hole.wrongWhy[c.text].isNullOrBlank()) errors += "$e: distractor '${c.text}' has no why for hole $h"
             }
         }
         if (shapeOk && ex.holes.all { it.ok.isNotEmpty() }) {

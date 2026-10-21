@@ -62,8 +62,13 @@ class ModelTest {
     @Test fun distractorNeedsWhy() {
         val bad = x2().copy(bank = listOf(Chip("X"), Chip("Y"), Chip("Z")))
         assertErr(lessonOf(x1(), bad, code = same), "distractor 'Z'")
-        val viaWrongWhy = bad.copy(holes = listOf(Hole(listOf("X"), wrongWhy = mapOf("Z" to "w")), Hole(listOf("Y"))))
-        assertEquals(emptyList(), validate(lessonOf(x1(), viaWrongWhy, code = same)))
+        assertErr(lessonOf(x1(), x2().copy(bank = listOf(Chip("X"), Chip("Y"), Chip("Z", " "))), code = same), "distractor 'Z'")
+        // wrongWhy in one hole only: Z dropped into hole 1 would have no explanation
+        val oneHole = bad.copy(holes = listOf(Hole(listOf("X"), wrongWhy = mapOf("Z" to "w")), Hole(listOf("Y"))))
+        assertErr(lessonOf(x1(), oneHole, code = same), "distractor 'Z' has no why for hole 1")
+        val everyHole = bad.copy(holes = listOf(Hole(listOf("X"), wrongWhy = mapOf("Z" to "w")), Hole(listOf("Y"), wrongWhy = mapOf("Z" to "w"))))
+        val e1 = x1().copy(holes = listOf(Hole(listOf("Y"), wrongWhy = mapOf("Z" to "w"))), bank = listOf(Chip("Y"), Chip("Z")))
+        assertEquals(emptyList(), validate(lessonOf(e1, everyHole, code = same)))
     }
 
     @Test fun bankTooBig() {
