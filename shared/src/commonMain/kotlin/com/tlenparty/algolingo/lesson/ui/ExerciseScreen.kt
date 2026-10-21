@@ -21,7 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -59,8 +63,11 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
 
     LaunchedEffect(shown) { if (shown > 0) scroll.animateScrollTo(0) } // new card is appended near the top
     val haptic = LocalHapticFeedback.current
+    // Fired flag survives rotation, so recreating the composition in Feedback does not buzz again (IN-03).
+    var buzzed by rememberSaveable(screenKey(state)) { mutableStateOf(false) }
     LaunchedEffect(check) {
-        if (check != null) {
+        if (check != null && !buzzed) {
+            buzzed = true
             haptic.performHapticFeedback(
                 if (check.verdict == Verdict.Wrong) HapticFeedbackType.Reject else HapticFeedbackType.Confirm,
             )
