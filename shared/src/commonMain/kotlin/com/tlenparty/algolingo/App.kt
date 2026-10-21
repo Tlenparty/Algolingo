@@ -80,11 +80,17 @@ fun App() {
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
                 composable<Home> { HomeStub() }
                 composable<KbList> {
-                    if (loaded) KbListScreen(repo.notes, { nav.navigate(NoteRoute(it.id)) }) else Text("…")
+                    if (loaded) KbListScreen(repo.notes, { nav.navigate(NoteRoute(it.id)) }, search = repo::search) else Text("…")
                 }
                 composable<NoteRoute> {
-                    val note = repo.byId(it.toRoute<NoteRoute>().id)
-                    if (note != null) NoteScreen(note, { nav.popBackStack() })
+                    val route = it.toRoute<NoteRoute>()
+                    val note = repo.byId(route.id)
+                    if (note != null) NoteScreen(
+                        note, route.anchor,
+                        resolvable = { t -> repo.resolve(t) != null },
+                        onLink = { t, a -> repo.resolve(t)?.let { n -> nav.navigate(NoteRoute(n.id, a)) } },
+                        onBack = { nav.popBackStack() },
+                    )
                     else Text("Заметка не найдена")
                 }
             }
