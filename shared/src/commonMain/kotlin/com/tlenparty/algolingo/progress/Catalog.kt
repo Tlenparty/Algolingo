@@ -16,9 +16,9 @@ data class Catalog(val schema: Int = 1, val lessons: List<CatalogEntry> = emptyL
 
 private val json = Json { ignoreUnknownKeys = true }
 
-/** Null on any bad input; never throws. */
+/** Null on any bad input; never throws. A repeated id keeps its first entry (Home's list keys must be unique). */
 fun parseCatalog(text: String): Catalog? = try {
-    json.decodeFromString(Catalog.serializer(), text)
+    json.decodeFromString(Catalog.serializer(), text).let { it.copy(lessons = it.lessons.distinctBy(CatalogEntry::id)) }
 } catch (_: SerializationException) {
     null
 } catch (_: IllegalArgumentException) {

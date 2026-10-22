@@ -85,6 +85,12 @@ class CatalogTest {
     )
 
     @Test
+    fun parseDropsDuplicateIds() = assertEquals(
+        listOf(CatalogEntry("a", "1"), CatalogEntry("b", "2")),
+        parseCatalog("""{"lessons":[{"id":"a","title":"1"},{"id":"b","title":"2"},{"id":"a","title":"3"}]}""")?.lessons,
+    )
+
+    @Test
     fun parseGarbageIsNull() = assertNull(parseCatalog("garbage"))
 
     @Test
