@@ -24,6 +24,9 @@ import com.tlenparty.algolingo.kb.ui.KbListScreen
 import com.tlenparty.algolingo.kb.ui.NoteScreen
 import com.tlenparty.algolingo.lesson.ui.LessonHost
 import com.tlenparty.algolingo.progress.AppGraph
+import com.tlenparty.algolingo.progress.Catalog
+import com.tlenparty.algolingo.progress.homeModel
+import com.tlenparty.algolingo.progress.loadCatalog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlinx.serialization.Serializable
@@ -38,7 +41,7 @@ object KbList
 data class NoteRoute(val id: String, val anchor: String? = null)
 
 @Serializable
-data class LessonRoute(val id: String)
+data class LessonRoute(val id: String, val review: Boolean = false)
 
 @Composable
 fun App(dataDir: String) {
@@ -46,6 +49,7 @@ fun App(dataDir: String) {
         val progressRepo = remember(dataDir) { AppGraph.progress(dataDir) }
         val repo = remember { KbRepository() }
         val loaded by produceState(false) { repo.load(); value = true }
+        val catalog by produceState<Catalog?>(null) { value = loadCatalog() }
         val nav = rememberNavController()
         val entry by nav.currentBackStackEntryAsState()
         val dest = entry?.destination
@@ -73,11 +77,19 @@ fun App(dataDir: String) {
                 composable<Home> { entry ->
                     val progress by progressRepo.progress.collectAsStateWithLifecycle(null)
                     // ponytail: today recomputed per composition; add a LifecycleResumeEffect refresh if midnight staleness matters.
-                    HomeScreen(progress, progressRepo.today()) { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } }
+                    val c = catalog
+                    val p = progress
+                    val model = if (c != null && p != null) homeModel(c, p, progressRepo.today()) else null
+                    HomeScreen(
+                        model,
+                        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
+                        // ponytail: review opens only the first due lesson; chain them into one session if N regularly exceeds 3.
+                        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true)) } } },
+                    )
                 }
                 composable<LessonRoute> { entry ->
-                    val id = entry.toRoute<LessonRoute>().id
-                    LessonHost(id, onFinish = { progressRepo.record(id, it) }) { entry.ifResumed { nav.popBackStack() } }
+                    val route = entry.toRoute<LessonRoute>()
+                    LessonHost(route.id, route.review, onFinish = { progressRepo.record(route.id, it) }) { entry.ifResumed { nav.popBackStack() } }
                 }
                 composable<KbList> { entry ->
                     if (loaded) KbListScreen(repo.notes, { n -> entry.ifResumed { nav.navigate(NoteRoute(n.id)) } }, search = repo::search) else Text("…")

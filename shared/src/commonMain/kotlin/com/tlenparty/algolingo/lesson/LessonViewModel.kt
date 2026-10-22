@@ -6,10 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-/** Loads the lesson once (survives rotation without a reload/blank frame). null = loading, failure = error screen. */
+/** review = due replay: same player, theory skipped (PROG-05). Loads the lesson once (survives rotation without a reload/blank frame). null = loading, failure = error screen. */
 class LessonViewModel(
     id: String,
     seed: Int,
+    review: Boolean = false,
     private val onFinish: (LessonResult) -> Unit = {},
     load: suspend (String) -> Result<Lesson> = ::loadLesson,
 ) : ViewModel() {
@@ -17,7 +18,7 @@ class LessonViewModel(
     val state: StateFlow<Result<LessonState>?> = _state
 
     init {
-        viewModelScope.launch { _state.value = load(id).map { LessonReducer.start(it, seed) } }
+        viewModelScope.launch { _state.value = load(id).map { LessonReducer.start(if (review) it.copy(theory = emptyList()) else it, seed) } }
     }
 
     /** onFinish fires once, on the transition into Done; the VM survives rotation, so no double write. */

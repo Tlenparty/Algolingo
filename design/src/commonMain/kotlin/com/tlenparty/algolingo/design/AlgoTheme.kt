@@ -107,12 +107,13 @@ class AlgoTypography(ui: FontFamily, val code: FontFamily) {
     val codeBold = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Bold)
     val codeChip = TextStyle(fontFamily = code, fontFeatureSettings = NO_LIGATURES, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Bold)
 
-    /** Emoji glyph sizes: top bar ✕/💡, summary hero. */
+    /** Emoji glyph sizes: top bar ✕/💡, Home path node ✅/🔒, summary hero. */
     val iconEmoji: TextUnit = 24.sp
+    val nodeEmoji: TextUnit = 32.sp
     val heroEmoji: TextUnit = 64.sp
 }
 
-/** 03-UI-SPEC spacing scale; pillX = horizontal padding inside the Home «Начать» pill. */
+/** 03-UI-SPEC spacing scale; pillX = horizontal padding inside the Home «Начать» pill, xxl = path zig-zag offset, xxxl = path bottom inset. */
 data class AlgoSpacing(
     val xs: Dp = 4.dp,
     val sm: Dp = 8.dp,
@@ -120,6 +121,8 @@ data class AlgoSpacing(
     val md: Dp = 16.dp,
     val lg: Dp = 24.dp,
     val xl: Dp = 32.dp,
+    val xxl: Dp = 48.dp,
+    val xxxl: Dp = 64.dp,
     val pillX: Dp = 20.dp,
 )
 
