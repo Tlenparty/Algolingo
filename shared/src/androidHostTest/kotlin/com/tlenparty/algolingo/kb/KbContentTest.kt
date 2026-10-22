@@ -47,9 +47,9 @@ class KbContentTest {
             is Table -> (listOf(it.header) + it.rows).flatten().flatMap(::parseInline)
             is Callout -> parseInline(it.title) + inlines(it.blocks)
             is Quote -> inlines(it.blocks)
-            is Code, Rule -> emptyList()
+            is Code, Rule, is ImageBlock -> emptyList()
         }
-    }
+    }.flatMap { if (it is Mark) parseInline(it.v) else listOf(it) }
 
     // Wikilinks to vault notes that are not part of the bundle; they render as plain text.
     private val knownMissing = setOf(

@@ -1,5 +1,7 @@
 package com.tlenparty.algolingo.kb.ui
 
+import algolingo.shared.generated.resources.Res
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -34,11 +40,13 @@ import com.tlenparty.algolingo.kb.Bold
 import com.tlenparty.algolingo.kb.Callout
 import com.tlenparty.algolingo.kb.Code
 import com.tlenparty.algolingo.kb.Heading
+import com.tlenparty.algolingo.kb.ImageBlock
 import com.tlenparty.algolingo.kb.Inline
 import com.tlenparty.algolingo.kb.InlineCode
 import com.tlenparty.algolingo.kb.Italic
 import com.tlenparty.algolingo.kb.Link
 import com.tlenparty.algolingo.kb.ListItem
+import com.tlenparty.algolingo.kb.Mark
 import com.tlenparty.algolingo.kb.Paragraph
 import com.tlenparty.algolingo.kb.Quote
 import com.tlenparty.algolingo.kb.Rule
@@ -48,6 +56,7 @@ import com.tlenparty.algolingo.design.highlight
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.NO_LIGATURES
 import com.tlenparty.algolingo.kb.Text as PlainText
+import org.jetbrains.compose.resources.decodeToImageBitmap
 
 @Composable
 fun inlineText(
@@ -58,9 +67,11 @@ fun inlineText(
     val bg = MaterialTheme.colorScheme.surfaceVariant
     val link = AlgoTheme.colors.focusText
     val mono = AlgoTheme.typography.code
-    return buildAnnotatedString {
+    val markBg = AlgoTheme.colors.acceptableTint
+    fun AnnotatedString.Builder.add(inlines: List<Inline>) {
         for (n in inlines) when (n) {
             is PlainText -> append(n.v)
+            is Mark -> withStyle(SpanStyle(background = markBg)) { add(parseInline(n.v)) }
             is Bold -> withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(n.v) }
             is Italic -> withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(n.v) }
             is InlineCode -> withStyle(SpanStyle(fontFamily = mono, fontFeatureSettings = NO_LIGATURES, background = bg)) { append(n.v) }
@@ -75,6 +86,7 @@ fun inlineText(
                 } else append(n.label)
         }
     }
+    return buildAnnotatedString { add(inlines) }
 }
 
 @Composable
@@ -142,6 +154,16 @@ fun BlockView(
         Rule -> HorizontalDivider(pad, color = MaterialTheme.colorScheme.outline)
         is Quote -> QuoteBox(block.blocks, noteId, resolvable, onLink)
         is Callout -> CalloutView(block, noteId, index) { BlockView(it, noteId, index, resolvable, onLink) }
+        is ImageBlock -> {
+            // ponytail: the item grows after the async load, so an anchor scroll into an image note may land slightly off;
+            // store the aspect ratio in the index if it bites.
+            val bmp by produceState<ImageBitmap?>(null, block.file) {
+                value = runCatching { Res.readBytes("files/kb/img/${block.file}").decodeToImageBitmap() }.getOrNull()
+            }
+            bmp?.let {
+                Image(it, contentDescription = "Картинка из заметки", modifier = pad.fillMaxWidth(), contentScale = ContentScale.FillWidth)
+            } ?: Text("🖼 картинка", pad, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
     }
 }
 
