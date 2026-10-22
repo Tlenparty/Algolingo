@@ -221,6 +221,25 @@ private object L1_3_v0 { // reference
     }
 }
 
+private object L1_4_v0 { // reference
+    fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {
+        val seen = HashMap<Int, Int>()
+        for (i in nums.indices) {
+            val need = target - nums[i]
+            seen[need]?.let { return it to i }
+            seen[nums[i]] = i
+        }
+        return null
+    }
+
+    fun examples() {
+        assertEquals(0 to 1, twoSum(intArrayOf(2, 7, 11, 15), 9))
+        assertEquals(1 to 2, twoSum(intArrayOf(3, 2, 4), 6))
+        assertEquals(0 to 1, twoSum(intArrayOf(3, 3), 6))
+        assertNull(twoSum(intArrayOf(1, 2), 7))
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -275,5 +294,10 @@ class ReferenceSolutionsTest {
     @Test
     fun l1_3_v0() {
         L1_3_v0.examples()
+    }
+
+    @Test
+    fun l1_4_v0() {
+        L1_4_v0.examples()
     }
 }

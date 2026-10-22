@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "id": "l1.4",
+  "level": 1,
+  "title": "Two Sum",
+  "statement": "Верни индексы двух чисел с суммой `target`.",
+  "trains": "Map «значение → индекс», поиск дополнения `target - x`",
+  "targetTimeSec": 180,
+  "theory": [
+    {
+      "title": "Когда Map значение → индекс",
+      "signals": [
+        "«Найди пару с суммой `target`»",
+        "Массив не отсортирован",
+        "Вернуть нужно индексы, а не сами числа"
+      ],
+      "body": "Для каждого `x` ищем дополнение `target - x` среди уже пройденных: `HashMap` «значение → индекс» отвечает за O(1). Если массив отсортирован — это два указателя (уровень 2)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "for (i in nums.indices) {\n    val need = target - nums[i]\n    seen[need]?.let { return it to i }\n    seen[nums[i]] = i\n}",
+      "body": "Один проход, не два: сначала ищем дополнение, потом кладём текущее число. O(n) по времени и памяти."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Сначала положить `nums[i]`, потом искать: `[3, 2, 4]`, `6` → `3` найдёт сам себя, ответ `0 to 0` вместо `1 to 2`",
+        "Искать `nums[i]` вместо дополнения `target - nums[i]`: пара не найдётся",
+        "Два вложенных цикла «каждый с каждым» — O(n²)"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l1.4.e1",
+      "segments": [
+        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        val need = target - nums[i]\n        seen[",
+        "]?.let { return it to i }\n        seen[nums[i]] = i\n    }\n    return null\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "need"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "need"
+        },
+        {
+          "text": "nums[i]",
+          "why": "ищем само число, а не дополнение: `[2, 7]`, `9` → `null` вместо `0 to 1`"
+        },
+        {
+          "text": "target",
+          "why": "ищем `target` целиком, а не недостающую часть: `[2, 7]`, `9` → `null` вместо `0 to 1`"
+        }
+      ],
+      "hints": [
+        "Для текущего `x` нужно `target - x`. Если оно уже в Map — ответ."
+      ]
+    },
+    {
+      "id": "l1.4.e2",
+      "segments": [
+        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        val need = target ",
+        " nums[i]\n        seen[",
+        "]?.let { return it to i }\n        seen[nums[i]] = i\n    }\n    return null\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "-"
+          ],
+          "wrongWhy": {
+            "need": "между `target` и `nums[i]` нужен оператор, а `need` ещё не объявлен: `target need nums[i]` не скомпилируется",
+            "nums[i]": "между `target` и `nums[i]` нужен оператор: `target nums[i] nums[i]` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "need"
+          ],
+          "wrongWhy": {
+            "-": "в скобках нужен ключ, а не оператор: `seen[-]` не скомпилируется",
+            "+": "в скобках нужен ключ, а не оператор: `seen[+]` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "-"
+        },
+        {
+          "text": "need"
+        },
+        {
+          "text": "+",
+          "why": "дополнение — это разность, а не сумма: `[2, 7]`, `9` → ищем `11` и `16`, ответ `null` вместо `0 to 1`"
+        },
+        {
+          "text": "nums[i]",
+          "why": "ищем само число, а не дополнение: `[2, 7]`, `9` → `null` вместо `0 to 1`"
+        }
+      ],
+      "hints": [
+        "Для текущего `x` нужно `target - x`. Если оно уже в Map — ответ."
+      ]
+    },
+    {
+      "id": "l1.4.e3",
+      "segments": [
+        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in ",
+        ") {\n        val need = target ",
+        " nums[i]\n        seen[",
+        "]?.let { return it to i }\n        seen[",
+        "] = i\n    }\n    return null\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "nums.indices"
+          ],
+          "wrongWhy": {
+            "-": "после `in` нужен диапазон, а не оператор: `for (i in -)` не скомпилируется",
+            "need": "`need` объявляется только внутри цикла: `for (i in need)` не скомпилируется",
+            "nums[i]": "`i` ещё не объявлен, а одно число не перебрать: `for (i in nums[i])` не скомпилируется",
+            "+": "после `in` нужен диапазон, а не оператор: `for (i in +)` не скомпилируется",
+            "target": "одно число `Int` не перебрать циклом: `for (i in target)` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "-"
+          ],
+          "wrongWhy": {
+            "nums.indices": "между `target` и `nums[i]` нужен оператор: `target nums.indices nums[i]` не скомпилируется",
+            "need": "между `target` и `nums[i]` нужен оператор, а `need` ещё не объявлен: `target need nums[i]` не скомпилируется",
+            "nums[i]": "между `target` и `nums[i]` нужен оператор: `target nums[i] nums[i]` не скомпилируется",
+            "0..nums.size": "между `target` и `nums[i]` нужен оператор: `target 0..nums.size nums[i]` не скомпилируется",
+            "target": "между `target` и `nums[i]` нужен оператор: `target target nums[i]` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "need"
+          ],
+          "wrongWhy": {
+            "nums.indices": "ключи `seen` — числа `Int`, а не диапазон: `seen[nums.indices]` не скомпилируется",
+            "-": "в скобках нужен ключ, а не оператор: `seen[-]` не скомпилируется",
+            "nums[i]": "при `seen[nums[i]] = i` ниже ищем само число, а не дополнение: `[2, 7]`, `9` → `null` вместо `0 to 1`. Сработает, только если и хранить наоборот — `seen[need] = i` («какое число жду → индекс»); но здесь собираем канон: ищем `need`, кладём `nums[i]`",
+            "0..nums.size": "ключи `seen` — числа `Int`, а не диапазон: `seen[0..nums.size]` не скомпилируется",
+            "+": "в скобках нужен ключ, а не оператор: `seen[+]` не скомпилируется",
+            "target": "ищем `target` целиком, а не недостающую часть: `[2, 7]`, `9` → `null` вместо `0 to 1`"
+          }
+        },
+        {
+          "ok": [
+            "nums[i]"
+          ],
+          "wrongWhy": {
+            "nums.indices": "ключи `seen` — числа `Int`, а не диапазон: `seen[nums.indices] = i` не скомпилируется",
+            "-": "в скобках нужен ключ, а не оператор: `seen[-] = i` не скомпилируется",
+            "need": "при `seen[need]` выше кладём дополнение, а ищем дополнение к другому числу: `[2, 7]`, `9` → `null` вместо `0 to 1`. Сработает, только если и искать наоборот — `seen[nums[i]]` («кто ждал это число?»); но здесь собираем канон: ищем `need`, кладём `nums[i]`",
+            "0..nums.size": "ключи `seen` — числа `Int`, а не диапазон: `seen[0..nums.size] = i` не скомпилируется",
+            "+": "в скобках нужен ключ, а не оператор: `seen[+] = i` не скомпилируется",
+            "target": "под одним ключом `target` хранится только последний индекс, чисел не запоминаем: `[2, 7]`, `9` → `null` вместо `0 to 1`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "nums.indices"
+        },
+        {
+          "text": "-"
+        },
+        {
+          "text": "need"
+        },
+        {
+          "text": "nums[i]"
+        },
+        {
+          "text": "0..nums.size",
+          "why": "`..` включает `nums.size`, последний шаг читает за границей: `[1, 2]`, `7` → падает на `nums[2]` вместо `null`"
+        },
+        {
+          "text": "+",
+          "why": "дополнение — это разность, а не сумма: `[2, 7]`, `9` → ищем `11` и `16`, ответ `null` вместо `0 to 1`"
+        },
+        {
+          "text": "target"
+        }
+      ],
+      "hints": [
+        "Идём по всем индексам массива — `i` нужен для ответа.",
+        "Для текущего `x` нужно `target - x`. Если оно уже в Map — ответ.",
+        "Иначе кладём `x → i`: Map хранит «значение → индекс»."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        val need = target - nums[i]\n        seen[need]?.let { return it to i }\n        seen[nums[i]] = i\n    }\n    return null\n}",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "сначала проверь дополнение, потом клади текущий — иначе на `target = 2*x` вернёшь один индекс дважды"
+    ],
+    "variations": []
+  }
+}
