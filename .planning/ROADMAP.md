@@ -191,10 +191,28 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
   2. `index.json` перечисляет 0.1–0.4, затем 1.1–1.5; 1.1 открывается после 0.4, следующие — по порядку
   3. Заказчик отревьюил контент уровня 1 (теория, дистракторы, пояснения)
   4. Уроки 1.1–1.5 проходятся с чистой установки на Android (авиарежим) и iOS-симуляторе
-**Plans:** 0 plans
+**Plans:** 5 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 6 to break down)
+**Wave 1**
+
+- [ ] 06-01-PLAN.md — Generator: examples inside variant objects + getOrDefault shim (Native); lesson 1.1 (CNV2-01)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 06-02-PLAN.md — Lessons 1.2 «Первый неповторяющийся символ» and 1.3 «Анаграмма» (CNV2-01)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 06-03-PLAN.md — Lessons 1.4 Two Sum and 1.5 «Победители соревнования»; 9-lesson index (CNV2-01)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 06-04-PLAN.md — Customer review of level 1 (blocking checkpoint) + edits (CNV2-01)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 06-05-PLAN.md — Autonomous Android (airplane) + iOS sim walkthrough 0.4 → 1.5; CNV2-01 Partial row (CNV2-01)
 
 ### Phase 7: Full Interview Knowledge Base
 
