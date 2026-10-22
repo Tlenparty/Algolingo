@@ -56,8 +56,8 @@ fun App(dataDir: String) {
         val loaded by produceState(false) { repo.load(); value = true }
         val catalog by produceState<Catalog?>(null) { value = loadCatalog() }
         val nav = rememberNavController()
-        val entry by nav.currentBackStackEntryAsState()
-        val dest = entry?.destination
+        val current by nav.currentBackStackEntryAsState()
+        val dest = current?.destination
         Scaffold(
             bottomBar = {
                 if (dest?.hasRoute<NoteRoute>() != true && dest?.hasRoute<LessonRoute>() != true) {
