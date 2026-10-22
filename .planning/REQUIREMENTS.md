@@ -149,6 +149,7 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | CONT-04 | Phase 5 | Complete |
 | CONT-05 | Phase 5 | Complete |
 | CONT-06 | Phase 5 | Complete |
+| CNV2-01 | Phase 6 | Partial (level 1) |
 
 **Coverage:**
 - v1 requirements: 37 total

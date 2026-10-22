@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "06-04 done (level 1 approved without edits); next 06-05 device walkthrough"
-last_updated: "2026-10-22T12:17:53.532Z"
+status: verifying
+stopped_at: Completed 05-04-PLAN.md; phase 5 plans 4/4
+last_updated: "2026-10-22T13:46:14.282Z"
 last_activity: 2026-10-22
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 32
-  completed_plans: 31
-  percent: 75
+  completed_plans: 32
+  percent: 88
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 
 Phase: 6 (level-1-content-hash-map-set) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-10-22
 
-Progress: [█████████░] 94%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -71,6 +71,7 @@ Progress: [█████████░] 94%
 | Phase 06 P01 | 20 min | 2 tasks | 6 files |
 | Phase 06 P02 | 15 min | 2 tasks | 6 files |
 | Phase 06 P03 | 15min | 2 tasks | 6 files |
+| Phase 06 P05 | 57min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,8 @@ Recent decisions affecting current work:
 - [Phase 06]: 06-02: l1.2 cnt.keys why worded as JVM HashMap order (Native iterates in insertion order), flagged for 06-04
 - [Phase 06]: l1.4: swapped lookup/store pair is correct; @3 nums[i]/@4 need whys are honest «сработает, только если…»
 - [Phase 06]: l1.5 tie example compares userIds.sorted(); tie whys never name which user survives (HashMap order JVM vs Native)
+- [Phase 06]: 06-05: level 1 passes end to end offline on Android + iOS sim; 1.5 long template usable (auto-scroll to hole)
+- [Phase 06]: 06-05: ghost bank chip renders plain text (highlight spans overrode transparent color), fix d9d8635
 
 ### Roadmap Evolution
 
@@ -123,6 +126,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-22T12:17:43.780Z
+Last session: 2026-10-22T13:45:28.317Z
 Stopped at: Completed 05-04-PLAN.md; phase 5 plans 4/4
 Resume file: None

@@ -17,7 +17,7 @@
 - [x] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог (completed 2026-10-21)
 - [x] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками (completed 2026-10-22)
 - [x] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах (completed 2026-10-22)
-- [ ] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах
+- [x] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах (completed 2026-10-22)
 - [ ] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам
 
 ## Phase Details
@@ -191,7 +191,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
   2. `index.json` перечисляет 0.1–0.4, затем 1.1–1.5; 1.1 открывается после 0.4, следующие — по порядку
   3. Заказчик отревьюил контент уровня 1 (теория, дистракторы, пояснения)
   4. Уроки 1.1–1.5 проходятся с чистой установки на Android (авиарежим) и iOS-симуляторе
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 **Wave 1**
@@ -212,7 +212,7 @@ Plans:
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 06-05-PLAN.md — Autonomous Android (airplane) + iOS sim walkthrough 0.4 → 1.5; CNV2-01 Partial row (CNV2-01)
+- [x] 06-05-PLAN.md — Autonomous Android (airplane) + iOS sim walkthrough 0.4 → 1.5; CNV2-01 Partial row (CNV2-01)
 
 ### Phase 7: Full Interview Knowledge Base
 
