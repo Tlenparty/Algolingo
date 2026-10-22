@@ -1,0 +1,77 @@
+package com.tlenparty.algolingo.progress
+
+import com.tlenparty.algolingo.lesson.Grade
+import com.tlenparty.algolingo.lesson.LessonResult
+import com.tlenparty.algolingo.lesson.xpFor
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+
+// Pure progress engine: no IO, no clock reads. `today` is always injected.
+
+/** One versioned document. A key in [lessons] means the lesson was completed at least once. */
+@Serializable
+data class Progress(
+    val schemaVersion: Int = 1,
+    val xp: Int = 0,
+    val streak: Int = 0,
+    val lastActiveDay: LocalDate? = null,
+    val lessons: Map<String, LessonProgress> = emptyMap(),
+)
+
+/** Leitner position. due == null means mastered. */
+@Serializable
+data class LessonProgress(val step: Int = 0, val due: LocalDate? = null)
+
+// encodeDefaults so schemaVersion is always written; ignoreUnknownKeys so newer files load in older builds.
+private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+
+fun encodeProgress(p: Progress): String = json.encodeToString(Progress.serializer(), p)
+
+/** Null on any bad input; never throws. */
+fun decodeProgress(s: String): Progress? = try {
+    json.decodeFromString(Progress.serializer(), s)
+} catch (_: SerializationException) {
+    null
+} catch (_: IllegalArgumentException) {
+    null
+}
+
+val INTERVALS = listOf(1, 3, 7)
+
+private fun LocalDate.plusDays(n: Int) = plus(n, DateTimeUnit.DAY)
+
+/** First pass (any grade) starts the ladder at +1 day. Reviews only count when due (A2). */
+fun schedule(prev: LessonProgress?, grade: Grade, today: LocalDate): LessonProgress = when {
+    prev == null -> LessonProgress(0, today.plusDays(1))
+    prev.due == null || prev.due > today -> prev // mastered, replay before due, or clock moved back
+    grade == Grade.Clean ->
+        if (prev.step >= INTERVALS.lastIndex) LessonProgress(INTERVALS.size, null)
+        else LessonProgress(prev.step + 1, today.plusDays(INTERVALS[prev.step + 1]))
+    grade == Grade.Hinted -> prev.copy(due = today.plusDays(INTERVALS[prev.step]))
+    else -> LessonProgress(0, today.plusDays(1))
+}
+
+fun bumpStreak(p: Progress, today: LocalDate): Progress {
+    val last = p.lastActiveDay
+    val s = when {
+        last == null -> 1
+        last >= today -> maxOf(p.streak, 1) // same day, or clock moved back: no change
+        last.plusDays(1) == today -> p.streak + 1
+        else -> 1
+    }
+    return p.copy(streak = s, lastActiveDay = if (last != null && last > today) last else today)
+}
+
+/** What Home shows: a streak whose last day is before yesterday is already broken. */
+fun visibleStreak(p: Progress, today: LocalDate): Int =
+    p.lastActiveDay?.takeIf { it >= today.minus(1, DateTimeUnit.DAY) }?.let { p.streak } ?: 0
+
+fun applyLessonResult(p: Progress, id: String, r: LessonResult, today: LocalDate): Progress =
+    bumpStreak(p, today).let {
+        it.copy(xp = it.xp + xpFor(r), lessons = it.lessons + (id to schedule(it.lessons[id], r.grade, today)))
+    }
