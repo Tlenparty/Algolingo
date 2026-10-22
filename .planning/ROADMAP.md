@@ -16,7 +16,7 @@
 - [x] **Phase 2: Content Schema & Engine** - Чистая модель контента, движок дырок и редьюсер урока, покрытые тестами (completed 2026-10-21)
 - [x] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог (completed 2026-10-21)
 - [x] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками (completed 2026-10-22)
-- [ ] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах
+- [x] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах (completed 2026-10-22)
 
 ## Phase Details
 
@@ -145,7 +145,7 @@ Plans:
   4. Заказчик отревьюил контент уровня 0 (теория, дистракторы, пояснения)
   5. Все 4 урока проходятся от начала до итога на Android и на iOS-симуляторе в режиме без сети, прогресс и повторы работают
 
-**Plans:** 2/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 **Wave 1**
@@ -158,11 +158,11 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2)*
 
-- [ ] 05-03-PLAN.md — Customer review checkpoint of level 0, edits applied and regenerated (CONT-06)
+- [x] 05-03-PLAN.md — Customer review checkpoint of level 0, edits applied and regenerated (CONT-06)
 
 **Wave 4** *(blocked on Wave 3)*
 
-- [ ] 05-04-PLAN.md — Autonomous offline walkthrough of 0.1–0.4 on Android (airplane mode) and iOS simulator + static offline proof (PLAT-03)
+- [x] 05-04-PLAN.md — Autonomous offline walkthrough of 0.1–0.4 on Android (airplane mode) and iOS simulator + static offline proof (PLAT-03)
 
 ## Progress
 
@@ -176,4 +176,4 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
 | 4. Progress & Review | 4/4 | Complete    | 2026-10-22 |
-| 5. Level 0 Content & End-to-End | 2/4 | In Progress|  |
+| 5. Level 0 Content & End-to-End | 4/4 | Complete   | 2026-10-22 |
