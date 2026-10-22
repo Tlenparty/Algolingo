@@ -91,7 +91,14 @@ def section(note_lines, heading):
 
 
 def split_items(text):
-    parts = re.split(r";\s+|(?<=\.)\s+(?=[А-ЯЁA-Z`])", text.strip())
+    text = text.strip()
+    code = [m.span() for m in re.finditer(r"`[^`]*`", text)]
+    parts, pos = [], 0
+    for m in re.finditer(r";\s+|(?<=\.)\s+(?=[А-ЯЁA-Z`])", text):
+        if not any(a <= m.start() < b for a, b in code):  # never split inside `inline code`
+            parts.append(text[pos:m.start()])
+            pos = m.end()
+    parts.append(text[pos:])
     return [p[:-1] if p.endswith(".") else p for p in (p.strip() for p in parts) if p]
 
 

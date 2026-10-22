@@ -103,6 +103,10 @@ class NoteParserGolden(unittest.TestCase):
         self.assertEqual(s["pitfalls"], L04["solution"]["pitfalls"])
         self.assertEqual(len(s["hints"]), 1)
 
+    def test_split_items_ignores_separators_in_inline_code(self):
+        self.assertEqual(gen_content.split_items("`l++; r--` ломает всё. `a. B` тоже; конец."),
+                         ["`l++; r--` ломает всё", "`a. B` тоже", "конец"])
+
     def test_unquote_keeps_arrows_and_comparisons(self):
         code = self.sec("0.4 Бинарный поиск")["code"]
         self.assertIn("nums[mid] == target -> return mid", code)
