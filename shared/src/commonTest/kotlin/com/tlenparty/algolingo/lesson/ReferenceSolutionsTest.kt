@@ -167,6 +167,21 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
     }
 }
 
+private object L1_1_v0 { // reference
+    fun hasDuplicate(nums: IntArray): Boolean {
+        val seen = HashSet<Int>()
+        for (x in nums) if (!seen.add(x)) return true
+        return false
+    }
+
+    fun examples() {
+        assertFalse(hasDuplicate(intArrayOf(1, 2, 3)))
+        assertTrue(hasDuplicate(intArrayOf(1, 2, 1)))
+        assertFalse(hasDuplicate(intArrayOf()))
+        assertTrue(hasDuplicate(intArrayOf(7, 7)))
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -206,5 +221,10 @@ class ReferenceSolutionsTest {
     @Test
     fun l0_4_v1() {
         L0_4_v1.examples()
+    }
+
+    @Test
+    fun l1_1_v0() {
+        L1_1_v0.examples()
     }
 }

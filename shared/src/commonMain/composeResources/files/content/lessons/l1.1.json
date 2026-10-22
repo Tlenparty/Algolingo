@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "id": "l1.1",
+  "level": 1,
+  "title": "Есть ли дубликат",
+  "statement": "Верни `true`, если в массиве есть хоть один повтор.",
+  "trains": "`HashSet` и трюк `add`",
+  "targetTimeSec": 90,
+  "theory": [
+    {
+      "title": "Когда HashSet",
+      "signals": [
+        "«Есть ли повтор?», «видели ли раньше?»",
+        "Важно только наличие элемента, не количество",
+        "Нужно уложиться в O(n)"
+      ],
+      "body": "`HashSet` отвечает «уже было?» за O(1), поэтому весь проход — O(n) по времени и O(n) по памяти."
+    },
+    {
+      "title": "Трюк add",
+      "skeleton": "val seen = HashSet<Int>()\nfor (x in nums) if (!seen.add(x)) return true",
+      "body": "`add` возвращает `false`, если элемент уже был в множестве: одна строка и проверяет, и запоминает."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`seen.add(x)` без `!` срабатывает на первом же новом элементе",
+        "`contains` без `add` ничего не запоминает: повтор не найдётся",
+        "У `MutableList` метод `add` всегда возвращает `true`, повтор он не заметит"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l1.1.e1",
+      "segments": [
+        "fun hasDuplicate(nums: IntArray): Boolean {\n    val seen = HashSet<Int>()\n    for (x in nums) if (",
+        ") return true\n    return false\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "!seen.add(x)"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "!seen.add(x)"
+        },
+        {
+          "text": "seen.add(x)",
+          "why": "условие перевёрнуто: первый же новый элемент даёт `true`: `[1, 2]` → `true`"
+        },
+        {
+          "text": "seen.contains(x)",
+          "why": "в `seen` никто ничего не кладёт, условие всегда ложно: `[1, 1]` → `false`"
+        },
+        {
+          "text": "!seen.contains(x)",
+          "why": "множество пустое, условие истинно на первом элементе: `[1]` → `true`"
+        }
+      ],
+      "hints": [
+        "`set.add(x)` возвращает `false`, если элемент уже был. Одна строка внутри цикла."
+      ]
+    },
+    {
+      "id": "l1.1.e2",
+      "segments": [
+        "fun hasDuplicate(nums: IntArray): Boolean {\n    val seen = ",
+        "\n    for (x in nums) if (",
+        ") return true\n    return false\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "HashSet<Int>()"
+          ],
+          "wrongWhy": {
+            "!seen.add(x)": "`val seen = !seen.add(x)` ссылается на саму себя, а `x` ещё не объявлен: не скомпилируется",
+            "seen.add(x)": "`val seen = seen.add(x)` ссылается на саму себя, а `x` ещё не объявлен: не скомпилируется",
+            "seen.contains(x)": "`val seen = seen.contains(x)` ссылается на саму себя, а `x` ещё не объявлен: не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "!seen.add(x)"
+          ],
+          "wrongWhy": {
+            "HashSet<Int>()": "`if` ждёт `Boolean`, а `HashSet<Int>()` — множество: не скомпилируется",
+            "mutableListOf<Int>()": "`if` ждёт `Boolean`, а `mutableListOf<Int>()` — список: не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "HashSet<Int>()"
+        },
+        {
+          "text": "!seen.add(x)"
+        },
+        {
+          "text": "mutableListOf<Int>()",
+          "why": "`add` у списка всегда возвращает `true`, повтор не заметит: `[1, 1]` → `false`"
+        },
+        {
+          "text": "seen.add(x)",
+          "why": "условие перевёрнуто: первый же новый элемент даёт `true`: `[1, 2]` → `true`"
+        },
+        {
+          "text": "seen.contains(x)",
+          "why": "в `seen` никто ничего не кладёт, условие всегда ложно: `[1, 1]` → `false`"
+        }
+      ],
+      "hints": [
+        "Нужна коллекция, у которой `add` возвращает `false` на повторе: это `HashSet`.",
+        "`set.add(x)` возвращает `false`, если элемент уже был. Одна строка внутри цикла."
+      ]
+    },
+    {
+      "id": "l1.1.e3",
+      "segments": [
+        "fun hasDuplicate(nums: IntArray): Boolean {\n    val seen = ",
+        "\n    for (x in nums) if (",
+        ") return ",
+        "\n    return ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "HashSet<Int>()"
+          ],
+          "wrongWhy": {
+            "!seen.add(x)": "`val seen = !seen.add(x)` ссылается на саму себя, а `x` ещё не объявлен: не скомпилируется",
+            "seen.add(x)": "`val seen = seen.add(x)` ссылается на саму себя, а `x` ещё не объявлен: не скомпилируется",
+            "seen.contains(x)": "`val seen = seen.contains(x)` ссылается на саму себя, а `x` ещё не объявлен: не скомпилируется",
+            "true": "`val seen = true` — это `Boolean`, у него нет `add`: не скомпилируется",
+            "false": "`val seen = false` — это `Boolean`, у него нет `add`: не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "!seen.add(x)"
+          ],
+          "wrongWhy": {
+            "HashSet<Int>()": "`if` ждёт `Boolean`, а `HashSet<Int>()` — множество: не скомпилируется",
+            "mutableListOf<Int>()": "`if` ждёт `Boolean`, а `mutableListOf<Int>()` — список: не скомпилируется",
+            "true": "`if (true)` выходит на первом же элементе: `[1]` → `true`",
+            "false": "`if (false)` никогда не срабатывает: `[1, 1]` → `false`"
+          }
+        },
+        {
+          "ok": [
+            "true"
+          ],
+          "wrongWhy": {
+            "HashSet<Int>()": "функция возвращает `Boolean`, а не множество: `return HashSet<Int>()` не скомпилируется",
+            "mutableListOf<Int>()": "функция возвращает `Boolean`, а не список: `return mutableListOf<Int>()` не скомпилируется",
+            "!seen.add(x)": "сработает: второй `add` того же `x` вернёт `false`, `!false` = `true`; но это лишний вызов `add` с побочным эффектом, здесь просто `true`",
+            "seen.add(x)": "`x` уже в `seen`, второй `add` вернёт `false`: `[1, 1]` → `false`",
+            "seen.contains(x)": "сработает: `x` уже в `seen`, `contains` вернёт `true`; но это лишняя проверка, здесь просто `true`",
+            "false": "повтор нашли, а вернули «повторов нет»: `[1, 1]` → `false`"
+          }
+        },
+        {
+          "ok": [
+            "false"
+          ],
+          "wrongWhy": {
+            "HashSet<Int>()": "функция возвращает `Boolean`, а не множество: `return HashSet<Int>()` не скомпилируется",
+            "mutableListOf<Int>()": "функция возвращает `Boolean`, а не список: `return mutableListOf<Int>()` не скомпилируется",
+            "!seen.add(x)": "после цикла `x` вне области видимости: `return !seen.add(x)` не скомпилируется",
+            "seen.add(x)": "после цикла `x` вне области видимости: `return seen.add(x)` не скомпилируется",
+            "seen.contains(x)": "после цикла `x` вне области видимости: `return seen.contains(x)` не скомпилируется",
+            "true": "дошли до конца без повторов, а вернули «есть повтор»: `[1, 2]` → `true`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "HashSet<Int>()"
+        },
+        {
+          "text": "!seen.add(x)"
+        },
+        {
+          "text": "true"
+        },
+        {
+          "text": "false"
+        },
+        {
+          "text": "mutableListOf<Int>()",
+          "why": "`add` у списка всегда возвращает `true`, повтор не заметит: `[1, 1]` → `false`"
+        },
+        {
+          "text": "seen.add(x)",
+          "why": "условие перевёрнуто: первый же новый элемент даёт `true`: `[1, 2]` → `true`"
+        },
+        {
+          "text": "seen.contains(x)",
+          "why": "в `seen` никто ничего не кладёт, условие всегда ложно: `[1, 1]` → `false`"
+        }
+      ],
+      "hints": [
+        "`set.add(x)` возвращает `false`, если элемент уже был. Одна строка внутри цикла.",
+        "Нашли повтор — сразу `true`; цикл закончился без повторов — `false`."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "fun hasDuplicate(nums: IntArray): Boolean {\n    val seen = HashSet<Int>()\n    for (x in nums) if (!seen.add(x)) return true\n    return false\n}",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "Двойной цикл «каждый с каждым» даёт O(n²) вместо O(n)",
+      "`contains` без `add` ничего не запоминает и никогда не находит повтор"
+    ],
+    "variations": []
+  }
+}
