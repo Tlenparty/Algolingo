@@ -22,4 +22,14 @@ class KbSearchTest {
     @Test fun metacharactersLiteral() {
         for (q in listOf("(", "[", ".*")) assertEquals(listOf("a"), searchNotes(notes, q).map { it.note.id })
     }
+
+    @Test fun titleThenBodySnippetKeepsOriginalCase() {
+        val ns = listOf(
+            Note("x", "Заметка", "Темы", "Тут живёт Корутина и её скоуп"),
+            Note("y", "корутина: основы", "Темы", "текст"),
+        )
+        val r = searchNotes(ns, "корутина")
+        assertEquals(listOf("y", "x"), r.map { it.note.id })
+        assertTrue(r[1].snippet.contains("Корутина"))
+    }
 }

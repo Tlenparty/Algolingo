@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.tlenparty.algolingo.design.AlgoTheme
@@ -27,7 +28,9 @@ fun KbListScreen(
     search: (String) -> List<SearchHit> = { emptyList() },
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val hits = search(query)
+    val hits = remember(query, notes) { search(query) }
+    // Open section names; empty = all collapsed. List<String> is saveable on Android and iOS.
+    var open by rememberSaveable { mutableStateOf(emptyList<String>()) }
     LazyColumn(modifier) {
         item(key = "search") {
             OutlinedTextField(
@@ -50,14 +53,17 @@ fun KbListScreen(
             return@LazyColumn
         }
         notes.groupBy { it.section }.forEach { (section, items) ->
+            val isOpen = section in open
             item(key = "h-$section") {
                 Text(
-                    section,
+                    "${if (isOpen) "▾ " else "▸ "}$section (${items.size})",
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(AlgoTheme.spacing.md, AlgoTheme.spacing.md, AlgoTheme.spacing.md, AlgoTheme.spacing.sm),
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable { open = if (section in open) open - section else open + section }
+                        .padding(AlgoTheme.spacing.md, AlgoTheme.spacing.md, AlgoTheme.spacing.md, AlgoTheme.spacing.sm),
                 )
             }
-            items(items, key = { it.id }) { note ->
+            if (isOpen) items(items, key = { it.id }) { note ->
                 Text(
                     note.title,
                     modifier = Modifier.fillMaxWidth().clickable { onOpen(note) }.padding(AlgoTheme.spacing.md, AlgoTheme.spacing.smd),
