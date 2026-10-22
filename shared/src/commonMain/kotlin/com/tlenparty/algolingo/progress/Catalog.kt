@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 
 /** files/content/index.json: lessons in unlock order. Phase 5's generator writes the same format. */
 @Serializable
-data class CatalogEntry(val id: String, val title: String)
+data class CatalogEntry(val id: String, val title: String, val caption: String? = null)
 
 @Serializable
 data class Catalog(val schema: Int = 1, val lessons: List<CatalogEntry> = emptyList())
@@ -55,6 +55,6 @@ data class HomeModel(val streak: Int, val xp: Int, val nodes: List<HomeNode>, va
 
 fun homeModel(catalog: Catalog, p: Progress, today: LocalDate): HomeModel {
     val ids = catalog.lessons.map { it.id }
-    val nodes = catalog.lessons.zip(lessonStatuses(ids, p)) { e, s -> HomeNode(e.id, e.id.removePrefix("l") + " " + e.title, s) }
+    val nodes = catalog.lessons.zip(lessonStatuses(ids, p)) { e, s -> HomeNode(e.id, e.caption ?: (e.id.removePrefix("l") + " " + e.title), s) }
     return HomeModel(visibleStreak(p, today), p.xp, nodes, dueIds(ids, p, today))
 }

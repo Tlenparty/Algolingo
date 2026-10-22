@@ -91,6 +91,11 @@ class CatalogTest {
     )
 
     @Test
+    fun explicitCaptionWins() = assertEquals(
+        "Свой", homeModel(Catalog(lessons = listOf(CatalogEntry("x", "t", "Свой"))), Progress(), d).nodes.single().caption,
+    )
+
+    @Test
     fun parseGarbageIsNull() = assertNull(parseCatalog("garbage"))
 
     @Test
