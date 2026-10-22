@@ -122,22 +122,31 @@ def parse_note_section(note_lines, heading):
         if in_statement:
             statement.append(ln)
     res["statement"] = "\n".join(statement).strip()
+    if res["code"] is None or res["time"] is None:
+        raise GenError(NOTE, "G7", "## %s: needs a [!success] callout with ```kotlin and **Сложность:**" % heading)
     return res
 
 
 def parse_success(body, res):
+    if "```kotlin" not in body or "```" not in body[body.index("```kotlin") + 1:]:
+        raise GenError(NOTE, "G7", "%s: [!success] has no closed ```kotlin fence" % res["title"])
     start = body.index("```kotlin")
     end = body.index("```", start + 1)
     res["code"] = "\n".join(body[start + 1:end])
     for ln in body[end + 1:]:
         if "**Сложность:**" in ln:
-            res["time"], res["space"] = re.findall(r"O\([^)]*\)", ln)[:2]
+            # one level of nesting: O(min(n, m))
+            found = re.findall(r"O\((?:[^()]|\([^()]*\))*\)", ln)
+            if len(found) < 2:
+                raise GenError(NOTE, "G7", "%s: **Сложность:** needs time and space O(...)" % res["title"])
+            res["time"], res["space"] = found[:2]
         m = re.search(r"⚠️?\s*\*\*Грабли[^*]*:\*\*\s*(.*)", ln)
         if m:
-            res["pitfalls"] = split_items(m.group(1))
+            # None = multi-line list the parser cannot read; build_lesson requires a sidecar override
+            res["pitfalls"] = split_items(m.group(1)) or None
         m = re.search(r"🔁\s*\*\*Вариации[^*]*:\*\*\s*(.*)", ln)
         if m:
-            res["variations"] = split_items(m.group(1))
+            res["variations"] = split_items(m.group(1)) or None
 
 
 # ---------- sidecar ----------
@@ -211,6 +220,8 @@ def parse_sidecar(text, stem):
     lid = lines[0][2:].strip()
     if lid != stem:
         raise GenError(file, "G7", "id %r != file stem %r" % (lid, stem))
+    if not re.match(r"^l\d+\.\d+$", lid):
+        raise GenError(file, "G7", "id %r is not l<level>.<n>" % lid)
     starts = [i for i, ln in enumerate(lines) if ln.startswith("## ")] + [len(lines)]
     top = parse_keys(lines[1:starts[0]], file, TOP_KINDS)
     unknown = set(top) - set(TOP_KINDS)
@@ -309,6 +320,9 @@ def build_lesson(sc, note_lines):
     lesson["solution"] = {"code": codes[0], "time": note["time"], "space": note["space"],
                           "pitfalls": top.get("pitfalls", note["pitfalls"]),
                           "variations": top.get("variations", note["variations"])}
+    for k in ("pitfalls", "variations"):
+        if lesson["solution"][k] is None:
+            raise GenError(file, "G7", "note %s is a multi-line list; set %s: in the sidecar" % (k, k))
     return lesson
 
 
@@ -429,10 +443,13 @@ def render_all(repo_root, allow_removed=()):
     ids = [lesson["id"] for lesson, _ in items]
     old = root / INDEX
     if old.is_file():
-        for entry in json.loads(old.read_text(encoding="utf-8")).get("lessons", []):
-            if entry["id"] not in ids and entry["id"] not in allow_removed:
-                raise GenError(INDEX, "G4", "lesson id %s disappeared (pass --allow-removed %s)"
-                               % (entry["id"], entry["id"]))
+        try:
+            old_ids = [e["id"] for e in json.loads(old.read_text(encoding="utf-8"))["lessons"]]
+        except (ValueError, KeyError, TypeError) as e:
+            raise GenError(INDEX, "syntax", "cannot read lesson ids: %r" % e)
+        for oid in old_ids:
+            if oid not in ids and oid not in allow_removed:
+                raise GenError(INDEX, "G4", "lesson id %s disappeared (pass --allow-removed %s)" % (oid, oid))
     out = {INDEX: dump({"schema": 1, "lessons": [{"id": l["id"], "title": l["title"]} for l, _ in items]})}
     for lesson, _ in items:
         out["%s/%s.json" % (LESSONS, lesson["id"])] = dump(lesson)

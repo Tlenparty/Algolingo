@@ -197,6 +197,30 @@ class Validation(unittest.TestCase):
         self.assertRule("syntax", build, BASE.replace("## e1", "## theory T\nbody:\n- x\n\n## e1", 1))
         self.assertRule("syntax", build, BASE.replace("## e1", "## theory T\nskeleton: x\n\n## e1", 1))
 
+    def test_malformed_note_and_index_fail_with_generror(self):
+        sec = ["## 0.9 X", "> [!success] Решение"]
+        cases = [sec + ["> no fence"],  # no ```kotlin
+                 sec + ["> ```kotlin", "> f()", "> ```", "> **Сложность:** O(n)"],  # one complexity
+                 ["## 0.9 X", "text only"],  # no [!success]
+                 sec + ["> ```kotlin", "> f()", "> ```", "> **Сложность:** O(n) / O(1)", "> ⚠️ **Грабли:**"]]
+        for note in cases[:3]:
+            self.assertRule("G7", gen_content.parse_note_section, note, "0.9 X")
+        self.assertIsNone(gen_content.parse_note_section(cases[3], "0.9 X")["pitfalls"])
+        nested = sec + ["> ```kotlin", "> f()", "> ```", "> **Сложность:** O(min(n, m)) / O(1)"]
+        self.assertEqual(gen_content.parse_note_section(nested, "0.9 X")["time"], "O(min(n, m))")
+        self.assertRule("G7", gen_content.parse_sidecar, BASE.replace("# l0.4", "# x4", 1), "x4")
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            shutil.copytree(str(ROOT / "content"), str(tmp / "content"))
+            (tmp / NOTE_REL).parent.mkdir(parents=True)
+            shutil.copy(str(ROOT / NOTE_REL), str(tmp / NOTE_REL))
+            index = tmp / gen_content.INDEX
+            index.parent.mkdir(parents=True)
+            index.write_text("{not json", encoding="utf-8")
+            self.assertRule("syntax", gen_content.render_all, tmp)
+        finally:
+            shutil.rmtree(str(tmp))
+
     def test_g8_no_examples_fails(self):
         self.assertRule("G8", build, BASE.replace("examples:\n- assertEquals(0, binarySearch(intArrayOf(5), 5))\n", ""))
 
