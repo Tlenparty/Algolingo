@@ -89,7 +89,7 @@ class ProgressRepository(
     }
 }
 
-/** One DataStore per process (two on one file crash), surviving Activity recreation. */
+/** One DataStore per process (two on one file crash), surviving Activity recreation. The first dataDir wins; later ones are ignored. */
 object AppGraph {
     // ponytail: main-thread only, no locking; App() is the sole caller.
     private var progress: ProgressRepository? = null

@@ -51,7 +51,7 @@ data class LessonRoute(val id: String, val review: Boolean = false)
 @Composable
 fun App(dataDir: String) {
     AlgoTheme {
-        val progressRepo = remember(dataDir) { AppGraph.progress(dataDir) }
+        val progressRepo = remember { AppGraph.progress(dataDir) }
         val repo = remember { KbRepository() }
         val loaded by produceState(false) { repo.load(); value = true }
         val catalog by produceState<Catalog?>(null) { value = loadCatalog() }
