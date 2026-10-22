@@ -96,6 +96,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 6 added: Level 1 Content — Hash Map / Set (уроки 1.1–1.5 из заметки 05)
+- Phase 7 added: Full Interview Knowledge Base (вся подготовка из хранилища «Матрицы», ~217 заметок)
 
 ### Pending Todos
 
