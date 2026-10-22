@@ -69,6 +69,16 @@ class CatalogTest {
         assertEquals(3, homeModel(Catalog(), Progress(streak = 3, lastActiveDay = day(-1)), d).streak)
 
     @Test
+    fun homeModelNextDayShowsDueAndThenBrokenStreak() {
+        // Finished on d: due d+1, streak 1. Home must change when only `today` moves (CR-01).
+        val cat = Catalog(lessons = listOf(CatalogEntry("l0.4", "Б")))
+        val prog = Progress(streak = 1, lastActiveDay = d, lessons = mapOf("l0.4" to LessonProgress(0, day(1))))
+        assertEquals(emptyList(), homeModel(cat, prog, d).due)
+        assertEquals(listOf("l0.4") to 1, homeModel(cat, prog, day(1)).let { it.due to it.streak })
+        assertEquals(0, homeModel(cat, prog, day(2)).streak)
+    }
+
+    @Test
     fun parseValidWithUnknownKeys() = assertEquals(
         Catalog(1, listOf(CatalogEntry("l0.4", "Б"))),
         parseCatalog("""{"schema":1,"extra":true,"lessons":[{"id":"l0.4","title":"Б","x":1}]}"""),

@@ -10,7 +10,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.delay
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
@@ -76,10 +81,17 @@ fun App(dataDir: String) {
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
                 composable<Home> { entry ->
                     val progress by progressRepo.progress.collectAsStateWithLifecycle(null)
-                    // ponytail: today recomputed per composition; add a LifecycleResumeEffect refresh if midnight staleness matters.
+                    // The process can outlive midnight: re-read the date on every resume, then once a minute while visible.
+                    var today by remember { mutableStateOf(progressRepo.today()) }
+                    LaunchedEffect(entry) {
+                        entry.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                            // ponytail: 1-min poll, so a midnight rollover shows up to a minute late.
+                            while (true) { today = progressRepo.today(); delay(60_000) }
+                        }
+                    }
                     val c = catalog
                     val p = progress
-                    val model = if (c != null && p != null) homeModel(c, p, progressRepo.today()) else null
+                    val model = if (c != null && p != null) homeModel(c, p, today) else null
                     HomeScreen(
                         model,
                         onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
