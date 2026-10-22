@@ -125,7 +125,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Package gate + deps/minSdk 26 + pure progress engine (XP, streak, 1/3/7 SRS, codec) with fake-date tests
-- [ ] 04-02-PLAN.md — DataStore repository (AppGraph singleton, app-scope write on Done) + 🔥/⭐ header persisted across restarts
+- [x] 04-02-PLAN.md — DataStore repository (AppGraph singleton, app-scope write on Done) + 🔥/⭐ header persisted across restarts
 - [ ] 04-03-PLAN.md — index.json catalog, statuses/due/homeModel + Home path (done/available/locked) + «Повтор сегодня (N)» review without theory
 - [ ] 04-04-PLAN.md — Autonomous device verification on Android emulator and iOS simulator (restart, due edit, corrupt file)
 **UI hint**: yes
@@ -158,5 +158,5 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 01.1 Knowledge Base | 4/4 | Complete    | 2026-10-21 |
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
-| 4. Progress & Review | 1/4 | In Progress|  |
+| 4. Progress & Review | 2/4 | In Progress|  |
 | 5. Level 0 Content & End-to-End | 0/TBD | Not started | - |
