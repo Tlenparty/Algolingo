@@ -15,12 +15,16 @@ data class Callout(
     val blocks: List<Block>,
 ) : Block
 object Rule : Block
+/** Whole-line `![[file.png]]` embed; [file] is a name under `files/kb/img/`. */
+data class ImageBlock(val file: String) : Block
 
 sealed interface Inline
 data class Text(val v: String) : Inline
 data class Bold(val v: String) : Inline
 data class Italic(val v: String) : Inline
 data class InlineCode(val v: String) : Inline
+/** `==highlight==`; [v] is raw markdown, parsed again when rendered. */
+data class Mark(val v: String) : Inline
 /** [target] is a note title, or `#anchor` for a link within the current note. */
 data class Link(val target: String, val anchor: String?, val label: String) : Inline
 
@@ -28,6 +32,7 @@ private val headingRe = Regex("^(#{1,6})\\s+(.*)$")
 private val listRe = Regex("^(\\s*)([-*]|(\\d+)\\.)\\s+(.*)$")
 private val alignRe = Regex("^\\|?[\\s:|-]+$")
 private val calloutRe = Regex("^\\[!([A-Za-z]+)]([+-]?)\\s*(.*)$")
+private val imageRe = Regex("^!\\[\\[([^\\]|]+\\.(?:png|jpe?g))(?:\\|[^\\]]*)?]]$")
 
 private fun isTableStart(lines: List<String>, i: Int) =
     lines[i].trimStart().startsWith("|") && i + 1 < lines.size &&
@@ -36,7 +41,7 @@ private fun isTableStart(lines: List<String>, i: Int) =
 private fun startsBlock(lines: List<String>, i: Int): Boolean {
     val t = lines[i].trim()
     return t.isEmpty() || t.startsWith("```") || t.startsWith(">") || t == "---" ||
-        headingRe.matches(t) || listRe.matches(lines[i]) || isTableStart(lines, i)
+        headingRe.matches(t) || listRe.matches(lines[i]) || isTableStart(lines, i) || imageRe.matches(t)
 }
 
 fun parseBlocks(src: String): List<Block> {
@@ -91,6 +96,7 @@ fun parseBlocks(src: String): List<Block> {
                 out.add(ListItem(num.isNotEmpty(), num.toIntOrNull() ?: 0, m.groupValues[1].length / 2, m.groupValues[4]))
                 i++
             }
+            imageRe.matches(t) -> { out.add(ImageBlock(imageRe.find(t)!!.groupValues[1])); i++ }
             else -> {
                 val buf = arrayListOf(line)
                 i++
@@ -139,6 +145,13 @@ fun parseInline(s: String): List<Inline> {
             c == '`' -> {
                 end = s.indexOf('`', i + 1)
                 if (end > i) { flush(); out.add(InlineCode(s.substring(i + 1, end))); i = end + 1; continue }
+            }
+            s.startsWith("==", i) && i + 2 < s.length && !s[i + 2].isWhitespace() && s[i + 2] != '=' &&
+                (i == 0 || s[i - 1] != '=') -> {
+                // Close at the next `==` that follows a non-space: «a == b» never opens, «==x» without a close stays literal.
+                end = s.indexOf("==", i + 3)
+                while (end > 0 && s[end - 1].isWhitespace()) end = s.indexOf("==", end + 1)
+                if (end > i + 2) { flush(); out.add(Mark(s.substring(i + 2, end))); i = end + 2; continue }
             }
             s.startsWith("**", i) -> {
                 end = s.indexOf("**", i + 2)
