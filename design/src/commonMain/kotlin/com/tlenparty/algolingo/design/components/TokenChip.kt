@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.AnnotatedString
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.highlight
 
@@ -28,7 +29,8 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
         modifier = if (ghost) modifier.clearAndSetSemantics {} else modifier,
     ) {
         Text(
-            highlight(text, AlgoTheme.colors),
+            // Ghost: plain text, otherwise highlight spans (numbers, keywords) override the transparent color.
+            if (ghost) AnnotatedString(text) else highlight(text, AlgoTheme.colors),
             style = AlgoTheme.typography.codeChip,
             color = if (ghost) Color.Transparent else s.onBackground,
             softWrap = false,
