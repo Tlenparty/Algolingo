@@ -191,7 +191,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
   2. `index.json` перечисляет 0.1–0.4, затем 1.1–1.5; 1.1 открывается после 0.4, следующие — по порядку
   3. Заказчик отревьюил контент уровня 1 (теория, дистракторы, пояснения)
   4. Уроки 1.1–1.5 проходятся с чистой установки на Android (авиарежим) и iOS-симуляторе
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 **Wave 1**
@@ -204,7 +204,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 06-03-PLAN.md — Lessons 1.4 Two Sum and 1.5 «Победители соревнования»; 9-lesson index (CNV2-01)
+- [x] 06-03-PLAN.md — Lessons 1.4 Two Sum and 1.5 «Победители соревнования»; 9-lesson index (CNV2-01)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
