@@ -253,6 +253,9 @@ def parse_sidecar(text, stem):
             sc["exercises"].append(parse_exercise(head, body, file))
         else:
             raise GenError(file, "syntax", "unknown section: ## " + head)
+    names = [e["name"] for e in sc["exercises"]]
+    if names != ["e%d" % k for k in range(1, len(names) + 1)]:
+        raise GenError(file, "G7", "exercise sections must be e1..eN in order, got %s" % names)
     return sc
 
 
@@ -346,6 +349,8 @@ def build_exercise(lid, file, ex, segs, holes):
                 raise GenError(file, "G6", "%s: ~`%s` is not acceptable in any hole" % (where, text))
             if not why:
                 raise GenError(file, "G6", "%s: ~`%s` has a blank note" % (where, text))
+            if text in notes:
+                raise GenError(file, "G6", "%s: ~`%s` is noted twice" % (where, text))
             notes[text] = why
         elif kind == "@":
             if not 1 <= h <= len(holes):
@@ -354,6 +359,8 @@ def build_exercise(lid, file, ex, segs, holes):
                 raise GenError(file, "G6", "%s: @%d `%s` is correct for that hole" % (where, h, text))
             if not why:
                 raise GenError(file, "G6", "%s: @%d `%s` has a blank why" % (where, h, text))
+            if text in wrong[h - 1]:
+                raise GenError(file, "G6", "%s: @%d `%s` is overridden twice" % (where, h, text))
             wrong[h - 1][text] = why
         else:
             if text in any_correct or text in [d[0] for d in distractors]:

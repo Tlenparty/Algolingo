@@ -176,6 +176,11 @@ class Validation(unittest.TestCase):
     def test_g6_override_on_correct_text_fails(self):
         self.assertRule("G6", build, BASE + "- @1 `lo <= hi`: `x`\n")
 
+    def test_duplicate_sections_and_bullets_fail(self):
+        self.assertRule("G7", build, BASE.replace("## e2", "## e1"))
+        self.assertRule("G6", build, BASE + "- @2 `lo < hi`: `mid` снова `Boolean`\n")
+        self.assertRule("G6", build, BASE + "- ~`(lo + hi) ushr 1`: ещё раз `x`\n")
+
     def test_g7_bank_too_big_fails(self):
         extra = "".join("- `d%d`: `x`\n" % i for i in range(9))
         self.assertRule("G7", build, BASE.replace("? hint one\n", extra + "? hint one\n"))
