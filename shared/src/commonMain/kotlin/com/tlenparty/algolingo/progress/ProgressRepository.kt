@@ -46,7 +46,7 @@ fun progressStore(
 
 fun localToday(): LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
-/** Writes run in this app-lifetime scope, never a viewModelScope: leaving the screen must not cancel them. */
+/** Writes run in this app-lifetime scope, never a ViewModel scope: leaving the screen must not cancel them. */
 class ProgressRepository(
     private val store: DataStore<Progress>,
     val today: () -> LocalDate = ::localToday,

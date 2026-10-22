@@ -16,14 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tlenparty.algolingo.lesson.LessonResult
 import com.tlenparty.algolingo.lesson.LessonViewModel
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlin.time.Clock
 
 @Composable
-fun LessonHost(id: String, onHome: () -> Unit) {
-    val vm = viewModel(key = id) { LessonViewModel(id, seed = Clock.System.now().toEpochMilliseconds().toInt()) }
+fun LessonHost(id: String, onFinish: (LessonResult) -> Unit, onHome: () -> Unit) {
+    val vm = viewModel(key = id) { LessonViewModel(id, seed = Clock.System.now().toEpochMilliseconds().toInt(), onFinish = onFinish) }
     val r by vm.state.collectAsStateWithLifecycle()
     val state = r?.getOrNull()
     when {

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -24,6 +23,8 @@ import com.tlenparty.algolingo.kb.KbRepository
 import com.tlenparty.algolingo.kb.ui.KbListScreen
 import com.tlenparty.algolingo.kb.ui.NoteScreen
 import com.tlenparty.algolingo.lesson.ui.LessonHost
+import com.tlenparty.algolingo.progress.AppGraph
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlinx.serialization.Serializable
 
@@ -40,9 +41,9 @@ data class NoteRoute(val id: String, val anchor: String? = null)
 data class LessonRoute(val id: String)
 
 @Composable
-@Preview
-fun App() {
+fun App(dataDir: String) {
     AlgoTheme {
+        val progressRepo = remember(dataDir) { AppGraph.progress(dataDir) }
         val repo = remember { KbRepository() }
         val loaded by produceState(false) { repo.load(); value = true }
         val nav = rememberNavController()
@@ -69,9 +70,14 @@ fun App() {
             },
         ) { pad ->
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
-                composable<Home> { entry -> HomeScreen { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } } }
+                composable<Home> { entry ->
+                    val progress by progressRepo.progress.collectAsStateWithLifecycle(null)
+                    // ponytail: today recomputed per composition; add a LifecycleResumeEffect refresh if midnight staleness matters.
+                    HomeScreen(progress, progressRepo.today()) { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } }
+                }
                 composable<LessonRoute> { entry ->
-                    LessonHost(entry.toRoute<LessonRoute>().id) { entry.ifResumed { nav.popBackStack() } }
+                    val id = entry.toRoute<LessonRoute>().id
+                    LessonHost(id, onFinish = { progressRepo.record(id, it) }) { entry.ifResumed { nav.popBackStack() } }
                 }
                 composable<KbList> { entry ->
                     if (loaded) KbListScreen(repo.notes, { n -> entry.ifResumed { nav.navigate(NoteRoute(n.id)) } }, search = repo::search) else Text("…")
