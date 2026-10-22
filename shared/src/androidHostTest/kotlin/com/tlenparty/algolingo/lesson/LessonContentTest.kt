@@ -28,7 +28,8 @@ class LessonContentTest {
     @Test
     fun catalogIdsAreUniqueAndHaveLessonFiles() {
         val dir = File("src/commonMain/composeResources/files/content")
-        val ids = Json { ignoreUnknownKeys = false }.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons.map { it.id }
+        // Lenient like the runtime (the generator may add fields), but no dedupe: duplicates in the shipped file must still fail here.
+        val ids = Json { ignoreUnknownKeys = true }.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons.map { it.id }
         assertTrue(ids.isNotEmpty())
         assertEquals(ids.size, ids.toSet().size)
         ids.forEach { assertTrue(File(dir, "lessons/$it.json").isFile, "missing lessons/$it.json") }
