@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.tlenparty.algolingo.kb.Block
+import kotlin.coroutines.cancellation.CancellationException
 import com.tlenparty.algolingo.kb.Bold
 import com.tlenparty.algolingo.kb.Callout
 import com.tlenparty.algolingo.kb.Code
@@ -157,8 +158,14 @@ fun BlockView(
         is ImageBlock -> {
             // ponytail: the item grows after the async load, so an anchor scroll into an image note may land slightly off;
             // store the aspect ratio in the index if it bites.
-            val bmp by produceState<ImageBitmap?>(null, block.file) {
-                value = runCatching { Res.readBytes("files/kb/img/${block.file}").decodeToImageBitmap() }.getOrNull()
+            val bmp by produceState(imageCache[block.file], block.file) {
+                if (value != null) return@produceState
+                value = try {
+                    Res.readBytes("files/kb/img/${block.file}").decodeToImageBitmap().also { imageCache[block.file] = it }
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    null
+                }
             }
             bmp?.let {
                 Image(it, contentDescription = "Картинка из заметки", modifier = pad.fillMaxWidth(), contentScale = ContentScale.FillWidth)
@@ -166,6 +173,10 @@ fun BlockView(
         }
     }
 }
+
+// Survives LazyColumn item disposal so scrolling back does not re-decode and re-grow the row.
+// ponytail: unbounded, fine for the bundled few dozen images; switch to an LRU if the bundle grows large.
+private val imageCache = mutableMapOf<String, ImageBitmap>()
 
 @Composable
 private fun QuoteBox(
