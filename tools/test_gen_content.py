@@ -191,6 +191,12 @@ class Validation(unittest.TestCase):
         self.assertEqual(build(BASE.replace("## e1", card, 1))["theory"], [{"title": "Грабли", "pitfalls": ["`x`"]}])
         self.assertRule("syntax", build, BASE.replace("## e1", card.replace("pitfalls:", "pitfal:"), 1))
 
+    def test_key_value_shape_is_checked(self):
+        one_line = BASE.replace("examples:\n- ", "examples: ", 1)
+        self.assertRule("syntax", build, one_line)
+        self.assertRule("syntax", build, BASE.replace("## e1", "## theory T\nbody:\n- x\n\n## e1", 1))
+        self.assertRule("syntax", build, BASE.replace("## e1", "## theory T\nskeleton: x\n\n## e1", 1))
+
     def test_g8_no_examples_fails(self):
         self.assertRule("G8", build, BASE.replace("examples:\n- assertEquals(0, binarySearch(intArrayOf(5), 5))\n", ""))
 

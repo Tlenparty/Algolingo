@@ -54,6 +54,10 @@ ALT_SEP = " | "
 BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?:: ?(.*))?$")
 KEY = re.compile(r"^([a-z]+):\s*(.*)$")
 CARD_KEYS = ("signals", "skeleton", "pitfalls", "body")
+# expected value shape per key: one line, bullet list or ``` fence
+TOP_KINDS = {"note": "line", "title": "line", "statement": "line", "trains": "line",
+             "pitfalls": "list", "variations": "list", "examples": "list"}
+CARD_KINDS = {"signals": "list", "skeleton": "fence", "pitfalls": "list", "body": "line"}
 
 
 class GenError(Exception):
@@ -138,7 +142,7 @@ def parse_success(body, res):
 
 # ---------- sidecar ----------
 
-def parse_keys(lines, file):
+def parse_keys(lines, file, kinds):
     out, i = {}, 0
     while i < len(lines):
         ln = lines[i]
@@ -149,6 +153,9 @@ def parse_keys(lines, file):
         if not m:
             raise GenError(file, "syntax", "unexpected line: " + ln)
         key, val = m.groups()
+        kind = "line" if val else "fence" if i < len(lines) and lines[i].startswith("```") else "list"
+        if key in kinds and kinds[key] != kind:
+            raise GenError(file, "syntax", "%s: expected %s, got %s" % (key, kinds[key], kind))
         if val:
             out[key] = val
         elif i < len(lines) and lines[i].startswith("```"):
@@ -205,8 +212,8 @@ def parse_sidecar(text, stem):
     if lid != stem:
         raise GenError(file, "G7", "id %r != file stem %r" % (lid, stem))
     starts = [i for i, ln in enumerate(lines) if ln.startswith("## ")] + [len(lines)]
-    top = parse_keys(lines[1:starts[0]], file)
-    unknown = set(top) - {"note", "title", "statement", "trains", "pitfalls", "variations", "examples"}
+    top = parse_keys(lines[1:starts[0]], file, TOP_KINDS)
+    unknown = set(top) - set(TOP_KINDS)
     if unknown:
         raise GenError(file, "syntax", "unknown keys: " + ", ".join(sorted(unknown)))
     if "note" not in top:
@@ -216,7 +223,7 @@ def parse_sidecar(text, stem):
         head = lines[a][3:].strip()
         body = lines[a + 1:b]
         if head.startswith("theory "):
-            card = parse_keys(body, file)
+            card = parse_keys(body, file, CARD_KINDS)
             bad = set(card) - set(CARD_KEYS)
             if bad:
                 raise GenError(file, "syntax", "## %s: unknown keys: %s" % (head, ", ".join(sorted(bad))))
