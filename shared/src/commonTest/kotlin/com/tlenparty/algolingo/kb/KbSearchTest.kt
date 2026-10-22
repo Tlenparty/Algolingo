@@ -32,4 +32,10 @@ class KbSearchTest {
         assertEquals(listOf("y", "x"), r.map { it.note.id })
         assertTrue(r[1].snippet.contains("Корутина"))
     }
+
+    @Test fun lowercaseLengthChangeDoesNotCrash() {
+        // "İ".lowercase() is 2 chars: the lowerRaw index runs past raw.
+        val hits = searchNotes(listOf(Note("z", "Заметка", "Темы", "İ".repeat(40) + " цель")), "цель")
+        assertEquals(listOf("z"), hits.map { it.note.id })
+    }
 }

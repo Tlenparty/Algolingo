@@ -32,10 +32,10 @@ fun searchNotes(notes: List<Note>, query: String): List<SearchHit> {
     val (titleHits, rest) = notes.partition { it.lowerTitle.contains(q) }
     val bodyHits = rest.mapNotNull { n ->
         val i = n.lowerRaw.indexOf(q)
-        if (i < 0) null else SearchHit(
-            n, n.raw.substring((i - 30).coerceAtLeast(0), (i + q.length + 30).coerceAtMost(n.raw.length))
-                .replace('\n', ' ').trim(),
-        )
+        // lowercase() can lengthen the string («İ» -> 2 chars), so clamp both ends to raw.
+        val start = (i - 30).coerceIn(0, n.raw.length)
+        val end = (i + q.length + 30).coerceIn(start, n.raw.length)
+        if (i < 0) null else SearchHit(n, n.raw.substring(start, end).replace('\n', ' ').trim())
     }
     return titleHits.map { SearchHit(it, "") } + bodyHits
 }
