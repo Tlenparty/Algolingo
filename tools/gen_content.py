@@ -3,7 +3,7 @@
 
 Usage:
   python3 tools/gen_content.py                      regenerate committed output
-  python3 tools/gen_content.py --check              exit 1 and list stale files, write nothing
+  python3 tools/gen_content.py --check              exit 1 and list stale/orphan files, write nothing
   python3 tools/gen_content.py --allow-removed l0.9 allow a lesson id to leave index.json
 
 Inputs: the bundled note 05 (files/kb/n07ed966c.md, refreshed by sync_notes.py,
@@ -454,10 +454,17 @@ def main(argv=None):
         return 1
     stale = [rel for rel, text in out.items()
              if not (root / rel).is_file() or (root / rel).read_text(encoding="utf-8") != text]
+    orphans = ["%s/%s" % (LESSONS, p.name) for p in sorted((root / LESSONS).glob("*.json"))
+               if "%s/%s" % (LESSONS, p.name) not in out]
     if args.check:
         for rel in stale:
             print("stale: " + rel)
-        return 1 if stale else 0
+        for rel in orphans:
+            print("orphan: " + rel)
+        return 1 if stale or orphans else 0
+    for rel in orphans:
+        (root / rel).unlink()
+        print("removed " + rel)
     for rel in stale:
         path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
