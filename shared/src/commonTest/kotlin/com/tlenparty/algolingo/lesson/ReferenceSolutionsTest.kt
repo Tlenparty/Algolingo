@@ -27,6 +27,52 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
     }
 }
 
+private object L0_2_v0 { // reference
+    fun reverse(s: CharArray) {
+        var l = 0
+        var r = s.size - 1
+        while (l < r) {
+            val t = s[l]; s[l] = s[r]; s[r] = t
+            l++; r--
+        }
+    }
+}
+
+private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
+    fun reverse(s: CharArray) {
+        var l = 0
+        var r = s.size - 1
+        while (l <= r) {
+            val t = s[l]; s[l] = s[r]; s[r] = t
+            l++; r--
+        }
+    }
+}
+
+private object L0_3_v0 { // reference
+    fun isPalindrome(s: String): Boolean {
+        var l = 0
+        var r = s.length - 1
+        while (l < r) {
+            if (s[l] != s[r]) return false
+            l++; r--
+        }
+        return true
+    }
+}
+
+private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
+    fun isPalindrome(s: String): Boolean {
+        var l = 0
+        var r = s.length - 1
+        while (l <= r) {
+            if (s[l] != s[r]) return false
+            l++; r--
+        }
+        return true
+    }
+}
+
 private object L0_4_v0 { // reference
     fun binarySearch(nums: IntArray, target: Int): Int {
         var lo = 0
@@ -75,6 +121,48 @@ class ReferenceSolutionsTest {
             assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
             assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
             assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
+        }
+    }
+
+    @Test
+    fun l0_2_v0() {
+        with(L0_2_v0) {
+            assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
+            assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
+            assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
+            assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
+        }
+    }
+
+    @Test
+    fun l0_2_v1() {
+        with(L0_2_v1) {
+            assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
+            assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
+            assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
+            assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
+        }
+    }
+
+    @Test
+    fun l0_3_v0() {
+        with(L0_3_v0) {
+            assertTrue(isPalindrome("aba"))
+            assertTrue(isPalindrome("abba"))
+            assertFalse(isPalindrome("ab"))
+            assertTrue(isPalindrome(""))
+            assertTrue(isPalindrome("a"))
+        }
+    }
+
+    @Test
+    fun l0_3_v1() {
+        with(L0_3_v1) {
+            assertTrue(isPalindrome("aba"))
+            assertTrue(isPalindrome("abba"))
+            assertFalse(isPalindrome("ab"))
+            assertTrue(isPalindrome(""))
+            assertTrue(isPalindrome("a"))
         }
     }
 
