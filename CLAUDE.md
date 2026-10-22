@@ -29,7 +29,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 | CMP Material3 (`org.jetbrains.compose.material3:material3`) | **1.12.0-alpha03** | Buttons, cards, theme | The CMP 1.12.x changelog pins this version. Material3 is versioned separately from CMP and always lags as an "alpha". The official Kotlin/KMP-App-Template also uses an alpha material3. The latest stable is 1.9.0, but it is built against older Compose, so use the pinned one. | HIGH |
 | Android Gradle Plugin | **9.3.x** (9.3.3) | Android build | Kotlin 2.4.20–2.4.21 is tested against AGP 8.5.2–9.3.1. 9.4.x exists but is outside the tested range. AGP 9 forces the new module layout described below. | HIGH |
 | Gradle | **9.7.1** | Build | 9.7.x is the highest Gradle line tested with KGP 2.4.21. The current Gradle is 9.8.2, which would produce compatibility warnings. | HIGH |
-| Android SDK | compileSdk/targetSdk **37**, minSdk **24** | — | These match the current official KMP template. | MEDIUM |
+| Android SDK | compileSdk/targetSdk **37**, minSdk **26** (26: kotlinx-datetime uses java.time without desugaring, Phase 4 decision) | — | These match the current official KMP template. | MEDIUM |
 | Xcode | **26.4** | iOS simulator build | This is the Xcode version tested with Kotlin 2.4.20+. A simulator is enough and needs no signing. | HIGH |
 | JDK | 17 (JetBrains Runtime bundled with Android Studio) | Gradle daemon | Android target uses `JvmTarget.JVM_11` as in the official samples. | MEDIUM |
 ### Project Template / Module Layout

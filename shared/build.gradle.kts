@@ -57,10 +57,14 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.androidx.datastore.core)
+            implementation(libs.androidx.datastore.core.okio)
+            implementation(libs.kotlinx.datetime)
             implementation(project(":design"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
