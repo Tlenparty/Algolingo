@@ -18,10 +18,15 @@ class LessonViewModel(
     val state: StateFlow<Result<LessonState>?> = _state
 
     init {
-        viewModelScope.launch { _state.value = load(id).map { LessonReducer.start(if (review) it.copy(theory = emptyList()) else it, seed) } }
+        viewModelScope.launch {
+            val r = load(id).map { LessonReducer.start(if (review) it.copy(theory = emptyList()) else it, seed) }
+            _state.value = r
+            // A review strips theory, so a lesson with no playable exercise starts in Done: record it like normal mode does, or it stays due forever.
+            r.getOrNull()?.takeIf { it.phase is Phase.Done }?.let { onFinish(LessonReducer.result(it)) }
+        }
     }
 
-    /** onFinish fires once, on the transition into Done; the VM survives rotation, so no double write. */
+    /** onFinish fires once, on the transition into Done (or at load if the lesson starts there); the VM survives rotation, so no double write. */
     fun on(a: LessonAction) {
         val prev = _state.value?.getOrNull() ?: return
         val next = LessonReducer.reduce(prev, a)
