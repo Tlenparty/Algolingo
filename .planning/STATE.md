@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 03-08-PLAN.md; phase 3 plans 10/10
-last_updated: "2026-10-22T06:50:49.725Z"
+last_updated: "2026-10-22T06:54:21.135Z"
 last_activity: 2026-10-22
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 21
+  completed_plans: 22
   percent: 67
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 ## Current Position
 
 Phase: 4 (progress-review) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-10-22
 
-Progress: [█████████░] 91%
+Progress: [██████████] 96%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [█████████░] 91%
 | Phase 03 P10 | 25min | 3 tasks | 22 files |
 | Phase 3 P08 | 30min | 2 tasks | 1 files |
 | Phase 04 P01 | 10min | 2 tasks | 5 files |
+| Phase 04 P03 | 10min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,8 @@ Recent decisions affecting current work:
 - [Phase 03-08]: Phase 3 lesson flow approved on Android emulator and iOS simulator; follow-ups: iOS ▶ emoji, hint code font, template brace scroll, no physical device test
 - [Phase 04]: Phase 4: minSdk 26 instead of desugaring (kotlinx-datetime java.time)
 - [Phase 04]: Phase 4: SRS moves only on first pass and due reviews; replays keep step/due but earn XP+streak (A2)
+- [Phase 04]: index.json lists only l0.4 in Phase 4; array order = unlock order; Phase 5 generator overwrites it
+- [Phase 04]: Review opens only the first due lesson per tap, same player with theory stripped
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-22T06:50:49.720Z
+Last session: 2026-10-22T06:54:16.751Z
 Stopped at: Completed 03-08-PLAN.md; phase 3 plans 10/10
 Resume file: None
