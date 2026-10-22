@@ -149,10 +149,10 @@ fun parseInline(s: String): List<Inline> {
             s.startsWith("==", i) && i + 2 < s.length && !s[i + 2].isWhitespace() && s[i + 2] != '=' &&
                 (i == 0 || s[i - 1] != '=') -> {
                 // Only the opener must touch text («a == b» never opens); close at the next `==` (not `===`), like Obsidian,
-                // so «==a ==b» -> Mark("a") + "b". «==x» without a close stays literal.
+                // so «==a ==b» -> Mark("a ") + "b" (the space stays, so words never glue). «==x» without a close stays literal.
                 end = s.indexOf("==", i + 3)
                 while (end > 0 && s.startsWith("===", end)) end = s.indexOf("==", end + 1)
-                if (end > i + 2) { flush(); out.add(Mark(s.substring(i + 2, end).trimEnd())); i = end + 2; continue }
+                if (end > i + 2) { flush(); out.add(Mark(s.substring(i + 2, end))); i = end + 2; continue }
             }
             s.startsWith("**", i) -> {
                 end = s.indexOf("**", i + 2)

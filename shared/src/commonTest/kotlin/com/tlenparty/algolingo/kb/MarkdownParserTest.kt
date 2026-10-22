@@ -118,7 +118,7 @@ class MarkdownParserTest {
         for (s in listOf("сумма == target", "a === b", "==без конца")) assertEquals(listOf(Text(s)), parseInline(s))
         assertEquals(listOf(InlineCode("a==b")), parseInline("`a==b`"))
         // Space before the closing `==` still closes (real notes), and does not swallow a later `==`.
-        assertEquals(listOf(Mark("a"), Text("b "), Mark("c"), Text(" d")), parseInline("==a ==b ==c== d"))
-        assertEquals(listOf(Text("x "), Mark("важно"), Text(" y")), parseInline("x ==важно == y"))
+        assertEquals(listOf(Mark("a "), Text("b "), Mark("c"), Text(" d")), parseInline("==a ==b ==c== d"))
+        assertEquals(listOf(Text("x "), Mark("важно "), Text(" y")), parseInline("x ==важно == y"))
     }
 }
