@@ -199,6 +199,28 @@ private object L1_2_v0 { // reference
     }
 }
 
+private object L1_3_v0 { // reference
+    fun sameLetters(a: String, b: String): Boolean {
+        if (a.length != b.length) return false
+        val cnt = HashMap<Char, Int>()
+        for (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1
+        for (c in b) {
+            val left = (cnt[c] ?: 0) - 1
+            if (left < 0) return false
+            cnt[c] = left
+        }
+        return true
+    }
+
+    fun examples() {
+        assertTrue(sameLetters("йцукен", "некуцй"))
+        assertFalse(sameLetters("ффффа", "фффа"))
+        assertFalse(sameLetters("ab", "ac"))
+        assertFalse(sameLetters("aab", "abb"))
+        assertTrue(sameLetters("", ""))
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -248,5 +270,10 @@ class ReferenceSolutionsTest {
     @Test
     fun l1_2_v0() {
         L1_2_v0.examples()
+    }
+
+    @Test
+    fun l1_3_v0() {
+        L1_3_v0.examples()
     }
 }
