@@ -17,6 +17,7 @@
 - [x] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог (completed 2026-10-21)
 - [x] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками (completed 2026-10-22)
 - [x] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах (completed 2026-10-22)
+- [ ] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах
 
 ## Phase Details
 
@@ -177,3 +178,19 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
 | 4. Progress & Review | 4/4 | Complete    | 2026-10-22 |
 | 5. Level 0 Content & End-to-End | 4/4 | Complete    | 2026-10-22 |
+
+### Phase 6: Level 1 Content — Hash Map / Set
+
+**Goal:** Уровень 1 «Hash Map / Set» (1.1–1.5) сгенерирован из заметки 05 + сайдкаров, отревьюен заказчиком и открывается после 0.4 на Android и iOS-симуляторе
+**Requirements**: CNV2-01 (уровень 1)
+**Depends on:** Phase 5
+**Success Criteria** (what must be TRUE):
+
+  1. Сайдкары l1.1–l1.5: дырки, верные облачка, дистракторы из «Граблей» с объяснением и контрпримером; `gen_content.py --check` и тесты эталонов зелёные
+  2. `index.json` перечисляет 0.1–0.4, затем 1.1–1.5; 1.1 открывается после 0.4, следующие — по порядку
+  3. Заказчик отревьюил контент уровня 1 (теория, дистракторы, пояснения)
+  4. Уроки 1.1–1.5 проходятся с чистой установки на Android (авиарежим) и iOS-симуляторе
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 6 to break down)

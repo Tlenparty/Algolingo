@@ -93,6 +93,10 @@ Recent decisions affecting current work:
 - [Phase 05]: l0.2 e3 uses l⟦++⟧; r⟦--⟧ holes (per-hole checker would reject equivalent r--; l++)
 - [Phase 05]: 05-04: level 0 (0.1-0.4) passes end to end offline on Android (airplane mode) + iOS sim; no app bugs
 
+### Roadmap Evolution
+
+- Phase 6 added: Level 1 Content — Hash Map / Set (уроки 1.1–1.5 из заметки 05)
+
 ### Pending Todos
 
 None yet.
