@@ -240,6 +240,34 @@ private object L1_4_v0 { // reference
     }
 }
 
+private object L1_5_v0 { // reference
+    data class StepEntry(val userId: Int, val steps: Int)
+    data class ChampionResult(val userIds: List<Int>, val steps: Int)
+
+    fun findChampions(statistics: List<List<StepEntry>>): ChampionResult {
+        val totalDays = statistics.size
+        val totalSteps = HashMap<Int, Int>()
+        val daysActive = HashMap<Int, Int>()
+
+        for (day in statistics) for (e in day) {
+            totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + e.steps
+            daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + 1
+        }
+
+        val full = daysActive.filterValues { it == totalDays }.keys
+        val maxSteps = full.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0
+        val champions = full.filter { totalSteps[it] == maxSteps }
+        return ChampionResult(champions, maxSteps)
+    }
+
+    fun examples() {
+        assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 50)), listOf(StepEntry(1, 100), StepEntry(2, 50)))))
+        assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 500)), listOf(StepEntry(1, 100)))))
+        findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 100)), listOf(StepEntry(2, 50), StepEntry(1, 50)))).let { assertEquals(listOf(1, 2), it.userIds.sorted()); assertEquals(150, it.steps) }
+        assertEquals(ChampionResult(emptyList(), 0), findChampions(emptyList()))
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -299,5 +327,10 @@ class ReferenceSolutionsTest {
     @Test
     fun l1_4_v0() {
         L1_4_v0.examples()
+    }
+
+    @Test
+    fun l1_5_v0() {
+        L1_5_v0.examples()
     }
 }
