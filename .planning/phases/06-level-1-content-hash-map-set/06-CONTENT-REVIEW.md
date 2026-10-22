@@ -700,3 +700,5 @@ fun findChampions(statistics: List<List<StepEntry>>): ChampionResult {
 
 ## Вердикт
 
+
+2026-10-22 — Одобрено без правок (заказчик: «approved»). Все 10 пунктов приняты как есть; в 1.1 e3 `!seen.add(x)` / `seen.contains(x)` остаются ошибкой с честным объяснением «сработает, но…».

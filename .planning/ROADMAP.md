@@ -191,7 +191,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
   2. `index.json` перечисляет 0.1–0.4, затем 1.1–1.5; 1.1 открывается после 0.4, следующие — по порядку
   3. Заказчик отревьюил контент уровня 1 (теория, дистракторы, пояснения)
   4. Уроки 1.1–1.5 проходятся с чистой установки на Android (авиарежим) и iOS-симуляторе
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 Plans:
 **Wave 1**
@@ -208,7 +208,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 06-04-PLAN.md — Customer review of level 1 (blocking checkpoint) + edits (CNV2-01)
+- [x] 06-04-PLAN.md — Customer review of level 1 (blocking checkpoint) + edits (CNV2-01)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
