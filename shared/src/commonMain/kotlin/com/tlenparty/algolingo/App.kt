@@ -80,7 +80,7 @@ fun App(dataDir: String) {
         ) { pad ->
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
                 composable<Home> { entry ->
-                    val progress by progressRepo.progress.collectAsStateWithLifecycle(null)
+                    val progress by progressRepo.progress.collectAsStateWithLifecycle()
                     // The process can outlive midnight: re-read the date on every resume, then once a minute while visible.
                     var today by remember { mutableStateOf(progressRepo.today()) }
                     LaunchedEffect(entry) {

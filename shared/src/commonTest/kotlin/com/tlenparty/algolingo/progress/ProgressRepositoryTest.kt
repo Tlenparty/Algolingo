@@ -12,6 +12,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
@@ -40,8 +41,8 @@ class ProgressRepositoryTest {
     @Test
     fun recordWritesXpStreakAndSrs() = runTest {
         val store = FakeStore()
-        ProgressRepository(store, { d }, this).record("l0.4", clean).join()
-        val p = ProgressRepository(store, { d }, this).progress.first()
+        ProgressRepository(store, { d }, backgroundScope).record("l0.4", clean).join()
+        val p = ProgressRepository(store, { d }, backgroundScope).progress.filterNotNull().first()
         assertEquals(20, p.xp)
         assertEquals(1, p.streak)
         assertEquals(LessonProgress(0, LocalDate(2026, 10, 23)), p.lessons["l0.4"])
@@ -51,7 +52,7 @@ class ProgressRepositoryTest {
     fun todayIsReadAtWriteTime() = runTest {
         var day = d
         val store = FakeStore()
-        val repo = ProgressRepository(store, { day }, this)
+        val repo = ProgressRepository(store, { day }, backgroundScope)
         day = LocalDate(2026, 10, 23)
         repo.record("l0.4", clean).join()
         assertEquals(LocalDate(2026, 10, 23), store.state.value.lastActiveDay)
@@ -60,7 +61,7 @@ class ProgressRepositoryTest {
     @Test
     fun twoRecordsSameDaySumXpKeepStreak() = runTest {
         val store = FakeStore()
-        val repo = ProgressRepository(store, { d }, this)
+        val repo = ProgressRepository(store, { d }, backgroundScope)
         repo.record("l0.4", clean).join()
         repo.record("l0.4", clean).join()
         assertEquals(40, store.state.value.xp)

@@ -12,8 +12,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -54,8 +56,8 @@ class ProgressRepository(
         SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, e -> println("progress write failed: $e") },
     ),
 ) {
-    /** An IO error shows zeros instead of crashing Home. */
-    val progress: Flow<Progress> = store.data.catch { emit(Progress()) }
+    /** Hot and app-scoped, so Home has the value on its first frame after the first load. null = not loaded yet. An IO error shows zeros instead of crashing Home. */
+    val progress: StateFlow<Progress?> = store.data.catch { emit(Progress()) }.stateIn(scope, SharingStarted.Eagerly, null)
 
     /** today() is read inside the transform: the day of the write, not of the lesson start. */
     fun record(id: String, r: LessonResult): Job =
