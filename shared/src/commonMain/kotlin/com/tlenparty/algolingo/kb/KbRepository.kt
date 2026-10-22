@@ -29,9 +29,9 @@ data class SearchHit(val note: Note, val snippet: String)
 fun searchNotes(notes: List<Note>, query: String): List<SearchHit> {
     val q = query.trim().lowercase()
     if (q.isEmpty()) return emptyList()
-    val (titleHits, rest) = notes.partition { it.title.lowercase().contains(q) }
+    val (titleHits, rest) = notes.partition { it.lowerTitle.contains(q) }
     val bodyHits = rest.mapNotNull { n ->
-        val i = n.raw.lowercase().indexOf(q)
+        val i = n.lowerRaw.indexOf(q)
         if (i < 0) null else SearchHit(
             n, n.raw.substring((i - 30).coerceAtLeast(0), (i + q.length + 30).coerceAtMost(n.raw.length))
                 .replace('\n', ' ').trim(),
