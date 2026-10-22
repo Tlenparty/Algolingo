@@ -226,13 +226,13 @@ Plans:
   2. Разделы базы знаний строятся по папкам/темам (Алгоритмы, Kotlin/Java, Android, Compose, Корутины, Многопоточность, Архитектура, KMP, Performance, System Design, Вопросы с собесов…); поиск работает по всей базе
   3. [[Ссылки]] между заметками из разных папок кликабельны; заметки с картинками не ломают экран (картинка показана или заменена заглушкой)
   4. Тест бандла: все ~217 заметок декодируются и парсятся; прогон на Android и iOS-симуляторе: разделы, открытие, поиск, переход по ссылке
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 07-01-PLAN.md — Recursive allow-list sync (14 sections, stable ids) + inline images (ImageBlock) + ==highlight==; full-bundle test (KB-07, KB-01, KB-05)
-- [ ] 07-02-PLAN.md — Collapsible section headers + cached/remembered global search (KB-07, KB-02, KB-06)
+- [x] 07-01-PLAN.md — Recursive allow-list sync (14 sections, stable ids) + inline images (ImageBlock) + ==highlight==; full-bundle test (KB-07, KB-01, KB-05)
+- [x] 07-02-PLAN.md — Collapsible section headers + cached/remembered global search (KB-07, KB-02, KB-06)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
