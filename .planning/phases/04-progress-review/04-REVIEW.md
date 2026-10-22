@@ -28,6 +28,7 @@ findings:
   info: 6
   total: 12
 status: issues_found
+fix_status: fixed (11/12; IN-06 no action) — see 04-REVIEW-FIX.md
 ---
 
 # Phase 4: Code Review Report
@@ -60,6 +61,23 @@ The main defect is in the UI layer. Home's `today` only refreshes when `progress
 - silent loss of write failures;
 - an unrecoverable wipe on any decode failure;
 - a review-mode path that never records.
+
+## Fix Status (2026-10-22, iteration 1)
+
+| ID | Status | Commit |
+|----|--------|--------|
+| CR-01 | fixed (emulator smoke PASS) | a01fd1e |
+| WR-01 | fixed | 6c4b7f3 |
+| WR-02 | fixed (Home banner; UX needs human check) | 7a4638b |
+| WR-03 | fixed | d0680ba |
+| WR-04 | fixed | 4285cbd |
+| WR-05 | fixed | 0cde109 |
+| IN-01 | fixed | a0de023 |
+| IN-02 | fixed | 7824a49 |
+| IN-03 | fixed | 3b22f62 |
+| IN-04 | fixed | f9c968d |
+| IN-05 | documented (ponytail note) | 05ab52c |
+| IN-06 | no action (as recommended) | — |
 
 ## Narrative Findings (AI reviewer)
 
