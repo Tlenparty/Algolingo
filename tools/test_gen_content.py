@@ -234,6 +234,33 @@ class Validation(unittest.TestCase):
         self.assertRule("G8", build, BASE.replace("examples:\n- assertEquals(0, binarySearch(intArrayOf(5), 5))\n", ""))
 
 
+class RenderKt(unittest.TestCase):
+    CODE = "data class E(val a: Int)\nfun g(xs: List<E>): Int = xs.sumOf { it.a }"
+
+    def render(self):
+        lesson = {"id": "l1.9", "solution": {"code": self.CODE}, "exercises": []}
+        return gen_content.render_kt([(lesson, ["assertEquals(1, g(listOf(E(1))))"])])
+
+    def test_examples_run_inside_variant_object(self):
+        kt = self.render()
+        self.assertNotIn("with(", kt)
+        self.assertEqual(kt.count("fun examples()"), 1)
+        self.assertIn("L1_9_v0.examples()", kt)
+        pos = [kt.index(s) for s in ("private object L1_9_v0", "data class E", "fun examples()", "E(1)")]
+        self.assertEqual(pos, sorted(pos))
+        self.assertLess(kt.index("E(1)"), kt.index("class ReferenceSolutionsTest"))
+
+    def test_get_or_default_shim_emitted_once(self):
+        kt = self.render()
+        self.assertEqual(kt.count("fun <K, V> Map<K, V>.getOrDefault(key: K, defaultValue: V): V"), 1)
+        self.assertEqual(kt.count('@Suppress("EXTENSION_SHADOWED_BY_MEMBER")'), 1)
+
+    def test_every_committed_variant_has_examples(self):
+        kt = (ROOT / gen_content.TEST_KT).read_text(encoding="utf-8")
+        self.assertEqual(kt.count("private object "), kt.count("fun examples()"))
+        self.assertEqual(kt.count("@Test"), kt.count(".examples()"))
+
+
 class EndToEnd(unittest.TestCase):
     def test_l04_render_is_byte_identical(self):
         out = gen_content.render_all(ROOT)
