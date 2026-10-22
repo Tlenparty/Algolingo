@@ -68,6 +68,7 @@ fun schedule(prev: LessonProgress?, grade: Grade, today: LocalDate): LessonProgr
     else -> LessonProgress(0, today.plusDays(1))
 }
 
+// ponytail: a clock set ahead during a lesson stores a future lastActiveDay/due that freezes the streak and the review until that date; clamp stored dates > today+2 back to today on read if this ever bites.
 fun bumpStreak(p: Progress, today: LocalDate): Progress {
     val last = p.lastActiveDay
     val s = when {
