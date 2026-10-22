@@ -43,7 +43,8 @@ ROOT_SECTION = "Обзор"
 TITLE_SECTION = {nfc("Плотность экрана в Android"): "Android", nfc("Свой DI на коленке"): "Архитектура"}
 SECTIONS = [ROOT_SECTION] + [s for _, s in FOLDERS]
 
-EMBED = re.compile(r"(?m)^[ \t]*!\[\[([^\]|]+\.(?:png|jpe?g))(?:\|[^\]]*)?\]\][ \t]*$", re.IGNORECASE)
+# Own-line embed, optionally inside a quote/callout (`> ![[x.png]]`, the app strips `> ` and shows an ImageBlock).
+EMBED = re.compile(r"^((?:[ \t]*>)*)[ \t]*!\[\[([^\]|]+\.(?:png|jpe?g))(?:\|[^\]]*)?\]\][ \t]*$", re.IGNORECASE)
 MAX_W = 1080
 
 
@@ -116,20 +117,34 @@ def main():
     missing_imgs = set()
 
     def embed(m):
-        name = nfc(m.group(1).strip())
+        name = nfc(m.group(2).strip())
         if name not in imgs:
             missing_imgs.add(name)
             return m.group(0)
         f = "i" + hashlib.sha1(name.encode("utf-8")).hexdigest()[:8] + Path(name).suffix.lower()
         if not (tmp / "img" / f).exists():
             copy_image(imgs[name], tmp / "img" / f)
-        return f"![[{f}]]"
+        return (m.group(1) + " " if m.group(1) else "") + f"![[{f}]]"
+
+    def rewrite(text):
+        # Line by line so embeds inside fenced code stay literal (the app renders them as code).
+        lines, fence = text.split("\n"), False
+        for k, line in enumerate(lines):
+            if line.lstrip().lstrip(">").lstrip().startswith("```"):
+                fence = not fence
+            elif not fence:
+                lines[k] = EMBED.sub(embed, line)
+        return "\n".join(lines)
 
     entries = []
     for section, title, text in notes:
         nid = "n" + hashlib.sha1(title.encode("utf-8")).hexdigest()[:8]
-        (tmp / f"{nid}.md").write_bytes(EMBED.sub(embed, text).encode("utf-8"))
+        (tmp / f"{nid}.md").write_bytes(rewrite(text).encode("utf-8"))
         entries.append({"id": nid, "title": title, "section": section, "file": f"{nid}.md"})
+    if missing_imgs:  # a kept `![[x.png]]` would ship as an ImageBlock pointing at nothing
+        shutil.rmtree(tmp, ignore_errors=True)
+        print("missing images:", sorted(missing_imgs))
+        return 1
     entries.sort(key=lambda e: (SECTIONS.index(e["section"]), e["title"].casefold()))
     (tmp / "index.json").write_text(json.dumps(entries, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     old = out.with_name(out.name + ".old")
@@ -151,7 +166,6 @@ def main():
     print(f"notes: {len(entries)}, sections: {len(counts)}, images: {len(list((out / 'img').iterdir()))}")
     print("skipped .md per top folder:", dict(sorted(skipped.items())))
     print("unresolved wikilinks:", sorted(broken))
-    print("missing images:", sorted(missing_imgs))
     return 0
 
 
