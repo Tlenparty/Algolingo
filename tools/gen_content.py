@@ -53,6 +53,7 @@ HOLE = re.compile(r"⟦(.*?)⟧")
 ALT_SEP = " | "
 BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?:: ?(.*))?$")
 KEY = re.compile(r"^([a-z]+):\s*(.*)$")
+CARD_KEYS = ("signals", "skeleton", "pitfalls", "body")
 
 
 class GenError(Exception):
@@ -216,6 +217,11 @@ def parse_sidecar(text, stem):
         body = lines[a + 1:b]
         if head.startswith("theory "):
             card = parse_keys(body, file)
+            bad = set(card) - set(CARD_KEYS)
+            if bad:
+                raise GenError(file, "syntax", "## %s: unknown keys: %s" % (head, ", ".join(sorted(bad))))
+            if not any(card.get(k) for k in CARD_KEYS):
+                raise GenError(file, "G7", "## %s is empty" % head)
             card["title"] = head[len("theory "):].strip()
             sc["theory"].append(card)
         elif re.match(r"^e\d+$", head):
@@ -290,7 +296,7 @@ def build_lesson(sc, note_lines):
         lesson["trains"] = trains
     if note["targetTimeSec"]:
         lesson["targetTimeSec"] = note["targetTimeSec"]
-    lesson["theory"] = [{k: c[k] for k in ("title", "signals", "skeleton", "pitfalls", "body") if c.get(k)}
+    lesson["theory"] = [{k: c[k] for k in ("title",) + CARD_KEYS if c.get(k)}
                         for c in sc["theory"]]
     lesson["exercises"] = exercises
     lesson["solution"] = {"code": codes[0], "time": note["time"], "space": note["space"],

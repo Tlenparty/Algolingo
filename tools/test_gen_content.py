@@ -186,6 +186,11 @@ class Validation(unittest.TestCase):
     def test_g7_unknown_note_heading_fails(self):
         self.assertRule("G7", build, BASE.replace("note: 0.4 Бинарный поиск", "note: 0.9 Нет такой"))
 
+    def test_theory_card_unknown_key_fails(self):
+        card = "## theory Грабли\npitfalls:\n- `x`\n\n## e1"
+        self.assertEqual(build(BASE.replace("## e1", card, 1))["theory"], [{"title": "Грабли", "pitfalls": ["`x`"]}])
+        self.assertRule("syntax", build, BASE.replace("## e1", card.replace("pitfalls:", "pitfal:"), 1))
+
     def test_g8_no_examples_fails(self):
         self.assertRule("G8", build, BASE.replace("examples:\n- assertEquals(0, binarySearch(intArrayOf(5), 5))\n", ""))
 
