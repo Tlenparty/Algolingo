@@ -77,8 +77,8 @@ Recent decisions affecting current work:
 - [Phase 03-09]: Separate :design KMP module owns AlgoTheme (colors, typography, spacing, sizes, shapes), fonts, highlight; shared depends on it
 - [Phase 03]: 03-10: reusable components (ChunkyBox/Button, TokenChip, LessonProgressBar, CodeBlock, AlgoCard) live in :design; CodeTemplate/LessonTopBar/ResultPanel stay in shared (lesson/kb types)
 - [Phase 03-08]: Phase 3 lesson flow approved on Android emulator and iOS simulator; follow-ups: iOS ▶ emoji, hint code font, template brace scroll, no physical device test
-- [Phase ?]: Phase 4: minSdk 26 instead of desugaring (kotlinx-datetime java.time)
-- [Phase ?]: Phase 4: SRS moves only on first pass and due reviews; replays keep step/due but earn XP+streak (A2)
+- [Phase 04]: Phase 4: minSdk 26 instead of desugaring (kotlinx-datetime java.time)
+- [Phase 04]: Phase 4: SRS moves only on first pass and due reviews; replays keep step/due but earn XP+streak (A2)
 
 ### Pending Todos
 
