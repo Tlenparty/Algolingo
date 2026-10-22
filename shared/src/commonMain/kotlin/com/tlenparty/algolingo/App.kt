@@ -89,6 +89,7 @@ fun App(dataDir: String) {
                             while (true) { today = progressRepo.today(); delay(60_000) }
                         }
                     }
+                    val saveFailed by progressRepo.saveFailed.collectAsStateWithLifecycle()
                     val c = catalog
                     val p = progress
                     val model = if (c != null && p != null) homeModel(c, p, today) else null
@@ -97,6 +98,7 @@ fun App(dataDir: String) {
                         onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
                         // ponytail: review opens only the first due lesson; chain them into one session if N regularly exceeds 3.
                         onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true)) } } },
+                        saveFailed = saveFailed,
                     )
                 }
                 composable<LessonRoute> { entry ->

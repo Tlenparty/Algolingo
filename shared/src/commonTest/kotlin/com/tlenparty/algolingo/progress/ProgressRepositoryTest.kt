@@ -23,6 +23,7 @@ import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 private class FakeStore : DataStore<Progress> {
     val state = MutableStateFlow(Progress())
@@ -66,6 +67,22 @@ class ProgressRepositoryTest {
         repo.record("l0.4", clean).join()
         assertEquals(40, store.state.value.xp)
         assertEquals(1, store.state.value.streak)
+    }
+
+    @Test
+    fun failedWriteIsRetriedThenFlagged() = runTest {
+        var calls = 0
+        val failing = object : DataStore<Progress> {
+            override val data: Flow<Progress> = MutableStateFlow(Progress())
+            override suspend fun updateData(transform: suspend (Progress) -> Progress): Progress {
+                calls++
+                throw okio.IOException("disk full")
+            }
+        }
+        val repo = ProgressRepository(failing, { d }, backgroundScope)
+        repo.record("l0.4", clean).join()
+        assertEquals(2, calls)
+        assertTrue(repo.saveFailed.value)
     }
 
     @Test

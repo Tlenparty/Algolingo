@@ -7,11 +7,13 @@ import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
 import com.tlenparty.algolingo.lesson.LessonResult
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -59,9 +61,25 @@ class ProgressRepository(
     /** Hot and app-scoped, so Home has the value on its first frame after the first load. null = not loaded yet. An IO error shows zeros instead of crashing Home. */
     val progress: StateFlow<Progress?> = store.data.catch { emit(Progress()) }.stateIn(scope, SharingStarted.Eagerly, null)
 
+    private val _saveFailed = MutableStateFlow(false)
+
+    /** True once a write failed even after a retry, so Home can say the lesson was not saved. The next good write clears it. */
+    val saveFailed: StateFlow<Boolean> = _saveFailed
+
     /** today() is read inside the transform: the day of the write, not of the lesson start. */
-    fun record(id: String, r: LessonResult): Job =
-        scope.launch { store.updateData { applyLessonResult(it, id, r, today()) } }
+    fun record(id: String, r: LessonResult): Job = scope.launch {
+        repeat(2) { attempt ->
+            try {
+                store.updateData { applyLessonResult(it, id, r, today()) }
+                _saveFailed.value = false
+                return@launch
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                if (attempt == 1) _saveFailed.value = true
+            }
+        }
+    }
 }
 
 /** One DataStore per process (two on one file crash), surviving Activity recreation. */

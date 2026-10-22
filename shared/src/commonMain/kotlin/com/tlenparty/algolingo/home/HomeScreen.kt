@@ -39,7 +39,7 @@ import com.tlenparty.algolingo.progress.LessonStatus
 
 /** model == null while catalog/progress load: plain background, no flicker of wrong statuses. */
 @Composable
-fun HomeScreen(model: HomeModel?, onStart: (String) -> Unit, onReview: () -> Unit) {
+fun HomeScreen(model: HomeModel?, onStart: (String) -> Unit, onReview: () -> Unit, saveFailed: Boolean = false) {
     val s = MaterialTheme.colorScheme
     val t = AlgoTheme.typography
     val sp = AlgoTheme.spacing
@@ -53,6 +53,13 @@ fun HomeScreen(model: HomeModel?, onStart: (String) -> Unit, onReview: () -> Uni
             ) {
                 Text("🔥 ${model.streak}", style = t.label, color = s.onBackground, modifier = Modifier.semantics { contentDescription = "Серия дней: ${model.streak}" })
                 Text("⭐ ${model.xp}", style = t.label, color = s.onBackground, modifier = Modifier.semantics { contentDescription = "Опыт: ${model.xp} XP" })
+            }
+            if (saveFailed) {
+                Text(
+                    "Не удалось сохранить прогресс последнего урока",
+                    style = t.label, color = s.error, textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = sp.md, vertical = sp.sm),
+                )
             }
             if (model.due.isNotEmpty()) {
                 ChunkyButton("Повтор сегодня (${model.due.size})", onReview, Modifier.padding(horizontal = sp.md), style = ChunkyStyle.Secondary)
