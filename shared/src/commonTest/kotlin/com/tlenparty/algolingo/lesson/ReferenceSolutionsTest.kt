@@ -182,6 +182,23 @@ private object L1_1_v0 { // reference
     }
 }
 
+private object L1_2_v0 { // reference
+    fun firstUniqueChar(s: String): Char? {
+        val cnt = HashMap<Char, Int>()
+        for (c in s) cnt[c] = cnt.getOrDefault(c, 0) + 1
+        for (c in s) if (cnt[c] == 1) return c
+        return null
+    }
+
+    fun examples() {
+        assertEquals('c', firstUniqueChar("abacb"))
+        assertNull(firstUniqueChar("aabb"))
+        assertEquals('z', firstUniqueChar("z"))
+        assertNull(firstUniqueChar(""))
+        assertEquals('b', firstUniqueChar("ba"))
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -226,5 +243,10 @@ class ReferenceSolutionsTest {
     @Test
     fun l1_1_v0() {
         L1_1_v0.examples()
+    }
+
+    @Test
+    fun l1_2_v0() {
+        L1_2_v0.examples()
     }
 }
