@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 03-08-PLAN.md; phase 3 plans 10/10
-last_updated: "2026-10-22T06:42:33.489Z"
-last_activity: 2026-10-22 -- Phase 4 planning complete
+last_updated: "2026-10-22T06:46:57.469Z"
+last_activity: 2026-10-22
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 19
+  completed_plans: 20
   percent: 67
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-21)
 
 **Core value:** Быстро, с телефона, без клавиатуры прорешать алгоритмическую задачу: собрать решение из облачков, нажать «Проверить» и сразу понять, где грабли.
-**Current focus:** Phase 4 — progress & review
+**Current focus:** Phase 4 — progress-review
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 4 (progress-review) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-10-22 -- Phase 4 planning complete
+Last activity: 2026-10-22
 
-Progress: [██████████] 100%
+Progress: [█████████░] 87%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [██████████] 100%
 | Phase 03 P09 | 15min | 3 tasks | 26 files |
 | Phase 03 P10 | 25min | 3 tasks | 22 files |
 | Phase 3 P08 | 30min | 2 tasks | 1 files |
+| Phase 04 P01 | 10min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -76,6 +77,8 @@ Recent decisions affecting current work:
 - [Phase 03-09]: Separate :design KMP module owns AlgoTheme (colors, typography, spacing, sizes, shapes), fonts, highlight; shared depends on it
 - [Phase 03]: 03-10: reusable components (ChunkyBox/Button, TokenChip, LessonProgressBar, CodeBlock, AlgoCard) live in :design; CodeTemplate/LessonTopBar/ResultPanel stay in shared (lesson/kb types)
 - [Phase 03-08]: Phase 3 lesson flow approved on Android emulator and iOS simulator; follow-ups: iOS ▶ emoji, hint code font, template brace scroll, no physical device test
+- [Phase ?]: Phase 4: minSdk 26 instead of desugaring (kotlinx-datetime java.time)
+- [Phase ?]: Phase 4: SRS moves only on first pass and due reviews; replays keep step/due but earn XP+streak (A2)
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-21T16:40:55.850Z
+Last session: 2026-10-22T06:46:53.669Z
 Stopped at: Completed 03-08-PLAN.md; phase 3 plans 10/10
 Resume file: None
