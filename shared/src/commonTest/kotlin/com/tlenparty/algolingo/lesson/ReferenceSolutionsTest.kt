@@ -3,6 +3,30 @@ package com.tlenparty.algolingo.lesson
 
 import kotlin.test.*
 
+private object L0_1_v0 { // reference
+    fun sumAndMax(nums: IntArray): Pair<Int, Int> {
+        var sum = 0
+        var max = nums[0]
+        for (x in nums) {
+            sum += x
+            if (x > max) max = x
+        }
+        return sum to max
+    }
+}
+
+private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
+    fun sumAndMax(nums: IntArray): Pair<Int, Int> {
+        var sum = 0
+        var max = Int.MIN_VALUE
+        for (x in nums) {
+            sum += x
+            if (x > max) max = x
+        }
+        return sum to max
+    }
+}
+
 private object L0_4_v0 { // reference
     fun binarySearch(nums: IntArray, target: Int): Int {
         var lo = 0
@@ -36,6 +60,24 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
 }
 
 class ReferenceSolutionsTest {
+    @Test
+    fun l0_1_v0() {
+        with(L0_1_v0) {
+            assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
+            assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
+            assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
+        }
+    }
+
+    @Test
+    fun l0_1_v1() {
+        with(L0_1_v1) {
+            assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
+            assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
+            assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
+        }
+    }
+
     @Test
     fun l0_4_v0() {
         with(L0_4_v0) {
