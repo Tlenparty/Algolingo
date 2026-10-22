@@ -2,6 +2,7 @@ package com.tlenparty.algolingo.lesson
 
 import java.io.File
 import kotlinx.serialization.json.Json
+import com.tlenparty.algolingo.progress.Catalog
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -22,5 +23,14 @@ class LessonContentTest {
     @Test
     fun e3HasTwoSeparateOneChips() {
         assertEquals(2, lesson.exercises.last().bank.count { it.text == "1" })
+    }
+
+    @Test
+    fun catalogIdsAreUniqueAndHaveLessonFiles() {
+        val dir = File("src/commonMain/composeResources/files/content")
+        val ids = Json { ignoreUnknownKeys = false }.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons.map { it.id }
+        assertTrue(ids.isNotEmpty())
+        assertEquals(ids.size, ids.toSet().size)
+        ids.forEach { assertTrue(File(dir, "lessons/$it.json").isFile, "missing lessons/$it.json") }
     }
 }
