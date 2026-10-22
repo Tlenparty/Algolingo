@@ -18,7 +18,7 @@
 - [x] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками (completed 2026-10-22)
 - [x] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах (completed 2026-10-22)
 - [x] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах (completed 2026-10-22)
-- [ ] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам
+- [x] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам (completed 2026-10-22)
 
 ## Phase Details
 
@@ -226,7 +226,7 @@ Plans:
   2. Разделы базы знаний строятся по папкам/темам (Алгоритмы, Kotlin/Java, Android, Compose, Корутины, Многопоточность, Архитектура, KMP, Performance, System Design, Вопросы с собесов…); поиск работает по всей базе
   3. [[Ссылки]] между заметками из разных папок кликабельны; заметки с картинками не ломают экран (картинка показана или заменена заглушкой)
   4. Тест бандла: все ~217 заметок декодируются и парсятся; прогон на Android и iOS-симуляторе: разделы, открытие, поиск, переход по ссылке
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -236,4 +236,4 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 07-03-PLAN.md — Autonomous Android + iOS sim walkthrough of the full KB; KB-07 Complete (KB-07, KB-02, KB-05, KB-06)
+- [x] 07-03-PLAN.md — Autonomous Android + iOS sim walkthrough of the full KB; KB-07 Complete (KB-07, KB-02, KB-05, KB-06)
