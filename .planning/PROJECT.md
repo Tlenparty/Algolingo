@@ -18,6 +18,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 - ✓ Урок проходится с телефона: теория-карточки, упражнения «дырки» из облачков, «Проверить» с зелёным / «принято, но…» / красным и объяснением грабли, подсказки, эталон, итог ✅/💡/❌ с XP; игривый стиль, светлая/тёмная тема; дизайн-система AlgoTheme в модуле :design — Validated in Phase 3: Lesson & Exercise UI
 - ✓ Прогресс между запусками (DataStore, версионированный документ): XP, streak по локальной дате, статусы уроков, интервальные повторы 1/3/7 и «Повтор сегодня (N)» — Validated in Phase 4: Progress & Review
 - ✓ Уровень 0 «Разминка» (0.1–0.4): генератор tools/gen_content.py из заметки 05 + сайдкаров, ревью заказчика, сквозной офлайн-прогон на Android (авиарежим) и iOS-симуляторе — Validated in Phase 5: Level 0 Content & End-to-End
+- ✓ Уровень 1 «Hash Map / Set» (1.1–1.5): генератор проверяет эталоны и на JVM, и на Native; ревью заказчика; прогон 0.1→1.5 через UI на Android (авиарежим) и iOS — Validated in Phase 6: Level 1 Content
 
 ### Active
 
@@ -97,4 +98,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-10-22 after Phase 5*
+*Last updated: 2026-10-22 after Phase 6*
