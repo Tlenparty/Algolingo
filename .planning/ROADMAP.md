@@ -176,4 +176,4 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
 | 4. Progress & Review | 4/4 | Complete    | 2026-10-22 |
-| 5. Level 0 Content & End-to-End | 4/4 | Complete   | 2026-10-22 |
+| 5. Level 0 Content & End-to-End | 4/4 | Complete    | 2026-10-22 |
