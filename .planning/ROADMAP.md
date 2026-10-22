@@ -145,7 +145,7 @@ Plans:
   4. Заказчик отревьюил контент уровня 0 (теория, дистракторы, пояснения)
   5. Все 4 урока проходятся от начала до итога на Android и на iOS-симуляторе в режиме без сети, прогресс и повторы работают
 
-**Plans:** 1/4 plans executed
+**Plans:** 2/4 plans executed
 
 Plans:
 **Wave 1**
@@ -154,7 +154,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 05-02-PLAN.md — Sidecars l0.1–l0.3 (theory, ladders, distractors, Int.MIN_VALUE / l <= r acceptable); 4-lesson index (CONT-01, CONT-03, CONT-04, CONT-05)
+- [x] 05-02-PLAN.md — Sidecars l0.1–l0.3 (theory, ladders, distractors, Int.MIN_VALUE / l <= r acceptable); 4-lesson index (CONT-01, CONT-03, CONT-04, CONT-05)
 
 **Wave 3** *(blocked on Wave 2)*
 
@@ -176,4 +176,4 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
 | 4. Progress & Review | 4/4 | Complete    | 2026-10-22 |
-| 5. Level 0 Content & End-to-End | 1/4 | In Progress|  |
+| 5. Level 0 Content & End-to-End | 2/4 | In Progress|  |
