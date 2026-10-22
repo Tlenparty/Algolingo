@@ -87,17 +87,21 @@ class ProgressRepositoryTest {
 
     @Test
     fun serializerRejectsGarbage() = runTest {
-        assertFailsWith<CorruptionException> { ProgressSerializer.readFrom(Buffer().writeUtf8("garbage")) }
+        assertFailsWith<CorruptionException> { ProgressSerializer().readFrom(Buffer().writeUtf8("garbage")) }
     }
 
     @Test
     fun serializerRoundTrips() = runTest {
         val p = Progress(xp = 7, streak = 2, lastActiveDay = d, lessons = mapOf("l0.4" to LessonProgress(1, d)))
-        assertEquals(p, ProgressSerializer.readFrom(Buffer().writeUtf8(encodeProgress(p))))
+        assertEquals(p, ProgressSerializer().readFrom(Buffer().writeUtf8(encodeProgress(p))))
         val buf = Buffer()
-        ProgressSerializer.writeTo(p, buf)
-        assertEquals(p, ProgressSerializer.readFrom(buf))
+        ProgressSerializer().writeTo(p, buf)
+        assertEquals(p, ProgressSerializer().readFrom(buf))
     }
+
+    @Test
+    fun missingSchemaVersionDecodesAsV1() =
+        assertEquals(Progress(xp = 5), decodeProgress("""{"xp":5}"""))
 
     private fun tempPath() = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "progress-${Random.nextLong().toULong()}.json"
 
@@ -124,8 +128,10 @@ class ProgressRepositoryTest {
             val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
             assertEquals(Progress(), progressStore(path.toString(), scope).data.first())
             scope.coroutineContext.job.cancelAndJoin()
+            assertEquals("garbage", FileSystem.SYSTEM.read("$path.bak".toPath()) { readUtf8() })
         } finally {
             FileSystem.SYSTEM.delete(path)
+            FileSystem.SYSTEM.delete("$path.bak".toPath())
         }
     }
 }

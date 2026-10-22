@@ -25,25 +25,32 @@ import kotlinx.datetime.todayIn
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.FileSystem
+import okio.Path
 import okio.Path.Companion.toPath
 import kotlin.time.Clock
 
-object ProgressSerializer : OkioSerializer<Progress> {
+/** An unreadable file is copied to [backup] (if set) before the corruption handler resets it, so progress can still be recovered by hand. */
+class ProgressSerializer(private val backup: Path? = null) : OkioSerializer<Progress> {
     override val defaultValue = Progress()
-    override suspend fun readFrom(source: BufferedSource): Progress =
-        decodeProgress(source.readUtf8()) ?: throw CorruptionException("progress.json unreadable")
+    override suspend fun readFrom(source: BufferedSource): Progress {
+        val raw = source.readUtf8()
+        return decodeProgress(raw) ?: run {
+            backup?.let { FileSystem.SYSTEM.write(it) { writeUtf8(raw) } }
+            throw CorruptionException("progress.json unreadable")
+        }
+    }
     override suspend fun writeTo(t: Progress, sink: BufferedSink) {
         sink.writeUtf8(encodeProgress(t))
     }
 }
 
-/** [path] must be absolute (OkioStorage checks it). A corrupt file is reset to zero progress. */
+/** [path] must be absolute (OkioStorage checks it). A corrupt file is saved as `<path>.bak`, then reset to zero progress. */
 fun progressStore(
     path: String,
     // ponytail: Default is fine for a few-KB file; Dispatchers.IO if the file ever grows.
     scope: CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob()),
 ): DataStore<Progress> = DataStoreFactory.create(
-    storage = OkioStorage(FileSystem.SYSTEM, ProgressSerializer) { path.toPath() },
+    storage = OkioStorage(FileSystem.SYSTEM, ProgressSerializer("$path.bak".toPath())) { path.toPath() },
     corruptionHandler = ReplaceFileCorruptionHandler { Progress() },
     scope = scope,
 )

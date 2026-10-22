@@ -10,13 +10,17 @@ import kotlinx.datetime.plus
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 // Pure progress engine: no IO, no clock reads. `today` is always injected.
 
 /** One versioned document. A key in [lessons] means the lesson was completed at least once. */
 @Serializable
 data class Progress(
-    val schemaVersion: Int = 1,
+    val schemaVersion: Int = PROGRESS_SCHEMA,
     val xp: Int = 0,
     val streak: Int = 0,
     val lastActiveDay: LocalDate? = null,
@@ -32,9 +36,17 @@ private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
 fun encodeProgress(p: Progress): String = json.encodeToString(Progress.serializer(), p)
 
-/** Null on any bad input; never throws. */
+const val PROGRESS_SCHEMA = 1
+
+/** Upgrades a raw document written with schemaVersion [from] to [PROGRESS_SCHEMA] before typed decoding. v1 is current: nothing to do. */
+fun migrate(doc: JsonObject, from: Int): JsonObject = when (from) {
+    else -> doc
+}
+
+/** Null on any bad input; never throws. A missing schemaVersion means v1. */
 fun decodeProgress(s: String): Progress? = try {
-    json.decodeFromString(Progress.serializer(), s)
+    val doc = json.parseToJsonElement(s).jsonObject
+    json.decodeFromJsonElement(Progress.serializer(), migrate(doc, doc["schemaVersion"]?.jsonPrimitive?.intOrNull ?: 1))
 } catch (_: SerializationException) {
     null
 } catch (_: IllegalArgumentException) {
