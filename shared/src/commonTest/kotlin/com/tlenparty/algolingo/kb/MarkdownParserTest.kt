@@ -98,4 +98,24 @@ class MarkdownParserTest {
         assertEquals("a **b", parseInline("a **b").joinToString("") { (it as Text).v })
         assertEquals("[[x", parseInline("[[x").joinToString("") { (it as Text).v })
     }
+
+    @Test
+    fun imageBlocks() {
+        assertEquals(listOf(ImageBlock("ia1b2c3d4.png")), parseBlocks("![[ia1b2c3d4.png]]"))
+        assertEquals(listOf(ImageBlock("x.png")), parseBlocks(" ![[x.png]]"))
+        assertEquals(listOf(ImageBlock("x.png")), parseBlocks("![[x.png|300]]"))
+        assertEquals(
+            listOf(Paragraph("text"), ImageBlock("x.png"), Paragraph("more")),
+            parseBlocks("text\n![[x.png]]\nmore"),
+        )
+        assertEquals(listOf(Paragraph("see ![[x.png]] inline")), parseBlocks("see ![[x.png]] inline"))
+    }
+
+    @Test
+    fun mark() {
+        assertEquals(listOf(Mark("важно")), parseInline("==важно=="))
+        assertEquals(listOf(Text("a "), Mark("**b**"), Text(" c")), parseInline("a ==**b**== c"))
+        for (s in listOf("сумма == target", "a === b", "==без конца")) assertEquals(listOf(Text(s)), parseInline(s))
+        assertEquals(listOf(InlineCode("a==b")), parseInline("`a==b`"))
+    }
 }
