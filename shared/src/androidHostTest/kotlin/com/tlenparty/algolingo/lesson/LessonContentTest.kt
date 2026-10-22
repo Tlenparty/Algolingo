@@ -34,4 +34,18 @@ class LessonContentTest {
         assertEquals(ids.size, ids.toSet().size)
         ids.forEach { assertTrue(File(dir, "lessons/$it.json").isFile, "missing lessons/$it.json") }
     }
+
+    @Test
+    fun everyCatalogLessonIsStrictAndValid() {
+        val dir = File("src/commonMain/composeResources/files/content")
+        val ids = Json { ignoreUnknownKeys = true }.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons.map { it.id }
+        val strict = Json { ignoreUnknownKeys = false }
+        ids.forEach { id ->
+            val l = strict.decodeFromString<Lesson>(File(dir, "lessons/$id.json").readText())
+            assertEquals(emptyList(), validate(l), id)
+            assertEquals(id, l.id)
+            val counts = l.exercises.map { it.holes.size }
+            assertTrue(counts.zipWithNext().all { (a, b) -> b > a }, "$id hole counts $counts")
+        }
+    }
 }

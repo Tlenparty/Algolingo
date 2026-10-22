@@ -64,3 +64,15 @@ ALGOLINGO_VAULT=<путь к папке Obsidian> python3 tools/sync_notes.py
 ```
 
 После этого пересоберите приложение.
+
+### Контент уроков
+
+Уроки собираются из двух источников: разметки `content/authoring/l0.N.md` (теория, ⟦дырки⟧, ложные облачка с объяснениями, подсказки, примеры для тестов; грамматика описана в заголовке `tools/gen_content.py`) и вшитой заметки 05 (`files/kb/n07ed966c.md`: условие, эталон, сложность, грабли).
+
+```bash
+python3 tools/gen_content.py                  # перегенерировать index.json, lessons/*.json и ReferenceSolutionsTest.kt
+python3 tools/gen_content.py --check          # проверить, что закоммиченный вывод совпадает с исходниками
+python3 -m unittest tools/test_gen_content.py # тесты генератора
+```
+
+Сгенерированные файлы коммитятся; Gradle Python не запускает. Если заметки в Obsidian менялись, сначала обновите их через `sync_notes.py`, затем перегенерируйте контент.
