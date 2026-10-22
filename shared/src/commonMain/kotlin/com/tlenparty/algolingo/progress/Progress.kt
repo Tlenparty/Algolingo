@@ -52,7 +52,7 @@ fun schedule(prev: LessonProgress?, grade: Grade, today: LocalDate): LessonProgr
     grade == Grade.Clean ->
         if (prev.step >= INTERVALS.lastIndex) LessonProgress(INTERVALS.size, null)
         else LessonProgress(prev.step + 1, today.plusDays(INTERVALS[prev.step + 1]))
-    grade == Grade.Hinted -> prev.copy(due = today.plusDays(INTERVALS[prev.step]))
+    grade == Grade.Hinted -> prev.copy(due = today.plusDays(INTERVALS[prev.step.coerceIn(INTERVALS.indices)]))
     else -> LessonProgress(0, today.plusDays(1))
 }
 
