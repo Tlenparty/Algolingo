@@ -4,7 +4,7 @@
 Extend the in-app knowledge base (Phase 01.1) from 23 algorithm notes to the full interview-prep vault «Матрицы» (~217 notes). No lesson/exercise changes.
 
 ## Implementation Decisions (locked, customer 2026-10-22)
-- Vault: `/Users/user/Yandex.Disk.localized/Матрицы` (local path — never commit it; pass via arg/env like `sync_notes.py` does now).
+- Vault: `$HOME/Yandex.Disk.localized/Матрицы` (local path — never commit it; pass via arg/env like `sync_notes.py` does now).
 - Include: `Алгоритмы/`, `Вопросы с собесов/` (incl. subfolders Коллекции, Многопоточка, Примитивы), `Матрицы/` (all subfolders: Android, Compose, Coroutines, KMP, Performance, Архитектура, Исключения, Котлин Java, Многопоточность, Общие вопросы), `SystemDesign/`, root notes «Подготовка к собеседованию», «СОДЕРЖАНИЕ».
 - Exclude: `Работа за рубежом/`, `Work/`, `Для работы/`, `Excalidraw/`, `.obsidian/`, `.claude/`, `*.base`.
 - Publishing all included notes to the public GitHub repo is approved.
