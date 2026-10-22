@@ -121,7 +121,13 @@ Plans:
   3. Задача уходит на повтор 1 / 3 / 7 дней (✅ — шаг вперёд, 💡 — на месте, ❌ — сброс), ✅ на последнем шаге помечает её «освоено»; тесты с подставной датой (23:59→00:01, два урока в день, пропуск дня, часы назад) проходят
   4. «Повтор сегодня (N)» на главной запускает тот же плеер урока для задач с наступившим сроком
 
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Package gate + deps/minSdk 26 + pure progress engine (XP, streak, 1/3/7 SRS, codec) with fake-date tests
+- [ ] 04-02-PLAN.md — DataStore repository (AppGraph singleton, app-scope write on Done) + 🔥/⭐ header persisted across restarts
+- [ ] 04-03-PLAN.md — index.json catalog, statuses/due/homeModel + Home path (done/available/locked) + «Повтор сегодня (N)» review without theory
+- [ ] 04-04-PLAN.md — Autonomous device verification on Android emulator and iOS simulator (restart, due edit, corrupt file)
 **UI hint**: yes
 
 ### Phase 5: Level 0 Content & End-to-End
