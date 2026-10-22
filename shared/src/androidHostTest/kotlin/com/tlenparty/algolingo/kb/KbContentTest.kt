@@ -26,9 +26,49 @@ class KbContentTest {
     @Test
     fun sectionsInOrder() {
         assertEquals(
-            listOf("Навигация", "Тренажёры", "Задачи с собесов", "Темы"),
+            listOf(
+                "Обзор", "Алгоритмы", "Kotlin / Java", "Многопоточность", "Корутины и Flow", "Compose", "Android",
+                "Архитектура", "Performance", "KMP", "System Design", "Исключения", "Вопросы с собесов", "Общие вопросы",
+            ),
             entries.map { it.section }.distinct(),
         )
+    }
+
+    @Test
+    fun oldIdsStable() {
+        assertTrue(entries.size >= 217, "entries=${entries.size}")
+        val byId = entries.associateBy { it.id }
+        // Phase 01.1 ids: gen_content.py reads kb/n07ed966c.md, links and nav state may hold the others.
+        """n054ccc1e n056e6b1c n07ed966c n0875a2bf n08afb307 n17006052 n20407d85 n3aa07ae9 n3cf4f903 n3f4be5ed n3f836927
+           n4e5e7ef4 n6f3f2844 n87785994 n87d0fd88 n9e62f72d n9e814012 nb2db8dca nd0ce2057 nde479513 ne8e12a31 ned5215b7
+           nef21c1e1""".split(Regex("\\s+")).filter { it.isNotEmpty() }.also { assertEquals(23, it.size) }.forEach {
+            assertEquals("Алгоритмы", byId[it]?.section, "id $it")
+        }
+    }
+
+    private fun images(bs: List<Block>): List<ImageBlock> = bs.flatMap {
+        when (it) {
+            is ImageBlock -> listOf(it)
+            is Callout -> images(it.blocks)
+            is Quote -> images(it.blocks)
+            else -> emptyList()
+        }
+    }
+
+    @Test
+    fun imagesBundled() {
+        val used = entries.flatMap { images(parseBlocks(File(dir, it.file).readText())) }.map { it.file }.toSet()
+        assertTrue(used.size >= 25, "images=${used.size}")
+        used.forEach { assertTrue(File(dir, "img/$it").exists(), "missing img/$it") }
+        val bundled = File(dir, "img").list()!!.toSet()
+        assertEquals(emptySet(), bundled - used, "orphan images")
+    }
+
+    @Test
+    fun searchSpansFolders() {
+        val notes = entries.map { Note(it.id, it.title, it.section, File(dir, it.file).readText()) }
+        val sections = searchNotes(notes, "корутин").map { it.note.section }.toSet()
+        assertTrue(sections.size >= 2, "sections=$sections")
     }
 
     private fun countCallouts(bs: List<Block>): Int = bs.sumOf {
@@ -53,7 +93,7 @@ class KbContentTest {
 
     // Wikilinks to vault notes that are not part of the bundle; they render as plain text.
     private val knownMissing = setOf(
-        "coil", "hashmap vs hashset", "heap & stack", "performance. память и утечки", "как работает hashmap", "структуры данных",
+        "kpi (2)", "extension для list", "spec", "00 remote worldwide — чеклист", "01 linkedin — итоговый профиль",
     )
 
     @Test

@@ -1,140 +1,1304 @@
 [
  {
+  "id": "n9528f2e8",
+  "title": "Подготовка к собеседованию",
+  "section": "Обзор",
+  "file": "n9528f2e8.md"
+ },
+ {
+  "id": "nae2e1e77",
+  "title": "СОДЕРЖАНИЕ",
+  "section": "Обзор",
+  "file": "nae2e1e77.md"
+ },
+ {
   "id": "n08afb307",
   "title": "00 Компас алгоритмов",
-  "section": "Навигация",
+  "section": "Алгоритмы",
   "file": "n08afb307.md"
  },
  {
   "id": "nb2db8dca",
   "title": "01 Ключи и сигналы",
-  "section": "Навигация",
+  "section": "Алгоритмы",
   "file": "nb2db8dca.md"
  },
  {
   "id": "n9e62f72d",
   "title": "02 Шаблон решения",
-  "section": "Навигация",
+  "section": "Алгоритмы",
   "file": "n9e62f72d.md"
  },
  {
   "id": "n87d0fd88",
   "title": "03 Тренажёр задач",
-  "section": "Навигация",
+  "section": "Алгоритмы",
   "file": "n87d0fd88.md"
  },
  {
   "id": "n3cf4f903",
   "title": "04 Маркеры + Заготовки",
-  "section": "Навигация",
+  "section": "Алгоритмы",
   "file": "n3cf4f903.md"
  },
  {
   "id": "n07ed966c",
   "title": "05 Тренажёр решений",
-  "section": "Тренажёры",
+  "section": "Алгоритмы",
   "file": "n07ed966c.md"
  },
  {
   "id": "n17006052",
   "title": "06 Движок «маркеры и дырки»",
-  "section": "Тренажёры",
+  "section": "Алгоритмы",
   "file": "n17006052.md"
- },
- {
-  "id": "n054ccc1e",
-  "title": "Алгоритмы Avito",
-  "section": "Задачи с собесов",
-  "file": "n054ccc1e.md"
- },
- {
-  "id": "n3aa07ae9",
-  "title": "Алгоритмы Glovo",
-  "section": "Задачи с собесов",
-  "file": "n3aa07ae9.md"
- },
- {
-  "id": "n9e814012",
-  "title": "Задача от Яндекс со станциями",
-  "section": "Задачи с собесов",
-  "file": "n9e814012.md"
- },
- {
-  "id": "nef21c1e1",
-  "title": "Задачи с Avito",
-  "section": "Задачи с собесов",
-  "file": "nef21c1e1.md"
  },
  {
   "id": "n4e5e7ef4",
   "title": "BIG O",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n4e5e7ef4.md"
  },
  {
   "id": "n0875a2bf",
   "title": "LRU Cache",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n0875a2bf.md"
  },
  {
   "id": "nde479513",
   "title": "Алгоритмические сложности",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "nde479513.md"
+ },
+ {
+  "id": "n054ccc1e",
+  "title": "Алгоритмы Avito",
+  "section": "Алгоритмы",
+  "file": "n054ccc1e.md"
+ },
+ {
+  "id": "n3aa07ae9",
+  "title": "Алгоритмы Glovo",
+  "section": "Алгоритмы",
+  "file": "n3aa07ae9.md"
  },
  {
   "id": "n056e6b1c",
   "title": "Бинарный поиск",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n056e6b1c.md"
  },
  {
   "id": "ned5215b7",
   "title": "Бублесорт",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "ned5215b7.md"
  },
  {
   "id": "n6f3f2844",
   "title": "Динамическое программирование",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n6f3f2844.md"
  },
  {
   "id": "n3f836927",
   "title": "Если слово палиндром",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n3f836927.md"
  },
  {
   "id": "n3f4be5ed",
   "title": "Задача на 2 указателя",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n3f4be5ed.md"
  },
  {
   "id": "n87785994",
   "title": "Задача на stack и map",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n87785994.md"
  },
  {
   "id": "ne8e12a31",
   "title": "Задача на поиск в ширину",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "ne8e12a31.md"
+ },
+ {
+  "id": "n9e814012",
+  "title": "Задача от Яндекс со станциями",
+  "section": "Алгоритмы",
+  "file": "n9e814012.md"
+ },
+ {
+  "id": "nef21c1e1",
+  "title": "Задачи с Avito",
+  "section": "Алгоритмы",
+  "file": "nef21c1e1.md"
  },
  {
   "id": "nd0ce2057",
   "title": "Поиск в глубину (DFS)",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "nd0ce2057.md"
  },
  {
   "id": "n20407d85",
   "title": "Проверка является ли слово анаграммой",
-  "section": "Темы",
+  "section": "Алгоритмы",
   "file": "n20407d85.md"
+ },
+ {
+  "id": "nb92feff2",
+  "title": "Abstract class vs Interface,  Полиморфизм",
+  "section": "Kotlin / Java",
+  "file": "nb92feff2.md"
+ },
+ {
+  "id": "n369d38c3",
+  "title": "Any,Nothing,Unit",
+  "section": "Kotlin / Java",
+  "file": "n369d38c3.md"
+ },
+ {
+  "id": "n036dce66",
+  "title": "Backing Field в Kotlin",
+  "section": "Kotlin / Java",
+  "file": "n036dce66.md"
+ },
+ {
+  "id": "n907830cd",
+  "title": "Data class",
+  "section": "Kotlin / Java",
+  "file": "n907830cd.md"
+ },
+ {
+  "id": "n4a1d41fe",
+  "title": "EQUALS, HASHCODE",
+  "section": "Kotlin / Java",
+  "file": "n4a1d41fe.md"
+ },
+ {
+  "id": "ne5d2873e",
+  "title": "Extension функции",
+  "section": "Kotlin / Java",
+  "file": "ne5d2873e.md"
+ },
+ {
+  "id": "nb8baa876",
+  "title": "GC, Виды ссылок, GC roots",
+  "section": "Kotlin / Java",
+  "file": "nb8baa876.md"
+ },
+ {
+  "id": "nff7613e5",
+  "title": "Generic",
+  "section": "Kotlin / Java",
+  "file": "nff7613e5.md"
+ },
+ {
+  "id": "n676678f5",
+  "title": "HashMap vs HashSet",
+  "section": "Kotlin / Java",
+  "file": "n676678f5.md"
+ },
+ {
+  "id": "n4405aa91",
+  "title": "Heap & Stack",
+  "section": "Kotlin / Java",
+  "file": "n4405aa91.md"
+ },
+ {
+  "id": "nb505c154",
+  "title": "Inline class, value class, typealias, infix",
+  "section": "Kotlin / Java",
+  "file": "nb505c154.md"
+ },
+ {
+  "id": "nd19c0a7f",
+  "title": "Inline, Noinline, cross inline, reified",
+  "section": "Kotlin / Java",
+  "file": "nd19c0a7f.md"
+ },
+ {
+  "id": "na66695f8",
+  "title": "let, apply,  with, run, also",
+  "section": "Kotlin / Java",
+  "file": "na66695f8.md"
+ },
+ {
+  "id": "nc923eb47",
+  "title": "Nested class vs inner class",
+  "section": "Kotlin / Java",
+  "file": "nc923eb47.md"
+ },
+ {
+  "id": "n2883f191",
+  "title": "Object",
+  "section": "Kotlin / Java",
+  "file": "n2883f191.md"
+ },
+ {
+  "id": "n3fd959a7",
+  "title": "object и companion object",
+  "section": "Kotlin / Java",
+  "file": "n3fd959a7.md"
+ },
+ {
+  "id": "n40e7d04b",
+  "title": "Reference function",
+  "section": "Kotlin / Java",
+  "file": "n40e7d04b.md"
+ },
+ {
+  "id": "n36c6ca7e",
+  "title": "Sealed class vs enum",
+  "section": "Kotlin / Java",
+  "file": "n36c6ca7e.md"
+ },
+ {
+  "id": "n9b37e8fd",
+  "title": "Spread operator и vararg",
+  "section": "Kotlin / Java",
+  "file": "n9b37e8fd.md"
+ },
+ {
+  "id": "n1d002151",
+  "title": "Stream vs Collection vs Sequence",
+  "section": "Kotlin / Java",
+  "file": "n1d002151.md"
+ },
+ {
+  "id": "n3df63b7a",
+  "title": "String",
+  "section": "Kotlin / Java",
+  "file": "n3df63b7a.md"
+ },
+ {
+  "id": "n7ac7479b",
+  "title": "Аллокация в jvm",
+  "section": "Kotlin / Java",
+  "file": "n7ac7479b.md"
+ },
+ {
+  "id": "n10727b44",
+  "title": "Вторичный конструктор",
+  "section": "Kotlin / Java",
+  "file": "n10727b44.md"
+ },
+ {
+  "id": "nd499eda1",
+  "title": "Делегаты.  Lateinit and Lazy",
+  "section": "Kotlin / Java",
+  "file": "nd499eda1.md"
+ },
+ {
+  "id": "n203cdd67",
+  "title": "Композиция vs наследование",
+  "section": "Kotlin / Java",
+  "file": "n203cdd67.md"
+ },
+ {
+  "id": "n83b0e17d",
+  "title": "Кто поддерживает деструктуризацию в Kotlin ?",
+  "section": "Kotlin / Java",
+  "file": "n83b0e17d.md"
+ },
+ {
+  "id": "n2afe6888",
+  "title": "Лямбда",
+  "section": "Kotlin / Java",
+  "file": "n2afe6888.md"
+ },
+ {
+  "id": "nd88753e2",
+  "title": "Модификаторы доступа и их видимость",
+  "section": "Kotlin / Java",
+  "file": "nd88753e2.md"
+ },
+ {
+  "id": "n03f60391",
+  "title": "ООП",
+  "section": "Kotlin / Java",
+  "file": "n03f60391.md"
+ },
+ {
+  "id": "n9d2f5b3d",
+  "title": "Побитовое сравнение",
+  "section": "Kotlin / Java",
+  "file": "n9d2f5b3d.md"
+ },
+ {
+  "id": "nb38b0211",
+  "title": "Структуры данных",
+  "section": "Kotlin / Java",
+  "file": "nb38b0211.md"
+ },
+ {
+  "id": "nd5e0d396",
+  "title": "Типы данных, отличие const val от val, есть ли в Котлин примитивы",
+  "section": "Kotlin / Java",
+  "file": "nd5e0d396.md"
+ },
+ {
+  "id": "n74c6a405",
+  "title": "Функциональные типы в Kotlin",
+  "section": "Kotlin / Java",
+  "file": "n74c6a405.md"
+ },
+ {
+  "id": "ne2ae98b2",
+  "title": "BackPressure в Flow что это и как решается",
+  "section": "Многопоточность",
+  "file": "ne2ae98b2.md"
+ },
+ {
+  "id": "n0b55e9ef",
+  "title": "Handler и Looper",
+  "section": "Многопоточность",
+  "file": "n0b55e9ef.md"
+ },
+ {
+  "id": "na04f7d9d",
+  "title": "Happens before",
+  "section": "Многопоточность",
+  "file": "na04f7d9d.md"
+ },
+ {
+  "id": "n9bdaf187",
+  "title": "ReentrantLock, Semaphore и CyclicBarrier",
+  "section": "Многопоточность",
+  "file": "n9bdaf187.md"
+ },
+ {
+  "id": "ne98f7a3e",
+  "title": "SharedFlow vs Flow vs StateFlow",
+  "section": "Многопоточность",
+  "file": "ne98f7a3e.md"
+ },
+ {
+  "id": "n3de6fdb9",
+  "title": "Structured Concurrency",
+  "section": "Многопоточность",
+  "file": "n3de6fdb9.md"
+ },
+ {
+  "id": "nc3bc4dbe",
+  "title": "Volatile & Synchronized, Atomic",
+  "section": "Многопоточность",
+  "file": "nc3bc4dbe.md"
+ },
+ {
+  "id": "n32fc522d",
+  "title": "Как работает CountDownLatch",
+  "section": "Многопоточность",
+  "file": "n32fc522d.md"
+ },
+ {
+  "id": "nb50efe22",
+  "title": "Правила семантики в jvm",
+  "section": "Многопоточность",
+  "file": "nb50efe22.md"
+ },
+ {
+  "id": "ndf3bba4e",
+  "title": "Процессы и потоки",
+  "section": "Многопоточность",
+  "file": "ndf3bba4e.md"
+ },
+ {
+  "id": "n031fd268",
+  "title": "Синхронные и асинхронные операции",
+  "section": "Многопоточность",
+  "file": "n031fd268.md"
+ },
+ {
+  "id": "n03869711",
+  "title": "Coroutines",
+  "section": "Корутины и Flow",
+  "file": "n03869711.md"
+ },
+ {
+  "id": "n416d366a",
+  "title": "Coroutines + callback",
+  "section": "Корутины и Flow",
+  "file": "n416d366a.md"
+ },
+ {
+  "id": "n03bec8eb",
+  "title": "Coroutines. Вопрос ответ",
+  "section": "Корутины и Flow",
+  "file": "n03bec8eb.md"
+ },
+ {
+  "id": "nb992b245",
+  "title": "FLOW",
+  "section": "Корутины и Flow",
+  "file": "nb992b245.md"
+ },
+ {
+  "id": "n24f548fd",
+  "title": "Задачи на корутины",
+  "section": "Корутины и Flow",
+  "file": "n24f548fd.md"
+ },
+ {
+  "id": "n9d9710c7",
+  "title": "Обработка ошибок в корутинах",
+  "section": "Корутины и Flow",
+  "file": "n9d9710c7.md"
+ },
+ {
+  "id": "n47da6f08",
+  "title": "Compose",
+  "section": "Compose",
+  "file": "n47da6f08.md"
+ },
+ {
+  "id": "n9c9ce819",
+  "title": "Compose. Composer and Snapshot",
+  "section": "Compose",
+  "file": "n9c9ce819.md"
+ },
+ {
+  "id": "ndfd8d7b7",
+  "title": "Compose. Composition Local",
+  "section": "Compose",
+  "file": "ndfd8d7b7.md"
+ },
+ {
+  "id": "n5b23d6d8",
+  "title": "Compose. Effect Handlers",
+  "section": "Compose",
+  "file": "n5b23d6d8.md"
+ },
+ {
+  "id": "n73080ae0",
+  "title": "Compose. Recomposition",
+  "section": "Compose",
+  "file": "n73080ae0.md"
+ },
+ {
+  "id": "n7e1782fc",
+  "title": "Compose. Remember",
+  "section": "Compose",
+  "file": "n7e1782fc.md"
+ },
+ {
+  "id": "nad7b2f0f",
+  "title": "Compose. Slot api",
+  "section": "Compose",
+  "file": "nad7b2f0f.md"
+ },
+ {
+  "id": "n2ce4cad5",
+  "title": "Compose. Slot table",
+  "section": "Compose",
+  "file": "n2ce4cad5.md"
+ },
+ {
+  "id": "n067b0af8",
+  "title": "Compose. Snapshot",
+  "section": "Compose",
+  "file": "n067b0af8.md"
+ },
+ {
+  "id": "n2d08f147",
+  "title": "Compose. Snapshot 1",
+  "section": "Compose",
+  "file": "n2d08f147.md"
+ },
+ {
+  "id": "n7b48381d",
+  "title": "Compose. SubcomposeLayout",
+  "section": "Compose",
+  "file": "n7b48381d.md"
+ },
+ {
+  "id": "n92182f50",
+  "title": "Compose. Анимации",
+  "section": "Compose",
+  "file": "n92182f50.md"
+ },
+ {
+  "id": "nc68cfcc4",
+  "title": "Compose. Оптимизация",
+  "section": "Compose",
+  "file": "nc68cfcc4.md"
+ },
+ {
+  "id": "nc98460ac",
+  "title": "Compose. Стабильность",
+  "section": "Compose",
+  "file": "nc98460ac.md"
+ },
+ {
+  "id": "nbfe8b8d1",
+  "title": "KPI",
+  "section": "Compose",
+  "file": "nbfe8b8d1.md"
+ },
+ {
+  "id": "ne06dffb1",
+  "title": "Activity и Fragment",
+  "section": "Android",
+  "file": "ne06dffb1.md"
+ },
+ {
+  "id": "n6a9e0c47",
+  "title": "Activity, Service,  Broadcast Receiver,  Content Provider",
+  "section": "Android",
+  "file": "n6a9e0c47.md"
+ },
+ {
+  "id": "n1928f95c",
+  "title": "Android",
+  "section": "Android",
+  "file": "n1928f95c.md"
+ },
+ {
+  "id": "n69112222",
+  "title": "AndroidViewModel vs ViewModel",
+  "section": "Android",
+  "file": "n69112222.md"
+ },
+ {
+  "id": "n42803b40",
+  "title": "BuildType, BuildFlavour, BuildVariant",
+  "section": "Android",
+  "file": "n42803b40.md"
+ },
+ {
+  "id": "n51667991",
+  "title": "Choreographer, SurfaceFlinger",
+  "section": "Android",
+  "file": "n51667991.md"
+ },
+ {
+  "id": "n741d840f",
+  "title": "Coil",
+  "section": "Android",
+  "file": "n741d840f.md"
+ },
+ {
+  "id": "ncc11b3a2",
+  "title": "Context",
+  "section": "Android",
+  "file": "ncc11b3a2.md"
+ },
+ {
+  "id": "n6ab02168",
+  "title": "Custom view",
+  "section": "Android",
+  "file": "n6ab02168.md"
+ },
+ {
+  "id": "n7bf164cc",
+  "title": "Dagger 2",
+  "section": "Android",
+  "file": "n7bf164cc.md"
+ },
+ {
+  "id": "n542c10f8",
+  "title": "DataStore",
+  "section": "Android",
+  "file": "n542c10f8.md"
+ },
+ {
+  "id": "nc191e544",
+  "title": "EditText",
+  "section": "Android",
+  "file": "nc191e544.md"
+ },
+ {
+  "id": "n73ccffa2",
+  "title": "Exo player",
+  "section": "Android",
+  "file": "n73ccffa2.md"
+ },
+ {
+  "id": "n6aea44a8",
+  "title": "Gradle build-оптимизация",
+  "section": "Android",
+  "file": "n6aea44a8.md"
+ },
+ {
+  "id": "n169239da",
+  "title": "Hilt",
+  "section": "Android",
+  "file": "n169239da.md"
+ },
+ {
+  "id": "n9c6e80ee",
+  "title": "Intent",
+  "section": "Android",
+  "file": "n9c6e80ee.md"
+ },
+ {
+  "id": "n548b1dfd",
+  "title": "Jetpack Navigation",
+  "section": "Android",
+  "file": "n548b1dfd.md"
+ },
+ {
+  "id": "n45877cc2",
+  "title": "ML Kit Barcode Scanning в Android",
+  "section": "Android",
+  "file": "n45877cc2.md"
+ },
+ {
+  "id": "n77b7d59c",
+  "title": "Parcelable vs Serializable",
+  "section": "Android",
+  "file": "n77b7d59c.md"
+ },
+ {
+  "id": "n86f930ce",
+  "title": "R8, ProGuard, обфускация",
+  "section": "Android",
+  "file": "n86f930ce.md"
+ },
+ {
+  "id": "n41767d2b",
+  "title": "Recycler. ViewPool, PayLoads",
+  "section": "Android",
+  "file": "n41767d2b.md"
+ },
+ {
+  "id": "nadac1052",
+  "title": "RecyclerView, Diff Utils, List Adapter",
+  "section": "Android",
+  "file": "nadac1052.md"
+ },
+ {
+  "id": "n4baf50b0",
+  "title": "Render Thread",
+  "section": "Android",
+  "file": "n4baf50b0.md"
+ },
+ {
+  "id": "nc3e83fe0",
+  "title": "Retrofit",
+  "section": "Android",
+  "file": "nc3e83fe0.md"
+ },
+ {
+  "id": "n90e2fca9",
+  "title": "Room",
+  "section": "Android",
+  "file": "n90e2fca9.md"
+ },
+ {
+  "id": "neb9f62ee",
+  "title": "Room or SharedPreferences",
+  "section": "Android",
+  "file": "neb9f62ee.md"
+ },
+ {
+  "id": "nc80a0425",
+  "title": "Standby Bucket + Doze Mode",
+  "section": "Android",
+  "file": "nc80a0425.md"
+ },
+ {
+  "id": "n35522606",
+  "title": "ViewModel, SaveStateHandle, SavedStateRegistryOwner",
+  "section": "Android",
+  "file": "n35522606.md"
+ },
+ {
+  "id": "na0598831",
+  "title": "WorkManager",
+  "section": "Android",
+  "file": "na0598831.md"
+ },
+ {
+  "id": "n9bb8156a",
+  "title": "Анимации в Android",
+  "section": "Android",
+  "file": "n9bb8156a.md"
+ },
+ {
+  "id": "ncde03e3b",
+  "title": "Безопасность в Android",
+  "section": "Android",
+  "file": "ncde03e3b.md"
+ },
+ {
+  "id": "nc6ca6d52",
+  "title": "Вызов в потоке UI",
+  "section": "Android",
+  "file": "nc6ca6d52.md"
+ },
+ {
+  "id": "nd1f034e7",
+  "title": "Передача данных между фрагментами",
+  "section": "Android",
+  "file": "nd1f034e7.md"
+ },
+ {
+  "id": "nf555513a",
+  "title": "Плотность экрана в Android",
+  "section": "Android",
+  "file": "nf555513a.md"
+ },
+ {
+  "id": "nd5c4ef08",
+  "title": "Приоритеты процессов",
+  "section": "Android",
+  "file": "nd5c4ef08.md"
+ },
+ {
+  "id": "n7c1c04f8",
+  "title": "Разница в SDK",
+  "section": "Android",
+  "file": "n7c1c04f8.md"
+ },
+ {
+  "id": "ndc97a3d6",
+  "title": "Сохранение состояние в android и Bundle",
+  "section": "Android",
+  "file": "ndc97a3d6.md"
+ },
+ {
+  "id": "n2c328827",
+  "title": "Что такое Manifest",
+  "section": "Android",
+  "file": "n2c328827.md"
+ },
+ {
+  "id": "n815c0c6b",
+  "title": "DI VS SERVICE LOCATOR",
+  "section": "Архитектура",
+  "file": "n815c0c6b.md"
+ },
+ {
+  "id": "n91ccf0d8",
+  "title": "MVI библиотеки",
+  "section": "Архитектура",
+  "file": "n91ccf0d8.md"
+ },
+ {
+  "id": "n4dc47c61",
+  "title": "SOLID",
+  "section": "Архитектура",
+  "file": "n4dc47c61.md"
+ },
+ {
+  "id": "n7e80bfe1",
+  "title": "UDF (Unidirectional Data Flow)",
+  "section": "Архитектура",
+  "file": "n7e80bfe1.md"
+ },
+ {
+  "id": "n58198a59",
+  "title": "Модуляризация",
+  "section": "Архитектура",
+  "file": "n58198a59.md"
+ },
+ {
+  "id": "nfa6658de",
+  "title": "Отличия MVI от MVVM,  MVC",
+  "section": "Архитектура",
+  "file": "nfa6658de.md"
+ },
+ {
+  "id": "n7bed8f36",
+  "title": "Отличия между Service Locator и Dependency injection.",
+  "section": "Архитектура",
+  "file": "n7bed8f36.md"
+ },
+ {
+  "id": "n3848a7dc",
+  "title": "Паттерны",
+  "section": "Архитектура",
+  "file": "n3848a7dc.md"
+ },
+ {
+  "id": "n00d68e11",
+  "title": "Примеры декораторов",
+  "section": "Архитектура",
+  "file": "n00d68e11.md"
+ },
+ {
+  "id": "n3f1b05ad",
+  "title": "Примеры стратегии",
+  "section": "Архитектура",
+  "file": "n3f1b05ad.md"
+ },
+ {
+  "id": "n64aaf96b",
+  "title": "Свой DI на коленке",
+  "section": "Архитектура",
+  "file": "n64aaf96b.md"
+ },
+ {
+  "id": "ncc46c90f",
+  "title": "Чистая архитектура",
+  "section": "Архитектура",
+  "file": "ncc46c90f.md"
+ },
+ {
+  "id": "ne8f9e5f1",
+  "title": "Performance. Baseline и Startup Profiles",
+  "section": "Performance",
+  "file": "ne8f9e5f1.md"
+ },
+ {
+  "id": "n91e83ef6",
+  "title": "Performance. Обзор и метрики",
+  "section": "Performance",
+  "file": "n91e83ef6.md"
+ },
+ {
+  "id": "n29c0feb3",
+  "title": "Performance. Оптимизация Compose",
+  "section": "Performance",
+  "file": "n29c0feb3.md"
+ },
+ {
+  "id": "n33bdfed4",
+  "title": "Performance. Память и утечки",
+  "section": "Performance",
+  "file": "n33bdfed4.md"
+ },
+ {
+  "id": "n474dd730",
+  "title": "Performance. Рендеринг, jank и Macrobenchmark",
+  "section": "Performance",
+  "file": "n474dd730.md"
+ },
+ {
+  "id": "nef6bdc97",
+  "title": "KMP",
+  "section": "KMP",
+  "file": "nef6bdc97.md"
+ },
+ {
+  "id": "n6583f884",
+  "title": "KMP. Compose Multiplatform",
+  "section": "KMP",
+  "file": "n6583f884.md"
+ },
+ {
+  "id": "nf41ce306",
+  "title": "KMP. expect-actual",
+  "section": "KMP",
+  "file": "nf41ce306.md"
+ },
+ {
+  "id": "n7659c972",
+  "title": "KMP. iOS interop и корутины",
+  "section": "KMP",
+  "file": "n7659c972.md"
+ },
+ {
+  "id": "n2d70b7c8",
+  "title": "KMP. Source sets и Gradle",
+  "section": "KMP",
+  "file": "n2d70b7c8.md"
+ },
+ {
+  "id": "nd60b2d13",
+  "title": "KMP. Библиотеки экосистемы",
+  "section": "KMP",
+  "file": "nd60b2d13.md"
+ },
+ {
+  "id": "n0ec72427",
+  "title": "KMP. Вопросы с собеса",
+  "section": "KMP",
+  "file": "n0ec72427.md"
+ },
+ {
+  "id": "n90ea9c5e",
+  "title": "KMP. Сборка и доставка iOS-приложения",
+  "section": "KMP",
+  "file": "n90ea9c5e.md"
+ },
+ {
+  "id": "nde394dd4",
+  "title": "System Design с учетом Kotlin Multiplatform (KMP)",
+  "section": "System Design",
+  "file": "nde394dd4.md"
+ },
+ {
+  "id": "n87c1abcf",
+  "title": "Возможные варианты формирования буфера",
+  "section": "System Design",
+  "file": "n87c1abcf.md"
+ },
+ {
+  "id": "necb59aa6",
+  "title": "Как вернуть WorkManager к жизни",
+  "section": "System Design",
+  "file": "necb59aa6.md"
+ },
+ {
+  "id": "n039484de",
+  "title": "Как вернуть сделать апдейт изменений если изменились условия связи?",
+  "section": "System Design",
+  "file": "n039484de.md"
+ },
+ {
+  "id": "ne3927ea1",
+  "title": "Кеширование через заголовки",
+  "section": "System Design",
+  "file": "ne3927ea1.md"
+ },
+ {
+  "id": "n59b21abd",
+  "title": "Конфликты состояний с backend",
+  "section": "System Design",
+  "file": "n59b21abd.md"
+ },
+ {
+  "id": "n79f43ead",
+  "title": "Локальный поиск на устройстве",
+  "section": "System Design",
+  "file": "n79f43ead.md"
+ },
+ {
+  "id": "naa70fba5",
+  "title": "Основные разделы и Ключевые принципы мобильного системного дизайна**",
+  "section": "System Design",
+  "file": "naa70fba5.md"
+ },
+ {
+  "id": "n90bc1875",
+  "title": "Очередь сообщений",
+  "section": "System Design",
+  "file": "n90bc1875.md"
+ },
+ {
+  "id": "n552d634f",
+  "title": "План интервью",
+  "section": "System Design",
+  "file": "n552d634f.md"
+ },
+ {
+  "id": "n5dbb3805",
+  "title": "Решение конфликта если несколько пользваков текст редактируют",
+  "section": "System Design",
+  "file": "n5dbb3805.md"
+ },
+ {
+  "id": "n75bbb185",
+  "title": "Иерархия",
+  "section": "Исключения",
+  "file": "n75bbb185.md"
+ },
+ {
+  "id": "n03dc00b4",
+  "title": "Как перехватить все исключения в run time",
+  "section": "Исключения",
+  "file": "n03dc00b4.md"
+ },
+ {
+  "id": "n664d94a2",
+  "title": "Atomic принципы",
+  "section": "Вопросы с собесов",
+  "file": "n664d94a2.md"
+ },
+ {
+  "id": "n8ddb26c1",
+  "title": "ExecutorService",
+  "section": "Вопросы с собесов",
+  "file": "n8ddb26c1.md"
+ },
+ {
+  "id": "nba62d7b8",
+  "title": "HashMap",
+  "section": "Вопросы с собесов",
+  "file": "nba62d7b8.md"
+ },
+ {
+  "id": "ncac17f9b",
+  "title": "HashSet",
+  "section": "Вопросы с собесов",
+  "file": "ncac17f9b.md"
+ },
+ {
+  "id": "nbab055db",
+  "title": "LinkedList",
+  "section": "Вопросы с собесов",
+  "file": "nbab055db.md"
+ },
+ {
+  "id": "nd9aca827",
+  "title": "TreeSet",
+  "section": "Вопросы с собесов",
+  "file": "nd9aca827.md"
+ },
+ {
+  "id": "nac3022e1",
+  "title": "Volatile",
+  "section": "Вопросы с собесов",
+  "file": "nac3022e1.md"
+ },
+ {
+  "id": "nc4ab2df5",
+  "title": "Атомарность",
+  "section": "Вопросы с собесов",
+  "file": "nc4ab2df5.md"
+ },
+ {
+  "id": "n40fdad81",
+  "title": "Базовые примитивные типы",
+  "section": "Вопросы с собесов",
+  "file": "n40fdad81.md"
+ },
+ {
+  "id": "n0345d60a",
+  "title": "Вопросы про многопоточку от Газпромбанка",
+  "section": "Вопросы с собесов",
+  "file": "n0345d60a.md"
+ },
+ {
+  "id": "n69a89c93",
+  "title": "Вопросы с собесов про apply",
+  "section": "Вопросы с собесов",
+  "file": "n69a89c93.md"
+ },
+ {
+  "id": "neea08aae",
+  "title": "Главный поток",
+  "section": "Вопросы с собесов",
+  "file": "neea08aae.md"
+ },
+ {
+  "id": "n2c7a337d",
+  "title": "Гонка данных",
+  "section": "Вопросы с собесов",
+  "file": "n2c7a337d.md"
+ },
+ {
+  "id": "n2132d832",
+  "title": "Зачем нужен hashCode если equals даёт точное сравнение",
+  "section": "Вопросы с собесов",
+  "file": "n2132d832.md"
+ },
+ {
+  "id": "n792ba689",
+  "title": "Как выглядит Bucket при ключах с одинаковым hashCode в HashMap",
+  "section": "Вопросы с собесов",
+  "file": "n792ba689.md"
+ },
+ {
+  "id": "ne88585f7",
+  "title": "Как работает HashMap",
+  "section": "Вопросы с собесов",
+  "file": "ne88585f7.md"
+ },
+ {
+  "id": "n7068137d",
+  "title": "Как сравниваются ключи в HashMap при одинаковом hashCode",
+  "section": "Вопросы с собесов",
+  "file": "n7068137d.md"
+ },
+ {
+  "id": "n852ff890",
+  "title": "Коллекции, основные виды",
+  "section": "Вопросы с собесов",
+  "file": "n852ff890.md"
+ },
+ {
+  "id": "n13b1aa6a",
+  "title": "КОРУТИНЫ",
+  "section": "Вопросы с собесов",
+  "file": "n13b1aa6a.md"
+ },
+ {
+  "id": "nd644860c",
+  "title": "Оптимизация UI, вопрос с WB",
+  "section": "Вопросы с собесов",
+  "file": "nd644860c.md"
+ },
+ {
+  "id": "nc10fea1f",
+  "title": "Подготовка к алгоритмической секции",
+  "section": "Вопросы с собесов",
+  "file": "nc10fea1f.md"
+ },
+ {
+  "id": "n3e77cac5",
+  "title": "Потоки",
+  "section": "Вопросы с собесов",
+  "file": "n3e77cac5.md"
+ },
+ {
+  "id": "ned44f5e9",
+  "title": "Почему hashCode не уникален и почему возможны коллизии",
+  "section": "Вопросы с собесов",
+  "file": "ned44f5e9.md"
+ },
+ {
+  "id": "nbfab3cf8",
+  "title": "Почему в коллекциях не используются примитивные типы",
+  "section": "Вопросы с собесов",
+  "file": "nbfab3cf8.md"
+ },
+ {
+  "id": "nfaee6f29",
+  "title": "Пул потоков",
+  "section": "Вопросы с собесов",
+  "file": "nfaee6f29.md"
+ },
+ {
+  "id": "n3f3564de",
+  "title": "Тех собес яндекс",
+  "section": "Вопросы с собесов",
+  "file": "n3f3564de.md"
+ },
+ {
+  "id": "n1b0daae4",
+  "title": "Финансовые форматы",
+  "section": "Вопросы с собесов",
+  "file": "n1b0daae4.md"
+ },
+ {
+  "id": "n2589e283",
+  "title": "Что означает число которое возвращает hashCode",
+  "section": "Вопросы с собесов",
+  "file": "n2589e283.md"
+ },
+ {
+  "id": "n9a9707c6",
+  "title": "CityDrive",
+  "section": "Общие вопросы",
+  "file": "n9a9707c6.md"
+ },
+ {
+  "id": "nc85f68fa",
+  "title": "CodeReview",
+  "section": "Общие вопросы",
+  "file": "nc85f68fa.md"
+ },
+ {
+  "id": "n8afc2cf2",
+  "title": "Fragment transaction",
+  "section": "Общие вопросы",
+  "file": "n8afc2cf2.md"
+ },
+ {
+  "id": "nf40b27d6",
+  "title": "HTTP",
+  "section": "Общие вопросы",
+  "file": "nf40b27d6.md"
+ },
+ {
+  "id": "nb25ec96a",
+  "title": "WebSocket для чего",
+  "section": "Общие вопросы",
+  "file": "nb25ec96a.md"
+ },
+ {
+  "id": "na15b33a9",
+  "title": "Атомарность и Транзакции",
+  "section": "Общие вопросы",
+  "file": "na15b33a9.md"
+ },
+ {
+  "id": "n4ded2826",
+  "title": "Вопросы с WB",
+  "section": "Общие вопросы",
+  "file": "n4ded2826.md"
+ },
+ {
+  "id": "n65f31f96",
+  "title": "Задача на flow от Совкомбанка",
+  "section": "Общие вопросы",
+  "file": "n65f31f96.md"
+ },
+ {
+  "id": "nc3114a31",
+  "title": "Задача на оптимизацию Compse кода c WB",
+  "section": "Общие вопросы",
+  "file": "nc3114a31.md"
+ },
+ {
+  "id": "n446474b3",
+  "title": "Задача на рефакторинг от Т-Банка",
+  "section": "Общие вопросы",
+  "file": "n446474b3.md"
+ },
+ {
+  "id": "n285f1ac8",
+  "title": "Задача от VK на лайвкодинг",
+  "section": "Общие вопросы",
+  "file": "n285f1ac8.md"
+ },
+ {
+  "id": "ne4d084f0",
+  "title": "Задача по легенде с Я. Кеш и Mutex",
+  "section": "Общие вопросы",
+  "file": "ne4d084f0.md"
+ },
+ {
+  "id": "n0ea360a5",
+  "title": "Задача с Авито",
+  "section": "Общие вопросы",
+  "file": "n0ea360a5.md"
+ },
+ {
+  "id": "n64fc9e32",
+  "title": "Корутины от Альфы",
+  "section": "Общие вопросы",
+  "file": "n64fc9e32.md"
+ },
+ {
+  "id": "n0897efd6",
+  "title": "Метод main в Android",
+  "section": "Общие вопросы",
+  "file": "n0897efd6.md"
+ },
+ {
+  "id": "ndb793edb",
+  "title": "Могут ли объекты перемещаться в памяти",
+  "section": "Общие вопросы",
+  "file": "ndb793edb.md"
+ },
+ {
+  "id": "n60517847",
+  "title": "Передача точной геолокации с интервалом времени",
+  "section": "Общие вопросы",
+  "file": "n60517847.md"
+ },
+ {
+  "id": "n4f25e926",
+  "title": "Пиздец от Яндекса",
+  "section": "Общие вопросы",
+  "file": "n4f25e926.md"
+ },
+ {
+  "id": "n86449b4d",
+  "title": "Приватный конструктор",
+  "section": "Общие вопросы",
+  "file": "n86449b4d.md"
+ },
+ {
+  "id": "n64eaa869",
+  "title": "Решение вопросов с собеседования яндекс",
+  "section": "Общие вопросы",
+  "file": "n64eaa869.md"
+ },
+ {
+  "id": "n1ae30f79",
+  "title": "Создание своего Executer",
+  "section": "Общие вопросы",
+  "file": "n1ae30f79.md"
+ },
+ {
+  "id": "n5ffa4d87",
+  "title": "Способы передачи геолокации в фоновом режиме",
+  "section": "Общие вопросы",
+  "file": "n5ffa4d87.md"
+ },
+ {
+  "id": "n920adce2",
+  "title": "Х5",
+  "section": "Общие вопросы",
+  "file": "n920adce2.md"
  }
 ]
