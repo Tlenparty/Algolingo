@@ -15,7 +15,7 @@
 - [x] **Phase 01.1: Knowledge Base** (INSERTED) - Все 23 Obsidian-заметки читаются в приложении: разделы, спойлеры, ссылки, поиск (completed 2026-10-21)
 - [x] **Phase 2: Content Schema & Engine** - Чистая модель контента, движок дырок и редьюсер урока, покрытые тестами (completed 2026-10-21)
 - [x] **Phase 3: Lesson & Exercise UI** - Урок проходится в приложении: теория, упражнения «дырки», проверка, подсказки, эталон, итог (completed 2026-10-21)
-- [ ] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками
+- [x] **Phase 4: Progress & Review** - XP, streak, интервальные повторы и статусы уроков сохраняются между запусками (completed 2026-10-22)
 - [ ] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах
 
 ## Phase Details
@@ -127,7 +127,7 @@ Plans:
 - [x] 04-01-PLAN.md — Package gate + deps/minSdk 26 + pure progress engine (XP, streak, 1/3/7 SRS, codec) with fake-date tests
 - [x] 04-02-PLAN.md — DataStore repository (AppGraph singleton, app-scope write on Done) + 🔥/⭐ header persisted across restarts
 - [x] 04-03-PLAN.md — index.json catalog, statuses/due/homeModel + Home path (done/available/locked) + «Повтор сегодня (N)» review without theory
-- [ ] 04-04-PLAN.md — Autonomous device verification on Android emulator and iOS simulator (restart, due edit, corrupt file)
+- [x] 04-04-PLAN.md — Autonomous device verification on Android emulator and iOS simulator (restart, due edit, corrupt file)
 **UI hint**: yes
 
 ### Phase 5: Level 0 Content & End-to-End
@@ -158,5 +158,5 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 01.1 Knowledge Base | 4/4 | Complete    | 2026-10-21 |
 | 2. Content Schema & Engine | 3/3 | Complete    | 2026-10-21 |
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
-| 4. Progress & Review | 3/4 | In Progress|  |
+| 4. Progress & Review | 4/4 | Complete   | 2026-10-22 |
 | 5. Level 0 Content & End-to-End | 0/TBD | Not started | - |
