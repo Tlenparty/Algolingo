@@ -83,7 +83,7 @@ Recent decisions affecting current work:
 - [Phase 04]: Phase 4: SRS moves only on first pass and due reviews; replays keep step/due but earn XP+streak (A2)
 - [Phase 04]: index.json lists only l0.4 in Phase 4; array order = unlock order; Phase 5 generator overwrites it
 - [Phase 04]: Review opens only the first due lesson per tap, same player with theory stripped
-- [Phase ?]: 04-04: Phase 4 verified on Android emulator + iOS sim; no app bugs
+- [Phase 04]: 04-04: Phase 4 verified on Android emulator + iOS sim; no app bugs
 
 ### Pending Todos
 
