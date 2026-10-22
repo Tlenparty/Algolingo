@@ -3,6 +3,12 @@ package com.tlenparty.algolingo.lesson
 
 import kotlin.test.*
 
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+private fun <K, V> Map<K, V>.getOrDefault(key: K, defaultValue: V): V {
+    @Suppress("UNCHECKED_CAST")
+    return if (containsKey(key)) get(key) as V else defaultValue
+}
+
 private object L0_1_v0 { // reference
     fun sumAndMax(nums: IntArray): Pair<Int, Int> {
         var sum = 0
@@ -12,6 +18,12 @@ private object L0_1_v0 { // reference
             if (x > max) max = x
         }
         return sum to max
+    }
+
+    fun examples() {
+        assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
+        assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
+        assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
     }
 }
 
@@ -25,6 +37,12 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
         }
         return sum to max
     }
+
+    fun examples() {
+        assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
+        assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
+        assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
+    }
 }
 
 private object L0_2_v0 { // reference
@@ -36,6 +54,13 @@ private object L0_2_v0 { // reference
             l++; r--
         }
     }
+
+    fun examples() {
+        assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
+        assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
+        assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
+        assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
+    }
 }
 
 private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
@@ -46,6 +71,13 @@ private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
             val t = s[l]; s[l] = s[r]; s[r] = t
             l++; r--
         }
+    }
+
+    fun examples() {
+        assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
+        assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
+        assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
+        assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
     }
 }
 
@@ -59,6 +91,14 @@ private object L0_3_v0 { // reference
         }
         return true
     }
+
+    fun examples() {
+        assertTrue(isPalindrome("aba"))
+        assertTrue(isPalindrome("abba"))
+        assertFalse(isPalindrome("ab"))
+        assertTrue(isPalindrome(""))
+        assertTrue(isPalindrome("a"))
+    }
 }
 
 private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
@@ -70,6 +110,14 @@ private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
             l++; r--
         }
         return true
+    }
+
+    fun examples() {
+        assertTrue(isPalindrome("aba"))
+        assertTrue(isPalindrome("abba"))
+        assertFalse(isPalindrome("ab"))
+        assertTrue(isPalindrome(""))
+        assertTrue(isPalindrome("a"))
     }
 }
 
@@ -87,6 +135,13 @@ private object L0_4_v0 { // reference
         }
         return -1
     }
+
+    fun examples() {
+        assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5))
+        assertEquals(-1, binarySearch(intArrayOf(1, 3), 0))
+        assertEquals(0, binarySearch(intArrayOf(5), 5))
+        assertEquals(-1, binarySearch(intArrayOf(), 1))
+    }
 }
 
 private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
@@ -103,86 +158,53 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
         }
         return -1
     }
+
+    fun examples() {
+        assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5))
+        assertEquals(-1, binarySearch(intArrayOf(1, 3), 0))
+        assertEquals(0, binarySearch(intArrayOf(5), 5))
+        assertEquals(-1, binarySearch(intArrayOf(), 1))
+    }
 }
 
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
-        with(L0_1_v0) {
-            assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
-            assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
-            assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
-        }
+        L0_1_v0.examples()
     }
 
     @Test
     fun l0_1_v1() {
-        with(L0_1_v1) {
-            assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
-            assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
-            assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
-        }
+        L0_1_v1.examples()
     }
 
     @Test
     fun l0_2_v0() {
-        with(L0_2_v0) {
-            assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
-            assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
-            assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
-            assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
-        }
+        L0_2_v0.examples()
     }
 
     @Test
     fun l0_2_v1() {
-        with(L0_2_v1) {
-            assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
-            assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
-            assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
-            assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
-        }
+        L0_2_v1.examples()
     }
 
     @Test
     fun l0_3_v0() {
-        with(L0_3_v0) {
-            assertTrue(isPalindrome("aba"))
-            assertTrue(isPalindrome("abba"))
-            assertFalse(isPalindrome("ab"))
-            assertTrue(isPalindrome(""))
-            assertTrue(isPalindrome("a"))
-        }
+        L0_3_v0.examples()
     }
 
     @Test
     fun l0_3_v1() {
-        with(L0_3_v1) {
-            assertTrue(isPalindrome("aba"))
-            assertTrue(isPalindrome("abba"))
-            assertFalse(isPalindrome("ab"))
-            assertTrue(isPalindrome(""))
-            assertTrue(isPalindrome("a"))
-        }
+        L0_3_v1.examples()
     }
 
     @Test
     fun l0_4_v0() {
-        with(L0_4_v0) {
-            assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5))
-            assertEquals(-1, binarySearch(intArrayOf(1, 3), 0))
-            assertEquals(0, binarySearch(intArrayOf(5), 5))
-            assertEquals(-1, binarySearch(intArrayOf(), 1))
-        }
+        L0_4_v0.examples()
     }
 
     @Test
     fun l0_4_v1() {
-        with(L0_4_v1) {
-            assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5))
-            assertEquals(-1, binarySearch(intArrayOf(1, 3), 0))
-            assertEquals(0, binarySearch(intArrayOf(5), 5))
-            assertEquals(-1, binarySearch(intArrayOf(), 1))
-        }
+        L0_4_v1.examples()
     }
 }
