@@ -645,6 +645,7 @@ def render_all(repo_root, allow_removed=()):
         out["%s/%s.json" % (LESSONS, lesson["id"])] = dump(lesson)
     pending = load_pending(root)
     out[TEST_KT] = render_kt(items, pending)
+    # WRONG_JSON sits in `out`, so --check compares it like every other output
     out[WRONG_JSON] = render_wrong_json(items, pending)
     return out
 
