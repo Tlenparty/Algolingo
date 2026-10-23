@@ -39,7 +39,7 @@ Sidecar grammar (content/authoring/l0.N.md):
 
 Kind tags (G9, test-only, never in lesson JSON) say how the variant breaks: compile | wrong |
 crash | hang. @H bullets carry exactly one; a distractor with a why carries a set ([compile,wrong]),
-the kinds seen across its holes; a distractor without a why may omit it.
+the kinds seen across its holes; a distractor without a why takes none (tag its @H overrides).
 
 Every claim is a hard gate: no variant is skipped or parked (tools/test_gen_content.py guards it).
 
@@ -359,7 +359,7 @@ def build_lesson(sc, note_lines):
 
 
 def check_tags(file, where, kind, h, text, why, tags):
-    """G9: @H needs exactly one kind, a distractor with a why needs >= 1, ~ takes none."""
+    """G9: @H needs exactly one kind, a distractor with a why needs >= 1, ~ and a bare distractor take none."""
     who = "%s: %s`%s`" % (where, "@%d " % h if kind == "@" else "~" if kind == "~" else "", text)
     bad = [t for t in tags if t not in KINDS]
     if bad:
@@ -372,6 +372,9 @@ def check_tags(file, where, kind, h, text, why, tags):
         raise GenError(file, "G9", "%s: needs exactly one kind tag [%s], got %d" % (who, "|".join(KINDS), len(tags)))
     if kind == "-" and why and not tags:
         raise GenError(file, "G9", "%s: distractor with a why needs a kind tag" % who)
+    if kind == "-" and tags and not why:
+        # claim_for only turns a chip why into a claim, so this tag would never be checked
+        raise GenError(file, "G9", "%s: kind tag without a why is never checked; tag the @H overrides instead" % who)
 
 
 def build_exercise(lid, file, ex, segs, holes):

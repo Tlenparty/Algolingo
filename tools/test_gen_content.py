@@ -274,6 +274,10 @@ class Tags(unittest.TestCase):
         lesson = build(BASE.replace("? hint one\n", "- `lo != hi`\n- @1 `lo != hi` [wrong]: `[5]` → `-1`\n? hint one\n"))
         self.assertEqual(lesson["exercises"][0]["holes"][0]["wrongWhy"], {"lo != hi": "`[5]` → `-1`"})
 
+    def test_g9_tag_on_distractor_without_why_fails(self):
+        # the tag would never become a claim (claim_for needs a why), so it must not pass as proven
+        self.assertRule("G9", build, BASE.replace("? hint one\n", "- `lo != hi` [hang]\n- @1 `lo != hi` [wrong]: `[5]` → `-1`\n? hint one\n"))
+
     def test_g9_tag_on_acceptable_fails(self):
         self.assertRule("G9", build, BASE.replace("- ~`(lo + hi) ushr 1`:", "- ~`(lo + hi) ushr 1` [wrong]:"))
 
