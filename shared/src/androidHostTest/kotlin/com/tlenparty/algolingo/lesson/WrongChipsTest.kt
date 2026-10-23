@@ -6,6 +6,9 @@ import java.io.File
 import java.io.PrintStream
 import java.net.URLClassLoader
 import java.nio.file.Files
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.jetbrains.kotlin.cli.common.ExitCode
@@ -46,7 +49,7 @@ class WrongChipsTest {
 
     private fun loc(c: Class<*>) = File(c.protectionDomain.codeSource.location.toURI()).path
 
-    private fun observe(source: String): Obs {
+    private fun observe(source: String, timeoutMs: Long = 20_000): Obs {
         val dir = Files.createTempDirectory("wv").toFile()
         try {
             val src = File(dir, "V.kt").also { it.writeText(source) }
@@ -63,8 +66,18 @@ class WrongChipsTest {
             }
             URLClassLoader(arrayOf(out.toURI().toURL()), javaClass.classLoader).use { cl ->
                 val c = cl.loadClass("V")
-                val kinds = c.getMethod("kinds").invoke(c.getField("INSTANCE").get(null)) as String
-                return Obs(kinds.split(',').filter { it.isNotEmpty() }.toSet())
+                // D-05 safety net over tick(): a loop tick() does not cover (recursion, lambdas, ranges)
+                // must not hang the whole run; the stuck daemon thread is abandoned
+                val ex = Executors.newSingleThreadExecutor { r -> Thread(r, "wrong-variant").apply { isDaemon = true } }
+                try {
+                    val kinds = ex.submit<String> { c.getMethod("kinds").invoke(c.getField("INSTANCE").get(null)) as String }
+                        .get(timeoutMs, TimeUnit.MILLISECONDS)
+                    return Obs(kinds.split(',').filter { it.isNotEmpty() }.toSet())
+                } catch (e: TimeoutException) {
+                    return Obs(setOf(UNTRACKED_HANG), "no result in ${timeoutMs}ms")
+                } finally {
+                    ex.shutdownNow()
+                }
             }
         } finally {
             dir.deleteRecursively()
@@ -99,6 +112,7 @@ class WrongChipsTest {
         for (e in programs) {
             val o = observed.getValue(e.id).kinds
             if (o.isEmpty()) findings += "${e.id} runs clean (false wrong?) [${e.label}]"
+            if (UNTRACKED_HANG in o) findings += "${e.id} hangs past tick(): cover the loop in instrument() or ban it (G11)"
             for (c in e.claims.filter { it.scope == "hole" }) {
                 val missing = c.tags - o
                 if (missing.isNotEmpty()) findings += "${e.id} ${c.bullet}: expected ${c.tags} observed ${o.sorted()} (missing $missing)"
@@ -158,6 +172,9 @@ class WrongChipsTest {
         assertTrue(findings(emptyList(), emptyMap(), listOf(lesson)).size == 2)
         assertTrue(findings(listOf(control), ok, listOf(lesson)).any { "have no program" in it })
         assertTrue(findings(emptyList(), emptyMap(), emptyList()).isNotEmpty())
+        // a hang caught only by the safety timeout is reported even when the claim allows any kind
+        assertTrue(findings(listOf(control, wrong), ok + (wrong.id to Obs(setOf("compile", UNTRACKED_HANG))), listOf(lesson))
+            .any { "hangs past tick()" in it })
     }
 
     @Test
@@ -179,5 +196,12 @@ class WrongChipsTest {
         val bad = observe("object V { fun kinds(): String = 1 }")
         assertEquals(setOf("compile"), bad.kinds)
         assertTrue(bad.log.isNotEmpty(), "compiler diagnostics are kept")
+        // a hang tick() does not see ends as a finding instead of blocking the test run
+        val stuck = observe("object V { fun kinds(): String { Thread.sleep(60_000); return \"\" } }", timeoutMs = 500)
+        assertEquals(setOf(UNTRACKED_HANG), stuck.kinds)
+    }
+
+    private companion object {
+        const val UNTRACKED_HANG = "hang-untracked"
     }
 }
