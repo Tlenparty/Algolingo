@@ -1,5 +1,6 @@
 package com.tlenparty.algolingo.lesson
 
+import com.tlenparty.algolingo.progress.Catalog
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
@@ -71,8 +72,24 @@ class WrongChipsTest {
     }
 
     /** Pure check, so the guards against a vacuous pass are themselves tested (noVacuousPass). */
-    private fun findings(entries: List<Entry>, observed: Map<String, Obs>): List<String> {
+    private fun findings(entries: List<Entry>, observed: Map<String, Obs>, lessons: List<Lesson>): List<String> {
         val findings = mutableListOf<String>()
+        // coverage: exactly one program per (hole, chip not correct for it) of the shipped lessons, plus a
+        // control per lesson; an empty or truncated wrong_variants.json cannot pass as "0 findings"
+        if (lessons.isEmpty()) findings += "no lessons in the catalog"
+        val expected = lessons.flatMap { l ->
+            l.exercises.flatMap { ex ->
+                ex.holes.flatMapIndexed { i, h ->
+                    val correct = h.ok.toSet() + h.acceptable.map { it.text }
+                    ex.bank.map { it.text }.filter { it !in correct }.map { "${ex.id}.h${i + 1}:$it" }
+                }
+            }
+        }.toSet()
+        val got = entries.filter { !it.control }.flatMap { it.ids }.toSet()
+        (expected - got).let { if (it.isNotEmpty()) findings += "${it.size} wrong pairs have no program: ${it.sorted().take(10)}" }
+        (got - expected).let { if (it.isNotEmpty()) findings += "${it.size} programs match no shipped pair: ${it.sorted().take(10)}" }
+        val controlled = entries.filter { it.control }.map { it.lesson }.toSet()
+        lessons.filter { it.id !in controlled }.forEach { findings += "lesson ${it.id} has no control program" }
         for (e in entries.filter { it.control }) {
             val o = observed.getValue(e.id)
             if (o.kinds.isNotEmpty()) findings +=
@@ -104,8 +121,12 @@ class WrongChipsTest {
     fun everyWrongChipBreaksAsTagged() {
         val entries = Json { ignoreUnknownKeys = true }
             .decodeFromString<List<Entry>>(File("src/androidHostTest/resources/wrong_variants.json").readText())
+        val dir = File("src/commonMain/composeResources/files/content")
+        val json = Json { ignoreUnknownKeys = true }
+        val lessons = json.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons
+            .map { json.decodeFromString<Lesson>(File(dir, "lessons/${it.id}.json").readText()) }
         val observed = entries.associate { it.id to observe(it.source) }
-        val findings = findings(entries, observed)
+        val findings = findings(entries, observed, lessons)
 
         val report = File("build/reports/wrong-chips.txt")
         report.parentFile.mkdirs()
@@ -124,10 +145,19 @@ class WrongChipsTest {
     fun noVacuousPass() {
         val control = Entry("l9.control", listOf("l9.control"), "l9", "reference (control)", emptyList(), "", control = true)
         val wrong = Entry("l9.e1.h1:x", listOf("l9.e1.h1:x"), "l9", "x", listOf(Claim("b", "hole", listOf("compile"))), "")
+        val lesson = Lesson(
+            id = "l9", title = "", statement = "", solution = Solution("", "", ""),
+            exercises = listOf(Exercise("l9.e1", listOf("", ""), listOf(Hole(listOf("a"))), listOf(Chip("a"), Chip("x")))),
+        )
+        val ok = mapOf(control.id to Obs(emptySet()), wrong.id to Obs(setOf("compile")))
+        assertEquals(emptyList(), findings(listOf(control, wrong), ok, listOf(lesson)))
         // a lesson whose harness does not compile must not turn its [compile] claim green
-        val broken = findings(listOf(control, wrong), mapOf(control.id to Obs(setOf("compile"), "boom"), wrong.id to Obs(setOf("compile"))))
+        val broken = findings(listOf(control, wrong), ok + (control.id to Obs(setOf("compile"), "boom")), listOf(lesson))
         assertTrue(broken.any { it.startsWith("CONTROL l9.control") }, broken.toString())
-        assertEquals(emptyList(), findings(listOf(control, wrong), mapOf(control.id to Obs(emptySet()), wrong.id to Obs(setOf("compile")))))
+        // empty / truncated input or an empty catalog is a finding, not "0 findings"
+        assertTrue(findings(emptyList(), emptyMap(), listOf(lesson)).size == 2)
+        assertTrue(findings(listOf(control), ok, listOf(lesson)).any { "have no program" in it })
+        assertTrue(findings(emptyList(), emptyMap(), emptyList()).isNotEmpty())
     }
 
     @Test
