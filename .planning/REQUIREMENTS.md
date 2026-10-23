@@ -115,12 +115,12 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 |-------------|-------|--------|
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |
-| PLAT-03 | Phase 5 | Complete |
+| PLAT-03 | Phase 5; hardened + verified in Phase 07.1 | Complete |
 | LESS-01 | Phase 4 | Complete |
 | LESS-02 | Phase 3 | Complete |
 | LESS-03 | Phase 2 | Complete |
 | LESS-04 | Phase 3 | Complete |
-| LESS-05 | Phase 2 | Complete |
+| LESS-05 | Phase 2; hardened + verified in Phase 07.1 | Complete |
 | LESS-06 | Phase 3 | Complete |
 | EXER-01 | Phase 3 | Complete |
 | EXER-02 | Phase 3 | Complete |
@@ -128,12 +128,12 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | EXER-04 | Phase 3 | Complete |
 | EXER-05 | Phase 2 | Complete |
 | EXER-06 | Phase 3 | Complete |
-| EXER-07 | Phase 3 | Complete |
-| EXER-08 | Phase 3 | Complete |
+| EXER-07 | Phase 3; hardened + verified in Phase 07.1 | Complete |
+| EXER-08 | Phase 3; hardened + verified in Phase 07.1 | Complete |
 | EXER-09 | Phase 3 | Complete |
 | EXER-10 | Phase 3 | Complete |
 | UI-01 | Phase 3 | Complete |
-| KB-01 | Phase 01.1 | Complete |
+| KB-01 | Phase 01.1; hardened + verified in Phase 07.1 | Complete |
 | KB-02 | Phase 01.1 | Complete |
 | KB-03 | Phase 01.1 | Complete |
 | KB-04 | Phase 01.1 | Complete |
@@ -146,12 +146,12 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | PROG-05 | Phase 4 | Complete |
 | CONT-01 | Phase 5 | Complete |
 | CONT-02 | Phase 5 | Complete |
-| CONT-03 | Phase 5 | Complete |
-| CONT-04 | Phase 5 | Complete |
-| CONT-05 | Phase 5 | Complete |
+| CONT-03 | Phase 5; hardened + verified in Phase 07.1 | Complete |
+| CONT-04 | Phase 5; hardened + verified in Phase 07.1 | Complete |
+| CONT-05 | Phase 5; hardened + verified in Phase 07.1 | Complete |
 | CONT-06 | Phase 5 | Complete |
-| CNV2-01 | Phase 6 | Partial (level 1) |
-| KB-07 | Phase 7 | Complete |
+| CNV2-01 | Phase 6; hardened + verified in Phase 07.1 | Partial (level 1) |
+| KB-07 | Phase 7; hardened + verified in Phase 07.1 | Complete |
 
 **Coverage:**
 - v1 requirements: 38 total
