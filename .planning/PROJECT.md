@@ -20,6 +20,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 - ✓ Уровень 0 «Разминка» (0.1–0.4): генератор tools/gen_content.py из заметки 05 + сайдкаров, ревью заказчика, сквозной офлайн-прогон на Android (авиарежим) и iOS-симуляторе — Validated in Phase 5: Level 0 Content & End-to-End
 - ✓ Уровень 1 «Hash Map / Set» (1.1–1.5): генератор проверяет эталоны и на JVM, и на Native; ревью заказчика; прогон 0.1→1.5 через UI на Android (авиарежим) и iOS — Validated in Phase 6: Level 1 Content
 - ✓ Вся база подготовки к собеседованию из «Матриц» (217 заметок, 14 разделов, 25 картинок) в приложении: сворачиваемые разделы, быстрый поиск по всей базе, картинки и ==выделение== в заметках; прогон на Android и iOS — Validated in Phase 7: Full Interview Knowledge Base
+- ✓ Каждая оценка облачка доказана тестом (метки compile/wrong/crash/hang, 253 программы, граничные случаи и оракулы на JVM+iOS), KB грузится лениво и не роняет приложение, фазз редьюсера, UI e2e-смоук всех 9 уроков на Android+iOS (`tools/smoke.sh`), monkey 0 FATAL/ANR — Validated in Phase 07.1: Content correctness & crash safety
 
 ### Active
 
@@ -99,4 +100,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-10-22 after Phase 7*
+*Last updated: 2026-10-23 after Phase 07.1*
