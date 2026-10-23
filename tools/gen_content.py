@@ -8,7 +8,9 @@ Usage:
 
 Inputs: the bundled note 05 (files/kb/n07ed966c.md, refreshed by sync_notes.py,
 never the vault) and content/authoring/<id>.md. Outputs: files/content/index.json,
-files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt.
+files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt (reference/ok/
+acceptable variants, JVM + Native) and androidHostTest/resources/wrong_variants.json (one full
+program per wrong (hole, chip) pair, classified on JVM by WrongChipsTest).
 Any validation error (G1-G11) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
 
 Sidecar grammar (content/authoring/l0.N.md):
@@ -58,6 +60,7 @@ INDEX = RES + "/content/index.json"
 LESSONS = RES + "/content/lessons"
 TEST_KT = "shared/src/commonTest/kotlin/com/tlenparty/algolingo/lesson/ReferenceSolutionsTest.kt"
 PENDING = AUTHORING + "/pending.txt"
+WRONG_JSON = "shared/src/androidHostTest/resources/wrong_variants.json"
 MAX_BANK = 10
 
 HOLE = re.compile(r"⟦(.*?)⟧")
@@ -463,7 +466,8 @@ def id_key(lid):
 
 
 def variants(lesson):
-    out = [(lesson["solution"]["code"], "reference")]
+    """(code, label, id) for the reference and every ok/acceptable alternative, reference first."""
+    out = [(lesson["solution"]["code"], "reference", lesson["id"] + ".reference")]
     for ex in lesson["exercises"]:
         base = [h["ok"][0] for h in ex["holes"]]
         for i, h in enumerate(ex["holes"]):
@@ -472,9 +476,42 @@ def variants(lesson):
                 fills = list(base)
                 fills[i] = text
                 code = assemble(ex["segments"], fills)
-                if code not in [c for c, _ in out]:
-                    out.append((code, "%s hole %d = %s (%s)" % (ex["id"], i + 1, text, kind)))
+                if code not in [c for c, _, _ in out]:
+                    out.append((code, "%s hole %d = %s (%s)" % (ex["id"], i + 1, text, kind),
+                                "%s.h%d:%s" % (ex["id"], i + 1, text)))
     return out
+
+
+def wrong_programs(lesson, sc):
+    """One entry per unique program: ok[0] everywhere except hole i = a chip not correct for it."""
+    by_code = {}
+    for ex, sx in zip(lesson["exercises"], sc["exercises"]):
+        base = [h["ok"][0] for h in ex["holes"]]
+        for i, h in enumerate(ex["holes"]):
+            correct = set(h["ok"]) | set(a["text"] for a in h.get("acceptable", []))
+            for chip in [c["text"] for c in ex["bank"] if c["text"] not in correct]:
+                fills = list(base)
+                fills[i] = chip
+                code = assemble(ex["segments"], fills)
+                pid = "%s.h%d:%s" % (ex["id"], i + 1, chip)
+                e = by_code.setdefault(code, {"id": pid, "ids": [], "lesson": lesson["id"], "claims": [],
+                                              "label": "%s hole %d = %s" % (ex["id"], i + 1, chip)})
+                e["ids"].append(pid)
+                claim = claim_for(ex["id"], sx["bullets"], i + 1, chip)
+                if claim and claim not in e["claims"]:
+                    e["claims"].append(claim)
+    return [(code, e) for code, e in by_code.items()]
+
+
+def claim_for(ex_id, bullets, hole, chip):
+    """The bullet whose reason the app shows for (hole, chip): @H override first, else the chip why."""
+    for kind, h, text, why, tags in bullets:
+        if kind == "@" and h == hole and text == chip:
+            return {"bullet": "%s @%d `%s`" % (ex_id, h, text), "scope": "hole", "tags": list(tags)}
+    for kind, h, text, why, tags in bullets:
+        if kind == "-" and text == chip and why:
+            return {"bullet": "%s `%s`" % (ex_id, text), "scope": "chip", "tags": list(tags)}
+    return None
 
 
 # ponytail: shims only the JVM-only Map.getOrDefault used by note 05 level 1; add another shim
@@ -486,20 +523,104 @@ private fun <K, V> Map<K, V>.getOrDefault(key: K, defaultValue: V): V {
 }
 """
 
+TICK_LINE = re.compile(r"^(\s*while\s*\(.*\)\s*\{)\s*$")
 
-def render_kt(items):
+
+def prelude():
+    """Common-only test harness shared by ReferenceSolutionsTest.kt and every wrong program.
+    case {} classifies one check: AssertionError -> wrong, HangError -> hang, other Throwable -> crash."""
+    return GET_OR_DEFAULT_SHIM + """
+private class HangError : Error()
+
+private object Probe {
+    var steps = 0
+    val kinds = mutableSetOf<String>()
+    fun reset() {
+        steps = 0
+        kinds.clear()
+    }
+}
+
+// injected after every `while (...) {`; deterministic hang detection, no threads (JVM and Native)
+private fun tick() {
+    if (++Probe.steps > 1_000_000) throw HangError()
+}
+
+private fun case(f: () -> Unit) {
+    Probe.steps = 0
+    try {
+        f()
+    } catch (e: AssertionError) {
+        Probe.kinds += "wrong"
+    } catch (e: HangError) {
+        Probe.kinds += "hang"
+    } catch (e: Throwable) {
+        Probe.kinds += "crash"
+    }
+}
+
+private fun pw(b: Int, e: Int): Int {
+    var r = 1
+    repeat(e) { r *= b }
+    return r
+}
+"""
+
+
+def instrument(code, where):
+    """Append tick() to every `while (...) {` line; G11 for loops it cannot instrument."""
+    out = []
+    for ln in code.split("\n"):
+        m = TICK_LINE.match(ln)
+        if m:
+            out.append(m.group(1) + " tick()")
+        elif re.search(r"\bwhile\b|\bdo\s*\{", ln):
+            raise GenError(where, "G11", "loop the tick injector cannot instrument: " + ln.strip())
+        else:
+            out.append(ln)
+    return "\n".join(out)
+
+
+def render_object(name, label, code, examples, checks, with_kinds):
+    """Same body for both outputs, so the JVM verdict on a wrong program matches what Native would see."""
+    body = "\n".join("    " + ln if ln else ln for ln in instrument(code, label).split("\n"))
+    cases = "".join("        case { %s }\n" % e for e in examples)
+    chk = "".join("        %s\n" % ln if ln else "\n" for ln in checks.split("\n")) if checks else ""
+    kinds = ("\n    fun kinds(): String {\n        Probe.reset()\n        run()\n"
+             "        return Probe.kinds.sorted().joinToString(\",\")\n    }\n") if with_kinds else ""
+    return ("%sobject %s { // %s\n%s\n\n    fun run() {\n%s        checks()\n    }\n\n"
+            "    @Suppress(\"UNUSED_VARIABLE\")\n    private fun checks() {\n"
+            "        val rnd = kotlin.random.Random(1234)\n%s    }\n%s}\n"
+            % ("" if with_kinds else "private ", name, label, body, cases, chk, kinds))
+
+
+HEADER = "// GENERATED by tools/gen_content.py from content/authoring/*.md. Do not edit; rerun the generator.\n"
+
+
+def render_kt(items, pending=frozenset()):
     objs, tests = [], []
-    for lesson, examples in items:
+    for lesson, sc in items:
         prefix = "L" + lesson["id"][1:].replace(".", "_")
-        for n, (code, label) in enumerate(variants(lesson)):
+        for n, (code, label, vid) in enumerate(variants(lesson)):
             name = "%s_v%d" % (prefix, n)
-            body = "\n".join("    " + ln if ln else ln for ln in code.split("\n"))
-            objs.append("private object %s { // %s\n%s\n\n    fun examples() {\n%s    }\n}\n"
-                        % (name, label, body, "".join("        %s\n" % e for e in examples)))
-            tests.append("    @Test\n    fun %s() {\n        %s.examples()\n    }\n" % (name.lower(), name))
-    return ("// GENERATED by tools/gen_content.py from content/authoring/*.md. Do not edit; rerun the generator.\n"
-            "package com.tlenparty.algolingo.lesson\n\nimport kotlin.test.*\n\n" + GET_OR_DEFAULT_SHIM + "\n"
+            objs.append(render_object(name, label, code, sc["top"]["examples"], sc["top"].get("checks"), False))
+            tests.append("%s    @Test\n    fun %s() {\n        Probe.reset()\n        %s.run()\n"
+                         "        assertEquals(emptySet<String>(), Probe.kinds)\n    }\n"
+                         % ("    @Ignore\n" if vid in pending else "", name.lower(), name))
+    return (HEADER + "package com.tlenparty.algolingo.lesson\n\nimport kotlin.test.*\n\n" + prelude() + "\n"
             + "\n".join(objs) + "\nclass ReferenceSolutionsTest {\n" + "\n".join(tests) + "}\n")
+
+
+def render_wrong_json(items, pending=frozenset()):
+    """Full program per wrong (hole, chip) pair for the JVM classification test (WrongChipsTest)."""
+    out = []
+    for lesson, sc in items:
+        for code, e in wrong_programs(lesson, sc):
+            src = (HEADER + "import kotlin.test.*\n\n" + prelude() + "\n"
+                   + render_object("V", e["label"], code, sc["top"]["examples"], sc["top"].get("checks"), True))
+            out.append({"id": e["id"], "ids": e["ids"], "lesson": e["lesson"], "label": e["label"],
+                        "claims": e["claims"], "pending": any(i in pending for i in e["ids"]), "source": src})
+    return dump(out)
 
 
 def render_all(repo_root, allow_removed=()):
@@ -508,7 +629,7 @@ def render_all(repo_root, allow_removed=()):
     items = []
     for p in sorted((root / AUTHORING).glob("*.md"), key=lambda p: id_key(p.stem)):
         sc = parse_sidecar(p.read_text(encoding="utf-8"), p.stem)
-        items.append((build_lesson(sc, note_lines), sc["top"]["examples"]))
+        items.append((build_lesson(sc, note_lines), sc))
     ids = [lesson["id"] for lesson, _ in items]
     old = root / INDEX
     if old.is_file():
@@ -522,7 +643,9 @@ def render_all(repo_root, allow_removed=()):
     out = {INDEX: dump({"schema": 1, "lessons": [{"id": l["id"], "title": l["title"]} for l, _ in items]})}
     for lesson, _ in items:
         out["%s/%s.json" % (LESSONS, lesson["id"])] = dump(lesson)
-    out[TEST_KT] = render_kt(items)
+    pending = load_pending(root)
+    out[TEST_KT] = render_kt(items, pending)
+    out[WRONG_JSON] = render_wrong_json(items, pending)
     return out
 
 
