@@ -8,8 +8,10 @@ Usage:
 
 Inputs: the bundled note 05 (files/kb/n07ed966c.md, refreshed by sync_notes.py,
 never the vault) and content/authoring/<id>.md. Outputs: files/content/index.json,
-files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt.
-Any validation error (G1-G8) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
+files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt (reference/ok/
+acceptable variants, JVM + Native) and androidHostTest/resources/wrong_variants.json (one full
+program per wrong (hole, chip) pair, classified on JVM by WrongChipsTest).
+Any validation error (G1-G11) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
 
 Sidecar grammar (content/authoring/l0.N.md):
 
@@ -20,17 +22,27 @@ Sidecar grammar (content/authoring/l0.N.md):
   examples:                      >=1 bullets, each a Kotlin statement run inside every variant
                                  object (member scope, so nested classes in the note code resolve)
   - assertEquals(2, f(intArrayOf(1, 3)))
+  checks:                        optional ```kotlin fence, test-only (never in lesson JSON): edge cases
+                                 and oracle loops, each check wrapped in case { ... }; `rnd`
+                                 (Random(1234)) and pw(b, e) are in scope; no Math./java./String( (G10)
 
   ## theory <card title>         theory card, keys: signals: (bullets), skeleton: (``` fence),
                                  pitfalls: (bullets), body: (one line)
 
   ## eK                          exercise <id>.eK; one ```kotlin fence with the FULL function,
                                  holes written as ⟦ok | ok2 | ~acceptable⟧ (first non-~ is ok[0])
-  - `T`: why                     distractor chip with a why (must contain a `code` counterexample)
+  - `T` [kinds]: why             distractor chip with a why (must contain a `code` counterexample)
   - `T`                          distractor without chip why: needs an @H override for every hole
-  - @H `T`: why                  holes[H-1].wrongWhy[T] (T in bank, not correct for hole H)
-  - ~`T`: note                   note for the acceptable text T
+  - @H `T` [kind]: why           holes[H-1].wrongWhy[T] (T in bank, not correct for hole H)
+  - ~`T`: note                   note for the acceptable text T (no tag)
   ? hint                         hint, in order
+
+Kind tags (G9, test-only, never in lesson JSON) say how the variant breaks: compile | wrong |
+crash | hang. @H bullets carry exactly one; a distractor with a why carries a set ([compile,wrong]),
+the kinds seen across its holes; a distractor without a why may omit it.
+
+content/authoring/pending.txt (optional): one variant id per line (`#` comments and blanks
+ignored). Listed reference/ok/acceptable tests get @Ignore, wrong programs get "pending": true.
 
 Bank order: ok[0] of each hole (with multiplicity), other ok/acceptable texts, distractors.
 """
@@ -47,17 +59,22 @@ AUTHORING = "content/authoring"
 INDEX = RES + "/content/index.json"
 LESSONS = RES + "/content/lessons"
 TEST_KT = "shared/src/commonTest/kotlin/com/tlenparty/algolingo/lesson/ReferenceSolutionsTest.kt"
+PENDING = AUTHORING + "/pending.txt"
+WRONG_JSON = "shared/src/androidHostTest/resources/wrong_variants.json"
 MAX_BANK = 10
 
 HOLE = re.compile(r"⟦(.*?)⟧")
 # ponytail: " | " separates alternatives; level 0 has no chip containing " | ", revisit if one appears
 ALT_SEP = " | "
-BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?:: ?(.*))?$")
+BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?: \[([a-z,]+)\])?(?:: ?(.*))?$")
+KINDS = ("compile", "wrong", "crash", "hang")
+# ponytail: substring ban, not a parser; enough to keep checks: common-Kotlin (Native-compilable)
+CHECKS_BANNED = ("Math.", "java.", "String(")
 KEY = re.compile(r"^([a-z]+):\s*(.*)$")
 CARD_KEYS = ("signals", "skeleton", "pitfalls", "body")
 # expected value shape per key: one line, bullet list or ``` fence
 TOP_KINDS = {"note": "line", "title": "line", "statement": "line", "trains": "line",
-             "pitfalls": "list", "variations": "list", "examples": "list"}
+             "pitfalls": "list", "variations": "list", "examples": "list", "checks": "fence"}
 CARD_KINDS = {"signals": "list", "skeleton": "fence", "pitfalls": "list", "body": "line"}
 
 
@@ -210,9 +227,10 @@ def parse_exercise(name, lines, file):
             m = BULLET.match(ln)
             if not m:
                 raise GenError(file, "syntax", name + ": bad bullet: " + ln)
-            hole, tilde, text, why = m.groups()
+            hole, tilde, text, tags, why = m.groups()
             kind = "@" if hole else ("~" if tilde else "-")
-            ex["bullets"].append((kind, int(hole) if hole else None, text, (why or "").strip() or None))
+            ex["bullets"].append((kind, int(hole) if hole else None, text, (why or "").strip() or None,
+                                  tuple(tags.split(",")) if tags else ()))
         elif ln.strip():
             raise GenError(file, "syntax", name + ": unexpected line: " + ln)
     if ex["code"] is None:
@@ -237,6 +255,9 @@ def parse_sidecar(text, stem):
         raise GenError(file, "syntax", "unknown keys: " + ", ".join(sorted(unknown)))
     if "note" not in top:
         raise GenError(file, "G7", "missing note: heading")
+    for bad in CHECKS_BANNED:
+        if bad in top.get("checks", ""):
+            raise GenError(file, "G10", "checks: uses %r (JVM-only or Native-deprecated API)" % bad)
     sc = {"id": lid, "file": file, "top": top, "theory": [], "exercises": []}
     for a, b in zip(starts, starts[1:]):
         head = lines[a][3:].strip()
@@ -337,6 +358,31 @@ def build_lesson(sc, note_lines):
     return lesson
 
 
+def check_tags(file, where, kind, h, text, why, tags):
+    """G9: @H needs exactly one kind, a distractor with a why needs >= 1, ~ takes none."""
+    who = "%s: %s`%s`" % (where, "@%d " % h if kind == "@" else "~" if kind == "~" else "", text)
+    bad = [t for t in tags if t not in KINDS]
+    if bad:
+        raise GenError(file, "G9", "%s: unknown kind %s (use %s)" % (who, ",".join(bad), "|".join(KINDS)))
+    if len(set(tags)) != len(tags):
+        raise GenError(file, "G9", "%s: repeated kind in [%s]" % (who, ",".join(tags)))
+    if kind == "~" and tags:
+        raise GenError(file, "G9", "%s: acceptable chips take no kind tag" % who)
+    if kind == "@" and len(tags) != 1:
+        raise GenError(file, "G9", "%s: needs exactly one kind tag [%s], got %d" % (who, "|".join(KINDS), len(tags)))
+    if kind == "-" and why and not tags:
+        raise GenError(file, "G9", "%s: distractor with a why needs a kind tag" % who)
+
+
+def load_pending(root):
+    """Variant ids parked until the customer decides (plan 05); empty if the file is absent."""
+    path = Path(root) / PENDING
+    if not path.is_file():
+        return set()
+    lines = (ln.strip() for ln in path.read_text(encoding="utf-8").splitlines())
+    return set(ln for ln in lines if ln and not ln.startswith("#"))
+
+
 def build_exercise(lid, file, ex, segs, holes):
     where = ex["name"]
     correct = [set(ok) | set(acc) for ok, acc, _ in holes]
@@ -344,7 +390,7 @@ def build_exercise(lid, file, ex, segs, holes):
     acc_texts = set(t for _, acc, _ in holes for t in acc)
     wrong = [dict() for _ in holes]
     notes, distractors = {}, []
-    for kind, h, text, why in ex["bullets"]:
+    for kind, h, text, why, tags in ex["bullets"]:
         if kind == "~":
             if text not in acc_texts:
                 raise GenError(file, "G6", "%s: ~`%s` is not acceptable in any hole" % (where, text))
@@ -367,6 +413,7 @@ def build_exercise(lid, file, ex, segs, holes):
             if text in any_correct or text in [d[0] for d in distractors]:
                 raise GenError(file, "G6", "%s: distractor `%s` is correct or duplicated" % (where, text))
             distractors.append((text, why))
+        check_tags(file, where, kind, h, text, why, tags)  # after G6 so G6 errors stay reported first
 
     bank = [{"text": ok[0]} for ok, _, _ in holes]
     for ok, acc, _ in holes:
@@ -419,7 +466,8 @@ def id_key(lid):
 
 
 def variants(lesson):
-    out = [(lesson["solution"]["code"], "reference")]
+    """(code, label, id) for the reference and every ok/acceptable alternative, reference first."""
+    out = [(lesson["solution"]["code"], "reference", lesson["id"] + ".reference")]
     for ex in lesson["exercises"]:
         base = [h["ok"][0] for h in ex["holes"]]
         for i, h in enumerate(ex["holes"]):
@@ -428,9 +476,42 @@ def variants(lesson):
                 fills = list(base)
                 fills[i] = text
                 code = assemble(ex["segments"], fills)
-                if code not in [c for c, _ in out]:
-                    out.append((code, "%s hole %d = %s (%s)" % (ex["id"], i + 1, text, kind)))
+                if code not in [c for c, _, _ in out]:
+                    out.append((code, "%s hole %d = %s (%s)" % (ex["id"], i + 1, text, kind),
+                                "%s.h%d:%s" % (ex["id"], i + 1, text)))
     return out
+
+
+def wrong_programs(lesson, sc):
+    """One entry per unique program: ok[0] everywhere except hole i = a chip not correct for it."""
+    by_code = {}
+    for ex, sx in zip(lesson["exercises"], sc["exercises"]):
+        base = [h["ok"][0] for h in ex["holes"]]
+        for i, h in enumerate(ex["holes"]):
+            correct = set(h["ok"]) | set(a["text"] for a in h.get("acceptable", []))
+            for chip in [c["text"] for c in ex["bank"] if c["text"] not in correct]:
+                fills = list(base)
+                fills[i] = chip
+                code = assemble(ex["segments"], fills)
+                pid = "%s.h%d:%s" % (ex["id"], i + 1, chip)
+                e = by_code.setdefault(code, {"id": pid, "ids": [], "lesson": lesson["id"], "claims": [],
+                                              "label": "%s hole %d = %s" % (ex["id"], i + 1, chip)})
+                e["ids"].append(pid)
+                claim = claim_for(ex["id"], sx["bullets"], i + 1, chip)
+                if claim and claim not in e["claims"]:
+                    e["claims"].append(claim)
+    return [(code, e) for code, e in by_code.items()]
+
+
+def claim_for(ex_id, bullets, hole, chip):
+    """The bullet whose reason the app shows for (hole, chip): @H override first, else the chip why."""
+    for kind, h, text, why, tags in bullets:
+        if kind == "@" and h == hole and text == chip:
+            return {"bullet": "%s @%d `%s`" % (ex_id, h, text), "scope": "hole", "tags": list(tags)}
+    for kind, h, text, why, tags in bullets:
+        if kind == "-" and text == chip and why:
+            return {"bullet": "%s `%s`" % (ex_id, text), "scope": "chip", "tags": list(tags)}
+    return None
 
 
 # ponytail: shims only the JVM-only Map.getOrDefault used by note 05 level 1; add another shim
@@ -442,20 +523,104 @@ private fun <K, V> Map<K, V>.getOrDefault(key: K, defaultValue: V): V {
 }
 """
 
+TICK_LINE = re.compile(r"^(\s*while\s*\(.*\)\s*\{)\s*$")
 
-def render_kt(items):
+
+def prelude():
+    """Common-only test harness shared by ReferenceSolutionsTest.kt and every wrong program.
+    case {} classifies one check: AssertionError -> wrong, HangError -> hang, other Throwable -> crash."""
+    return GET_OR_DEFAULT_SHIM + """
+private class HangError : Error()
+
+private object Probe {
+    var steps = 0
+    val kinds = mutableSetOf<String>()
+    fun reset() {
+        steps = 0
+        kinds.clear()
+    }
+}
+
+// injected after every `while (...) {`; deterministic hang detection, no threads (JVM and Native)
+private fun tick() {
+    if (++Probe.steps > 1_000_000) throw HangError()
+}
+
+private fun case(f: () -> Unit) {
+    Probe.steps = 0
+    try {
+        f()
+    } catch (e: AssertionError) {
+        Probe.kinds += "wrong"
+    } catch (e: HangError) {
+        Probe.kinds += "hang"
+    } catch (e: Throwable) {
+        Probe.kinds += "crash"
+    }
+}
+
+private fun pw(b: Int, e: Int): Int {
+    var r = 1
+    repeat(e) { r *= b }
+    return r
+}
+"""
+
+
+def instrument(code, where):
+    """Append tick() to every `while (...) {` line; G11 for loops it cannot instrument."""
+    out = []
+    for ln in code.split("\n"):
+        m = TICK_LINE.match(ln)
+        if m:
+            out.append(m.group(1) + " tick()")
+        elif re.search(r"\bwhile\b|\bdo\s*\{", ln):
+            raise GenError(where, "G11", "loop the tick injector cannot instrument: " + ln.strip())
+        else:
+            out.append(ln)
+    return "\n".join(out)
+
+
+def render_object(name, label, code, examples, checks, with_kinds):
+    """Same body for both outputs, so the JVM verdict on a wrong program matches what Native would see."""
+    body = "\n".join("    " + ln if ln else ln for ln in instrument(code, label).split("\n"))
+    cases = "".join("        case { %s }\n" % e for e in examples)
+    chk = "".join("        %s\n" % ln if ln else "\n" for ln in checks.split("\n")) if checks else ""
+    kinds = ("\n    fun kinds(): String {\n        Probe.reset()\n        run()\n"
+             "        return Probe.kinds.sorted().joinToString(\",\")\n    }\n") if with_kinds else ""
+    return ("%sobject %s { // %s\n%s\n\n    fun run() {\n%s        checks()\n    }\n\n"
+            "    @Suppress(\"UNUSED_VARIABLE\")\n    private fun checks() {\n"
+            "        val rnd = kotlin.random.Random(1234)\n%s    }\n%s}\n"
+            % ("" if with_kinds else "private ", name, label, body, cases, chk, kinds))
+
+
+HEADER = "// GENERATED by tools/gen_content.py from content/authoring/*.md. Do not edit; rerun the generator.\n"
+
+
+def render_kt(items, pending=frozenset()):
     objs, tests = [], []
-    for lesson, examples in items:
+    for lesson, sc in items:
         prefix = "L" + lesson["id"][1:].replace(".", "_")
-        for n, (code, label) in enumerate(variants(lesson)):
+        for n, (code, label, vid) in enumerate(variants(lesson)):
             name = "%s_v%d" % (prefix, n)
-            body = "\n".join("    " + ln if ln else ln for ln in code.split("\n"))
-            objs.append("private object %s { // %s\n%s\n\n    fun examples() {\n%s    }\n}\n"
-                        % (name, label, body, "".join("        %s\n" % e for e in examples)))
-            tests.append("    @Test\n    fun %s() {\n        %s.examples()\n    }\n" % (name.lower(), name))
-    return ("// GENERATED by tools/gen_content.py from content/authoring/*.md. Do not edit; rerun the generator.\n"
-            "package com.tlenparty.algolingo.lesson\n\nimport kotlin.test.*\n\n" + GET_OR_DEFAULT_SHIM + "\n"
+            objs.append(render_object(name, label, code, sc["top"]["examples"], sc["top"].get("checks"), False))
+            tests.append("%s    @Test\n    fun %s() {\n        Probe.reset()\n        %s.run()\n"
+                         "        assertEquals(emptySet<String>(), Probe.kinds)\n    }\n"
+                         % ("    @Ignore\n" if vid in pending else "", name.lower(), name))
+    return (HEADER + "package com.tlenparty.algolingo.lesson\n\nimport kotlin.test.*\n\n" + prelude() + "\n"
             + "\n".join(objs) + "\nclass ReferenceSolutionsTest {\n" + "\n".join(tests) + "}\n")
+
+
+def render_wrong_json(items, pending=frozenset()):
+    """Full program per wrong (hole, chip) pair for the JVM classification test (WrongChipsTest)."""
+    out = []
+    for lesson, sc in items:
+        for code, e in wrong_programs(lesson, sc):
+            src = (HEADER + "import kotlin.test.*\n\n" + prelude() + "\n"
+                   + render_object("V", e["label"], code, sc["top"]["examples"], sc["top"].get("checks"), True))
+            out.append({"id": e["id"], "ids": e["ids"], "lesson": e["lesson"], "label": e["label"],
+                        "claims": e["claims"], "pending": any(i in pending for i in e["ids"]), "source": src})
+    return dump(out)
 
 
 def render_all(repo_root, allow_removed=()):
@@ -464,7 +629,7 @@ def render_all(repo_root, allow_removed=()):
     items = []
     for p in sorted((root / AUTHORING).glob("*.md"), key=lambda p: id_key(p.stem)):
         sc = parse_sidecar(p.read_text(encoding="utf-8"), p.stem)
-        items.append((build_lesson(sc, note_lines), sc["top"]["examples"]))
+        items.append((build_lesson(sc, note_lines), sc))
     ids = [lesson["id"] for lesson, _ in items]
     old = root / INDEX
     if old.is_file():
@@ -478,7 +643,10 @@ def render_all(repo_root, allow_removed=()):
     out = {INDEX: dump({"schema": 1, "lessons": [{"id": l["id"], "title": l["title"]} for l, _ in items]})}
     for lesson, _ in items:
         out["%s/%s.json" % (LESSONS, lesson["id"])] = dump(lesson)
-    out[TEST_KT] = render_kt(items)
+    pending = load_pending(root)
+    out[TEST_KT] = render_kt(items, pending)
+    # WRONG_JSON sits in `out`, so --check compares it like every other output
+    out[WRONG_JSON] = render_wrong_json(items, pending)
     return out
 
 
