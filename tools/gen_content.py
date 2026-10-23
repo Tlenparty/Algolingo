@@ -22,7 +22,7 @@ Sidecar grammar (content/authoring/l0.N.md):
   examples:                      >=1 bullets, each a Kotlin statement run inside every variant
                                  object (member scope, so nested classes in the note code resolve)
   - assertEquals(2, f(intArrayOf(1, 3)))
-  checks:                        optional ```kotlin fence, test-only (never in lesson JSON): edge cases
+  checks:                        required ```kotlin fence, test-only (never in lesson JSON): edge cases
                                  and oracle loops, each check wrapped in case { ... }; `rnd`
                                  (Random(1234)) and pw(b, e) are in scope; no Math./java./String( (G10)
 
@@ -69,7 +69,7 @@ ALT_SEP = " | "
 BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?: \[([a-z,]+)\])?(?:: ?(.*))?$")
 KINDS = ("compile", "wrong", "crash", "hang")
 # ponytail: substring ban, not a parser; enough to keep checks: common-Kotlin (Native-compilable)
-CHECKS_BANNED = ("Math.", "java.", "String(")
+CHECKS_BANNED = re.compile(r"\b(Math\.|java\.|String\()")  # \b: concatToString() is fine
 KEY = re.compile(r"^([a-z]+):\s*(.*)$")
 CARD_KEYS = ("signals", "skeleton", "pitfalls", "body")
 # expected value shape per key: one line, bullet list or ``` fence
@@ -255,9 +255,11 @@ def parse_sidecar(text, stem):
         raise GenError(file, "syntax", "unknown keys: " + ", ".join(sorted(unknown)))
     if "note" not in top:
         raise GenError(file, "G7", "missing note: heading")
-    for bad in CHECKS_BANNED:
-        if bad in top.get("checks", ""):
-            raise GenError(file, "G10", "checks: uses %r (JVM-only or Native-deprecated API)" % bad)
+    if "checks" not in top:
+        raise GenError(file, "G10", "missing checks: (edge cases + oracle are required, D-08)")
+    bad = CHECKS_BANNED.search(top["checks"])
+    if bad:
+        raise GenError(file, "G10", "checks: uses %r (JVM-only or Native-deprecated API)" % bad.group(1))
     sc = {"id": lid, "file": file, "top": top, "theory": [], "exercises": []}
     for a, b in zip(starts, starts[1:]):
         head = lines[a][3:].strip()

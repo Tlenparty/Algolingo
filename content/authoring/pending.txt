@@ -1,4 +1,6 @@
 # Wrong-chip mismatches found by WrongChipsTest (plan 07.1-03), parked until the customer decides (plan 05).
+# Plan 04 checks: proved l0.4 e3 h3 `0`/`mid`, h4 `mid`, l1.3 e2 h2 `!=`, e3 h4 `0`, l1.5 e3 h3 `daysActive.size` (removed).
+# Findings doc: .planning/phases/07.1-.../07.1-CONTENT-FINDINGS.md
 # Raw report: .planning/phases/07.1-.../07.1-wrong-chips-raw.txt. Do not add ids without a finding: stale ids fail the test.
 
 # l0.2 e3 tagged wrong, actually crashes (index out of bounds)
@@ -12,18 +14,9 @@ l0.3.e3.h1:s.length
 l0.4.e2.h2:(lo + hi) / 2
 l0.4.e2.h2:hi - lo / 2
 
-# l0.4 e3: `0` and `mid` in hole 3 run clean (tagged hang), `mid` in hole 4 hangs (tagged wrong)
-l0.4.e3.h3:0
-l0.4.e3.h3:mid
-l0.4.e3.h4:mid
-
 # l1.1 e3 duplicate check variants run clean (F4)
 l1.1.e3.h3:!seen.add(x)
 l1.1.e3.h3:seen.contains(x)
 
-# l1.3 e2/e3 run clean on the examples
-l1.3.e2.h2:!=
-l1.3.e3.h4:0
-
-# l1.5 e3 `daysActive.size` runs clean
-l1.5.e3.h3:daysActive.size
+# l0.1 reference crashes on the empty array (F1, plan 04 checks:)
+l0.1.reference

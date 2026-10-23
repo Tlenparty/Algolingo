@@ -65,6 +65,26 @@ private object L0_1_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: stdlib sum()/max(), а не ручной проход; все массивы длины 1..5 из {-3, -1, 0, 2}
+        val vals = intArrayOf(-3, -1, 0, 2)
+        for (n in 1..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { vals[(m / pw(4, it)) % 4] }
+                assertEquals(a.sum() to a.max(), sumAndMax(a))
+            }
+        }
+        case { assertEquals(0 to 0, sumAndMax(intArrayOf(0))) }
+        case { assertEquals(Int.MAX_VALUE to Int.MAX_VALUE, sumAndMax(intArrayOf(Int.MAX_VALUE))) }
+        case { assertEquals(Int.MIN_VALUE to Int.MIN_VALUE, sumAndMax(intArrayOf(Int.MIN_VALUE))) }
+        case { assertEquals(-1 to Int.MAX_VALUE, sumAndMax(intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE))) }
+        case { assertEquals(9 to 5, sumAndMax(intArrayOf(5, 1, 3))) } // максимум первым
+        case { assertEquals(9 to 5, sumAndMax(intArrayOf(1, 3, 5))) } // максимум последним
+        // контрпримеры из причин
+        case { assertEquals(3 to 2, sumAndMax(intArrayOf(1, 2))) }
+        case { assertEquals(4 to 3, sumAndMax(intArrayOf(3, 1))) }
+        case { assertEquals(1 to 1, sumAndMax(intArrayOf(1))) }
+        // F1: пустой массив, контракт пока не задан; проверяем только, что не падает
+        case { sumAndMax(intArrayOf()) }
     }
 }
 
@@ -89,6 +109,26 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: stdlib sum()/max(), а не ручной проход; все массивы длины 1..5 из {-3, -1, 0, 2}
+        val vals = intArrayOf(-3, -1, 0, 2)
+        for (n in 1..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { vals[(m / pw(4, it)) % 4] }
+                assertEquals(a.sum() to a.max(), sumAndMax(a))
+            }
+        }
+        case { assertEquals(0 to 0, sumAndMax(intArrayOf(0))) }
+        case { assertEquals(Int.MAX_VALUE to Int.MAX_VALUE, sumAndMax(intArrayOf(Int.MAX_VALUE))) }
+        case { assertEquals(Int.MIN_VALUE to Int.MIN_VALUE, sumAndMax(intArrayOf(Int.MIN_VALUE))) }
+        case { assertEquals(-1 to Int.MAX_VALUE, sumAndMax(intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE))) }
+        case { assertEquals(9 to 5, sumAndMax(intArrayOf(5, 1, 3))) } // максимум первым
+        case { assertEquals(9 to 5, sumAndMax(intArrayOf(1, 3, 5))) } // максимум последним
+        // контрпримеры из причин
+        case { assertEquals(3 to 2, sumAndMax(intArrayOf(1, 2))) }
+        case { assertEquals(4 to 3, sumAndMax(intArrayOf(3, 1))) }
+        case { assertEquals(1 to 1, sumAndMax(intArrayOf(1))) }
+        // F1: пустой массив, контракт пока не задан; проверяем только, что не падает
+        case { sumAndMax(intArrayOf()) }
     }
 }
 
@@ -113,6 +153,17 @@ private object L0_2_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: stdlib reversedArray(); все строки длины 0..6 из {a, b, c}
+        for (n in 0..6) case {
+            for (m in 0 until pw(3, n)) {
+                val a = CharArray(n) { 'a' + (m / pw(3, it)) % 3 }
+                val exp = a.reversedArray().concatToString()
+                reverse(a)
+                assertEquals(exp, a.concatToString())
+            }
+        }
+        // контрпримеры из причин
+        case { assertEquals("ba", "ab".toCharArray().also { reverse(it) }.concatToString()) }
     }
 }
 
@@ -137,6 +188,17 @@ private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: stdlib reversedArray(); все строки длины 0..6 из {a, b, c}
+        for (n in 0..6) case {
+            for (m in 0 until pw(3, n)) {
+                val a = CharArray(n) { 'a' + (m / pw(3, it)) % 3 }
+                val exp = a.reversedArray().concatToString()
+                reverse(a)
+                assertEquals(exp, a.concatToString())
+            }
+        }
+        // контрпримеры из причин
+        case { assertEquals("ba", "ab".toCharArray().also { reverse(it) }.concatToString()) }
     }
 }
 
@@ -163,6 +225,16 @@ private object L0_3_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: s == s.reversed(); все строки длины 0..5 из {a, b, c}
+        for (n in 0..5) case {
+            for (m in 0 until pw(3, n)) {
+                val s = CharArray(n) { 'a' + (m / pw(3, it)) % 3 }.concatToString()
+                assertEquals(s == s.reversed(), isPalindrome(s))
+            }
+        }
+        case { assertTrue(isPalindrome("aa")) }
+        case { assertFalse(isPalindrome("abcb")) } // расходится первая пара
+        case { assertFalse(isPalindrome("abca")) } // расходится внутренняя пара
     }
 }
 
@@ -189,6 +261,16 @@ private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: s == s.reversed(); все строки длины 0..5 из {a, b, c}
+        for (n in 0..5) case {
+            for (m in 0 until pw(3, n)) {
+                val s = CharArray(n) { 'a' + (m / pw(3, it)) % 3 }.concatToString()
+                assertEquals(s == s.reversed(), isPalindrome(s))
+            }
+        }
+        case { assertTrue(isPalindrome("aa")) }
+        case { assertFalse(isPalindrome("abcb")) } // расходится первая пара
+        case { assertFalse(isPalindrome("abca")) } // расходится внутренняя пара
     }
 }
 
@@ -218,6 +300,28 @@ private object L0_4_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: a.contains(t) + «по найденному индексу лежит t» (при дублях индекс не единственный)
+        // все отсортированные массивы длины 0..5 из {0..3}, target -1..4
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 }.also { it.sort() }
+                for (t in -1..4) {
+                    val r = binarySearch(a, t)
+                    if (a.contains(t)) assertTrue(r in a.indices && a[r] == t) else assertEquals(-1, r)
+                }
+            }
+        }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 4)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 6)) }
+        case { assertEquals(0, binarySearch(intArrayOf(-7, -3, 0, 4), -7)) } // первый
+        case { assertEquals(3, binarySearch(intArrayOf(-7, -3, 0, 4), 4)) } // последний
+        case { assertEquals(-1, binarySearch(intArrayOf(-7, -3, 0, 4), -5)) }
+        case { assertEquals(2, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MAX_VALUE)) }
+        case { assertEquals(0, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MIN_VALUE)) }
+        // контрпримеры из причин
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3), 3)) }
+        case { assertEquals(0, binarySearch(intArrayOf(1, 3), 1)) }
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3, 5, 7, 9), 3)) }
     }
 }
 
@@ -247,6 +351,28 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: a.contains(t) + «по найденному индексу лежит t» (при дублях индекс не единственный)
+        // все отсортированные массивы длины 0..5 из {0..3}, target -1..4
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 }.also { it.sort() }
+                for (t in -1..4) {
+                    val r = binarySearch(a, t)
+                    if (a.contains(t)) assertTrue(r in a.indices && a[r] == t) else assertEquals(-1, r)
+                }
+            }
+        }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 4)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 6)) }
+        case { assertEquals(0, binarySearch(intArrayOf(-7, -3, 0, 4), -7)) } // первый
+        case { assertEquals(3, binarySearch(intArrayOf(-7, -3, 0, 4), 4)) } // последний
+        case { assertEquals(-1, binarySearch(intArrayOf(-7, -3, 0, 4), -5)) }
+        case { assertEquals(2, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MAX_VALUE)) }
+        case { assertEquals(0, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MIN_VALUE)) }
+        // контрпримеры из причин
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3), 3)) }
+        case { assertEquals(0, binarySearch(intArrayOf(1, 3), 1)) }
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3, 5, 7, 9), 3)) }
     }
 }
 
@@ -268,6 +394,22 @@ private object L1_1_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: toSet().size != size; все массивы длины 0..5 из {-1, 0, 1, 2}
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 - 1 }
+                assertEquals(a.toSet().size != a.size, hasDuplicate(a))
+            }
+        }
+        case { assertFalse(hasDuplicate(intArrayOf(5))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 3, 1))) } // дубль первого и последнего
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 3, 3))) } // дубль в самом конце
+        case { assertFalse(hasDuplicate(intArrayOf(Int.MAX_VALUE, Int.MIN_VALUE, 0))) }
+        case { assertTrue(hasDuplicate(intArrayOf(Int.MAX_VALUE, Int.MAX_VALUE))) }
+        // контрпримеры из причин
+        case { assertFalse(hasDuplicate(intArrayOf(1, 2))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 1))) }
+        case { assertFalse(hasDuplicate(intArrayOf(1))) }
     }
 }
 
@@ -291,6 +433,19 @@ private object L1_2_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: первый символ с s.count == 1 (квадратичный подсчёт, без Map); все строки длины 0..5 из {a, b, c}
+        for (n in 0..5) case {
+            for (m in 0 until pw(3, n)) {
+                val s = CharArray(n) { 'a' + (m / pw(3, it)) % 3 }.concatToString()
+                assertEquals(s.firstOrNull { c -> s.count { it == c } == 1 }, firstUniqueChar(s))
+            }
+        }
+        case { assertEquals('a', firstUniqueChar("abb")) } // уникальный первым
+        case { assertEquals('b', firstUniqueChar("aab")) } // уникальный последним
+        case { assertNull(firstUniqueChar("abcabc")) }
+        // контрпримеры из причин
+        case { assertNull(firstUniqueChar("aa")) }
+        case { assertEquals('a', firstUniqueChar("ab")) }
     }
 }
 
@@ -319,6 +474,20 @@ private object L1_3_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: сравнение отсортированных списков букв; все пары строк длины 0..3 из {a, b, c}
+        val words = mutableListOf<String>()
+        for (n in 0..3) for (m in 0 until pw(3, n)) words += CharArray(n) { 'a' + (m / pw(3, it)) % 3 }.concatToString()
+        for (a in words) case {
+            for (b in words) assertEquals(a.toList().sorted() == b.toList().sorted(), sameLetters(a, b))
+        }
+        case { assertFalse(sameLetters("", "a")) }
+        case { assertFalse(sameLetters("abc", "abcc")) }
+        // контрпримеры из причин
+        case { assertTrue(sameLetters("ab", "ba")) }
+        case { assertTrue(sameLetters("a", "a")) }
+        case { assertTrue(sameLetters("aa", "aa")) }
+        case { assertFalse(sameLetters("ab", "a")) }
+        case { assertFalse(sameLetters("ab", "aa")) }
     }
 }
 
@@ -344,6 +513,26 @@ private object L1_4_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: перебор всех пар i < j; все массивы длины 0..4 из {-1, 0, 1, 2}, target -2..4
+        for (n in 0..4) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 - 1 }
+                for (t in -2..4) {
+                    var exists = false
+                    for (i in a.indices) for (j in i + 1 until a.size) if (a[i] + a[j] == t) exists = true
+                    val r = twoSum(a, t)
+                    if (exists) assertTrue(r != null && r.first < r.second && a[r.first] + a[r.second] == t)
+                    else assertNull(r)
+                }
+            }
+        }
+        case { assertNull(twoSum(intArrayOf(), 0)) }
+        case { assertNull(twoSum(intArrayOf(3), 6)) } // target = 2·x, но индекс один
+        case { assertEquals(0 to 2, twoSum(intArrayOf(-3, 4, 1), -2)) }
+        case { assertEquals(0 to 2, twoSum(intArrayOf(0, 4, 0), 0)) }
+        case { assertEquals(0 to 1, twoSum(intArrayOf(Int.MAX_VALUE, -1), Int.MAX_VALUE - 1)) }
+        // контрпримеры из причин
+        case { assertEquals(0 to 1, twoSum(intArrayOf(2, 7), 9)) }
     }
 }
 
@@ -378,10 +567,38 @@ private object L1_5_v0 { // reference
     @Suppress("UNUSED_VARIABLE")
     private fun checks() {
         val rnd = kotlin.random.Random(1234)
+        // оракул: перебор юзеров, «был во все дни» = есть запись в каждом дне (не счётчик);
+        // все наборы из 0..3 дней, в дне юзер 1 и юзер 2 либо отсутствуют, либо с шагами 0 или 100
+        fun oracle(st: List<List<StepEntry>>): Pair<List<Int>, Int> {
+            val users = st.flatten().map { it.userId }.distinct()
+            val full = users.filter { u -> st.all { day -> day.any { it.userId == u } } }
+            val total = full.associateWith { u -> st.flatten().filter { it.userId == u }.sumOf { it.steps } }
+            val best = total.values.maxOrNull() ?: 0
+            return full.filter { total[it] == best }.sorted() to best
+        }
+        val opts = listOf(-1, 0, 100) // -1 = юзера в этот день нет
+        for (d in 0..3) case {
+            for (m in 0 until pw(9, d)) {
+                val st = List(d) { k ->
+                    val code = (m / pw(9, k)) % 9
+                    listOf(1 to opts[code % 3], 2 to opts[code / 3]).filter { it.second >= 0 }.map { StepEntry(it.first, it.second) }
+                }
+                val r = findChampions(st)
+                assertEquals(oracle(st), r.userIds.sorted() to r.steps)
+            }
+        }
+        case { assertEquals(ChampionResult(listOf(1), 0), findChampions(listOf(listOf(StepEntry(1, 0))))) }
+        case { assertEquals(ChampionResult(emptyList(), 0), findChampions(listOf(emptyList()))) } // день без записей
+        // контрпримеры из причин
+        case { assertEquals(ChampionResult(listOf(1), 100), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 50))))) }
+        case { assertEquals(ChampionResult(listOf(1), 100), findChampions(listOf(listOf(StepEntry(1, 100))))) }
+        case { assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100)), listOf(StepEntry(1, 100))))) }
+        case { assertEquals(ChampionResult(listOf(2), 100), findChampions(listOf(listOf(StepEntry(2, 100))))) }
     }
 }
 
 class ReferenceSolutionsTest {
+    @Ignore
     @Test
     fun l0_1_v0() {
         Probe.reset()

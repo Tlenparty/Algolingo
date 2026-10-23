@@ -30,6 +30,10 @@ BASE = """# l0.4
 note: 0.4 Бинарный поиск
 examples:
 - assertEquals(0, binarySearch(intArrayOf(5), 5))
+checks:
+```kotlin
+case { }
+```
 
 ## e1
 ```kotlin
@@ -281,20 +285,25 @@ class Tags(unittest.TestCase):
 
 class Checks(unittest.TestCase):
     assertRule = Validation.assertRule
-    FENCE = "checks:\n```kotlin\n%s\n```\n\n## e1"
+    FENCE = "checks:\n```kotlin\ncase { }\n```\n"
 
     def with_checks(self, body):
-        return BASE.replace("\n## e1", "\n" + self.FENCE % body, 1)
+        return BASE.replace(self.FENCE, "checks:\n```kotlin\n%s\n```\n" % body, 1)
 
-    def test_checks_fence_is_parsed_and_optional(self):
+    def test_checks_fence_is_parsed_and_never_in_json(self):
         sc = gen_content.parse_sidecar(self.with_checks("case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }"), "l0.4")
         self.assertEqual(sc["top"]["checks"], "case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }")
-        self.assertNotIn("checks", gen_content.parse_sidecar(BASE, "l0.4")["top"])
-        self.assertEqual(build(self.with_checks("case { }")), build(BASE))
+        self.assertEqual(build(self.with_checks("case { assertTrue(true) }")), build(BASE))
+
+    def test_g10_missing_checks_fails(self):
+        self.assertRule("G10", build, BASE.replace(self.FENCE, "", 1))
 
     def test_g10_jvm_only_api_in_checks_fails(self):
         for bad in ("val p = Math.pow(2.0, 3.0)", "val l = java.util.ArrayList<Int>()", "val s = String(charArrayOf('a'))"):
             self.assertRule("G10", build, self.with_checks(bad))
+
+    def test_g10_allows_concat_to_string(self):
+        build(self.with_checks("case { assertEquals(\"a\", charArrayOf('a').concatToString()) }"))
 
     def test_checks_as_one_line_fails(self):
         self.assertRule("syntax", build, BASE.replace("\n## e1", "\nchecks: x\n\n## e1", 1))
