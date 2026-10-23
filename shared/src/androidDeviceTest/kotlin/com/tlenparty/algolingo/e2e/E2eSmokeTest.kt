@@ -5,6 +5,7 @@ import androidx.compose.ui.test.runComposeUiTest
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.minutes
 
 /** One @Test per process: AppGraph keeps the first dataDir, so all scenarios share one fresh dir. */
 @OptIn(ExperimentalTestApi::class)
@@ -14,8 +15,11 @@ class E2eSmokeTest {
             .apply { mkdirs() }.absolutePath
 
     @Test
-    fun smoke() = runComposeUiTest {
+    fun smoke() = runComposeUiTest(testTimeout = 10.minutes) { // default 1m is too short for every lesson
         launchApp(freshDir())
         scenarioLaunch()
+        scenarioWrongChip() // exits without saving: progress stays clean for the full run
+        scenarioKb()
+        scenarioAllLessons()
     }
 }
