@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.tlenparty.algolingo.home.HomeScreen
 import com.tlenparty.algolingo.kb.KbRepository
+import com.tlenparty.algolingo.kb.Note
 import com.tlenparty.algolingo.kb.ui.KbListScreen
 import com.tlenparty.algolingo.kb.ui.NoteScreen
 import com.tlenparty.algolingo.lesson.ui.LessonHost
@@ -48,12 +49,13 @@ data class NoteRoute(val id: String, val anchor: String? = null)
 @Serializable
 data class LessonRoute(val id: String, val review: Boolean = false)
 
+private const val KB_ERROR = "Не удалось загрузить базу знаний"
+
 @Composable
 fun App(dataDir: String) {
     AlgoTheme {
         val progressRepo = remember { AppGraph.progress(dataDir) }
         val repo = remember { KbRepository() }
-        val loaded by produceState(false) { repo.load(); value = true }
         val catalog by produceState<Catalog?>(null) { value = loadCatalog() }
         val nav = rememberNavController()
         val current by nav.currentBackStackEntryAsState()
@@ -106,11 +108,19 @@ fun App(dataDir: String) {
                     LessonHost(route.id, route.review, onFinish = { progressRepo.record(route.id, it) }) { entry.ifResumed { nav.popBackStack() } }
                 }
                 composable<KbList> { entry ->
-                    if (loaded) KbListScreen(repo.notes, { n -> entry.ifResumed { nav.navigate(NoteRoute(n.id)) } }, search = repo::search) else Text("…")
+                    // KB loads lazily on first open (load() is idempotent), so a bad KB file never blocks Home or lessons.
+                    val kb by produceState<Result<List<Note>>?>(null) { value = repo.load() }
+                    when {
+                        kb == null -> Text("…")
+                        kb?.isFailure == true -> Text(KB_ERROR)
+                        else -> KbListScreen(repo.notes, { n -> entry.ifResumed { nav.navigate(NoteRoute(n.id)) } }, search = repo::search)
+                    }
                 }
                 composable<NoteRoute> { entry ->
-                    // Reading `loaded` here re-composes this entry once notes arrive (Activity recreation restores NoteRoute first).
-                    if (!loaded) { Text("…"); return@composable }
+                    // NoteRoute triggers its own load: Activity recreation restores NoteRoute before KbList was ever opened.
+                    val kb by produceState<Result<List<Note>>?>(null) { value = repo.load() }
+                    if (kb == null) { Text("…"); return@composable }
+                    if (kb?.isFailure == true) { Text(KB_ERROR); return@composable }
                     val route = entry.toRoute<NoteRoute>()
                     val note = repo.byId(route.id)
                     if (note != null) NoteScreen(
