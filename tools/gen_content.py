@@ -9,7 +9,7 @@ Usage:
 Inputs: the bundled note 05 (files/kb/n07ed966c.md, refreshed by sync_notes.py,
 never the vault) and content/authoring/<id>.md. Outputs: files/content/index.json,
 files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt.
-Any validation error (G1-G8) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
+Any validation error (G1-G11) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
 
 Sidecar grammar (content/authoring/l0.N.md):
 
@@ -20,17 +20,27 @@ Sidecar grammar (content/authoring/l0.N.md):
   examples:                      >=1 bullets, each a Kotlin statement run inside every variant
                                  object (member scope, so nested classes in the note code resolve)
   - assertEquals(2, f(intArrayOf(1, 3)))
+  checks:                        optional ```kotlin fence, test-only (never in lesson JSON): edge cases
+                                 and oracle loops, each check wrapped in case { ... }; `rnd`
+                                 (Random(1234)) and pw(b, e) are in scope; no Math./java./String( (G10)
 
   ## theory <card title>         theory card, keys: signals: (bullets), skeleton: (``` fence),
                                  pitfalls: (bullets), body: (one line)
 
   ## eK                          exercise <id>.eK; one ```kotlin fence with the FULL function,
                                  holes written as ⟦ok | ok2 | ~acceptable⟧ (first non-~ is ok[0])
-  - `T`: why                     distractor chip with a why (must contain a `code` counterexample)
+  - `T` [kinds]: why             distractor chip with a why (must contain a `code` counterexample)
   - `T`                          distractor without chip why: needs an @H override for every hole
-  - @H `T`: why                  holes[H-1].wrongWhy[T] (T in bank, not correct for hole H)
-  - ~`T`: note                   note for the acceptable text T
+  - @H `T` [kind]: why           holes[H-1].wrongWhy[T] (T in bank, not correct for hole H)
+  - ~`T`: note                   note for the acceptable text T (no tag)
   ? hint                         hint, in order
+
+Kind tags (G9, test-only, never in lesson JSON) say how the variant breaks: compile | wrong |
+crash | hang. @H bullets carry exactly one; a distractor with a why carries a set ([compile,wrong]),
+the kinds seen across its holes; a distractor without a why may omit it.
+
+content/authoring/pending.txt (optional): one variant id per line (`#` comments and blanks
+ignored). Listed reference/ok/acceptable tests get @Ignore, wrong programs get "pending": true.
 
 Bank order: ok[0] of each hole (with multiplicity), other ok/acceptable texts, distractors.
 """
@@ -47,17 +57,21 @@ AUTHORING = "content/authoring"
 INDEX = RES + "/content/index.json"
 LESSONS = RES + "/content/lessons"
 TEST_KT = "shared/src/commonTest/kotlin/com/tlenparty/algolingo/lesson/ReferenceSolutionsTest.kt"
+PENDING = AUTHORING + "/pending.txt"
 MAX_BANK = 10
 
 HOLE = re.compile(r"⟦(.*?)⟧")
 # ponytail: " | " separates alternatives; level 0 has no chip containing " | ", revisit if one appears
 ALT_SEP = " | "
-BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?:: ?(.*))?$")
+BULLET = re.compile(r"^- (?:@(\d+) |(~))?`(.+?)`(?: \[([a-z,]+)\])?(?:: ?(.*))?$")
+KINDS = ("compile", "wrong", "crash", "hang")
+# ponytail: substring ban, not a parser; enough to keep checks: common-Kotlin (Native-compilable)
+CHECKS_BANNED = ("Math.", "java.", "String(")
 KEY = re.compile(r"^([a-z]+):\s*(.*)$")
 CARD_KEYS = ("signals", "skeleton", "pitfalls", "body")
 # expected value shape per key: one line, bullet list or ``` fence
 TOP_KINDS = {"note": "line", "title": "line", "statement": "line", "trains": "line",
-             "pitfalls": "list", "variations": "list", "examples": "list"}
+             "pitfalls": "list", "variations": "list", "examples": "list", "checks": "fence"}
 CARD_KINDS = {"signals": "list", "skeleton": "fence", "pitfalls": "list", "body": "line"}
 
 
@@ -210,9 +224,10 @@ def parse_exercise(name, lines, file):
             m = BULLET.match(ln)
             if not m:
                 raise GenError(file, "syntax", name + ": bad bullet: " + ln)
-            hole, tilde, text, why = m.groups()
+            hole, tilde, text, tags, why = m.groups()
             kind = "@" if hole else ("~" if tilde else "-")
-            ex["bullets"].append((kind, int(hole) if hole else None, text, (why or "").strip() or None))
+            ex["bullets"].append((kind, int(hole) if hole else None, text, (why or "").strip() or None,
+                                  tuple(tags.split(",")) if tags else ()))
         elif ln.strip():
             raise GenError(file, "syntax", name + ": unexpected line: " + ln)
     if ex["code"] is None:
@@ -237,6 +252,9 @@ def parse_sidecar(text, stem):
         raise GenError(file, "syntax", "unknown keys: " + ", ".join(sorted(unknown)))
     if "note" not in top:
         raise GenError(file, "G7", "missing note: heading")
+    for bad in CHECKS_BANNED:
+        if bad in top.get("checks", ""):
+            raise GenError(file, "G10", "checks: uses %r (JVM-only or Native-deprecated API)" % bad)
     sc = {"id": lid, "file": file, "top": top, "theory": [], "exercises": []}
     for a, b in zip(starts, starts[1:]):
         head = lines[a][3:].strip()
@@ -337,6 +355,31 @@ def build_lesson(sc, note_lines):
     return lesson
 
 
+def check_tags(file, where, kind, h, text, why, tags):
+    """G9: @H needs exactly one kind, a distractor with a why needs >= 1, ~ takes none."""
+    who = "%s: %s`%s`" % (where, "@%d " % h if kind == "@" else "~" if kind == "~" else "", text)
+    bad = [t for t in tags if t not in KINDS]
+    if bad:
+        raise GenError(file, "G9", "%s: unknown kind %s (use %s)" % (who, ",".join(bad), "|".join(KINDS)))
+    if len(set(tags)) != len(tags):
+        raise GenError(file, "G9", "%s: repeated kind in [%s]" % (who, ",".join(tags)))
+    if kind == "~" and tags:
+        raise GenError(file, "G9", "%s: acceptable chips take no kind tag" % who)
+    if kind == "@" and len(tags) != 1:
+        raise GenError(file, "G9", "%s: needs exactly one kind tag [%s], got %d" % (who, "|".join(KINDS), len(tags)))
+    if kind == "-" and why and not tags:
+        raise GenError(file, "G9", "%s: distractor with a why needs a kind tag" % who)
+
+
+def load_pending(root):
+    """Variant ids parked until the customer decides (plan 05); empty if the file is absent."""
+    path = Path(root) / PENDING
+    if not path.is_file():
+        return set()
+    lines = (ln.strip() for ln in path.read_text(encoding="utf-8").splitlines())
+    return set(ln for ln in lines if ln and not ln.startswith("#"))
+
+
 def build_exercise(lid, file, ex, segs, holes):
     where = ex["name"]
     correct = [set(ok) | set(acc) for ok, acc, _ in holes]
@@ -344,7 +387,7 @@ def build_exercise(lid, file, ex, segs, holes):
     acc_texts = set(t for _, acc, _ in holes for t in acc)
     wrong = [dict() for _ in holes]
     notes, distractors = {}, []
-    for kind, h, text, why in ex["bullets"]:
+    for kind, h, text, why, tags in ex["bullets"]:
         if kind == "~":
             if text not in acc_texts:
                 raise GenError(file, "G6", "%s: ~`%s` is not acceptable in any hole" % (where, text))
@@ -367,6 +410,7 @@ def build_exercise(lid, file, ex, segs, holes):
             if text in any_correct or text in [d[0] for d in distractors]:
                 raise GenError(file, "G6", "%s: distractor `%s` is correct or duplicated" % (where, text))
             distractors.append((text, why))
+        check_tags(file, where, kind, h, text, why, tags)  # after G6 so G6 errors stay reported first
 
     bank = [{"text": ok[0]} for ok, _, _ in holes]
     for ok, acc, _ in holes:
