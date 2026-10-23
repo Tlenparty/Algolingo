@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 07.1 context gathered
-last_updated: "2026-10-23T10:22:49.301Z"
-last_activity: 2026-10-23 -- Phase 07.1 execution started
+last_updated: "2026-10-23T10:39:42.449Z"
+last_activity: 2026-10-23
 progress:
   total_phases: 9
   completed_phases: 8
   total_plans: 41
-  completed_plans: 35
-  percent: 85
+  completed_plans: 38
+  percent: 89
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 ## Current Position
 
 Phase: 07.1 (content-correctness-crash-safety) — EXECUTING
-Plan: 1 of 6
-Status: Executing Phase 07.1
-Last activity: 2026-10-23 -- Phase 07.1 execution started
+Plan: 4 of 6
+Status: Ready to execute
+Last activity: 2026-10-23
 
-Progress: [██████████] 100%
+Progress: [█████████░] 93%
 
 ## Performance Metrics
 
@@ -75,6 +75,7 @@ Progress: [██████████] 100%
 | Phase 06 P03 | 15min | 2 tasks | 6 files |
 | Phase 06 P05 | 57min | 3 tasks | 3 files |
 | Phase 07 P03 | 45 min | 3 tasks | 2 files |
+| Phase 07.1 P03 | 15 min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,7 @@ Recent decisions affecting current work:
 - [Phase 06]: 06-05: level 1 passes end to end offline on Android + iOS sim; 1.5 long template usable (auto-scroll to hole)
 - [Phase 06]: 06-05: ghost bank chip renders plain text (highlight spans overrode transparent color), fix d9d8635
 - [Phase 07]: KB cold load ~0.4 s on iOS sim, no single-file bundle needed (A2 closed)
+- [Phase 07.1]: 07.1-03: wrong-chip verdicts JVM-only via embedded compiler; 13 mismatches parked in content/authoring/pending.txt, stale pending fails the test
 
 ### Roadmap Evolution
 
@@ -131,6 +133,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-23T09:10:52.709Z
+Last session: 2026-10-23T10:39:36.266Z
 Stopped at: Phase 07.1 context gathered
-Resume file: .planning/phases/07.1-content-correctness-crash-safety-wrong-chip-proofs-edge-case/07.1-CONTEXT.md
+Resume file: None
