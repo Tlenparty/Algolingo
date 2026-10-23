@@ -33,7 +33,7 @@ examples:
 ```kotlin
 %s
 ```
-- `lo < hi`: при `lo == hi` цикл не зайдёт: `[5]` вернёт `-1`
+- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт: `[5]` вернёт `-1`
 ? hint one
 
 ## e2
@@ -41,8 +41,8 @@ examples:
 %s
 ```
 - ~`(lo + hi) ushr 1`: работает, но эталон читаемее
-- `lo < hi`: при `lo == hi` цикл не зайдёт
-- @2 `lo < hi`: `mid` станет `Boolean`
+- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт
+- @2 `lo < hi` [compile]: `mid` станет `Boolean`
 """ % (E1_CODE, E2_CODE)
 
 
@@ -132,15 +132,15 @@ class Validation(unittest.TestCase):
         self.assertRule("G1", build, BASE.replace("⟦lo <= hi⟧", "⟦lo <= hi | ⟧", 1))
 
     def test_g2_distractor_without_why_fails(self):
-        self.assertRule("G2", build, BASE.replace("- `lo < hi`: при `lo == hi` цикл не зайдёт: `[5]` вернёт `-1`",
+        self.assertRule("G2", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт: `[5]` вернёт `-1`",
                                                   "- `lo < hi`"))
 
     def test_g3_why_without_counterexample_fails(self):
-        self.assertRule("G3", build, BASE.replace("- `lo < hi`: при `lo == hi` цикл не зайдёт\n",
-                                                  "- `lo < hi`: просто неверно\n"))
+        self.assertRule("G3", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
+                                                  "- `lo < hi` [wrong]: просто неверно\n"))
 
     def test_g3_override_without_counterexample_fails(self):
-        self.assertRule("G3", build, BASE.replace("- @2 `lo < hi`: `mid` станет `Boolean`", "- @2 `lo < hi`: нет"))
+        self.assertRule("G3", build, BASE.replace("- @2 `lo < hi` [compile]: `mid` станет `Boolean`", "- @2 `lo < hi` [compile]: нет"))
 
     def test_g4_removed_lesson_id_fails_unless_allowed(self):
         tmp = Path(tempfile.mkdtemp())
@@ -182,7 +182,7 @@ class Validation(unittest.TestCase):
         self.assertRule("G6", build, BASE + "- ~`(lo + hi) ushr 1`: ещё раз `x`\n")
 
     def test_g7_bank_too_big_fails(self):
-        extra = "".join("- `d%d`: `x`\n" % i for i in range(9))
+        extra = "".join("- `d%d` [wrong]: `x`\n" % i for i in range(9))
         self.assertRule("G7", build, BASE.replace("? hint one\n", extra + "? hint one\n"))
 
     def test_g7_non_increasing_hole_counts_fails(self):
@@ -232,6 +232,83 @@ class Validation(unittest.TestCase):
 
     def test_g8_no_examples_fails(self):
         self.assertRule("G8", build, BASE.replace("examples:\n- assertEquals(0, binarySearch(intArrayOf(5), 5))\n", ""))
+
+
+class Tags(unittest.TestCase):
+    assertRule = Validation.assertRule
+
+    def bullets(self, text):
+        return gen_content.parse_sidecar(text, "l0.4")["exercises"][1]["bullets"]
+
+    def test_tag_is_parsed_and_kept_out_of_why(self):
+        b = self.bullets(BASE.replace("- @2 `lo < hi` [compile]:", "- @2 `lo < hi` [hang]:"))
+        self.assertIn(("@", 2, "lo < hi", "`mid` станет `Boolean`", ("hang",)), b)
+        self.assertIn(("~", None, "(lo + hi) ushr 1", "работает, но эталон читаемее", ()), b)
+
+    def test_g9_override_without_tag_fails(self):
+        self.assertRule("G9", build, BASE.replace("- @2 `lo < hi` [compile]:", "- @2 `lo < hi`:"))
+
+    def test_g9_override_with_two_kinds_fails(self):
+        self.assertRule("G9", build, BASE.replace("[compile]", "[compile,wrong]"))
+
+    def test_g9_unknown_kind_fails(self):
+        self.assertRule("G9", build, BASE.replace("[compile]", "[boom]"))
+        self.assertRule("G9", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
+                                                  "- `lo < hi` [wrong,boom]: при `lo == hi` цикл не зайдёт\n"))
+
+    def test_g9_distractor_with_why_without_tag_fails(self):
+        self.assertRule("G9", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
+                                                  "- `lo < hi`: при `lo == hi` цикл не зайдёт\n"))
+
+    def test_distractor_tag_set_is_accepted(self):
+        build(BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
+                           "- `lo < hi` [compile,wrong]: при `lo == hi` цикл не зайдёт\n"))
+
+    def test_distractor_without_why_needs_no_tag(self):
+        lesson = build(BASE.replace("? hint one\n", "- `lo != hi`\n- @1 `lo != hi` [wrong]: `[5]` → `-1`\n? hint one\n"))
+        self.assertEqual(lesson["exercises"][0]["holes"][0]["wrongWhy"], {"lo != hi": "`[5]` → `-1`"})
+
+    def test_g9_tag_on_acceptable_fails(self):
+        self.assertRule("G9", build, BASE.replace("- ~`(lo + hi) ushr 1`:", "- ~`(lo + hi) ushr 1` [wrong]:"))
+
+    def test_tags_never_reach_lesson_json(self):
+        other = BASE.replace("[wrong]", "[crash]").replace("[compile]", "[hang]")
+        self.assertEqual(build(BASE), build(other))
+        self.assertNotIn("[wrong]", gen_content.dump(build(BASE)))
+
+
+class Checks(unittest.TestCase):
+    assertRule = Validation.assertRule
+    FENCE = "checks:\n```kotlin\n%s\n```\n\n## e1"
+
+    def with_checks(self, body):
+        return BASE.replace("\n## e1", "\n" + self.FENCE % body, 1)
+
+    def test_checks_fence_is_parsed_and_optional(self):
+        sc = gen_content.parse_sidecar(self.with_checks("case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }"), "l0.4")
+        self.assertEqual(sc["top"]["checks"], "case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }")
+        self.assertNotIn("checks", gen_content.parse_sidecar(BASE, "l0.4")["top"])
+        self.assertEqual(build(self.with_checks("case { }")), build(BASE))
+
+    def test_g10_jvm_only_api_in_checks_fails(self):
+        for bad in ("val p = Math.pow(2.0, 3.0)", "val l = java.util.ArrayList<Int>()", "val s = String(charArrayOf('a'))"):
+            self.assertRule("G10", build, self.with_checks(bad))
+
+    def test_checks_as_one_line_fails(self):
+        self.assertRule("syntax", build, BASE.replace("\n## e1", "\nchecks: x\n\n## e1", 1))
+
+
+class Pending(unittest.TestCase):
+    def test_load_pending(self):
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            self.assertEqual(gen_content.load_pending(tmp), set())
+            (tmp / "content/authoring").mkdir(parents=True)
+            (tmp / gen_content.PENDING).write_text("# l0.4 false wrong\nl0.4.e2.h2:hi - lo / 2\n\n  \nl1.1.reference\n",
+                                                   encoding="utf-8")
+            self.assertEqual(gen_content.load_pending(tmp), {"l0.4.e2.h2:hi - lo / 2", "l1.1.reference"})
+        finally:
+            shutil.rmtree(str(tmp))
 
 
 class RenderKt(unittest.TestCase):
