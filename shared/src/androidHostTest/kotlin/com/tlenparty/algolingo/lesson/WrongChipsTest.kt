@@ -30,7 +30,6 @@ class WrongChipsTest {
         val lesson: String,
         val label: String,
         val claims: List<Claim>,
-        val pending: Boolean,
         val source: String,
     )
 
@@ -59,24 +58,19 @@ class WrongChipsTest {
         }
     }
 
-    /** A failure line plus the entry ids it is attributed to (any pending one parks it). */
-    private class Finding(val line: String, val entries: Set<String>)
-
     @Test
     fun everyWrongChipBreaksAsTagged() {
         val entries = Json { ignoreUnknownKeys = true }
             .decodeFromString<List<Entry>>(File("src/androidHostTest/resources/wrong_variants.json").readText())
         val observed = entries.associate { it.id to observe(it.source) }
-        val findings = mutableListOf<Finding>()
+        val findings = mutableListOf<String>()
 
         for (e in entries) {
             val o = observed.getValue(e.id)
-            if (o.isEmpty()) findings += Finding("${e.id} runs clean (false wrong?) [${e.label}]", setOf(e.id))
+            if (o.isEmpty()) findings += "${e.id} runs clean (false wrong?) [${e.label}]"
             for (c in e.claims.filter { it.scope == "hole" }) {
                 val missing = c.tags - o
-                if (missing.isNotEmpty()) findings += Finding(
-                    "${e.id} ${c.bullet}: expected ${c.tags} observed ${o.sorted()} (missing $missing)", setOf(e.id),
-                )
+                if (missing.isNotEmpty()) findings += "${e.id} ${c.bullet}: expected ${c.tags} observed ${o.sorted()} (missing $missing)"
             }
         }
         // chip scope: the reason holds for the chip in any hole of the exercise, so tags must be in the union
@@ -86,26 +80,18 @@ class WrongChipsTest {
             val tags = entries.flatMap { it.claims }.first { it.bullet == bullet && it.scope == "chip" }.tags
             val union = group.flatMap { observed.getValue(it.id) }.toSet()
             val missing = tags - union
-            if (missing.isNotEmpty()) findings += Finding(
-                "${group.joinToString("+") { it.id }} $bullet: expected $tags observed ${union.sorted()} (missing $missing)",
-                group.map { it.id }.toSet(),
-            )
+            if (missing.isNotEmpty()) findings +=
+                "${group.joinToString("+") { it.id }} $bullet: expected $tags observed ${union.sorted()} (missing $missing)"
         }
-
-        val pending = entries.filter { it.pending }.map { it.id }.toSet()
-        val failing = findings.filter { f -> f.entries.none { it in pending } }.map { it.line }
-        val parked = findings.filter { f -> f.entries.any { it in pending } }.map { "PENDING " + it.line }
-        val stale = (pending - findings.flatMap { it.entries }.toSet()).map { "$it stale pending (now passes, remove from pending.txt)" }
 
         val report = File("build/reports/wrong-chips.txt")
         report.parentFile.mkdirs()
         report.writeText(
-            (listOf("# ${entries.size} programs, ${findings.size} findings, ${pending.size} pending") +
-                failing + stale + parked + entries.map { "observed ${it.id}: ${observed.getValue(it.id).sorted()}" })
+            (listOf("# ${entries.size} programs, ${findings.size} findings") +
+                findings + entries.map { "observed ${it.id}: ${observed.getValue(it.id).sorted()}" })
                 .joinToString("\n", postfix = "\n"),
         )
-        val bad = failing + stale
-        if (bad.isNotEmpty()) fail("${bad.size} wrong-chip mismatches (see ${report.path}):\n" + bad.joinToString("\n"))
+        if (findings.isNotEmpty()) fail("${findings.size} wrong-chip mismatches (see ${report.path}):\n" + findings.joinToString("\n"))
     }
 
     @Test

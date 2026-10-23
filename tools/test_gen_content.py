@@ -309,28 +309,21 @@ class Checks(unittest.TestCase):
         self.assertRule("syntax", build, BASE.replace("\n## e1", "\nchecks: x\n\n## e1", 1))
 
 
-class Pending(unittest.TestCase):
-    def test_load_pending(self):
-        tmp = Path(tempfile.mkdtemp())
-        try:
-            self.assertEqual(gen_content.load_pending(tmp), set())
-            (tmp / "content/authoring").mkdir(parents=True)
-            (tmp / gen_content.PENDING).write_text("# l0.4 false wrong\nl0.4.e2.h2:hi - lo / 2\n\n  \nl1.1.reference\n",
-                                                   encoding="utf-8")
-            self.assertEqual(gen_content.load_pending(tmp), {"l0.4.e2.h2:hi - lo / 2", "l1.1.reference"})
-        finally:
-            shutil.rmtree(str(tmp))
+class NoPending(unittest.TestCase):
+    def test_no_pending_file(self):
+        # every claim is a hard gate (phase 07.1): no list may park a failing variant again
+        self.assertFalse((ROOT / "content/authoring/pending.txt").exists())
 
 
 class RenderKt(unittest.TestCase):
     CODE = "data class E(val a: Int)\nfun g(xs: List<E>): Int = xs.sumOf { it.a }"
 
-    def render(self, pending=frozenset(), checks=None):
+    def render(self, checks=None):
         lesson = {"id": "l1.9", "solution": {"code": self.CODE}, "exercises": []}
         top = {"examples": ["assertEquals(1, g(listOf(E(1))))"]}
         if checks:
             top["checks"] = checks
-        return gen_content.render_kt([(lesson, {"top": top, "exercises": []})], pending)
+        return gen_content.render_kt([(lesson, {"top": top, "exercises": []})])
 
     def test_examples_run_inside_variant_object(self):
         kt = self.render()
@@ -357,9 +350,9 @@ class RenderKt(unittest.TestCase):
         self.assertTrue(body.startswith("private fun checks() {\n        val rnd = kotlin.random.Random(1234)\n"
                                         "        for (n in 0..2) case {"))
 
-    def test_pending_variant_is_ignored(self):
+    def test_no_variant_is_ignored(self):
         self.assertNotIn("@Ignore", self.render())
-        self.assertIn("    @Ignore\n    @Test\n    fun l1_9_v0()", self.render(pending={"l1.9.reference"}))
+        self.assertNotIn("@Ignore", (ROOT / gen_content.TEST_KT).read_text(encoding="utf-8"))
 
     def test_every_committed_variant_runs(self):
         kt = (ROOT / gen_content.TEST_KT).read_text(encoding="utf-8")
@@ -388,8 +381,8 @@ class WrongPrograms(unittest.TestCase):
         sc = gen_content.parse_sidecar(BASE, "l0.4")
         return [(gen_content.build_lesson(sc, NOTE_LINES), sc)]
 
-    def entries(self, pending=frozenset()):
-        return json.loads(gen_content.render_wrong_json(self.items(), pending))
+    def entries(self):
+        return json.loads(gen_content.render_wrong_json(self.items()))
 
     def test_one_program_per_unique_pair(self):
         e = self.entries()
@@ -398,7 +391,7 @@ class WrongPrograms(unittest.TestCase):
                                                 "l0.4.e2.h2:lo < hi"])
         self.assertEqual(e[0]["ids"], ["l0.4.e1.h1:lo < hi", "l0.4.e2.h1:lo < hi"])  # identical program merged
         self.assertEqual(len(set(x["source"] for x in e)), len(e))
-        self.assertEqual(set(e[0]), {"id", "ids", "lesson", "label", "claims", "pending", "source"})
+        self.assertEqual(set(e[0]), {"id", "ids", "lesson", "label", "claims", "source"})
         self.assertEqual(e[0]["lesson"], "l0.4")
 
     def test_claims_come_from_override_or_distractor(self):
@@ -419,10 +412,6 @@ class WrongPrograms(unittest.TestCase):
         self.assertIn("private class HangError", src)
         self.assertNotIn("package ", src)
 
-    def test_pending_flag(self):
-        e = self.entries(pending={"l0.4.e2.h1:lo < hi"})
-        self.assertEqual([x["pending"] for x in e], [True, False, False, False, False])
-
     def test_wrong_json_is_a_checked_output(self):
         tmp = Path(tempfile.mkdtemp())
         try:
@@ -437,10 +426,6 @@ class WrongPrograms(unittest.TestCase):
             with contextlib.redirect_stdout(buf):
                 self.assertEqual(gen_content.main(["--root", str(tmp), "--check"]), 1)
             self.assertEqual(buf.getvalue(), "stale: %s\n" % gen_content.WRONG_JSON)
-            (tmp / gen_content.PENDING).write_text("l0.4.e2.h2:lo < hi\n", encoding="utf-8")
-            self.assertEqual(gen_content.main(["--root", str(tmp)]), 0)
-            e = json.loads((tmp / gen_content.WRONG_JSON).read_text(encoding="utf-8"))
-            self.assertEqual([x["pending"] for x in e], [False, False, False, False, True])
         finally:
             shutil.rmtree(str(tmp))
 
