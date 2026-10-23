@@ -9,6 +9,41 @@ private fun <K, V> Map<K, V>.getOrDefault(key: K, defaultValue: V): V {
     return if (containsKey(key)) get(key) as V else defaultValue
 }
 
+private class HangError : Error()
+
+private object Probe {
+    var steps = 0
+    val kinds = mutableSetOf<String>()
+    fun reset() {
+        steps = 0
+        kinds.clear()
+    }
+}
+
+// injected after every `while (...) {`; deterministic hang detection, no threads (JVM and Native)
+private fun tick() {
+    if (++Probe.steps > 1_000_000) throw HangError()
+}
+
+private fun case(f: () -> Unit) {
+    Probe.steps = 0
+    try {
+        f()
+    } catch (e: AssertionError) {
+        Probe.kinds += "wrong"
+    } catch (e: HangError) {
+        Probe.kinds += "hang"
+    } catch (e: Throwable) {
+        Probe.kinds += "crash"
+    }
+}
+
+private fun pw(b: Int, e: Int): Int {
+    var r = 1
+    repeat(e) { r *= b }
+    return r
+}
+
 private object L0_1_v0 { // reference
     fun sumAndMax(nums: IntArray): Pair<Int, Int> {
         var sum = 0
@@ -20,10 +55,16 @@ private object L0_1_v0 { // reference
         return sum to max
     }
 
-    fun examples() {
-        assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
-        assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
-        assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
+    fun run() {
+        case { assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3))) }
+        case { assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2))) }
+        case { assertEquals(7 to 7, sumAndMax(intArrayOf(7))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -38,10 +79,16 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
         return sum to max
     }
 
-    fun examples() {
-        assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3)))
-        assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2)))
-        assertEquals(7 to 7, sumAndMax(intArrayOf(7)))
+    fun run() {
+        case { assertEquals(6 to 3, sumAndMax(intArrayOf(1, 2, 3))) }
+        case { assertEquals(-7 to -2, sumAndMax(intArrayOf(-5, -2))) }
+        case { assertEquals(7 to 7, sumAndMax(intArrayOf(7))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -49,17 +96,23 @@ private object L0_2_v0 { // reference
     fun reverse(s: CharArray) {
         var l = 0
         var r = s.size - 1
-        while (l < r) {
+        while (l < r) { tick()
             val t = s[l]; s[l] = s[r]; s[r] = t
             l++; r--
         }
     }
 
-    fun examples() {
-        assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
-        assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
-        assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
-        assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
+    fun run() {
+        case { assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString()) }
+        case { assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString()) }
+        case { assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString()) }
+        case { assertEquals("", "".toCharArray().also { reverse(it) }.concatToString()) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -67,17 +120,23 @@ private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
     fun reverse(s: CharArray) {
         var l = 0
         var r = s.size - 1
-        while (l <= r) {
+        while (l <= r) { tick()
             val t = s[l]; s[l] = s[r]; s[r] = t
             l++; r--
         }
     }
 
-    fun examples() {
-        assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString())
-        assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString())
-        assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString())
-        assertEquals("", "".toCharArray().also { reverse(it) }.concatToString())
+    fun run() {
+        case { assertEquals("dcba", "abcd".toCharArray().also { reverse(it) }.concatToString()) }
+        case { assertEquals("cba", "abc".toCharArray().also { reverse(it) }.concatToString()) }
+        case { assertEquals("a", "a".toCharArray().also { reverse(it) }.concatToString()) }
+        case { assertEquals("", "".toCharArray().also { reverse(it) }.concatToString()) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -85,19 +144,25 @@ private object L0_3_v0 { // reference
     fun isPalindrome(s: String): Boolean {
         var l = 0
         var r = s.length - 1
-        while (l < r) {
+        while (l < r) { tick()
             if (s[l] != s[r]) return false
             l++; r--
         }
         return true
     }
 
-    fun examples() {
-        assertTrue(isPalindrome("aba"))
-        assertTrue(isPalindrome("abba"))
-        assertFalse(isPalindrome("ab"))
-        assertTrue(isPalindrome(""))
-        assertTrue(isPalindrome("a"))
+    fun run() {
+        case { assertTrue(isPalindrome("aba")) }
+        case { assertTrue(isPalindrome("abba")) }
+        case { assertFalse(isPalindrome("ab")) }
+        case { assertTrue(isPalindrome("")) }
+        case { assertTrue(isPalindrome("a")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -105,19 +170,25 @@ private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
     fun isPalindrome(s: String): Boolean {
         var l = 0
         var r = s.length - 1
-        while (l <= r) {
+        while (l <= r) { tick()
             if (s[l] != s[r]) return false
             l++; r--
         }
         return true
     }
 
-    fun examples() {
-        assertTrue(isPalindrome("aba"))
-        assertTrue(isPalindrome("abba"))
-        assertFalse(isPalindrome("ab"))
-        assertTrue(isPalindrome(""))
-        assertTrue(isPalindrome("a"))
+    fun run() {
+        case { assertTrue(isPalindrome("aba")) }
+        case { assertTrue(isPalindrome("abba")) }
+        case { assertFalse(isPalindrome("ab")) }
+        case { assertTrue(isPalindrome("")) }
+        case { assertTrue(isPalindrome("a")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -125,7 +196,7 @@ private object L0_4_v0 { // reference
     fun binarySearch(nums: IntArray, target: Int): Int {
         var lo = 0
         var hi = nums.size - 1
-        while (lo <= hi) {
+        while (lo <= hi) { tick()
             val mid = lo + (hi - lo) / 2
             when {
                 nums[mid] == target -> return mid
@@ -136,11 +207,17 @@ private object L0_4_v0 { // reference
         return -1
     }
 
-    fun examples() {
-        assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5))
-        assertEquals(-1, binarySearch(intArrayOf(1, 3), 0))
-        assertEquals(0, binarySearch(intArrayOf(5), 5))
-        assertEquals(-1, binarySearch(intArrayOf(), 1))
+    fun run() {
+        case { assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(1, 3), 0)) }
+        case { assertEquals(0, binarySearch(intArrayOf(5), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -148,7 +225,7 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
     fun binarySearch(nums: IntArray, target: Int): Int {
         var lo = 0
         var hi = nums.size - 1
-        while (lo <= hi) {
+        while (lo <= hi) { tick()
             val mid = (lo + hi) ushr 1
             when {
                 nums[mid] == target -> return mid
@@ -159,11 +236,17 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
         return -1
     }
 
-    fun examples() {
-        assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5))
-        assertEquals(-1, binarySearch(intArrayOf(1, 3), 0))
-        assertEquals(0, binarySearch(intArrayOf(5), 5))
-        assertEquals(-1, binarySearch(intArrayOf(), 1))
+    fun run() {
+        case { assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(1, 3), 0)) }
+        case { assertEquals(0, binarySearch(intArrayOf(5), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -174,11 +257,17 @@ private object L1_1_v0 { // reference
         return false
     }
 
-    fun examples() {
-        assertFalse(hasDuplicate(intArrayOf(1, 2, 3)))
-        assertTrue(hasDuplicate(intArrayOf(1, 2, 1)))
-        assertFalse(hasDuplicate(intArrayOf()))
-        assertTrue(hasDuplicate(intArrayOf(7, 7)))
+    fun run() {
+        case { assertFalse(hasDuplicate(intArrayOf(1, 2, 3))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 1))) }
+        case { assertFalse(hasDuplicate(intArrayOf())) }
+        case { assertTrue(hasDuplicate(intArrayOf(7, 7))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -190,12 +279,18 @@ private object L1_2_v0 { // reference
         return null
     }
 
-    fun examples() {
-        assertEquals('c', firstUniqueChar("abacb"))
-        assertNull(firstUniqueChar("aabb"))
-        assertEquals('z', firstUniqueChar("z"))
-        assertNull(firstUniqueChar(""))
-        assertEquals('b', firstUniqueChar("ba"))
+    fun run() {
+        case { assertEquals('c', firstUniqueChar("abacb")) }
+        case { assertNull(firstUniqueChar("aabb")) }
+        case { assertEquals('z', firstUniqueChar("z")) }
+        case { assertNull(firstUniqueChar("")) }
+        case { assertEquals('b', firstUniqueChar("ba")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -212,12 +307,18 @@ private object L1_3_v0 { // reference
         return true
     }
 
-    fun examples() {
-        assertTrue(sameLetters("йцукен", "некуцй"))
-        assertFalse(sameLetters("ффффа", "фффа"))
-        assertFalse(sameLetters("ab", "ac"))
-        assertFalse(sameLetters("aab", "abb"))
-        assertTrue(sameLetters("", ""))
+    fun run() {
+        case { assertTrue(sameLetters("йцукен", "некуцй")) }
+        case { assertFalse(sameLetters("ффффа", "фффа")) }
+        case { assertFalse(sameLetters("ab", "ac")) }
+        case { assertFalse(sameLetters("aab", "abb")) }
+        case { assertTrue(sameLetters("", "")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -232,11 +333,17 @@ private object L1_4_v0 { // reference
         return null
     }
 
-    fun examples() {
-        assertEquals(0 to 1, twoSum(intArrayOf(2, 7, 11, 15), 9))
-        assertEquals(1 to 2, twoSum(intArrayOf(3, 2, 4), 6))
-        assertEquals(0 to 1, twoSum(intArrayOf(3, 3), 6))
-        assertNull(twoSum(intArrayOf(1, 2), 7))
+    fun run() {
+        case { assertEquals(0 to 1, twoSum(intArrayOf(2, 7, 11, 15), 9)) }
+        case { assertEquals(1 to 2, twoSum(intArrayOf(3, 2, 4), 6)) }
+        case { assertEquals(0 to 1, twoSum(intArrayOf(3, 3), 6)) }
+        case { assertNull(twoSum(intArrayOf(1, 2), 7)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
@@ -260,77 +367,109 @@ private object L1_5_v0 { // reference
         return ChampionResult(champions, maxSteps)
     }
 
-    fun examples() {
-        assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 50)), listOf(StepEntry(1, 100), StepEntry(2, 50)))))
-        assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 500)), listOf(StepEntry(1, 100)))))
-        findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 100)), listOf(StepEntry(2, 50), StepEntry(1, 50)))).let { assertEquals(listOf(1, 2), it.userIds.sorted()); assertEquals(150, it.steps) }
-        assertEquals(ChampionResult(emptyList(), 0), findChampions(emptyList()))
+    fun run() {
+        case { assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 50)), listOf(StepEntry(1, 100), StepEntry(2, 50))))) }
+        case { assertEquals(ChampionResult(listOf(1), 200), findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 500)), listOf(StepEntry(1, 100))))) }
+        case { findChampions(listOf(listOf(StepEntry(1, 100), StepEntry(2, 100)), listOf(StepEntry(2, 50), StepEntry(1, 50)))).let { assertEquals(listOf(1, 2), it.userIds.sorted()); assertEquals(150, it.steps) } }
+        case { assertEquals(ChampionResult(emptyList(), 0), findChampions(emptyList())) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
     }
 }
 
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
-        L0_1_v0.examples()
+        Probe.reset()
+        L0_1_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_1_v1() {
-        L0_1_v1.examples()
+        Probe.reset()
+        L0_1_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_2_v0() {
-        L0_2_v0.examples()
+        Probe.reset()
+        L0_2_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_2_v1() {
-        L0_2_v1.examples()
+        Probe.reset()
+        L0_2_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_3_v0() {
-        L0_3_v0.examples()
+        Probe.reset()
+        L0_3_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_3_v1() {
-        L0_3_v1.examples()
+        Probe.reset()
+        L0_3_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_4_v0() {
-        L0_4_v0.examples()
+        Probe.reset()
+        L0_4_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l0_4_v1() {
-        L0_4_v1.examples()
+        Probe.reset()
+        L0_4_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l1_1_v0() {
-        L1_1_v0.examples()
+        Probe.reset()
+        L1_1_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l1_2_v0() {
-        L1_2_v0.examples()
+        Probe.reset()
+        L1_2_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l1_3_v0() {
-        L1_3_v0.examples()
+        Probe.reset()
+        L1_3_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l1_4_v0() {
-        L1_4_v0.examples()
+        Probe.reset()
+        L1_4_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 
     @Test
     fun l1_5_v0() {
-        L1_5_v0.examples()
+        Probe.reset()
+        L1_5_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
     }
 }
