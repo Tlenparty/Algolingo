@@ -13,12 +13,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.kb.Note
 import com.tlenparty.algolingo.kb.SearchHit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 @Composable
 fun KbListScreen(
@@ -28,7 +31,14 @@ fun KbListScreen(
     search: (String) -> List<SearchHit> = { emptyList() },
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val hits = remember(query, notes) { search(query) }
+    // Full-text scan of every note is too slow for the UI thread (monkey ANR in 07.1-06): debounce, then
+    // search on Default; a new query cancels the pending one. null = still searching.
+    val hits by produceState<List<SearchHit>?>(null, query, notes) {
+        value = null
+        if (query.isBlank()) return@produceState
+        delay(150)
+        value = withContext(Dispatchers.Default) { search(query) }
+    }
     // Open section names; empty = all collapsed. List<String> is saveable on Android and iOS.
     var open by rememberSaveable { mutableStateOf(emptyList<String>()) }
     LazyColumn(modifier) {
@@ -41,8 +51,9 @@ fun KbListScreen(
             )
         }
         if (query.isNotBlank()) {
-            if (hits.isEmpty()) item(key = "none") { Text("Ничего не найдено", Modifier.padding(AlgoTheme.spacing.md)) }
-            items(hits, key = { "s-" + it.note.id }) { h ->
+            val found = hits.orEmpty()
+            if (hits?.isEmpty() == true) item(key = "none") { Text("Ничего не найдено", Modifier.padding(AlgoTheme.spacing.md)) }
+            items(found, key = { "s-" + it.note.id }) { h ->
                 Column(Modifier.fillMaxWidth().clickable { onOpen(h.note) }.padding(AlgoTheme.spacing.md, AlgoTheme.spacing.smd)) {
                     Text(h.note.title)
                     if (h.snippet.isNotEmpty()) {
