@@ -386,7 +386,14 @@ class WrongPrograms(unittest.TestCase):
         return [(gen_content.build_lesson(sc, NOTE_LINES), sc)]
 
     def entries(self):
-        return json.loads(gen_content.render_wrong_json(self.items()))
+        return [x for x in json.loads(gen_content.render_wrong_json(self.items())) if not x.get("control")]
+
+    def test_one_control_per_lesson_is_the_reference(self):
+        controls = [x for x in json.loads(gen_content.render_wrong_json(self.items())) if x.get("control")]
+        self.assertEqual([(c["id"], c["claims"]) for c in controls], [("l0.4.control", [])])
+        lesson = self.items()[0][0]
+        self.assertIn(gen_content.instrument(lesson["solution"]["code"], "x").split("\n")[0], controls[0]["source"])
+        self.assertIn("fun kinds(): String", controls[0]["source"])
 
     def test_one_program_per_unique_pair(self):
         e = self.entries()

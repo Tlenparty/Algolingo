@@ -10,7 +10,8 @@ Inputs: the bundled note 05 (files/kb/n07ed966c.md, refreshed by sync_notes.py,
 never the vault) and content/authoring/<id>.md. Outputs: files/content/index.json,
 files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt (reference/ok/
 acceptable variants, JVM + Native) and androidHostTest/resources/wrong_variants.json (one full
-program per wrong (hole, chip) pair, classified on JVM by WrongChipsTest).
+program per wrong (hole, chip) pair plus one "control" reference per lesson, classified on JVM by
+WrongChipsTest).
 Any validation error (G1-G11) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
 
 Sidecar grammar (content/authoring/l0.N.md):
@@ -606,13 +607,20 @@ def render_kt(items):
 
 def render_wrong_json(items):
     """Full program per wrong (hole, chip) pair for the JVM classification test (WrongChipsTest)."""
+    def src(label, code, sc):
+        return (HEADER + "import kotlin.test.*\n\n" + prelude() + "\n"
+                + render_object("V", label, code, sc["top"]["examples"], sc["top"].get("checks"), True))
+
     out = []
     for lesson, sc in items:
+        # control: the reference through the same harness must compile and run clean, so a broken
+        # harness/classpath for this lesson fails loudly instead of "proving" every [compile] claim
+        cid = lesson["id"] + ".control"
+        out.append({"id": cid, "ids": [cid], "lesson": lesson["id"], "label": "reference (control)",
+                    "claims": [], "control": True, "source": src("reference (control)", lesson["solution"]["code"], sc)})
         for code, e in wrong_programs(lesson, sc):
-            src = (HEADER + "import kotlin.test.*\n\n" + prelude() + "\n"
-                   + render_object("V", e["label"], code, sc["top"]["examples"], sc["top"].get("checks"), True))
             out.append({"id": e["id"], "ids": e["ids"], "lesson": e["lesson"], "label": e["label"],
-                        "claims": e["claims"], "source": src})
+                        "claims": e["claims"], "source": src(e["label"], code, sc)})
     return dump(out)
 
 
