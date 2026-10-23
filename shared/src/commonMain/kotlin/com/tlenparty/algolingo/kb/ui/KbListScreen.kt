@@ -32,12 +32,15 @@ fun KbListScreen(
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     // Full-text scan of every note is too slow for the UI thread (monkey ANR in 07.1-06): debounce, then
-    // search on Default; a new query cancels the pending one. null = still searching.
-    val hits by produceState<List<SearchHit>?>(null, query, notes) {
-        value = null
-        if (query.isBlank()) return@produceState
+    // search on Default; a new query cancels the pending one. Value = (query, hits) of the last finished
+    // search, kept while the next one runs so typing does not blank the list; null = nothing searched yet.
+    val result by produceState<Pair<String, List<SearchHit>>?>(null, query, notes) {
+        if (query.isBlank()) {
+            value = null
+            return@produceState
+        }
         delay(150)
-        value = withContext(Dispatchers.Default) { search(query) }
+        value = query to withContext(Dispatchers.Default) { search(query) }
     }
     // Open section names; empty = all collapsed. List<String> is saveable on Android and iOS.
     var open by rememberSaveable { mutableStateOf(emptyList<String>()) }
@@ -51,8 +54,9 @@ fun KbListScreen(
             )
         }
         if (query.isNotBlank()) {
-            val found = hits.orEmpty()
-            if (hits?.isEmpty() == true) item(key = "none") { Text("Ничего не найдено", Modifier.padding(AlgoTheme.spacing.md)) }
+            val found = result?.second.orEmpty()
+            // only a finished search for exactly this query may say "nothing found"
+            if (result?.first == query && found.isEmpty()) item(key = "none") { Text("Ничего не найдено", Modifier.padding(AlgoTheme.spacing.md)) }
             items(found, key = { "s-" + it.note.id }) { h ->
                 Column(Modifier.fillMaxWidth().clickable { onOpen(h.note) }.padding(AlgoTheme.spacing.md, AlgoTheme.spacing.smd)) {
                     Text(h.note.title)
