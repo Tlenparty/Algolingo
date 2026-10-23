@@ -103,6 +103,7 @@ data class WrongAt(val exId: String, val hole: Int, val text: String)
 private fun ComposeUiTest.playLesson(lesson: Lesson, wrongAt: WrongAt? = null): LessonState {
     var s = LessonReducer.start(lesson, 0)
     var wrongPlayed = false
+    var wrongSeen = false
     var step = 0
     while (true) {
         val exId = s.queue.firstOrNull()
@@ -132,7 +133,9 @@ private fun ComposeUiTest.playLesson(lesson: Lesson, wrongAt: WrongAt? = null): 
                 onAllNodes(hasText(m.title)).onFirst().assertIsDisplayed()
                 if (exId != wrongAt?.exId && p.check.verdict == Verdict.Wrong) fail("$where: ok[0] chips gave ❌ (${m.wrong.map { it.chip }})")
                 if (wrongAt != null && exId == wrongAt.exId) {
+                    if (!wrongPlayed) fail("$where: feedback before the wrong chip was played")
                     if (p.check.verdict == Verdict.Wrong) {
+                        wrongSeen = true
                         assertEquals("❌ Не совсем", m.title, where)
                         // richText strips the markup; match a plain prefix of the reason.
                         val reason = m.wrong.first().text.replace("`", "").replace("**", "").takeWhile { it !in "*=[" }.take(40).trim()
@@ -142,6 +145,8 @@ private fun ComposeUiTest.playLesson(lesson: Lesson, wrongAt: WrongAt? = null): 
                         waitFor(hasContentDescription("Дырка ${wrongAt.hole + 1}:", substring = true) and
                             hasContentDescription(": ошибка", substring = true), "$where: wrong hole")
                     } else {
+                        // the first check of this exercise had the wrong chip: ✅ there means it was accepted
+                        assertTrue(wrongSeen, "$where: wrong chip '${wrongAt.text}' in hole ${wrongAt.hole + 1} was accepted")
                         assertEquals("✅ Отлично!", m.title, where)
                         return s
                     }
