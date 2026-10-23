@@ -65,10 +65,17 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.compose.uiTest)
         }
         // in-process compiler for WrongChipsTest (JVM only); `androidHostTest.dependencies {}` does not resolve under AGP 9
         getByName("androidHostTest").dependencies {
             implementation(libs.kotlin.compiler.embeddable)
+        }
+        // UI e2e smoke (E2eSmokeTest) on a device/emulator
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.androidx.compose.uiTestJunit4)
+            implementation(libs.androidx.test.runner)
+            implementation(libs.androidx.espresso.core) // ui-test-junit4 pulls an older espresso without InputManager support on new API levels
         }
     }
 }
