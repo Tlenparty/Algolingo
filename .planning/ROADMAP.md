@@ -237,3 +237,19 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 
 - [x] 07-03-PLAN.md — Autonomous Android + iOS sim walkthrough of the full KB; KB-07 Complete (KB-07, KB-02, KB-05, KB-06)
+
+### Phase 07.1: Content correctness & crash safety: wrong-chip proofs, edge cases, fuzz no-crash, safe KB load, fix l1.2/l1.3 (INSERTED)
+
+**Goal:** Каждая оценка облачка в уроках доказана тестом, а приложение не падает ни на одном уроке и ни при сбое загрузки контента (закрывает GAP-1..5 из v1.0-MILESTONE-AUDIT.md)
+**Requirements**: EXER-07, EXER-08, CONT-03, CONT-04, CONT-05, LESS-05, KB-01, KB-07, PLAT-03, CNV2-01 (усиливает)
+**Depends on:** Phase 7
+**Success Criteria** (what must be TRUE):
+  1. Для каждого неверного облачка каждого урока есть тест: вариант с ним не компилируется или падает на примерах; причина в `wrongWhy` не противоречит реальной ошибке (GAP-1)
+  2. Эталон и все ok/acceptable-варианты каждого урока проходят обязательные граничные случаи (пустой вход, один элемент, дубликаты и т.п. по типу задачи) на JVM и Native (GAP-2)
+  3. Фазз-тест по всем урокам: любые последовательности тапов, «Проверить», подсказок и повторов не бросают исключений; monkey-прогон на Android без FATAL EXCEPTION (GAP-3)
+  4. Битый или отсутствующий файл базы знаний не роняет приложение: уроки работают, KB показывает мягкую ошибку; KB не грузится целиком на старте (GAP-4)
+  5. l1.2 e3 причины и l1.3 подсказка исправлены по 06-REVIEW WR-01/WR-02, `gen_content.py --check` зелёный (GAP-5)
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 07.1 to break down)

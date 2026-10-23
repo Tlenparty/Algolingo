@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: milestone_complete
-stopped_at: Milestone complete (Phase 07 was final phase)
-last_updated: 2026-10-22T15:16:29.147Z
-last_activity: 2026-10-22
+status: Ready to discuss
+stopped_at: Completed 07-03-PLAN.md; phase 7 plans 3/3
+last_updated: "2026-10-23T07:05:53.321Z"
+last_activity: 2026-10-23
 progress:
-  total_phases: 8
+  total_phases: 9
   completed_phases: 8
   total_plans: 35
   completed_plans: 35
-  percent: 100
+  percent: 89
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-21)
 
 **Core value:** Быстро, с телефона, без клавиатуры прорешать алгоритмическую задачу: собрать решение из облачков, нажать «Проверить» и сразу понять, где грабли.
-**Current focus:** Milestone complete
+**Current focus:** Phase 07.1 — content correctness & crash safety (v1.0 audit gaps)
 
 ## Current Position
 
-Phase: 07
+Phase: 07.1
 Plan: Not started
-Status: Milestone complete
-Last activity: 2026-10-22
+Status: Ready to discuss
+Last activity: 2026-10-23
 
 Progress: [██████████] 100%
 
@@ -112,6 +112,7 @@ Recent decisions affecting current work:
 
 - Phase 6 added: Level 1 Content — Hash Map / Set (уроки 1.1–1.5 из заметки 05)
 - Phase 7 added: Full Interview Knowledge Base (вся подготовка из хранилища «Матрицы», ~217 заметок)
+- Phase 07.1 inserted after Phase 7: Content correctness & crash safety — closes v1.0 audit GAP-1..5 (URGENT)
 
 ### Pending Todos
 
