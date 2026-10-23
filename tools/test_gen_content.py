@@ -62,7 +62,7 @@ class NoteParserGolden(unittest.TestCase):
 
     def test_0_1(self):
         s = self.sec("0.1 Сумма и максимум массива")
-        self.assertEqual(s["statement"], "Верни сумму всех чисел массива и (отдельно) максимальный элемент.")
+        self.assertEqual(s["statement"], "Верни сумму всех чисел массива и (отдельно) максимальный элемент. Массив непустой.")
         self.assertEqual(s["trains"], "базовый линейный проход с аккумулятором")
         self.assertEqual(s["targetTimeSec"], 60)
         self.assertEqual((s["time"], s["space"]), ("O(n)", "O(1)"))

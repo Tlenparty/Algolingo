@@ -83,8 +83,6 @@ private object L0_1_v0 { // reference
         case { assertEquals(3 to 2, sumAndMax(intArrayOf(1, 2))) }
         case { assertEquals(4 to 3, sumAndMax(intArrayOf(3, 1))) }
         case { assertEquals(1 to 1, sumAndMax(intArrayOf(1))) }
-        // F1: пустой массив, контракт пока не задан; проверяем только, что не падает
-        case { sumAndMax(intArrayOf()) }
     }
 }
 
@@ -127,8 +125,6 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
         case { assertEquals(3 to 2, sumAndMax(intArrayOf(1, 2))) }
         case { assertEquals(4 to 3, sumAndMax(intArrayOf(3, 1))) }
         case { assertEquals(1 to 1, sumAndMax(intArrayOf(1))) }
-        // F1: пустой массив, контракт пока не задан; проверяем только, что не падает
-        case { sumAndMax(intArrayOf()) }
     }
 }
 
@@ -376,10 +372,186 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
     }
 }
 
+private object L0_4_v2 { // l0.4.e2 hole 2 = (lo + hi) / 2 (acceptable)
+    fun binarySearch(nums: IntArray, target: Int): Int {
+        var lo = 0
+        var hi = nums.size - 1
+        while (lo <= hi) { tick()
+            val mid = (lo + hi) / 2
+            when {
+                nums[mid] == target -> return mid
+                nums[mid] < target  -> lo = mid + 1
+                else                -> hi = mid - 1
+            }
+        }
+        return -1
+    }
+
+    fun run() {
+        case { assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(1, 3), 0)) }
+        case { assertEquals(0, binarySearch(intArrayOf(5), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: a.contains(t) + «по найденному индексу лежит t» (при дублях индекс не единственный)
+        // все отсортированные массивы длины 0..5 из {0..3}, target -1..4
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 }.also { it.sort() }
+                for (t in -1..4) {
+                    val r = binarySearch(a, t)
+                    if (a.contains(t)) assertTrue(r in a.indices && a[r] == t) else assertEquals(-1, r)
+                }
+            }
+        }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 4)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 6)) }
+        case { assertEquals(0, binarySearch(intArrayOf(-7, -3, 0, 4), -7)) } // первый
+        case { assertEquals(3, binarySearch(intArrayOf(-7, -3, 0, 4), 4)) } // последний
+        case { assertEquals(-1, binarySearch(intArrayOf(-7, -3, 0, 4), -5)) }
+        case { assertEquals(2, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MAX_VALUE)) }
+        case { assertEquals(0, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MIN_VALUE)) }
+        // контрпримеры из причин
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3), 3)) }
+        case { assertEquals(0, binarySearch(intArrayOf(1, 3), 1)) }
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3, 5, 7, 9), 3)) }
+    }
+}
+
+private object L0_4_v3 { // l0.4.e2 hole 2 = hi - lo / 2 (acceptable)
+    fun binarySearch(nums: IntArray, target: Int): Int {
+        var lo = 0
+        var hi = nums.size - 1
+        while (lo <= hi) { tick()
+            val mid = hi - lo / 2
+            when {
+                nums[mid] == target -> return mid
+                nums[mid] < target  -> lo = mid + 1
+                else                -> hi = mid - 1
+            }
+        }
+        return -1
+    }
+
+    fun run() {
+        case { assertEquals(2, binarySearch(intArrayOf(1, 3, 5, 7), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(1, 3), 0)) }
+        case { assertEquals(0, binarySearch(intArrayOf(5), 5)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(), 1)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: a.contains(t) + «по найденному индексу лежит t» (при дублях индекс не единственный)
+        // все отсортированные массивы длины 0..5 из {0..3}, target -1..4
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 }.also { it.sort() }
+                for (t in -1..4) {
+                    val r = binarySearch(a, t)
+                    if (a.contains(t)) assertTrue(r in a.indices && a[r] == t) else assertEquals(-1, r)
+                }
+            }
+        }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 4)) }
+        case { assertEquals(-1, binarySearch(intArrayOf(5), 6)) }
+        case { assertEquals(0, binarySearch(intArrayOf(-7, -3, 0, 4), -7)) } // первый
+        case { assertEquals(3, binarySearch(intArrayOf(-7, -3, 0, 4), 4)) } // последний
+        case { assertEquals(-1, binarySearch(intArrayOf(-7, -3, 0, 4), -5)) }
+        case { assertEquals(2, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MAX_VALUE)) }
+        case { assertEquals(0, binarySearch(intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE), Int.MIN_VALUE)) }
+        // контрпримеры из причин
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3), 3)) }
+        case { assertEquals(0, binarySearch(intArrayOf(1, 3), 1)) }
+        case { assertEquals(1, binarySearch(intArrayOf(1, 3, 5, 7, 9), 3)) }
+    }
+}
+
 private object L1_1_v0 { // reference
     fun hasDuplicate(nums: IntArray): Boolean {
         val seen = HashSet<Int>()
         for (x in nums) if (!seen.add(x)) return true
+        return false
+    }
+
+    fun run() {
+        case { assertFalse(hasDuplicate(intArrayOf(1, 2, 3))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 1))) }
+        case { assertFalse(hasDuplicate(intArrayOf())) }
+        case { assertTrue(hasDuplicate(intArrayOf(7, 7))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: toSet().size != size; все массивы длины 0..5 из {-1, 0, 1, 2}
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 - 1 }
+                assertEquals(a.toSet().size != a.size, hasDuplicate(a))
+            }
+        }
+        case { assertFalse(hasDuplicate(intArrayOf(5))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 3, 1))) } // дубль первого и последнего
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 3, 3))) } // дубль в самом конце
+        case { assertFalse(hasDuplicate(intArrayOf(Int.MAX_VALUE, Int.MIN_VALUE, 0))) }
+        case { assertTrue(hasDuplicate(intArrayOf(Int.MAX_VALUE, Int.MAX_VALUE))) }
+        // контрпримеры из причин
+        case { assertFalse(hasDuplicate(intArrayOf(1, 2))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 1))) }
+        case { assertFalse(hasDuplicate(intArrayOf(1))) }
+    }
+}
+
+private object L1_1_v1 { // l1.1.e3 hole 3 = !seen.add(x) (acceptable)
+    fun hasDuplicate(nums: IntArray): Boolean {
+        val seen = HashSet<Int>()
+        for (x in nums) if (!seen.add(x)) return !seen.add(x)
+        return false
+    }
+
+    fun run() {
+        case { assertFalse(hasDuplicate(intArrayOf(1, 2, 3))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 1))) }
+        case { assertFalse(hasDuplicate(intArrayOf())) }
+        case { assertTrue(hasDuplicate(intArrayOf(7, 7))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: toSet().size != size; все массивы длины 0..5 из {-1, 0, 1, 2}
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 - 1 }
+                assertEquals(a.toSet().size != a.size, hasDuplicate(a))
+            }
+        }
+        case { assertFalse(hasDuplicate(intArrayOf(5))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 3, 1))) } // дубль первого и последнего
+        case { assertTrue(hasDuplicate(intArrayOf(1, 2, 3, 3))) } // дубль в самом конце
+        case { assertFalse(hasDuplicate(intArrayOf(Int.MAX_VALUE, Int.MIN_VALUE, 0))) }
+        case { assertTrue(hasDuplicate(intArrayOf(Int.MAX_VALUE, Int.MAX_VALUE))) }
+        // контрпримеры из причин
+        case { assertFalse(hasDuplicate(intArrayOf(1, 2))) }
+        case { assertTrue(hasDuplicate(intArrayOf(1, 1))) }
+        case { assertFalse(hasDuplicate(intArrayOf(1))) }
+    }
+}
+
+private object L1_1_v2 { // l1.1.e3 hole 3 = seen.contains(x) (acceptable)
+    fun hasDuplicate(nums: IntArray): Boolean {
+        val seen = HashSet<Int>()
+        for (x in nums) if (!seen.add(x)) return seen.contains(x)
         return false
     }
 
@@ -598,7 +770,6 @@ private object L1_5_v0 { // reference
 }
 
 class ReferenceSolutionsTest {
-    @Ignore
     @Test
     fun l0_1_v0() {
         Probe.reset()
@@ -656,9 +827,37 @@ class ReferenceSolutionsTest {
     }
 
     @Test
+    fun l0_4_v2() {
+        Probe.reset()
+        L0_4_v2.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l0_4_v3() {
+        Probe.reset()
+        L0_4_v3.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
     fun l1_1_v0() {
         Probe.reset()
         L1_1_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l1_1_v1() {
+        Probe.reset()
+        L1_1_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l1_1_v2() {
+        Probe.reset()
+        L1_1_v2.run()
         assertEquals(emptySet<String>(), Probe.kinds)
     }
 
