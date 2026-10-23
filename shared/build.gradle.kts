@@ -66,6 +66,10 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
         }
+        // in-process compiler for WrongChipsTest (JVM only); `androidHostTest.dependencies {}` does not resolve under AGP 9
+        getByName("androidHostTest").dependencies {
+            implementation(libs.kotlin.compiler.embeddable)
+        }
     }
 }
 
