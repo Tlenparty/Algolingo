@@ -1,17 +1,41 @@
 package com.tlenparty.algolingo.kb
 
 import algolingo.shared.generated.resources.Res
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
+import kotlin.coroutines.cancellation.CancellationException
 
-class KbRepository {
+class KbRepository(
+    private val read: suspend (String) -> ByteArray = { Res.readBytes(it) },
+) {
     var notes: List<Note> = emptyList()
         private set
+    private var loaded = false
+    private val mutex = Mutex()
 
-    suspend fun load() {
-        val index = Json { ignoreUnknownKeys = true }
-            .decodeFromString<List<KbEntry>>(Res.readBytes("files/kb/index.json").decodeToString())
-        notes = index.map {
-            Note(it.id, it.title, it.section, Res.readBytes("files/kb/${it.file}").decodeToString())
+    /** Loads once; a failure (missing/corrupt index, no readable notes) is not cached, so the next open retries. */
+    suspend fun load(): Result<List<Note>> = mutex.withLock {
+        if (loaded) return@withLock Result.success(notes)
+        try {
+            val index = json.decodeFromString<List<KbEntry>>(read("files/kb/index.json").decodeToString())
+            val loadedNotes = index.mapNotNull {
+                try {
+                    Note(it.id, it.title, it.section, read("files/kb/${it.file}").decodeToString())
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    null // one broken note must not hide the rest
+                }
+            }
+            if (loadedNotes.isEmpty()) return@withLock Result.failure(IllegalStateException("kb empty"))
+            notes = loadedNotes
+            loaded = true
+            Result.success(loadedNotes)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
@@ -22,6 +46,8 @@ class KbRepository {
 
     fun search(q: String): List<SearchHit> = searchNotes(notes, q)
 }
+
+private val json = Json { ignoreUnknownKeys = true }
 
 data class SearchHit(val note: Note, val snippet: String)
 
