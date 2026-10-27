@@ -126,6 +126,12 @@ None yet.
 - Phase 1 и Phase 5 требуют `--research-phase` (пины версий / визард; синтаксис сайдкаров и golden-тест парсера)
 - Phase 3: перед началом нужен UI-SPEC / style sketch (`/gsd:ui-phase`)
 
+### Quick Tasks Completed
+
+| # | Description | Date | Directory |
+|---|-------------|------|-----------|
+| 261027-e0g | Напоминания «пора потренироваться» + иконка | 2026-10-27 | [261027-e0g](./quick/261027-e0g-practice-reminders-app-icon/) |
+
 ## Deferred Items
 
 | Category | Item | Status | Deferred At |

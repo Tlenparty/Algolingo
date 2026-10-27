@@ -1,0 +1,17 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Themed-icon layer and notification small icon: braces + eyes silhouette. -->
+    <path
+        android:pathData="M41,30 Q33,30 33,38 L33,47 Q33,54 26,54 Q33,54 33,61 L33,70 Q33,78 41,78 M67,30 Q75,30 75,38 L75,47 Q75,54 82,54 Q75,54 75,61 L75,70 Q75,78 67,78"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M37.5,50a8,8 0,1 0,16 0a8,8 0,1 0,-16 0zM54.5,50a8,8 0,1 0,16 0a8,8 0,1 0,-16 0zM43.5,51a4,4 0,1 0,8 0a4,4 0,1 0,-8 0zM60.5,51a4,4 0,1 0,8 0a4,4 0,1 0,-8 0z" />
+</vector>
