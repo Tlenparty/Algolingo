@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 07.1 context gathered
-last_updated: "2026-10-28T14:33:42.900Z"
-last_activity: 2026-10-28 -- Phase 12 execution started
+last_updated: "2026-10-28T14:56:38.084Z"
+last_activity: 2026-10-28
 progress:
   total_phases: 14
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 55
-  completed_plans: 52
-  percent: 79
+  completed_plans: 54
+  percent: 86
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 ## Current Position
 
 Phase: 12 (Client-Server Basics Lessons) — EXECUTING
-Plan: 1 of 2
-Status: Executing Phase 12
-Last activity: 2026-10-28 -- Phase 12 execution started
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-10-28
 
-Progress: [█████████░] 89%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
@@ -81,6 +81,7 @@ Progress: [█████████░] 89%
 | Phase 07.1 P03 | 15 min | 3 tasks | 7 files |
 | Phase 08 P01 | 21 min | 3 tasks | 17 files |
 | Phase 08 P02 | 25min | 2 tasks | 6 files |
+| Phase 12 P01 | 45min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,7 @@ Recent decisions affecting current work:
 - [Phase 07.1]: 07.1-03: wrong-chip verdicts JVM-only via embedded compiler; 13 mismatches parked in content/authoring/pending.txt, stale pending fails the test
 - [Phase 08]: порядок первых вопросов в sd0.1 свободный (ok = все три ответа)
 - [Phase 08]: why Memcached в sd1.2 — нет скриптов/структур данных (incr атомарен)
+- [Phase 12]: 12-01: полная матрица wrongWhy; WebSocket (sd0.6 котировки) и PostgreSQL (sd0.3 чат) — acceptable
 
 ### Roadmap Evolution
 
@@ -152,6 +154,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-28T14:13:41.899Z
+Last session: 2026-10-28T14:56:34.508Z
 Stopped at: Phase 07.1 context gathered
 Resume file: None
