@@ -20,7 +20,7 @@
 - [x] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах (completed 2026-10-22)
 - [x] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам (completed 2026-10-22)
 - [x] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2 (completed 2026-10-28)
-- [ ] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python
+- [x] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python (completed 2026-10-28)
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
 - [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
 - [ ] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ»
@@ -309,7 +309,7 @@ Plans:
 **Goal:** Пользователь переключает «Kotlin | Python» на Home, и пилотный урок l1.4 Two Sum собирается из Python-облачков; прогресс общий, выбор языка сохраняется (спека docs/superpowers/specs/2026-10-28-python-language-design.md, компоненты 1–7)
 **Requirements**: TBD
 **Depends on:** Phase 8
-**Plans:** 5/6 plans executed
+**Plans:** 6/6 plans complete
 
 Plans:
 **Wave 1**
@@ -328,7 +328,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 09-06-PLAN.md — E2E-сценарий и прогон на Android/iOS
+- [x] 09-06-PLAN.md — E2E-сценарий и прогон на Android/iOS
 
 ### Phase 10: Python Content
 
