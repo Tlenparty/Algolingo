@@ -124,6 +124,9 @@ Recent decisions affecting current work:
 - Phase 9 added: Language Switch + Python Pilot (спека docs/superpowers/specs/2026-10-28-python-language-design.md)
 - Phase 10 added: Python Content — остальные 8 уроков на Python
 
+- Phase 11 added: Client-Server Basics Notes (12 заметок «Основы» в Obsidian → KB)
+- Phase 12 added: Client-Server Basics Lessons (SD-уроки на закрепление)
+
 ### Pending Todos
 
 None yet.

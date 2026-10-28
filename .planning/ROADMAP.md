@@ -22,6 +22,8 @@
 - [x] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2 (completed 2026-10-28)
 - [ ] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
+- [ ] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний
+- [ ] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ»
 
 ## Phase Details
 
@@ -338,3 +340,31 @@ Plans:
 Plans:
 
 - [ ] TBD (run /gsd-plan-phase 10 to break down)
+
+### Phase 11: Client-Server Basics Notes
+
+**Goal:** Мобильный разработчик понимает бэкенд-кирпичи и клиент-серверное взаимодействие: 12 заметок «Основы» в Obsidian `SystemDesign/Основы/` синхронизированы в «Базу знаний» (раздел System Design)
+**Mode:** mvp
+**Requirements**: SD-05
+**Success Criteria** (what must be TRUE):
+
+  1. В хранилище `SystemDesign/Основы/` лежат 12 заметок `01`–`12`: путь запроса, HTTP, HTTPS/TLS/SSL, авторизация, nginx/LB/Gateway, Redis, Kafka и очереди, БД, Docker/K8s, real-time, файлы/CDN, наблюдаемость
+  2. Каждая заметка: «зачем», аналогия из Android-мира, как применить в SD-задаче, грабли, вопросы с собеса под спойлером `[!question]-`; ссылки `[[…]]` между заметками и на SD-уроки/существующие SD-заметки резолвятся
+  3. `СОДЕРЖАНИЕ.md` ссылается на все 12 заметок в разделе System Design
+  4. `tools/sync_notes.py` переносит заметки в `files/kb/`; заметки открываются в приложении на Android и iOS-симуляторе; KB-тесты зелёные
+**Depends on:** Phase 8
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 11 to break down)
+
+### Phase 12: Client-Server Basics Lessons
+
+**Goal:** Теория из Phase 11 закрепляется SD-уроками с облачками на вкладке System Design (путь запроса, TLS-рукопожатие, компонент → зачем и др.)
+**Mode:** mvp
+**Requirements**: SD-06
+**Depends on:** Phase 11
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 12 to break down)
