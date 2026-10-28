@@ -7,6 +7,26 @@
       "caption": "SD0.1 Как вести интервью"
     },
     {
+      "id": "sd0.3",
+      "title": "Строительные блоки",
+      "caption": "SD0.3 Строительные блоки"
+    },
+    {
+      "id": "sd0.4",
+      "title": "Путь запроса",
+      "caption": "SD0.4 Путь запроса"
+    },
+    {
+      "id": "sd0.5",
+      "title": "HTTPS и TLS",
+      "caption": "SD0.5 HTTPS и TLS"
+    },
+    {
+      "id": "sd0.6",
+      "title": "Real-time",
+      "caption": "SD0.6 Real-time"
+    },
+    {
       "id": "sd1.1",
       "title": "URL shortener",
       "caption": "SD1.1 URL shortener"
