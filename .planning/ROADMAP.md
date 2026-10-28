@@ -309,7 +309,7 @@ Plans:
 **Goal:** Пользователь переключает «Kotlin | Python» на Home, и пилотный урок l1.4 Two Sum собирается из Python-облачков; прогресс общий, выбор языка сохраняется (спека docs/superpowers/specs/2026-10-28-python-language-design.md, компоненты 1–7)
 **Requirements**: TBD
 **Depends on:** Phase 8
-**Plans:** 2/6 plans executed
+**Plans:** 3/6 plans executed
 
 Plans:
 **Wave 1**
@@ -319,7 +319,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 09-02-PLAN.md — Progress.lang, setLang, lessonPath по языку, фильтр каталога
+- [x] 09-02-PLAN.md — Progress.lang, setLang, lessonPath по языку, фильтр каталога
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
