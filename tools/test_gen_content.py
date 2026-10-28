@@ -451,6 +451,7 @@ class PyHarness(unittest.TestCase):
             gen_content.PY_TIMEOUT = old
 
     def g14(self, text):
+        """Render must stop with G14 (claimed kind tags not observed); returns the detail."""
         with self.assertRaises(gen_content.GenError) as cm:
             self.render(text)
         self.assertEqual(cm.exception.rule, "G14", cm.exception.detail)
@@ -480,6 +481,7 @@ class PyHarness(unittest.TestCase):
         self.assertIn("заявлено compile/wrong, на деле crash/wrong", detail)
 
     def test_g14_true_tags_pass(self):
+        """G14 accepts tags that match: real SyntaxError [compile], real NameError [crash]."""
         text = self.chip("- `x +` [compile]: не выражение: `x +`")
         text = text.replace(self.E1_TAIL, "- `y` [crash]: нет такого имени: `NameError`\n" + self.E1_TAIL, 1)
         self.assertIn(gen_content.LESSONS_PY + "/l1.4.json", self.render(text))
@@ -496,6 +498,7 @@ class PyHarness(unittest.TestCase):
         self.assertEqual(k("while True:\n    pass", timeout=1), {"hang"})
 
     def test_g14_skips_untagged_and_unclaimed(self):
+        """G14 ignores empty tags and programs without a claim; chip tags check the union."""
         e = {"claims": [{"bullet": "b", "scope": "chip", "tags": []}]}
         self.assertIsNone(gen_content.claim_mismatch([(e, {"crash"}), ({"claims": []}, {"wrong"})]))
         e2 = {"claims": [{"bullet": "c", "scope": "chip", "tags": ["wrong"]}]}
