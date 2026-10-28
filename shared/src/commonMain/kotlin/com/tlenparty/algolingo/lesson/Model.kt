@@ -92,7 +92,7 @@ fun validate(lesson: Lesson): List<String> {
     val counts = lesson.exercises.map { it.holes.size }
     if (!design && counts.zipWithNext().any { (a, b) -> b <= a }) errors += "lesson: hole counts $counts not strictly increasing"
 
-    for (ex in lesson.exercises) {
+    for ((i, ex) in lesson.exercises.withIndex()) {
         val e = ex.id
         if (!ex.id.startsWith(lesson.id + ".")) errors += "$e: id is not prefixed with '${lesson.id}.'"
         val shapeOk = ex.segments.size == ex.holes.size + 1
@@ -132,7 +132,7 @@ fun validate(lesson: Lesson): List<String> {
         if (shapeOk && ex.holes.all { it.ok.isNotEmpty() }) {
             val rebuilt = assembled(ex)
             // design: only the final step is the reference scheme; earlier steps are requirements/API/decisions
-            if ((!design || ex === lesson.exercises.last()) && rebuilt != lesson.solution.code)
+            if ((!design || i == lesson.exercises.lastIndex) && rebuilt != lesson.solution.code)
                 errors += "$e: segments + ok[0] differ from solution.code"
             if (design) rebuilt.split('\n').forEachIndexed { n, line ->
                 if (line.length > MAX_DESIGN_LINE) errors += "$e: line ${n + 1} has ${line.length} chars (max $MAX_DESIGN_LINE)"
