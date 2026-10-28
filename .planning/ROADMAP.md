@@ -276,7 +276,9 @@ Plans:
   4. Эталон SD показывает собранный шаг, на последнем — грабли и «Что спросят дальше», без секции «Сложность»
   5. sd0.1, sd1.1, sd1.2 отревьюены заказчиком и проходятся на Android и iOS-симуляторе; `gen_content.py --check` по-прежнему зелёный
 **Depends on:** Phase 7
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 8 to break down)
+- [ ] 08-01-PLAN.md — движок design + вкладка + UI + sd1.1 end-to-end (SD-01, SD-02, SD-03)
+- [ ] 08-02-PLAN.md — sd0.1 + sd1.2 + ревью заказчика (SD-04)
+- [ ] 08-03-PLAN.md — E2E smoke Android + iOS, скриншоты (SD-02, SD-04)
