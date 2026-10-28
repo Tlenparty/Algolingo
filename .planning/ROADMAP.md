@@ -24,7 +24,7 @@
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
 - [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
 - [x] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ» (completed 2026-10-28)
-- [ ] **Phase 13: SD Classics and Reliability** - 8 SD-уроков: авторизация, уведомления, лента, чат, платежи, потеря связи, несколько БД, наблюдаемость
+- [x] **Phase 13: SD Classics and Reliability** - 8 SD-уроков: авторизация, уведомления, лента, чат, платежи, потеря связи, несколько БД, наблюдаемость (completed 2026-10-28)
 
 ## Phase Details
 
@@ -417,7 +417,7 @@ Plans:
   4. smoke.sh проходит все SD-уроки на Android-эмуляторе и iOS-симуляторе (физический Pixel 7 не используется)
 
 **Depends on:** Phase 12
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -430,4 +430,4 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 13-03-PLAN.md — E2E smoke на Android-эмуляторе и iOS-симуляторе, gen_content --check, host-тесты (SD-07)
+- [x] 13-03-PLAN.md — E2E smoke на Android-эмуляторе и iOS-симуляторе, gen_content --check, host-тесты (SD-07)
