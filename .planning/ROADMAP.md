@@ -285,12 +285,12 @@ Plans:
   5. sd0.1, sd1.1, sd1.2 отревьюены заказчиком и проходятся на Android и iOS-симуляторе; `gen_content.py --check` по-прежнему зелёный
 
 **Depends on:** Phase 7
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 08-01-PLAN.md — движок design + вкладка + UI + sd1.1 end-to-end (SD-01, SD-02, SD-03)
+- [x] 08-01-PLAN.md — движок design + вкладка + UI + sd1.1 end-to-end (SD-01, SD-02, SD-03)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 

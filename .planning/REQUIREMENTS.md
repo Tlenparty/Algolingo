@@ -159,9 +159,9 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | CONT-06 | Phase 5 | Complete |
 | CNV2-01 | Phase 6; hardened + verified in Phase 07.1 | Partial (level 1) |
 | KB-07 | Phase 7; hardened + verified in Phase 07.1 | Complete |
-| SD-01 | Phase 8 | Pending |
-| SD-02 | Phase 8 | Pending |
-| SD-03 | Phase 8 | Pending |
+| SD-01 | Phase 8 | Complete |
+| SD-02 | Phase 8 | Complete |
+| SD-03 | Phase 8 | Complete |
 | SD-04 | Phase 8 | Pending |
 
 **Coverage:**
