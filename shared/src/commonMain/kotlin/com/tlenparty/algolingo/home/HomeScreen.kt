@@ -128,7 +128,8 @@ private fun PathNode(n: HomeNode, modifier: Modifier, onStart: (String) -> Unit)
                 s.primary, c.greenLedge, true, start,
                 Modifier.clearAndSetSemantics { contentDescription = "Пройден, повторить: ${n.caption}" },
             ) { Text("✅", fontSize = t.nodeEmoji) }
-            LessonStatus.Locked -> Node(
+            // ponytail: Soon reuses the Locked node; 09-04 gives it its own caption.
+            LessonStatus.Locked, LessonStatus.Soon -> Node(
                 s.outline, null, false, null,
                 Modifier.clearAndSetSemantics { contentDescription = "Закрыт: ${n.caption}" },
             ) { Text("🔒", fontSize = t.nodeEmoji) }

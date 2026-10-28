@@ -25,6 +25,7 @@ import com.tlenparty.algolingo.lesson.LessonReducer
 import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.Phase
 import com.tlenparty.algolingo.lesson.Verdict
+import com.tlenparty.algolingo.design.CodeLang
 import com.tlenparty.algolingo.lesson.loadLesson
 import com.tlenparty.algolingo.lesson.panelModel
 import com.tlenparty.algolingo.lesson.screenKey
@@ -57,7 +58,7 @@ private fun nodes(path: String = CATALOG_PATH): List<HomeNode> {
     return homeModel(catalog, Progress(), LocalDate(2000, 1, 1)).nodes
 }
 
-private fun lesson(id: String): Lesson = runBlocking { loadLesson(id) }.getOrElse { fail("lesson $id failed to load: $it") }
+private fun lesson(id: String): Lesson = runBlocking { loadLesson(id, CodeLang.Kotlin) }.getOrElse { fail("lesson $id failed to load: $it") }
 
 @OptIn(ExperimentalTestApi::class)
 private fun ComposeUiTest.click(m: SemanticsMatcher, where: String) {

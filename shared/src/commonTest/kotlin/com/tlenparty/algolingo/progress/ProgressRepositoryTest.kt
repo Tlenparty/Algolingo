@@ -2,6 +2,7 @@ package com.tlenparty.algolingo.progress
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
+import com.tlenparty.algolingo.design.CodeLang
 import com.tlenparty.algolingo.lesson.ExerciseResult
 import com.tlenparty.algolingo.lesson.Grade
 import com.tlenparty.algolingo.lesson.LessonResult
@@ -81,6 +82,30 @@ class ProgressRepositoryTest {
         }
         val repo = ProgressRepository(failing, { d }, backgroundScope)
         repo.record("l0.4", clean).join()
+        assertEquals(2, calls)
+        assertTrue(repo.saveFailed.value)
+    }
+
+    @Test
+    fun setLangPersists() = runTest {
+        val store = FakeStore()
+        ProgressRepository(store, { d }, backgroundScope).setLang(CodeLang.Python).join()
+        val p = ProgressRepository(store, { d }, backgroundScope).progress.filterNotNull().first()
+        assertEquals(CodeLang.Python, p.lang)
+    }
+
+    @Test
+    fun setLangFailedWriteIsRetriedThenFlagged() = runTest {
+        var calls = 0
+        val failing = object : DataStore<Progress> {
+            override val data: Flow<Progress> = MutableStateFlow(Progress())
+            override suspend fun updateData(transform: suspend (Progress) -> Progress): Progress {
+                calls++
+                throw okio.IOException("disk full")
+            }
+        }
+        val repo = ProgressRepository(failing, { d }, backgroundScope)
+        repo.setLang(CodeLang.Python).join()
         assertEquals(2, calls)
         assertTrue(repo.saveFailed.value)
     }

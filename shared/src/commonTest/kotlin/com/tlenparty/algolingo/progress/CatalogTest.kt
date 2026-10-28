@@ -1,8 +1,10 @@
 package com.tlenparty.algolingo.progress
 
+import com.tlenparty.algolingo.design.CodeLang
 import com.tlenparty.algolingo.progress.LessonStatus.Available
 import com.tlenparty.algolingo.progress.LessonStatus.Done
 import com.tlenparty.algolingo.progress.LessonStatus.Locked
+import com.tlenparty.algolingo.progress.LessonStatus.Soon
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
@@ -100,4 +102,55 @@ class CatalogTest {
 
     @Test
     fun parseEmptyObjectIsEmpty() = assertEquals(emptyList(), parseCatalog("{}")?.lessons)
+
+    // Language (09-02)
+
+    private val py = listOf("kotlin", "python")
+    private fun cat(vararg e: Pair<String, List<String>>) = Catalog(lessons = e.map { (id, l) -> CatalogEntry(id, id, langs = l) })
+    private val kt = listOf("kotlin")
+
+    @Test
+    fun entryWithoutLangsIsKotlinOnly() =
+        assertEquals(listOf("kotlin"), parseCatalog("""{"lessons":[{"id":"a","title":"t"}]}""")!!.lessons.single().langs)
+
+    @Test
+    fun pilotFreshPythonOnlyPythonLessonAvailable() {
+        val c = cat("l1.1" to kt, "l1.2" to kt, "l1.4" to py, "l1.5" to kt)
+        assertEquals(listOf(Soon, Soon, Available, Soon), homeModel(c, Progress(lang = CodeLang.Python), d).nodes.map { it.status })
+    }
+
+    @Test
+    fun sharedProgressUnlocksNextAvailableOnPython() {
+        // a passed on Kotlin counts; b is not on python and drops out; c follows a; d follows c (not passed).
+        val c = cat("a" to py, "b" to kt, "c" to py, "d" to py)
+        val prog = Progress(lang = CodeLang.Python, lessons = mapOf("a" to LessonProgress()))
+        assertEquals(listOf(Done, Soon, Available, Locked), homeModel(c, prog, d).nodes.map { it.status })
+    }
+
+    @Test
+    fun doneLessonWithoutPythonStaysDone() {
+        val c = cat("a" to kt, "b" to py)
+        val prog = Progress(lang = CodeLang.Python, lessons = mapOf("a" to LessonProgress()))
+        // a is Done but off the python chain, so b is the first available lesson.
+        assertEquals(listOf(Done, Available), homeModel(c, prog, d).nodes.map { it.status })
+    }
+
+    @Test
+    fun dueSkipsLessonsWithoutPythonKeepingDue() {
+        val c = cat("a" to kt, "b" to py)
+        val prog = Progress(lang = CodeLang.Python, lessons = mapOf("a" to LessonProgress(0, d), "b" to LessonProgress(0, d)))
+        assertEquals(listOf("b"), homeModel(c, prog, d).due)
+        assertEquals(listOf("a", "b"), homeModel(c, prog.copy(lang = CodeLang.Kotlin), d).due)
+        assertEquals(d, prog.lessons["a"]!!.due)
+    }
+
+    @Test
+    fun sdTabIgnoresLanguage() {
+        val sd = Catalog(lessons = listOf(CatalogEntry("sd1", "x"), CatalogEntry("sd2", "y"), CatalogEntry("sd3", "z")))
+        val prog = Progress(lang = CodeLang.Python, lessons = mapOf("sd1" to LessonProgress(0, d)))
+        val m = homeModel(sd, prog, d, lang = null)
+        assertEquals(listOf(Done, Available, Locked), m.nodes.map { it.status })
+        assertEquals(listOf("sd1"), m.due)
+        assertEquals(homeModel(sd, prog.copy(lang = CodeLang.Kotlin), d), m)
+    }
 }

@@ -1,6 +1,7 @@
 package com.tlenparty.algolingo.progress
 
 import algolingo.shared.generated.resources.Res
+import com.tlenparty.algolingo.design.CodeLang
 import kotlinx.coroutines.CancellationException
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
@@ -9,7 +10,13 @@ import kotlinx.serialization.json.Json
 
 /** files/content/index.json: lessons in unlock order. Phase 5's generator writes the same format. */
 @Serializable
-data class CatalogEntry(val id: String, val title: String, val caption: String? = null)
+data class CatalogEntry(
+    val id: String,
+    val title: String,
+    val caption: String? = null,
+    /** CodeLang ids this lesson ships in; the generator adds "python" when a py sidecar exists. */
+    val langs: List<String> = listOf("kotlin"),
+)
 
 @Serializable
 data class Catalog(val schema: Int = 1, val lessons: List<CatalogEntry> = emptyList())
@@ -37,27 +44,39 @@ suspend fun loadCatalog(path: String = CATALOG_PATH): Catalog = try {
     Catalog()
 }
 
-enum class LessonStatus { Done, Available, Locked }
+/** Soon = not shipped in the selected language yet. */
+enum class LessonStatus { Done, Available, Locked, Soon }
 
-/** Any pass (even ❌, A3) marks Done and unlocks the next id. */
-fun lessonStatuses(ids: List<String>, p: Progress): List<LessonStatus> = ids.mapIndexed { i, id ->
-    when {
-        id in p.lessons -> LessonStatus.Done
-        i == 0 || ids[i - 1] in p.lessons -> LessonStatus.Available
-        else -> LessonStatus.Locked
+/**
+ * Any pass (even ❌, A3), in any language, marks Done and unlocks the next id.
+ * Lessons not [available] in the selected language drop out of the chain: Soon unless Done, and they unlock nothing.
+ */
+fun lessonStatuses(ids: List<String>, p: Progress, available: (String) -> Boolean = { true }): List<LessonStatus> {
+    var prev: String? = null // previous available lesson
+    return ids.map { id ->
+        val avail = available(id)
+        when {
+            id in p.lessons -> LessonStatus.Done
+            !avail -> LessonStatus.Soon
+            prev == null || prev in p.lessons -> LessonStatus.Available
+            else -> LessonStatus.Locked
+        }.also { if (avail) prev = id }
     }
 }
 
-/** Catalog order; ids absent from the catalog are ignored. */
-fun dueIds(ids: List<String>, p: Progress, today: LocalDate): List<String> =
-    ids.filter { id -> p.lessons[id]?.due?.let { it <= today } == true }
+/** Catalog order; ids absent from the catalog or not [available] are ignored (their due date is untouched). */
+fun dueIds(ids: List<String>, p: Progress, today: LocalDate, available: (String) -> Boolean = { true }): List<String> =
+    ids.filter { id -> available(id) && p.lessons[id]?.due?.let { it <= today } == true }
 
 data class HomeNode(val id: String, val caption: String, val status: LessonStatus)
 
 data class HomeModel(val streak: Int, val xp: Int, val nodes: List<HomeNode>, val due: List<String>)
 
-fun homeModel(catalog: Catalog, p: Progress, today: LocalDate): HomeModel {
+/** [lang] null = no language filter (SD tab). */
+fun homeModel(catalog: Catalog, p: Progress, today: LocalDate, lang: CodeLang? = p.lang): HomeModel {
     val ids = catalog.lessons.map { it.id }
-    val nodes = catalog.lessons.zip(lessonStatuses(ids, p)) { e, s -> HomeNode(e.id, e.caption ?: (e.id.removePrefix("l") + " " + e.title), s) }
-    return HomeModel(visibleStreak(p, today), p.xp, nodes, dueIds(ids, p, today))
+    val inLang = catalog.lessons.filter { lang == null || lang.id in it.langs }.mapTo(HashSet()) { it.id }
+    val available = { id: String -> id in inLang }
+    val nodes = catalog.lessons.zip(lessonStatuses(ids, p, available)) { e, s -> HomeNode(e.id, e.caption ?: (e.id.removePrefix("l") + " " + e.title), s) }
+    return HomeModel(visibleStreak(p, today), p.xp, nodes, dueIds(ids, p, today, available))
 }

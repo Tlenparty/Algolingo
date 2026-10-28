@@ -1,5 +1,6 @@
 package com.tlenparty.algolingo.lesson
 
+import com.tlenparty.algolingo.design.CodeLang
 import java.io.File
 import kotlinx.serialization.json.Json
 import com.tlenparty.algolingo.progress.Catalog
@@ -49,6 +50,14 @@ class LessonContentTest {
         }
     }
 
+    /** Vacuous until 09-05 ships lessons/py; then every python lesson must parse + validate. */
+    @Test
+    fun everyPythonLessonParses() {
+        File("src/commonMain/composeResources/files/content/lessons/py").listFiles { f -> f.extension == "json" }?.forEach { f ->
+            assertTrue(parseLesson(f.readText()).isSuccess, "${f.name}: ${parseLesson(f.readText()).exceptionOrNull()}")
+        }
+    }
+
     @Test
     fun everySdLessonIsStrictValidDesign() {
         val dir = File("src/commonMain/composeResources/files/content")
@@ -61,7 +70,7 @@ class LessonContentTest {
         ids.forEach { id ->
             val f = File(dir, "sd/$id.json")
             assertTrue(f.isFile, "missing sd/$id.json")
-            assertEquals("files/content/sd/$id.json", lessonPath(id))
+            assertEquals("files/content/sd/$id.json", lessonPath(id, CodeLang.Python))
             val l = strict.decodeFromString<Lesson>(f.readText())
             assertEquals(LessonKind.Design, l.kind, id)
             assertEquals(emptyList(), validate(l), id)
