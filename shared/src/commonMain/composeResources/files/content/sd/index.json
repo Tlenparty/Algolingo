@@ -2,9 +2,19 @@
   "schema": 1,
   "lessons": [
     {
+      "id": "sd0.1",
+      "title": "Как вести интервью",
+      "caption": "SD0.1 Как вести интервью"
+    },
+    {
       "id": "sd1.1",
       "title": "URL shortener",
       "caption": "SD1.1 URL shortener"
+    },
+    {
+      "id": "sd1.2",
+      "title": "Rate limiter",
+      "caption": "SD1.2 Rate limiter"
     }
   ]
 }
