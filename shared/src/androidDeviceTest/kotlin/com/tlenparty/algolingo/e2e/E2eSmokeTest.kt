@@ -7,7 +7,7 @@ import java.io.File
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.minutes
 
-/** One @Test per process: AppGraph keeps the first dataDir, so all scenarios share one fresh dir. */
+/** Each @Test gets its own fresh dataDir (AppGraph keys the repository by dir); scenarios inside one test share it. */
 @OptIn(ExperimentalTestApi::class)
 class E2eSmokeTest {
     private fun freshDir(): String =
@@ -21,5 +21,11 @@ class E2eSmokeTest {
         scenarioWrongChip() // exits without saving: progress stays clean for the full run
         scenarioKb()
         scenarioSystemDesign(startXp = scenarioAllLessons())
+    }
+
+    @Test
+    fun python() = runComposeUiTest(testTimeout = 3.minutes) {
+        launchApp(freshDir())
+        scenarioPython()
     }
 }
