@@ -100,6 +100,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
+
 - [x] 03-01-PLAN.md — Fonts (Nunito + JetBrains Mono) and theme text styles
 - [x] 03-02-PLAN.md — TDD pure UI-state functions (hole visuals, panel model, XP)
 - [x] 03-03-PLAN.md — Back-handling spike and lesson plumbing
@@ -127,10 +128,12 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
+
 - [x] 04-01-PLAN.md — Package gate + deps/minSdk 26 + pure progress engine (XP, streak, 1/3/7 SRS, codec) with fake-date tests
 - [x] 04-02-PLAN.md — DataStore repository (AppGraph singleton, app-scope write on Done) + 🔥/⭐ header persisted across restarts
 - [x] 04-03-PLAN.md — index.json catalog, statuses/due/homeModel + Home path (done/available/locked) + «Повтор сегодня (N)» review without theory
 - [x] 04-04-PLAN.md — Autonomous device verification on Android emulator and iOS simulator (restart, due edit, corrupt file)
+
 **UI hint**: yes
 
 ### Phase 5: Level 0 Content & End-to-End
@@ -192,6 +195,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
   2. `index.json` перечисляет 0.1–0.4, затем 1.1–1.5; 1.1 открывается после 0.4, следующие — по порядку
   3. Заказчик отревьюил контент уровня 1 (теория, дистракторы, пояснения)
   4. Уроки 1.1–1.5 проходятся с чистой установки на Android (авиарежим) и iOS-симуляторе
+
 **Plans:** 5/5 plans complete
 
 Plans:
@@ -227,6 +231,7 @@ Plans:
   2. Разделы базы знаний строятся по папкам/темам (Алгоритмы, Kotlin/Java, Android, Compose, Корутины, Многопоточность, Архитектура, KMP, Performance, System Design, Вопросы с собесов…); поиск работает по всей базе
   3. [[Ссылки]] между заметками из разных папок кликабельны; заметки с картинками не ломают экран (картинка показана или заменена заглушкой)
   4. Тест бандла: все ~217 заметок декодируются и парсятся; прогон на Android и iOS-симуляторе: разделы, открытие, поиск, переход по ссылке
+
 **Plans:** 3/3 plans complete
 
 Plans:
@@ -245,15 +250,18 @@ Plans:
 **Requirements**: EXER-07, EXER-08, CONT-03, CONT-04, CONT-05, LESS-05, KB-01, KB-07, PLAT-03, CNV2-01 (усиливает)
 **Depends on:** Phase 7
 **Success Criteria** (what must be TRUE):
+
   1. Для каждого неверного облачка каждого урока есть тест: вариант с ним не компилируется или падает на примерах; причина в `wrongWhy` не противоречит реальной ошибке (GAP-1)
   2. Эталон и все ok/acceptable-варианты каждого урока проходят обязательные граничные случаи (пустой вход, один элемент, дубликаты и т.п. по типу задачи) на JVM и Native (GAP-2)
   3. Фазз-тест по всем урокам: любые последовательности тапов, «Проверить», подсказок и повторов не бросают исключений; monkey-прогон на Android без FATAL EXCEPTION (GAP-3)
   4. Битый или отсутствующий файл базы знаний не роняет приложение: уроки работают, KB показывает мягкую ошибку; KB не грузится целиком на старте (GAP-4)
   5. l1.2 e3 причины и l1.3 подсказка исправлены по 06-REVIEW WR-01/WR-02, `gen_content.py --check` зелёный (GAP-5)
   6. E2E-смоук одной командой проходит все 9 уроков через UI на Android-эмуляторе и iOS-симуляторе
+
 **Plans:** 7/7 plans complete
 
 Plans:
+
 - [x] 07.1-01-PLAN.md — мягкая ленивая загрузка KB + fuzz редьюсера
 - [x] 07.1-02-PLAN.md — генератор: метки поломок, checks:, pending
 - [x] 07.1-03-PLAN.md — JVM-харнесс неверных облачков (WrongChipsTest)
@@ -275,10 +283,19 @@ Plans:
   3. Шаги рендерятся без Kotlin-подсветки, с подписью шага; финальная схема из блоков влезает в экран без горизонтального скролла
   4. Эталон SD показывает собранный шаг, на последнем — грабли и «Что спросят дальше», без секции «Сложность»
   5. sd0.1, sd1.1, sd1.2 отревьюены заказчиком и проходятся на Android и iOS-симуляторе; `gen_content.py --check` по-прежнему зелёный
+
 **Depends on:** Phase 7
 **Plans:** 3 plans
 
 Plans:
+**Wave 1**
+
 - [ ] 08-01-PLAN.md — движок design + вкладка + UI + sd1.1 end-to-end (SD-01, SD-02, SD-03)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 08-02-PLAN.md — sd0.1 + sd1.2 + ревью заказчика (SD-04)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 08-03-PLAN.md — E2E smoke Android + iOS, скриншоты (SD-02, SD-04)
