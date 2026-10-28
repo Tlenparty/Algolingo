@@ -95,11 +95,15 @@ class ProgressRepository(
     }
 }
 
-/** One DataStore per process (two on one file crash), surviving Activity recreation. The first dataDir wins; later ones are ignored. */
+/**
+ * One DataStore per file (two on one file crash), surviving Activity recreation. The app always passes the same
+ * dataDir; a different one (a second e2e @Test with its own fresh dir) gets a new repository on its own file.
+ */
 object AppGraph {
     // ponytail: main-thread only, no locking; App() is the sole caller.
-    private var progress: ProgressRepository? = null
+    private var progress: Pair<String, ProgressRepository>? = null
 
     fun progress(dataDir: String): ProgressRepository =
-        progress ?: ProgressRepository(progressStore("$dataDir/progress.json")).also { progress = it }
+        progress?.takeIf { it.first == dataDir }?.second
+            ?: ProgressRepository(progressStore("$dataDir/progress.json")).also { progress = dataDir to it }
 }

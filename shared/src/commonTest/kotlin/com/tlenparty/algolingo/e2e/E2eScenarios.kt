@@ -4,6 +4,7 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasScrollAction
@@ -11,6 +12,9 @@ import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
@@ -30,12 +34,15 @@ import com.tlenparty.algolingo.lesson.loadLesson
 import com.tlenparty.algolingo.lesson.panelModel
 import com.tlenparty.algolingo.lesson.screenKey
 import com.tlenparty.algolingo.lesson.xpFor
+import com.tlenparty.algolingo.progress.AppGraph
 import com.tlenparty.algolingo.progress.CATALOG_PATH
 import com.tlenparty.algolingo.progress.HomeNode
+import com.tlenparty.algolingo.progress.LessonStatus
 import com.tlenparty.algolingo.progress.Progress
 import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
 import com.tlenparty.algolingo.progress.homeModel
 import com.tlenparty.algolingo.progress.loadCatalog
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 import kotlin.test.assertEquals
@@ -48,8 +55,25 @@ import kotlin.test.fail
 
 private const val WAIT = 15_000L
 
+// Bumping it drops the whole App composition (nav, remembered state) and builds it again on the same dataDir.
+private val appGeneration = mutableIntStateOf(0)
+
+/**
+ * Progress is loaded before the first frame: otherwise DataStore's first emit (on a worker) can resume the test
+ * recomposer inline on that worker (Android: "multithreaded access to SnapshotStateObserver" in a second @Test).
+ */
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.launchApp(dataDir: String) = setContent { App(dataDir) }
+fun ComposeUiTest.launchApp(dataDir: String) {
+    runBlocking { AppGraph.progress(dataDir).progress.first { it != null } }
+    setContent { key(appGeneration.intValue) { App(dataDir) } }
+}
+
+/** setContent works once per test: recreate App in place instead. AppGraph keeps the repository (as on Activity recreation). */
+@OptIn(ExperimentalTestApi::class)
+private fun ComposeUiTest.recreateApp() {
+    appGeneration.intValue++
+    waitForIdle()
+}
 
 /** Home nodes in catalog order (fresh progress), via the app's own homeModel. */
 private fun nodes(path: String = CATALOG_PATH): List<HomeNode> {
@@ -58,7 +82,7 @@ private fun nodes(path: String = CATALOG_PATH): List<HomeNode> {
     return homeModel(catalog, Progress(), LocalDate(2000, 1, 1)).nodes
 }
 
-private fun lesson(id: String): Lesson = runBlocking { loadLesson(id, CodeLang.Kotlin) }.getOrElse { fail("lesson $id failed to load: $it") }
+private fun lesson(id: String, lang: CodeLang = CodeLang.Kotlin): Lesson = runBlocking { loadLesson(id, lang) }.getOrElse { fail("lesson $id failed to load: $it") }
 
 @OptIn(ExperimentalTestApi::class)
 private fun ComposeUiTest.click(m: SemanticsMatcher, where: String) {
@@ -247,4 +271,36 @@ private fun ComposeUiTest.playCatalog(nodes: List<HomeNode>, startXp: Int): Int 
     }
     println("e2e: played ${nodes.size} lessons through the UI, $xp XP")
     return xp
+}
+
+/**
+ * Python on fresh progress: lessons without Python show «Скоро на Python», the first Python lesson plays to «Чисто!»,
+ * the language survives App recreation, and the lesson is Done on the Kotlin path too (progress is shared).
+ */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.scenarioPython() {
+    val catalog = runBlocking { loadCatalog() }
+    val py = homeModel(catalog, Progress(lang = CodeLang.Python), LocalDate(2000, 1, 1)).nodes
+    val pilot = py.firstOrNull { it.status == LessonStatus.Available } ?: fail("no Python lesson in the catalog")
+    val soon = py.firstOrNull { it.status == LessonStatus.Soon } ?: fail("every lesson has Python: nothing to show as Soon")
+    click(hasTestTag("lang-python"), "lang python")
+    onHome(hasContentDescription("Скоро на Python: ${soon.caption}"), "python: ${soon.id} soon")
+    openLesson(pilot)
+    val s = playLesson(lesson(pilot.id, CodeLang.Python))
+    waitFor(hasText("Чисто!"), "${pilot.id} py: summary")
+    waitFor(hasText("+${xpFor(LessonReducer.result(s))} XP"), "${pilot.id} py: summary xp")
+    click(hasText("Продолжить"), "${pilot.id} py: summary")
+    onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "${pilot.id} py: done")
+
+    recreateApp()
+    waitFor(hasTestTag("lang-python"), "after recreate: segment")
+    onNodeWithTag("lang-python").assertIsSelected()
+    onHome(hasContentDescription("Скоро на Python: ${soon.caption}"), "after recreate: still python")
+    onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "after recreate: ${pilot.id} done")
+
+    click(hasTestTag("lang-kotlin"), "lang kotlin")
+    onNodeWithTag("lang-kotlin").assertIsSelected()
+    onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "kotlin: ${pilot.id} done")
+    onHome(hasContentDescription("Начать: ${nodes().first().caption}"), "kotlin: chain starts over")
+    assertEquals(0, onAllNodes(hasContentDescription("Скоро на Python", substring = true)).fetchSemanticsNodes().size, "kotlin: Soon nodes left")
 }
