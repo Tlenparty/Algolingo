@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,19 +21,23 @@ import com.tlenparty.algolingo.lesson.LessonResult
 import com.tlenparty.algolingo.lesson.LessonViewModel
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.design.LocalCodeLang
 import kotlin.time.Clock
 
 @Composable
-fun LessonHost(id: String, review: Boolean, onFinish: (LessonResult) -> Unit, onHome: () -> Unit) {
-    val vm = viewModel(key = "$id/$review") {
-        LessonViewModel(id, seed = Clock.System.now().toEpochMilliseconds().toInt(), review = review, onFinish = onFinish)
+fun LessonHost(id: String, lang: CodeLang, review: Boolean, onFinish: (LessonResult) -> Unit, onHome: () -> Unit) {
+    val vm = viewModel(key = "$id/$review/${lang.id}") {
+        LessonViewModel(id, seed = Clock.System.now().toEpochMilliseconds().toInt(), review = review, lang = lang, onFinish = onFinish)
     }
     val r by vm.state.collectAsStateWithLifecycle()
     val state = r?.getOrNull()
-    when {
-        r == null -> Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
-        state == null -> LessonErrorScreen(onHome)
-        else -> LessonScreen(state, vm::on, onHome)
+    CompositionLocalProvider(LocalCodeLang provides lang) {
+        when {
+            r == null -> Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
+            state == null -> LessonErrorScreen(onHome)
+            else -> LessonScreen(state, vm::on, onHome)
+        }
     }
 }
 

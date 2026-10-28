@@ -30,6 +30,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.design.components.LangSegment
 import com.tlenparty.algolingo.design.components.ChunkyBox
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.components.ChunkyStyle
@@ -39,7 +41,15 @@ import com.tlenparty.algolingo.progress.LessonStatus
 
 /** model == null while catalog/progress load: plain background, no flicker of wrong statuses. */
 @Composable
-fun HomeScreen(model: HomeModel?, onStart: (String) -> Unit, onReview: () -> Unit, saveFailed: Boolean = false) {
+fun HomeScreen(
+    model: HomeModel?,
+    onStart: (String) -> Unit,
+    onReview: () -> Unit,
+    saveFailed: Boolean = false,
+    lang: CodeLang = CodeLang.Kotlin,
+    // null = no language segment (SD tab).
+    onLang: ((CodeLang) -> Unit)? = null,
+) {
     val s = MaterialTheme.colorScheme
     val t = AlgoTheme.typography
     val sp = AlgoTheme.spacing
@@ -60,6 +70,9 @@ fun HomeScreen(model: HomeModel?, onStart: (String) -> Unit, onReview: () -> Uni
                     style = t.label, color = s.error, textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = sp.md, vertical = sp.sm),
                 )
+            }
+            if (onLang != null) {
+                LangSegment(lang, onLang, Modifier.fillMaxWidth().padding(horizontal = sp.md, vertical = sp.sm))
             }
             if (model.due.isNotEmpty()) {
                 ChunkyButton("Повтор сегодня (${model.due.size})", onReview, Modifier.padding(horizontal = sp.md), style = ChunkyStyle.Secondary)
@@ -98,6 +111,8 @@ fun HomeScreen(model: HomeModel?, onStart: (String) -> Unit, onReview: () -> Uni
     }
 }
 
+private const val SOON = "Скоро на Python"
+
 @Composable
 private fun PathNode(n: HomeNode, modifier: Modifier, onStart: (String) -> Unit) {
     val c = AlgoTheme.colors
@@ -128,11 +143,18 @@ private fun PathNode(n: HomeNode, modifier: Modifier, onStart: (String) -> Unit)
                 s.primary, c.greenLedge, true, start,
                 Modifier.clearAndSetSemantics { contentDescription = "Пройден, повторить: ${n.caption}" },
             ) { Text("✅", fontSize = t.nodeEmoji) }
-            // ponytail: Soon reuses the Locked node; 09-04 gives it its own caption.
-            LessonStatus.Locked, LessonStatus.Soon -> Node(
+            LessonStatus.Locked -> Node(
                 s.outline, null, false, null,
                 Modifier.clearAndSetSemantics { contentDescription = "Закрыт: ${n.caption}" },
             ) { Text("🔒", fontSize = t.nodeEmoji) }
+            // Locked look, own caption; no onClick: a lesson without this language has no file to open (T-09-10).
+            LessonStatus.Soon -> {
+                Node(
+                    s.outline, null, false, null,
+                    Modifier.clearAndSetSemantics { contentDescription = "$SOON: ${n.caption}" },
+                ) { Text("🔒", fontSize = t.nodeEmoji) }
+                Text(SOON, style = t.label, color = c.secondaryText, modifier = Modifier.clearAndSetSemantics {})
+            }
         }
         Text(
             n.caption, style = t.label, color = c.secondaryText, textAlign = TextAlign.Center,

@@ -38,6 +38,7 @@ import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.CodeLang
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -53,7 +54,7 @@ object KbList
 data class NoteRoute(val id: String, val anchor: String? = null)
 
 @Serializable
-data class LessonRoute(val id: String, val review: Boolean = false)
+data class LessonRoute(val id: String, val review: Boolean = false, val lang: String = CodeLang.Kotlin.id)
 
 private const val KB_ERROR = "Не удалось загрузить базу знаний"
 
@@ -98,7 +99,9 @@ fun App(dataDir: String) {
                 composable<SdHome> { entry -> HomeTab(entry, sdCatalog, progressRepo, nav, byLang = false) }
                 composable<LessonRoute> { entry ->
                     val route = entry.toRoute<LessonRoute>()
-                    LessonHost(route.id, route.review, onFinish = { progressRepo.record(route.id, it) }) { entry.ifResumed { nav.popBackStack() } }
+                    // Language is frozen in the route at start: switching it on Home never reloads an open lesson.
+                    val lang = CodeLang.entries.firstOrNull { it.id == route.lang } ?: CodeLang.Kotlin
+                    LessonHost(route.id, lang, route.review, onFinish = { progressRepo.record(route.id, it) }) { entry.ifResumed { nav.popBackStack() } }
                 }
                 composable<KbList> { entry ->
                     // KB loads lazily on first open (load() is idempotent), so a bad KB file never blocks Home or lessons.
@@ -144,13 +147,16 @@ private fun HomeTab(entry: NavBackStackEntry, catalog: Catalog?, progressRepo: P
     val saveFailed by progressRepo.saveFailed.collectAsStateWithLifecycle()
     val c = catalog
     val p = progress
+    val lang = p?.lang ?: CodeLang.Kotlin
     val model = if (c != null && p != null) homeModel(c, p, today, lang = if (byLang) p.lang else null) else null
     HomeScreen(
         model,
-        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
+        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id, lang = lang.id)) } },
         // ponytail: review opens only the first due lesson; chain them into one session if N regularly exceeds 3.
-        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true)) } } },
+        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true, lang = lang.id)) } } },
         saveFailed = saveFailed,
+        lang = lang,
+        onLang = if (byLang) { l -> progressRepo.setLang(l) } else null,
     )
 }
 
