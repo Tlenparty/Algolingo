@@ -353,10 +353,15 @@
           "ok": [
             "PostgreSQL"
           ],
+          "acceptable": [
+            {
+              "text": "Redis",
+              "note": "Так тоже делают: refresh с TTL в Redis (заметка 04 — хранилище сессий и refresh). Нужна персистентность (AOF) и реплика, иначе рестарт Redis разлогинит всех."
+            }
+          ],
           "wrongWhy": {
             "Auth-сервис": "сервис уже выше; refresh-токены он хранит в БД",
-            "API Gateway": "шлюз ничего не хранит; refresh-токены лежат в БД",
-            "Redis": "при падении Redis теряет последние записи — пользователей выкинет на логин; долгие refresh держат в БД, Redis — для короткого denylist"
+            "API Gateway": "шлюз ничего не хранит; refresh-токены лежат в БД"
           }
         },
         {
@@ -386,6 +391,9 @@
         },
         {
           "text": "PostgreSQL"
+        },
+        {
+          "text": "Redis"
         },
         {
           "text": "API Gateway"
