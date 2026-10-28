@@ -267,7 +267,7 @@ Plans:
 **Goal:** Вкладка «System Design»: уроки-«шаги + схема» (бэкенд-классика) собираются из облачков на текущем движке дырок; первый срез — sd0.1, sd1.1, sd1.2
 **Mode:** mvp
 **Spec:** docs/superpowers/specs/2026-10-28-system-design-section-design.md
-**Requirements**: SD-01..SD-04 (см. спеку)
+**Requirements**: SD-01, SD-02, SD-03, SD-04
 **Success Criteria** (what must be TRUE):
 
   1. `Lesson.kind = design` валидируется по своим правилам (2..4 шага, последний шаг == `solution.code`, строка ≤ 34 символов); тесты в commonTest/host проходят

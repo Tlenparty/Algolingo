@@ -92,6 +92,13 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 - **CNV2-03**: Запуск реального кода на отдельном VPS (Judge0 / kotlin-compiler-server)
 - **CNV2-04**: Подпись iOS, TestFlight, публикация в сторы (свои формулировки задач, поле `origin`)
 
+### System Design
+
+- **SD-01**: Урок типа `design` (шаги + схема) описывается тем же `Lesson`, валидируется своими правилами (2..4 шага, последний шаг == `solution.code`, строка ≤ 34 символов) и проходится на текущем движке дырок
+- **SD-02**: Третья вкладка «System Design» показывает путь SD-уроков из отдельного каталога `files/content/sd/`; XP и streak общие, повторы — на вкладке
+- **SD-03**: Шаг SD рендерится с подписью и без Kotlin-подсветки; эталон показывает собранный шаг, на последнем шаге — грабли и «Что спросят дальше»
+- **SD-04**: Уроки sd0.1 «Как вести интервью», sd1.1 «URL shortener», sd1.2 «Rate limiter» отревьюены заказчиком и проходятся на Android и iOS-симуляторе
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -152,6 +159,10 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | CONT-06 | Phase 5 | Complete |
 | CNV2-01 | Phase 6; hardened + verified in Phase 07.1 | Partial (level 1) |
 | KB-07 | Phase 7; hardened + verified in Phase 07.1 | Complete |
+| SD-01 | Phase 8 | Pending |
+| SD-02 | Phase 8 | Pending |
+| SD-03 | Phase 8 | Pending |
+| SD-04 | Phase 8 | Pending |
 
 **Coverage:**
 - v1 requirements: 38 total
