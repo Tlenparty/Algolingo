@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -377,6 +378,77 @@ class PySidecar(unittest.TestCase):
             self.assertRule("G7", gen_content.render_all, tmp)
         finally:
             shutil.rmtree(str(tmp))
+
+
+class PyHarness(unittest.TestCase):
+    assertRule = Validation.assertRule
+    E1_TAIL = "- `target` [wrong]: ищем `target` целиком: `[2, 7]`, `9` → `None`\n\n## e2"
+
+    def render(self, text):
+        tmp = py_root(text)
+        try:
+            return gen_content.render_all(tmp)
+        finally:
+            shutil.rmtree(str(tmp))
+
+    def test_run_python_isolated_tempdir(self):
+        ok, detail = gen_content.run_python(
+            "import os, sys\nassert sys.flags.isolated == 1\nassert 'HOME' not in os.environ\n"
+            "open('junk.txt', 'w').write('x')\nprint(os.getcwd())")
+        self.assertTrue(ok, detail)
+        self.assertFalse(Path(detail.strip()).exists())  # tempdir removed
+        self.assertFalse((ROOT / "junk.txt").exists())
+        self.assertEqual(gen_content.run_python("raise SystemExit(3)")[0], False)
+
+    def test_module_counts_failed_cases(self):
+        src = gen_content.py_module("def f(x):\n    return x", ["assert f(1) == 2", "assert f(2) == 2"], "with case():\n    f(1)")
+        ok, detail = gen_content.run_python(src)
+        self.assertFalse(ok)
+        self.assertIn("AssertionError", detail)
+        self.assertTrue(gen_content.run_python(src.replace("f(1) == 2", "f(1) == 1"))[0])
+
+    def test_hang_is_killed(self):
+        t = time.time()
+        ok, detail = gen_content.run_python("while True:\n    pass", timeout=1)
+        self.assertFalse(ok)
+        self.assertIn("timeout", detail)
+        self.assertLess(time.time() - t, 5)
+
+    def test_valid_python_lesson_passes_gates(self):
+        self.assertIn(gen_content.LESSONS_PY + "/l1.4.json", self.render(PY_BASE))
+
+    def test_g12_broken_reference_fails(self):
+        with self.assertRaises(gen_content.GenError) as cm:
+            self.render(PY_BASE.replace("return None", "return -1"))
+        self.assertEqual(cm.exception.rule, "G12")
+        self.assertTrue(cm.exception.detail.startswith("reference: "), cm.exception.detail)
+        self.assertIn("AssertionError", cm.exception.detail)
+
+    def test_g12_broken_acceptable_variant_fails(self):
+        text = PY_BASE.replace("⟦target - x⟧ in seen", "⟦target - x | ~x - target⟧ in seen", 1)
+        text = text.replace(self.E1_TAIL, "- ~`x - target`: зеркально\n" + self.E1_TAIL, 1)
+        with self.assertRaises(gen_content.GenError) as cm:
+            self.render(text)
+        self.assertEqual(cm.exception.rule, "G12")
+        self.assertIn("l1.4.e1 hole 1 = x - target (acceptable)", cm.exception.detail)
+
+    def test_g13_wrong_chip_that_passes_fails(self):
+        text = PY_BASE.replace(self.E1_TAIL, "- `(target - x)` [wrong]: то же самое: `x`\n" + self.E1_TAIL, 1)
+        with self.assertRaises(gen_content.GenError) as cm:
+            self.render(text)
+        self.assertEqual(cm.exception.rule, "G13")
+        self.assertIn("l1.4.e1 hole 1 = (target - x)", cm.exception.detail)
+
+    def test_hanging_wrong_chip_is_killed_and_counts_as_failing(self):
+        text = PY_BASE.replace(self.E1_TAIL, "- `any(iter(int, 1))` [hang]: вечный цикл: `x`\n" + self.E1_TAIL, 1)
+        old = gen_content.PY_TIMEOUT
+        gen_content.PY_TIMEOUT = 2
+        try:
+            t = time.time()
+            self.assertIn(gen_content.LESSONS_PY + "/l1.4.json", self.render(text))
+            self.assertLess(time.time() - t, 30)
+        finally:
+            gen_content.PY_TIMEOUT = old
 
 
 class Tags(unittest.TestCase):
