@@ -44,6 +44,11 @@ the kinds seen across its holes; a distractor without a why takes none (tag its 
 
 Every claim is a hard gate: no variant is skipped or parked (tools/test_gen_content.py guards it).
 
+Python sidecar (content/authoring/py/<id>.md): same grammar plus `lang: python`; every fence is
+```python; pitfalls: and variations: are required; the note gives title/statement/complexity only
+(no G5 against the Kotlin note code). Needs a Kotlin sidecar with the same id. Output goes to
+files/content/lessons/py/<id>.json and adds langs ["kotlin","python"] to the index entry.
+
 Bank order: ok[0] of each hole (with multiplicity), other ok/acceptable texts, distractors.
 """
 import argparse
@@ -58,6 +63,8 @@ NOTE = RES + "/kb/n07ed966c.md"
 AUTHORING = "content/authoring"
 INDEX = RES + "/content/index.json"
 LESSONS = RES + "/content/lessons"
+LESSONS_PY = RES + "/content/lessons/py"
+AUTHORING_PY = AUTHORING + "/py"
 TEST_KT = "shared/src/commonTest/kotlin/com/tlenparty/algolingo/lesson/ReferenceSolutionsTest.kt"
 WRONG_JSON = "shared/src/androidHostTest/resources/wrong_variants.json"
 MAX_BANK = 10
@@ -72,7 +79,7 @@ CHECKS_BANNED = re.compile(r"\b(Math\.|java\.|String\()")  # \b: concatToString(
 KEY = re.compile(r"^([a-z]+):\s*(.*)$")
 CARD_KEYS = ("signals", "skeleton", "pitfalls", "body")
 # expected value shape per key: one line, bullet list or ``` fence
-TOP_KINDS = {"note": "line", "title": "line", "statement": "line", "trains": "line",
+TOP_KINDS = {"lang": "line", "note": "line", "title": "line", "statement": "line", "trains": "line",
              "pitfalls": "list", "variations": "list", "examples": "list", "checks": "fence"}
 CARD_KINDS = {"signals": "list", "skeleton": "fence", "pitfalls": "list", "body": "line"}
 
@@ -175,7 +182,7 @@ def parse_success(body, res):
 
 # ---------- sidecar ----------
 
-def parse_keys(lines, file, kinds):
+def parse_keys(lines, file, kinds, fence="kotlin"):
     out, i = {}, 0
     while i < len(lines):
         ln = lines[i]
@@ -192,6 +199,8 @@ def parse_keys(lines, file, kinds):
         if val:
             out[key] = val
         elif i < len(lines) and lines[i].startswith("```"):
+            if lines[i] != "```" + fence:
+                raise GenError(file, "syntax", "%s: fence must be ```%s, got %s" % (key, fence, lines[i]))
             try:
                 end = lines.index("```", i + 1)
             except ValueError:
@@ -207,17 +216,19 @@ def parse_keys(lines, file, kinds):
     return out
 
 
-def parse_exercise(name, lines, file):
+def parse_exercise(name, lines, file, fence="kotlin"):
     ex = {"name": name, "code": None, "bullets": [], "hints": []}
     i = 0
     while i < len(lines):
         ln = lines[i]
         i += 1
-        if ln.startswith("```kotlin") and ex["code"] is None:
+        if ln.startswith("```") and ln != "```" and ex["code"] is None:
+            if ln != "```" + fence:
+                raise GenError(file, "syntax", "%s: fence must be ```%s, got %s" % (name, fence, ln))
             try:
                 end = lines.index("```", i)
             except ValueError:
-                raise GenError(file, "syntax", name + ": unclosed kotlin fence")
+                raise GenError(file, "syntax", "%s: unclosed %s fence" % (name, fence))
             ex["code"] = "\n".join(lines[i:end])
             i = end + 1
         elif ln.startswith("? "):
@@ -233,12 +244,13 @@ def parse_exercise(name, lines, file):
         elif ln.strip():
             raise GenError(file, "syntax", name + ": unexpected line: " + ln)
     if ex["code"] is None:
-        raise GenError(file, "syntax", name + ": no ```kotlin fence")
+        raise GenError(file, "syntax", "%s: no ```%s fence" % (name, fence))
     return ex
 
 
-def parse_sidecar(text, stem):
-    file = "%s/%s.md" % (AUTHORING, stem)
+def parse_sidecar(text, stem, lang="kotlin"):
+    """lang comes from the folder: content/authoring/<id>.md is kotlin, content/authoring/py/<id>.md python."""
+    file = "%s/%s.md" % (AUTHORING_PY if lang == "python" else AUTHORING, stem)
     lines = text.splitlines()
     if not lines or not lines[0].startswith("# "):
         raise GenError(file, "G7", "first line must be '# <lesson id>'")
@@ -248,7 +260,14 @@ def parse_sidecar(text, stem):
     if not re.match(r"^l\d+\.\d+$", lid):
         raise GenError(file, "G7", "id %r is not l<level>.<n>" % lid)
     starts = [i for i, ln in enumerate(lines) if ln.startswith("## ")] + [len(lines)]
-    top = parse_keys(lines[1:starts[0]], file, TOP_KINDS)
+    # the lang: line must be read before the fences it selects
+    declared = next((ln[5:].strip() for ln in lines[1:starts[0]] if ln.startswith("lang:")), None)
+    if declared not in (None, "python"):
+        raise GenError(file, "syntax", "lang: only python is allowed, got %r" % declared)
+    if (declared or "kotlin") != lang:
+        raise GenError(file, "syntax", "lang: %s sidecar must live in %s/" % (
+            declared or "kotlin", AUTHORING_PY if declared else AUTHORING))
+    top = parse_keys(lines[1:starts[0]], file, TOP_KINDS, lang)
     unknown = set(top) - set(TOP_KINDS)
     if unknown:
         raise GenError(file, "syntax", "unknown keys: " + ", ".join(sorted(unknown)))
@@ -256,15 +275,15 @@ def parse_sidecar(text, stem):
         raise GenError(file, "G7", "missing note: heading")
     if "checks" not in top:
         raise GenError(file, "G10", "missing checks: (edge cases + oracle are required, D-08)")
-    bad = CHECKS_BANNED.search(top["checks"])
+    bad = lang == "kotlin" and CHECKS_BANNED.search(top["checks"])
     if bad:
         raise GenError(file, "G10", "checks: uses %r (JVM-only or Native-deprecated API)" % bad.group(1))
-    sc = {"id": lid, "file": file, "top": top, "theory": [], "exercises": []}
+    sc = {"id": lid, "file": file, "lang": lang, "top": top, "theory": [], "exercises": []}
     for a, b in zip(starts, starts[1:]):
         head = lines[a][3:].strip()
         body = lines[a + 1:b]
         if head.startswith("theory "):
-            card = parse_keys(body, file, CARD_KINDS)
+            card = parse_keys(body, file, CARD_KINDS, lang)
             bad = set(card) - set(CARD_KEYS)
             if bad:
                 raise GenError(file, "syntax", "## %s: unknown keys: %s" % (head, ", ".join(sorted(bad))))
@@ -273,7 +292,7 @@ def parse_sidecar(text, stem):
             card["title"] = head[len("theory "):].strip()
             sc["theory"].append(card)
         elif re.match(r"^e\d+$", head):
-            sc["exercises"].append(parse_exercise(head, body, file))
+            sc["exercises"].append(parse_exercise(head, body, file, lang))
         else:
             raise GenError(file, "syntax", "unknown section: ## " + head)
     names = [e["name"] for e in sc["exercises"]]
@@ -313,6 +332,9 @@ def build_lesson(sc, note_lines):
     note = parse_note_section(note_lines, top["note"])
     if not top.get("examples"):
         raise GenError(file, "G8", "no examples: lines")
+    for k in ("pitfalls", "variations"):
+        if sc["lang"] != "kotlin" and k not in top:
+            raise GenError(file, "G7", "%s: is required for %s (the note's is about Kotlin)" % (k, sc["lang"]))
 
     parsed = []
     for ex in sc["exercises"]:
@@ -332,7 +354,8 @@ def build_lesson(sc, note_lines):
 
     codes = [assemble(segs, [h[0][0] for h in holes]) for _, segs, holes in parsed]
     for (ex, _, _), code in zip(parsed, codes):
-        if norm(code) != norm(note["code"]):
+        # the note code is Kotlin; a python lesson is proven by the python harness (G12) instead
+        if sc["lang"] == "kotlin" and norm(code) != norm(note["code"]):
             raise GenError(file, "G5", ex["name"] + ": code without holes != note reference")
     if len(set(codes)) != 1:
         raise GenError(file, "G5", "exercises do not produce the same code")
@@ -632,6 +655,13 @@ def render_all(repo_root, allow_removed=()):
         sc = parse_sidecar(p.read_text(encoding="utf-8"), p.stem)
         items.append((build_lesson(sc, note_lines), sc))
     ids = [lesson["id"] for lesson, _ in items]
+    py_items = []
+    for p in sorted((root / AUTHORING_PY).glob("*.md"), key=lambda p: id_key(p.stem)):
+        sc = parse_sidecar(p.read_text(encoding="utf-8"), p.stem, "python")
+        if sc["id"] not in ids:
+            raise GenError(sc["file"], "G7", "no Kotlin lesson %s/%s.md to pair with" % (AUTHORING, sc["id"]))
+        py_items.append((build_lesson(sc, note_lines), sc))
+    py_ids = set(lesson["id"] for lesson, _ in py_items)
     old = root / INDEX
     if old.is_file():
         try:
@@ -641,9 +671,15 @@ def render_all(repo_root, allow_removed=()):
         for oid in old_ids:
             if oid not in ids and oid not in allow_removed:
                 raise GenError(INDEX, "G4", "lesson id %s disappeared (pass --allow-removed %s)" % (oid, oid))
-    out = {INDEX: dump({"schema": 1, "lessons": [{"id": l["id"], "title": l["title"]} for l, _ in items]})}
+    entries = [{"id": l["id"], "title": l["title"]} for l, _ in items]
+    for e in entries:
+        if e["id"] in py_ids:
+            e["langs"] = ["kotlin", "python"]
+    out = {INDEX: dump({"schema": 1, "lessons": entries})}
     for lesson, _ in items:
         out["%s/%s.json" % (LESSONS, lesson["id"])] = dump(lesson)
+    for lesson, _ in py_items:
+        out["%s/%s.json" % (LESSONS_PY, lesson["id"])] = dump(lesson)
     out[TEST_KT] = render_kt(items)
     # WRONG_JSON sits in `out`, so --check compares it like every other output
     out[WRONG_JSON] = render_wrong_json(items)
@@ -664,8 +700,8 @@ def main(argv=None):
         return 1
     stale = [rel for rel, text in out.items()
              if not (root / rel).is_file() or (root / rel).read_text(encoding="utf-8") != text]
-    orphans = ["%s/%s" % (LESSONS, p.name) for p in sorted((root / LESSONS).glob("*.json"))
-               if "%s/%s" % (LESSONS, p.name) not in out]
+    orphans = ["%s/%s" % (d, p.name) for d in (LESSONS, LESSONS_PY) for p in sorted((root / d).glob("*.json"))
+               if "%s/%s" % (d, p.name) not in out]
     if args.check:
         for rel in stale:
             print("stale: " + rel)
