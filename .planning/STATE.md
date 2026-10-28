@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 07.1 context gathered
-last_updated: "2026-10-28T14:13:41.906Z"
+status: ready_to_plan
+stopped_at: Phase 11 complete (2/2) — ready to discuss Phase 12
+last_updated: 2026-10-28T14:16:11.070Z
 last_activity: 2026-10-28
 progress:
   total_phases: 14
   completed_phases: 11
   total_plans: 53
-  completed_plans: 47
+  completed_plans: 49
   percent: 79
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-21)
 
 **Core value:** Быстро, с телефона, без клавиатуры прорешать алгоритмическую задачу: собрать решение из облачков, нажать «Проверить» и сразу понять, где грабли.
-**Current focus:** Phase 9 — Language Switch + Python Pilot
+**Current focus:** Phase 12 — client server basics lessons
 
 ## Current Position
 
-Phase: 9 (Language Switch + Python Pilot) — EXECUTING
-Plan: 1 of 6
-Status: Executing Phase 9
-Last activity: 2026-10-28 -- Phase 11 plan 02 complete (Phase 9 executing in parallel)
+Phase: 12
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-10-28
 
 Progress: [█████████░] 89%
 
@@ -36,7 +36,7 @@ Progress: [█████████░] 89%
 
 **Velocity:**
 
-- Total plans completed: 45
+- Total plans completed: 47
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -54,6 +54,7 @@ Progress: [█████████░] 89%
 | 07 | 3 | - | - |
 | 07.1 | 7 | - | - |
 | 8 | 3 | - | - |
+| 11 | 2 | - | - |
 
 **Recent Trend:**
 
