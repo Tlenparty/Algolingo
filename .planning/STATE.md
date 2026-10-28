@@ -116,6 +116,7 @@ Recent decisions affecting current work:
 - Phase 6 added: Level 1 Content — Hash Map / Set (уроки 1.1–1.5 из заметки 05)
 - Phase 7 added: Full Interview Knowledge Base (вся подготовка из хранилища «Матрицы», ~217 заметок)
 - Phase 07.1 inserted after Phase 7: Content correctness & crash safety — closes v1.0 audit GAP-1..5 (URGENT)
+- Phase 8 added: System Design Section (спека docs/superpowers/specs/2026-10-28-system-design-section-design.md)
 
 ### Pending Todos
 

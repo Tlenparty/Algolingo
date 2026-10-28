@@ -19,6 +19,7 @@
 - [x] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах (completed 2026-10-22)
 - [x] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах (completed 2026-10-22)
 - [x] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам (completed 2026-10-22)
+- [ ] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2
 
 ## Phase Details
 
@@ -260,3 +261,22 @@ Plans:
 - [x] 07.1-05-PLAN.md — чекпоинт заказчика по находкам
 - [x] 07.1-06-PLAN.md — применить вердикты, жёсткие гейты, прогоны на устройствах
 - [x] 07.1-07-PLAN.md — UI e2e (Android + iOS) по всем урокам + tools/smoke.sh
+
+### Phase 8: System Design Section
+
+**Goal:** Вкладка «System Design»: уроки-«шаги + схема» (бэкенд-классика) собираются из облачков на текущем движке дырок; первый срез — sd0.1, sd1.1, sd1.2
+**Mode:** mvp
+**Spec:** docs/superpowers/specs/2026-10-28-system-design-section-design.md
+**Requirements**: SD-01..SD-04 (см. спеку)
+**Success Criteria** (what must be TRUE):
+
+  1. `Lesson.kind = design` валидируется по своим правилам (2..4 шага, последний шаг == `solution.code`, строка ≤ 34 символов); тесты в commonTest/host проходят
+  2. Третья вкладка «System Design» показывает путь из 3 SD-уроков из `files/content/sd/index.json`; XP/streak общие, повторы — на вкладке
+  3. Шаги рендерятся без Kotlin-подсветки, с подписью шага; финальная схема из блоков влезает в экран без горизонтального скролла
+  4. Эталон SD показывает собранный шаг, на последнем — грабли и «Что спросят дальше», без секции «Сложность»
+  5. sd0.1, sd1.1, sd1.2 отревьюены заказчиком и проходятся на Android и iOS-симуляторе; `gen_content.py --check` по-прежнему зелёный
+**Depends on:** Phase 7
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 8 to break down)
