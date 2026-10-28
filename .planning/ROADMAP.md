@@ -285,7 +285,7 @@ Plans:
   5. sd0.1, sd1.1, sd1.2 отревьюены заказчиком и проходятся на Android и iOS-симуляторе; `gen_content.py --check` по-прежнему зелёный
 
 **Depends on:** Phase 7
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 **Wave 1**
@@ -294,7 +294,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 08-02-PLAN.md — sd0.1 + sd1.2 + ревью заказчика (SD-04)
+- [x] 08-02-PLAN.md — sd0.1 + sd1.2 + ревью заказчика (SD-04)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 

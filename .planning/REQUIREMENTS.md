@@ -162,7 +162,7 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | SD-01 | Phase 8 | Complete |
 | SD-02 | Phase 8 | Complete |
 | SD-03 | Phase 8 | Complete |
-| SD-04 | Phase 8 | Pending |
+| SD-04 | Phase 8 | Complete |
 
 **Coverage:**
 - v1 requirements: 38 total

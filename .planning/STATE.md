@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 07.1 context gathered
-last_updated: "2026-10-28T13:07:23.126Z"
+last_updated: "2026-10-28T13:16:52.675Z"
 last_activity: 2026-10-28
 progress:
   total_phases: 10
   completed_phases: 9
   total_plans: 45
-  completed_plans: 43
+  completed_plans: 44
   percent: 90
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 ## Current Position
 
 Phase: 8 (System Design Section) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-10-28
 
-Progress: [██████████] 96%
+Progress: [██████████] 98%
 
 ## Performance Metrics
 
@@ -78,6 +78,7 @@ Progress: [██████████] 96%
 | Phase 07 P03 | 45 min | 3 tasks | 2 files |
 | Phase 07.1 P03 | 15 min | 3 tasks | 7 files |
 | Phase 08 P01 | 21 min | 3 tasks | 17 files |
+| Phase 08 P02 | 25min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,8 @@ Recent decisions affecting current work:
 - [Phase 06]: 06-05: ghost bank chip renders plain text (highlight spans overrode transparent color), fix d9d8635
 - [Phase 07]: KB cold load ~0.4 s on iOS sim, no single-file bundle needed (A2 closed)
 - [Phase 07.1]: 07.1-03: wrong-chip verdicts JVM-only via embedded compiler; 13 mismatches parked in content/authoring/pending.txt, stale pending fails the test
+- [Phase 08]: порядок первых вопросов в sd0.1 свободный (ok = все три ответа)
+- [Phase 08]: why Memcached в sd1.2 — нет скриптов/структур данных (incr атомарен)
 
 ### Roadmap Evolution
 
@@ -142,6 +145,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-10-28T13:07:18.699Z
+Last session: 2026-10-28T13:16:48.258Z
 Stopped at: Phase 07.1 context gathered
 Resume file: None
