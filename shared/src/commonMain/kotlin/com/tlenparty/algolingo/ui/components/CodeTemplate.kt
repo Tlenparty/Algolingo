@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.tlenparty.algolingo.lesson.HoleVisual
@@ -44,6 +45,7 @@ fun CodeTemplate(
     onHoleTap: (Int) -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
+    highlight: Boolean = true,
 ) {
     val colors = AlgoTheme.colors
     val t = AlgoTheme.typography
@@ -63,12 +65,12 @@ fun CodeTemplate(
                 Row(Modifier.height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
                     for (p in line) when (p) {
                         is Piece.Code -> Text(
-                            highlight(p.s, colors), style = t.codeRegular,
+                            if (highlight) highlight(p.s, colors) else AnnotatedString(p.s), style = t.codeRegular,
                             color = MaterialTheme.colorScheme.onBackground, softWrap = false, maxLines = 1,
                         )
                         is Piece.HoleAt -> Hole(
                             p.h, placedText.getOrNull(p.h), visuals.getOrNull(p.h) ?: HoleVisual.Empty,
-                            { onHoleTap(p.h) }, enabled, focused = p.h == focus,
+                            { onHoleTap(p.h) }, enabled, focused = p.h == focus, highlight = highlight,
                         )
                     }
                 }
@@ -78,7 +80,7 @@ fun CodeTemplate(
 }
 
 @Composable
-private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean) {
+private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean, highlight: Boolean) {
     val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
     // fill, border, text color
@@ -123,7 +125,7 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
             Crossfade(text, animationSpec = tween(100)) { shown ->
                 if (shown != null) {
                     Text(
-                        highlight(shown, c), style = AlgoTheme.typography.codeBold, color = ink,
+                        if (highlight) highlight(shown, c) else AnnotatedString(shown), style = AlgoTheme.typography.codeBold, color = ink,
                         softWrap = false, maxLines = 1,
                     )
                 }

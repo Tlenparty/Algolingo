@@ -15,6 +15,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.tlenparty.algolingo.lesson.ExerciseResult
 import com.tlenparty.algolingo.lesson.LessonAction
+import com.tlenparty.algolingo.lesson.LessonKind
+import com.tlenparty.algolingo.lesson.assembled
 import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.isLastExercise
 import com.tlenparty.algolingo.lesson.screenKey
@@ -33,6 +35,7 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
     val id = state.queue.firstOrNull()
     val ex = state.lesson.exercises.firstOrNull { it.id == id }
     val sol = state.lesson.solution
+    val design = state.lesson.kind == LessonKind.Design
     Column(modifier.fillMaxSize()) {
         Column(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = AlgoTheme.spacing.md, vertical = AlgoTheme.spacing.md),
@@ -47,13 +50,16 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
                     }
                 } else buildAnnotatedString { append("❌ Разберём решение") }
                 Text(head, style = t.display, color = ink)
-                Section("Эталон") { CodeBlock(sol.code, highlightRanges = solutionSpans(ex)) }
+                Section("Эталон") {
+                    // design: each step is its own reference (requirements/API/scheme), not the final solution.code
+                    CodeBlock(if (design) assembled(ex) else sol.code, highlightRanges = solutionSpans(ex), highlight = !design)
+                }
                 if (isLastExercise(state)) {
-                    Section("Сложность") {
+                    if (sol.time.isNotBlank() || sol.space.isNotBlank()) Section("Сложность") {
                         Text("Время ${sol.time} · Память ${sol.space}", style = t.body, color = ink)
                     }
                     if (sol.pitfalls.isNotEmpty()) Section("⚠️ Грабли") { Bullets(sol.pitfalls) }
-                    if (sol.variations.isNotEmpty()) Section("🔁 Вариации") { Bullets(sol.variations) }
+                    if (sol.variations.isNotEmpty()) Section(if (design) "🔁 Что спросят дальше" else "🔁 Вариации") { Bullets(sol.variations) }
                 }
             }
         }

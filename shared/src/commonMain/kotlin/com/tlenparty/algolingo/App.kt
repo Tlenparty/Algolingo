@@ -33,12 +33,18 @@ import com.tlenparty.algolingo.progress.AppGraph
 import com.tlenparty.algolingo.progress.Catalog
 import com.tlenparty.algolingo.progress.homeModel
 import com.tlenparty.algolingo.progress.loadCatalog
+import com.tlenparty.algolingo.progress.ProgressRepository
+import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
+import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
 object Home
+
+@Serializable
+object SdHome
 
 @Serializable
 object KbList
@@ -57,6 +63,7 @@ fun App(dataDir: String) {
         val progressRepo = remember { AppGraph.progress(dataDir) }
         val repo = remember { KbRepository() }
         val catalog by produceState<Catalog?>(null) { value = loadCatalog() }
+        val sdCatalog by produceState<Catalog?>(null) { value = loadCatalog(SD_CATALOG_PATH) }
         val nav = rememberNavController()
         val current by nav.currentBackStackEntryAsState()
         val dest = current?.destination
@@ -76,33 +83,19 @@ fun App(dataDir: String) {
                             icon = {},
                             label = { Text("База знаний") },
                         )
+                        NavigationBarItem(
+                            selected = dest?.hasRoute<SdHome>() == true,
+                            onClick = { nav.switchTab(SdHome) },
+                            icon = {},
+                            label = { Text("System Design") },
+                        )
                     }
                 }
             },
         ) { pad ->
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
-                composable<Home> { entry ->
-                    val progress by progressRepo.progress.collectAsStateWithLifecycle()
-                    // The process can outlive midnight: re-read the date on every resume, then once a minute while visible.
-                    var today by remember { mutableStateOf(progressRepo.today()) }
-                    LaunchedEffect(entry) {
-                        entry.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                            // ponytail: 1-min poll, so a midnight rollover shows up to a minute late.
-                            while (true) { today = progressRepo.today(); delay(60_000) }
-                        }
-                    }
-                    val saveFailed by progressRepo.saveFailed.collectAsStateWithLifecycle()
-                    val c = catalog
-                    val p = progress
-                    val model = if (c != null && p != null) homeModel(c, p, today) else null
-                    HomeScreen(
-                        model,
-                        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
-                        // ponytail: review opens only the first due lesson; chain them into one session if N regularly exceeds 3.
-                        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true)) } } },
-                        saveFailed = saveFailed,
-                    )
-                }
+                composable<Home> { entry -> HomeTab(entry, catalog, progressRepo, nav) }
+                composable<SdHome> { entry -> HomeTab(entry, sdCatalog, progressRepo, nav) }
                 composable<LessonRoute> { entry ->
                     val route = entry.toRoute<LessonRoute>()
                     LessonHost(route.id, route.review, onFinish = { progressRepo.record(route.id, it) }) { entry.ifResumed { nav.popBackStack() } }
@@ -136,12 +129,37 @@ fun App(dataDir: String) {
     }
 }
 
+/** One Home screen per tab: the path and due reviews come from that tab's catalog; progress is shared. */
+@Composable
+private fun HomeTab(entry: NavBackStackEntry, catalog: Catalog?, progressRepo: ProgressRepository, nav: NavController) {
+    val progress by progressRepo.progress.collectAsStateWithLifecycle()
+    // The process can outlive midnight: re-read the date on every resume, then once a minute while visible.
+    var today by remember { mutableStateOf(progressRepo.today()) }
+    LaunchedEffect(entry) {
+        entry.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            // ponytail: 1-min poll, so a midnight rollover shows up to a minute late.
+            while (true) { today = progressRepo.today(); delay(60_000) }
+        }
+    }
+    val saveFailed by progressRepo.saveFailed.collectAsStateWithLifecycle()
+    val c = catalog
+    val p = progress
+    val model = if (c != null && p != null) homeModel(c, p, today) else null
+    HomeScreen(
+        model,
+        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
+        // ponytail: review opens only the first due lesson; chain them into one session if N regularly exceeds 3.
+        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true)) } } },
+        saveFailed = saveFailed,
+    )
+}
+
 /** Ignores clicks while the entry is transitioning out, so a double tap cannot pop/push twice. */
 private fun NavBackStackEntry.ifResumed(block: () -> Unit) {
     if (lifecycle.currentState == Lifecycle.State.RESUMED) block()
 }
 
-private fun androidx.navigation.NavController.switchTab(route: Any) = navigate(route) {
+private fun NavController.switchTab(route: Any) = navigate(route) {
     popUpTo(Home) { saveState = true }
     launchSingleTop = true
     restoreState = true

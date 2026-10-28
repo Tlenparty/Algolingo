@@ -34,7 +34,7 @@ import com.tlenparty.algolingo.design.highlight
 internal fun richText(s: String): AnnotatedString = inlineText(parseInline(s))
 
 @Composable
-fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifier: Modifier = Modifier) {
+fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifier: Modifier = Modifier, highlight: Boolean = true) {
     val c = AlgoTheme.colors
     val t = AlgoTheme.typography
     val style = when (model.kind) {
@@ -57,11 +57,11 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
                     Modifier.padding(top = AlgoTheme.spacing.smd).heightIn(max = maxBodyHeight).verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.md),
                 ) {
-                    for (w in model.wrong) Item(w, inkC)
+                    for (w in model.wrong) Item(w, inkC, highlight)
                     if (model.wrong.isNotEmpty() && model.acceptable.isNotEmpty()) {
                         Text("Принято, но…", style = t.label, color = c.acceptableText)
                     }
-                    for (a in model.acceptable) Item(a, inkC)
+                    for (a in model.acceptable) Item(a, inkC, highlight)
                 }
             }
             ChunkyButton(model.button, onNext, Modifier.padding(top = AlgoTheme.spacing.md), style = style)
@@ -70,15 +70,16 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
 }
 
 @Composable
-private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color) {
+private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color, highlight: Boolean) {
     val c = AlgoTheme.colors
+    fun code(s: String) = if (highlight) highlight(s, c) else AnnotatedString(s)
     val t = AlgoTheme.typography
     Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xs)) {
-        Text(highlight(item.chip, c), style = t.codeBold, color = ink, softWrap = false)
+        Text(code(item.chip), style = t.codeBold, color = ink, softWrap = false)
         Text(richText(item.text), style = t.body, color = MaterialTheme.colorScheme.onBackground)
         if (item.correct != null) {
             Text("Верно:", style = t.label, color = c.secondaryText)
-            Text(highlight(item.correct, c), style = t.codeBold, color = MaterialTheme.colorScheme.onBackground, softWrap = false)
+            Text(code(item.correct), style = t.codeBold, color = MaterialTheme.colorScheme.onBackground, softWrap = false)
         }
     }
 }

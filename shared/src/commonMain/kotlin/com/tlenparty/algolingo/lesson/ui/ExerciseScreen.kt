@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Dp
 import com.tlenparty.algolingo.lesson.CheckResult
 import com.tlenparty.algolingo.lesson.LessonAction
+import com.tlenparty.algolingo.lesson.LessonKind
 import com.tlenparty.algolingo.lesson.LessonState
 import com.tlenparty.algolingo.lesson.Phase
 import com.tlenparty.algolingo.lesson.Verdict
@@ -61,6 +62,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
     val outline = MaterialTheme.colorScheme.outline
     val shown = (state.hintsShown[ex.id] ?: 0).coerceIn(0, ex.hints.size)
     val scroll = rememberScrollState()
+    val code = state.lesson.kind == LessonKind.Code
 
     LaunchedEffect(shown) { if (shown > 0) scroll.animateScrollTo(0) } // new card is appended near the top
     val haptic = LocalHapticFeedback.current
@@ -99,6 +101,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                             if (i == 0) Text("Подсказка снижает оценку до 💡", style = t.label, color = c.secondaryText)
                         }
                     }
+                    if (ex.title != null) Text(ex.title, style = t.label, color = c.secondaryText)
                     CodeTemplate(
                         segments = ex.segments,
                         placedText = cur.placed.map { it?.let { i -> ex.bank.getOrNull(i)?.text } },
@@ -106,6 +109,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                         selected = if (solving) cur.selected else null,
                         onHoleTap = { on(LessonAction.TapHole(it)) },
                         enabled = solving,
+                        highlight = code,
                     )
                 }
                 Column(Modifier.height(AlgoTheme.spacing.md)) {}
@@ -115,7 +119,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                 if (check != null) {
                     // No exit animation here: the panel leaves with its page, the outgoing AnimatedContent
                     // snapshot still holds the old check.
-                    ResultPanelHost(check, maxBody) { on(LessonAction.Continue(screenKey(state))) }
+                    ResultPanelHost(check, maxBody, code) { on(LessonAction.Continue(screenKey(state))) }
                 } else {
                     Column(Modifier.padding(AlgoTheme.spacing.md)) {
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm), verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
@@ -141,7 +145,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
 }
 
 @Composable
-private fun ResultPanelHost(check: CheckResult, maxBody: Dp, onNext: () -> Unit) {
+private fun ResultPanelHost(check: CheckResult, maxBody: Dp, highlight: Boolean, onNext: () -> Unit) {
     // Enter animation: visible flips to true on first composition.
     val visible = remember { MutableTransitionState(false).apply { targetState = true } }
     AnimatedVisibility(
@@ -150,6 +154,6 @@ private fun ResultPanelHost(check: CheckResult, maxBody: Dp, onNext: () -> Unit)
     ) {
         // Solving -> Feedback keeps the same screen key, so a second tap on «Проверить» could land on the
         // panel button as it slides in; ignore taps until the enter animation has settled (CR-01).
-        ResultPanel(panelModel(check), maxBody, onNext = { if (visible.isIdle && visible.currentState) onNext() })
+        ResultPanel(panelModel(check), maxBody, onNext = { if (visible.isIdle && visible.currentState) onNext() }, highlight = highlight)
     }
 }

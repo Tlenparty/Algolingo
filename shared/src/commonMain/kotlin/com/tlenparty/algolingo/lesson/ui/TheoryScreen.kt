@@ -18,7 +18,7 @@ import com.tlenparty.algolingo.ui.components.richText
 import com.tlenparty.algolingo.design.AlgoTheme
 
 @Composable
-fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modifier) {
+fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modifier, highlight: Boolean = true) {
     val t = AlgoTheme.typography
     val cap = AlgoTheme.colors.secondaryText
     Column(modifier.fillMaxSize()) {
@@ -38,7 +38,7 @@ fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modi
                 }
                 if (card.skeleton != null) {
                     Text("Скелет", style = t.label, color = cap)
-                    CodeBlock(card.skeleton)
+                    CodeBlock(card.skeleton, highlight = highlight)
                 }
                 if (card.body.isNotBlank()) {
                     Text(richText(card.body), style = t.body, color = MaterialTheme.colorScheme.onBackground)
