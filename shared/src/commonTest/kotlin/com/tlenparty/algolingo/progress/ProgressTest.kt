@@ -7,6 +7,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import com.tlenparty.algolingo.design.CodeLang
 import kotlin.test.*
 
 class ProgressTest {
@@ -134,5 +135,26 @@ class ProgressTest {
         val s = encodeProgress(p)
         assertTrue("\"2026-10-22\"" in s, s)
         assertEquals(p, decodeProgress(s))
+    }
+
+    // Language
+
+    @Test fun decodeWithoutLangIsKotlin() =
+        assertEquals(Progress(xp = 5, lang = CodeLang.Kotlin), decodeProgress("{\"xp\":5,\"lessons\":{}}"))
+
+    @Test fun decodeUnknownLangFallsBackToKotlinKeepingProgress() {
+        val p = decodeProgress("{\"xp\":9,\"lang\":\"java\",\"lessons\":{\"l0.4\":{\"step\":1}}}")
+        assertNotNull(p)
+        assertEquals(CodeLang.Kotlin, p.lang)
+        assertEquals(9, p.xp)
+        assertEquals(LessonProgress(1), p.lessons["l0.4"])
+    }
+
+    @Test fun langRoundTrip() {
+        val p = Progress(xp = 3, lang = CodeLang.Python)
+        val s = encodeProgress(p)
+        assertTrue("\"lang\":\"python\"" in s, s)
+        assertEquals(p, decodeProgress(s))
+        assertTrue("\"lang\":\"kotlin\"" in encodeProgress(Progress()))
     }
 }
