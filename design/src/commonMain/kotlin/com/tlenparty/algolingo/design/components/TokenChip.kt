@@ -15,7 +15,7 @@ enum class ChipState { Normal, Ghost }
 
 /** Bank chip. Ghost keeps exact size (text composed but transparent) so the bank does not reflow. */
 @Composable
-fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: Modifier = Modifier) {
+fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: Modifier = Modifier, highlight: Boolean = true) {
     val s = MaterialTheme.colorScheme
     val ghost = state == ChipState.Ghost
     ChunkyBox(
@@ -30,7 +30,7 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
     ) {
         Text(
             // Ghost: plain text, otherwise highlight spans (numbers, keywords) override the transparent color.
-            if (ghost) AnnotatedString(text) else highlight(text, AlgoTheme.colors),
+            if (ghost || !highlight) AnnotatedString(text) else highlight(text, AlgoTheme.colors),
             style = AlgoTheme.typography.codeChip,
             color = if (ghost) Color.Transparent else s.onBackground,
             softWrap = false,

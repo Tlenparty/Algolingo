@@ -130,6 +130,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                                     if (placed) ChipState.Ghost else ChipState.Normal,
                                     if (placed || !solving) null else ({ on(LessonAction.TapChip(id)) }),
                                     Modifier.testTag("chip"), // e2e (E2eScenarios)
+                                    highlight = code,
                                 )
                             }
                         }
