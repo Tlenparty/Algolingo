@@ -22,7 +22,7 @@
 - [x] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2 (completed 2026-10-28)
 - [ ] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
-- [ ] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний
+- [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
 - [ ] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ»
 
 ## Phase Details
@@ -353,11 +353,11 @@ Plans:
   3. `СОДЕРЖАНИЕ.md` ссылается на все 12 заметок в разделе System Design
   4. `tools/sync_notes.py` переносит заметки в `files/kb/`; заметки открываются в приложении на Android и iOS-симуляторе; KB-тесты зелёные
 **Depends on:** Phase 8
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 11-01-PLAN.md — заметки 01–06 (путь запроса, HTTP, TLS, авторизация, nginx/LB, Redis) в vault + sync + тесты + проверка на устройствах
-- [ ] 11-02-PLAN.md — заметки 07–12 (Kafka, БД, Docker/K8s, real-time, файлы/CDN, наблюдаемость) + СОДЕРЖАНИЕ + финальный sync и проверка
+- [x] 11-02-PLAN.md — заметки 07–12 (Kafka, БД, Docker/K8s, real-time, файлы/CDN, наблюдаемость) + СОДЕРЖАНИЕ + финальный sync и проверка
 
 ### Phase 12: Client-Server Basics Lessons
 
