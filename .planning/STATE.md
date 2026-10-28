@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 07.1 context gathered
-last_updated: "2026-10-28T14:00:10.463Z"
-last_activity: 2026-10-28
+last_updated: "2026-10-28T14:09:43.811Z"
+last_activity: 2026-10-28 -- Phase 9 execution started
 progress:
   total_phases: 14
   completed_phases: 10
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-21)
 
 **Core value:** Быстро, с телефона, без клавиатуры прорешать алгоритмическую задачу: собрать решение из облачков, нажать «Проверить» и сразу понять, где грабли.
-**Current focus:** Phase 11 — Client-Server Basics Notes
+**Current focus:** Phase 9 — Language Switch + Python Pilot
 
 ## Current Position
 
-Phase: 11 (Client-Server Basics Notes) — EXECUTING
-Plan: 2 of 2
-Status: Ready to execute
-Last activity: 2026-10-28
+Phase: 9 (Language Switch + Python Pilot) — EXECUTING
+Plan: 1 of 6
+Status: Executing Phase 9
+Last activity: 2026-10-28 -- Phase 9 execution started
 
 Progress: [█████████░] 87%
 
