@@ -336,13 +336,13 @@ Plans:
 **Goal:** Все 9 уроков с кодом проходятся на Python: свои дистракторы и грабли, оракулы на python3, ревью заказчика по каждому уроку (спека docs/superpowers/specs/2026-10-28-python-language-design.md)
 **Requirements**: PY-WR01, PY-BATCH-A, PY-BATCH-B, PY-BATCH-C, PY-E2E, PY-DEVICES
 **Depends on:** Phase 9
-**Plans:** 5 plans
+**Plans:** 1/5 plans executed
 
 Plans:
 
 **Wave 1**
 
-- [ ] 10-01-PLAN.md — WR-01: генератор сверяет теги неверных облачков с фактом (G14), перепроверка пилота l1.4
+- [x] 10-01-PLAN.md — WR-01: генератор сверяет теги неверных облачков с фактом (G14), перепроверка пилота l1.4
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
