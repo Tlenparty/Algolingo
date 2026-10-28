@@ -417,7 +417,7 @@ Plans:
   4. smoke.sh проходит все SD-уроки на Android-эмуляторе и iOS-симуляторе (физический Pixel 7 не используется)
 
 **Depends on:** Phase 12
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 **Wave 1**
@@ -426,7 +426,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 13-02-PLAN.md — sd2.1-sd2.3 (Потеря связи, Несколько БД, Наблюдаемость) + каталог (SD-07)
+- [x] 13-02-PLAN.md — sd2.1-sd2.3 (Потеря связи, Несколько БД, Наблюдаемость) + каталог (SD-07)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
