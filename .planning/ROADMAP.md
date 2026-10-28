@@ -23,7 +23,7 @@
 - [x] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python (completed 2026-10-28)
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
 - [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
-- [ ] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ»
+- [x] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ» (completed 2026-10-28)
 
 ## Phase Details
 
