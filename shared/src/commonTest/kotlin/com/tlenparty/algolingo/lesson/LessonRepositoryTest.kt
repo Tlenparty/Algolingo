@@ -36,4 +36,9 @@ class LessonRepositoryTest {
         val text = Json.encodeToString(l).replaceFirst("{", "{\"extra\":1,")
         assertEquals(l, parseLesson(text).getOrThrow())
     }
+
+    @Test fun pathByPrefix() {
+        assertEquals("files/content/lessons/l1.1.json", lessonPath("l1.1"))
+        assertEquals("files/content/sd/sd1.1.json", lessonPath("sd1.1"))
+    }
 }

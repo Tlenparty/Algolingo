@@ -113,4 +113,50 @@ class ModelTest {
         assertEquals(1, e.holes.size)
         assertEquals("w", e.bank[1].why)
     }
+
+    // --- design lessons ---
+    private fun d(n: Int, code: String) = ex("l.e$n", listOf("", ""), listOf(Hole(listOf(code))), listOf(Chip(code), Chip("Z", "w")))
+    private fun design(vararg ex: Exercise, code: String) = lessonOf(*ex, code = code).copy(kind = LessonKind.Design)
+
+    @Test fun designStepRange() {
+        assertEquals(emptyList(), validate(design(d(1, "a"), d(2, "b"), code = "b")))
+        assertEquals(emptyList(), validate(design(d(1, "a"), d(2, "b"), d(3, "c"), d(4, "d"), code = "d")))
+        assertErr(design(d(1, "a"), d(2, "b"), d(3, "c"), d(4, "d"), d(5, "e"), code = "e"), "expected 2..4")
+        assertErr(design(d(1, "a"), code = "a"), "expected 2..4")
+        val code4 = lessonOf(d(1, "a"), d(2, "a"), d(3, "a"), d(4, "a"), code = "a")
+        assertErr(code4, "expected 2..3")
+    }
+
+    @Test fun designSkipsHoleGrowth() {
+        val l = design(d(1, "a"), d(2, "b"), code = "b")
+        assertTrue(validate(l).none { "strictly increasing" in it })
+        assertErr(lessonOf(d(1, "a"), d(2, "a"), code = "a"), "strictly increasing")
+    }
+
+    @Test fun designOnlyLastStepMatchesSolution() {
+        assertEquals(emptyList(), validate(design(d(1, "a"), d(2, "b"), code = "b")))
+        assertErr(design(d(1, "a"), d(2, "b"), code = "a"), "l.e2: segments + ok[0] differ")
+        assertErr(lessonOf(d(1, "a"), d(2, "b"), code = "b"), "l.e1: segments + ok[0] differ")
+    }
+
+    @Test fun designLineLength() {
+        val ok = "x".repeat(MAX_DESIGN_LINE)
+        val long = "y".repeat(MAX_DESIGN_LINE + 1)
+        assertEquals(emptyList(), validate(design(d(1, "a\n$ok"), d(2, ok), code = ok)))
+        assertErr(design(d(1, "a\n$long"), d(2, ok), code = ok), "l.e1: line 2 has ${MAX_DESIGN_LINE + 1} chars (max $MAX_DESIGN_LINE)")
+        assertTrue(validate(lessonOf(d(1, long), d(2, long).copy(segments = listOf("", "", ""), holes = listOf(Hole(listOf("q")), Hole(listOf(long))), bank = listOf(Chip("q"), Chip(long))), code = long))
+            .let { errs -> errs.none { "chars" in it } })
+    }
+
+    @Test fun defaultsAndKindDecode() {
+        val j = Json { ignoreUnknownKeys = true }
+        val base = """"id":"x","title":"t","statement":"s","exercises":[],"solution":{"code":"c"}"""
+        val l = j.decodeFromString<Lesson>("{$base}")
+        assertEquals(LessonKind.Code, l.kind)
+        assertEquals("", l.solution.time)
+        assertEquals("", l.solution.space)
+        assertEquals(LessonKind.Design, j.decodeFromString<Lesson>("{\"kind\":\"design\",$base}").kind)
+        val e = j.decodeFromString<Exercise>("""{"id":"e","segments":[""],"holes":[],"bank":[]}""")
+        assertEquals(null, e.title)
+    }
 }
