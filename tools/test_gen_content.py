@@ -52,6 +52,83 @@ case { }
 """ % (E1_CODE, E2_CODE)
 
 
+PY_E1 = """def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    seen = {}
+    for i, x in enumerate(nums):
+        if ⟦target - x⟧ in seen:
+            return seen[target - x], i
+        seen[x] = i
+    return None"""
+PY_E2 = PY_E1.replace("seen[x] = i", "seen[⟦x⟧] = i")
+
+PY_BASE = """# l1.4
+lang: python
+note: 1.4 Two Sum (массив НЕ отсортирован)
+title: Two Sum
+pitfalls:
+- Положить `x` в `seen` до проверки: `[3, 2, 4]`, `6` → `(0, 0)`
+variations:
+- `nums.index(...)` в цикле — O(n²)
+examples:
+- assert two_sum([2, 7, 11, 15], 9) == (0, 1)
+- assert two_sum([3, 2, 4], 6) == (1, 2)
+- assert two_sum([1, 2], 7) is None
+checks:
+```python
+import itertools
+for n in range(5):
+    for a in itertools.product([-1, 0, 1, 2], repeat=n):
+        for t in range(-2, 5):
+            with case():
+                ok = any(a[i] + a[j] == t for i in range(n) for j in range(i + 1, n))
+                r = two_sum(list(a), t)
+                assert (r is not None and r[0] < r[1] and a[r[0]] + a[r[1]] == t) if ok else r is None
+with case():
+    assert two_sum([], 0) is None
+```
+
+## theory Каркас
+skeleton:
+```python
+for i, x in enumerate(nums):
+    if target - x in seen:
+        return seen[target - x], i
+    seen[x] = i
+```
+
+## e1
+```python
+%s
+```
+- `x` [wrong]: ищем само число: `[2, 7]`, `9` → `None`
+- `target` [wrong]: ищем `target` целиком: `[2, 7]`, `9` → `None`
+
+## e2
+```python
+%s
+```
+- `target` [wrong]: ищем `target` целиком: `[2, 7]`, `9` → `None`
+- @1 `x` [wrong]: ищем само число: `[2, 7]`, `9` → `None`
+- @2 `target - x` [wrong]: кладём дополнение: `[2, 7]`, `9` → `None`
+""" % (PY_E1, PY_E2)
+
+
+def py_root(py_text=PY_BASE, kotlin=True):
+    """Temp repo root with note 05, the Kotlin l1.4 sidecar (unless kotlin=False) and a py sidecar."""
+    tmp = Path(tempfile.mkdtemp())
+    (tmp / NOTE_REL).parent.mkdir(parents=True)
+    shutil.copy(str(ROOT / NOTE_REL), str(tmp / NOTE_REL))
+    (tmp / "content/authoring/py").mkdir(parents=True)
+    if kotlin:
+        shutil.copy(str(ROOT / "content/authoring/l1.4.md"), str(tmp / "content/authoring/l1.4.md"))
+    (tmp / "content/authoring/py/l1.4.md").write_text(py_text, encoding="utf-8")
+    return tmp
+
+
+def py_build(text):
+    return gen_content.build_lesson(gen_content.parse_sidecar(text, "l1.4", "python"), NOTE_LINES)
+
+
 def build(text, stem="l0.4"):
     return gen_content.build_lesson(gen_content.parse_sidecar(text, stem), NOTE_LINES)
 
@@ -238,6 +315,68 @@ class Validation(unittest.TestCase):
 
     def test_g8_no_examples_fails(self):
         self.assertRule("G8", build, BASE.replace("examples:\n- assertEquals(0, binarySearch(intArrayOf(5), 5))\n", ""))
+
+
+class PySidecar(unittest.TestCase):
+    assertRule = Validation.assertRule
+
+    def test_py_sidecar_parses_with_python_fences(self):
+        sc = gen_content.parse_sidecar(PY_BASE, "l1.4", "python")
+        self.assertEqual(sc["lang"], "python")
+        self.assertEqual(sc["file"], "content/authoring/py/l1.4.md")
+        self.assertIn("with case():", sc["top"]["checks"])
+        self.assertEqual(gen_content.parse_sidecar(BASE, "l0.4")["lang"], "kotlin")
+        lesson = py_build(PY_BASE)  # G5 vs the Kotlin note code is skipped for python
+        self.assertEqual([len(e["holes"]) for e in lesson["exercises"]], [1, 2])
+        self.assertIn("def two_sum", lesson["solution"]["code"])
+        self.assertEqual(lesson["solution"]["time"], "O(n)")
+        self.assertEqual(lesson["theory"][0]["skeleton"].split("\n")[0], "for i, x in enumerate(nums):")
+
+    def test_lang_must_match_folder_and_be_python(self):
+        self.assertRule("syntax", py_build, PY_BASE.replace("lang: python", "lang: java"))
+        self.assertRule("syntax", py_build, PY_BASE.replace("lang: python\n", ""))
+        self.assertRule("syntax", build, BASE.replace("note:", "lang: python\nnote:", 1))
+
+    def test_fence_language_is_enforced(self):
+        self.assertRule("syntax", py_build, PY_BASE.replace("```python\ndef", "```kotlin\ndef", 1))
+        self.assertRule("syntax", py_build, PY_BASE.replace("checks:\n```python", "checks:\n```kotlin", 1))
+        self.assertRule("syntax", py_build, PY_BASE.replace("skeleton:\n```python", "skeleton:\n```kotlin", 1))
+        self.assertRule("syntax", build, BASE.replace("checks:\n```kotlin", "checks:\n```python", 1))
+
+    def test_python_needs_own_pitfalls_and_variations(self):
+        self.assertRule("G7", py_build, PY_BASE.replace("pitfalls:\n- Положить `x` в `seen` до проверки: `[3, 2, 4]`, `6` → `(0, 0)`\n", ""))
+        self.assertRule("G7", py_build, PY_BASE.replace("variations:\n- `nums.index(...)` в цикле — O(n²)\n", ""))
+
+    def test_python_exercises_still_must_agree(self):
+        self.assertRule("G5", py_build, PY_BASE.replace("seen = {}", "seen = dict()", 1))
+
+    def test_render_writes_lessons_py_and_langs(self):
+        tmp = py_root()
+        try:
+            out = gen_content.render_all(tmp)
+            py = json.loads(out[gen_content.LESSONS_PY + "/l1.4.json"])
+            self.assertIn("def two_sum", py["solution"]["code"])
+            self.assertEqual(json.loads(out[gen_content.LESSONS + "/l1.4.json"])["title"], "Two Sum")
+            index = json.loads(out[gen_content.INDEX])["lessons"]
+            self.assertEqual(index, [{"id": "l1.4", "title": "Two Sum", "langs": ["kotlin", "python"]}])
+            self.assertNotIn("two_sum", out[gen_content.TEST_KT])
+            self.assertNotIn("two_sum", out[gen_content.WRONG_JSON])
+            self.assertEqual(gen_content.main(["--root", str(tmp)]), 0)
+            self.assertEqual(gen_content.main(["--root", str(tmp), "--check"]), 0)
+            orphan = tmp / gen_content.LESSONS_PY / "l0.9.json"
+            orphan.write_text("{}", encoding="utf-8")
+            self.assertEqual(gen_content.main(["--root", str(tmp), "--check"]), 1)
+            self.assertEqual(gen_content.main(["--root", str(tmp)]), 0)
+            self.assertFalse(orphan.exists())
+        finally:
+            shutil.rmtree(str(tmp))
+
+    def test_python_without_kotlin_pair_fails(self):
+        tmp = py_root(kotlin=False)
+        try:
+            self.assertRule("G7", gen_content.render_all, tmp)
+        finally:
+            shutil.rmtree(str(tmp))
 
 
 class Tags(unittest.TestCase):
@@ -445,6 +584,11 @@ class EndToEnd(unittest.TestCase):
     def test_l04_render_is_byte_identical(self):
         out = gen_content.render_all(ROOT)
         self.assertEqual(out[L04_REL], (ROOT / L04_REL).read_text(encoding="utf-8"))
+        committed = sorted((ROOT / gen_content.LESSONS).glob("*.json"))
+        self.assertGreaterEqual(len(committed), 9)
+        for p in committed + [ROOT / gen_content.INDEX]:
+            rel = str(p.relative_to(ROOT))
+            self.assertEqual(out[rel], p.read_text(encoding="utf-8"), rel)
 
     def test_check_passes_on_committed_tree(self):
         r = subprocess.run([sys.executable, "tools/gen_content.py", "--check"], cwd=str(ROOT),
