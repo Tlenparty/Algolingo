@@ -53,8 +53,12 @@ Bank order: ok[0] of each hole (with multiplicity), other ok/acceptable texts, d
 """
 import argparse
 import json
+import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -647,6 +651,73 @@ def render_wrong_json(items):
     return dump(out)
 
 
+# ---------- python lessons ----------
+
+PY_TIMEOUT = 10  # seconds per program; a hang is killed and counts as a failing run
+
+PY_PRELUDE = """
+import sys as _sys
+import traceback as _tb
+_fails = []
+
+
+class case:
+    \"\"\"with case(): one check; any Exception is recorded as a failure and the module goes on.\"\"\"
+    def __enter__(self):
+        return self
+
+    def __exit__(self, t, e, tb):
+        if t is not None and issubclass(t, Exception):
+            _fails.append("line %d: %s" % (tb.tb_lineno, "".join(_tb.format_exception_only(t, e)).strip()))
+            return True
+
+
+def pw(b, e):
+    return b ** e
+"""
+
+
+def py_module(code, examples, checks):
+    """Variant code, then the case()/pw prelude, each example in its own case, checks at top level.
+    The __future__ import lets `tuple[int, int] | None` annotations run on python3 < 3.10."""
+    return ("from __future__ import annotations\n" + code + "\n\n" + PY_PRELUDE + "\n"
+            + "".join("with case():\n    %s\n" % e for e in examples) + (checks or "")
+            + "\n\nif _fails:\n    print(\"%d failed, first: %s\" % (len(_fails), _fails[0]))\n    _sys.exit(1)\n")
+
+
+def run_python(source, timeout=None):
+    """(ok, detail): run source with `python3 -I` in a fresh temp dir, env = PATH only."""
+    exe = shutil.which("python3")
+    if not exe:
+        raise GenError("python3", "G12", "python3 not found in PATH (needed to check python lessons)")
+    timeout = timeout or PY_TIMEOUT
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "variant.py")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(source)
+        try:
+            r = subprocess.run([exe, "-I", path], cwd=d, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT, env={"PATH": os.environ.get("PATH", "")},
+                               timeout=timeout, encoding="utf-8", errors="replace")
+        except subprocess.TimeoutExpired:
+            return False, "timeout after %ss" % timeout
+    lines = r.stdout.strip().splitlines()
+    return r.returncode == 0, " | ".join(lines[-3:]) or "exit code %d" % r.returncode
+
+
+def python_gates(lesson, sc):
+    """G12: reference + every ok/acceptable variant passes examples + checks.
+    G13: every wrong (hole, chip) program fails them (kind tags are not compared, only G9-validated)."""
+    ex, chk = sc["top"]["examples"], sc["top"]["checks"]
+    for code, label, _ in variants(lesson):
+        ok, detail = run_python(py_module(code, ex, chk))
+        if not ok:
+            raise GenError(sc["file"], "G12", "%s: %s" % (label, detail))
+    for code, e in wrong_programs(lesson, sc):
+        if run_python(py_module(code, ex, chk))[0]:
+            raise GenError(sc["file"], "G13", "%s: chip does not fail any check" % e["label"])
+
+
 def render_all(repo_root, allow_removed=()):
     root = Path(repo_root)
     note_lines = (root / NOTE).read_text(encoding="utf-8").splitlines()
@@ -660,7 +731,9 @@ def render_all(repo_root, allow_removed=()):
         sc = parse_sidecar(p.read_text(encoding="utf-8"), p.stem, "python")
         if sc["id"] not in ids:
             raise GenError(sc["file"], "G7", "no Kotlin lesson %s/%s.md to pair with" % (AUTHORING, sc["id"]))
-        py_items.append((build_lesson(sc, note_lines), sc))
+        lesson = build_lesson(sc, note_lines)
+        python_gates(lesson, sc)
+        py_items.append((lesson, sc))
     py_ids = set(lesson["id"] for lesson, _ in py_items)
     old = root / INDEX
     if old.is_file():
