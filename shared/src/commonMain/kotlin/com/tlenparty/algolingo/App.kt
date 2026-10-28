@@ -34,6 +34,7 @@ import com.tlenparty.algolingo.progress.Catalog
 import com.tlenparty.algolingo.progress.homeModel
 import com.tlenparty.algolingo.progress.loadCatalog
 import com.tlenparty.algolingo.progress.ProgressRepository
+import com.tlenparty.algolingo.progress.routeLang
 import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -148,12 +149,14 @@ private fun HomeTab(entry: NavBackStackEntry, catalog: Catalog?, progressRepo: P
     val c = catalog
     val p = progress
     val lang = p?.lang ?: CodeLang.Kotlin
-    val model = if (c != null && p != null) homeModel(c, p, today, lang = if (byLang) p.lang else null) else null
+    val filter = if (byLang) lang else null // SD: no language filter, always routes Kotlin
+    val model = if (c != null && p != null) homeModel(c, p, today, lang = filter) else null
+    fun langOf(id: String) = (c?.routeLang(id, filter) ?: CodeLang.Kotlin).id
     HomeScreen(
         model,
-        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id, lang = lang.id)) } },
+        onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id, lang = langOf(id))) } },
         // ponytail: review opens only the first due lesson; chain them into one session if N regularly exceeds 3.
-        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true, lang = lang.id)) } } },
+        onReview = { model?.due?.firstOrNull()?.let { id -> entry.ifResumed { nav.navigate(LessonRoute(id, review = true, lang = langOf(id))) } } },
         saveFailed = saveFailed,
         lang = lang,
         onLang = if (byLang) { l -> progressRepo.setLang(l) } else null,
