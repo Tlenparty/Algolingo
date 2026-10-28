@@ -97,13 +97,14 @@ class ProgressRepository(
 
 /**
  * One DataStore per file (two on one file crash), surviving Activity recreation. The app always passes the same
- * dataDir; a different one (a second e2e @Test with its own fresh dir) gets a new repository on its own file.
+ * dataDir; a different one (a second e2e @Test with its own fresh dir) gets its own repository, kept for reuse.
  */
 object AppGraph {
     // ponytail: main-thread only, no locking; App() is the sole caller.
-    private var progress: Pair<String, ProgressRepository>? = null
+    // ponytail: never evicts; one entry in the app, one per e2e @Test dir.
+    private val progress = mutableMapOf<String, ProgressRepository>()
 
+    /** Keyed by dir, so A -> B -> A reuses A's store instead of opening a second DataStore on A's file. */
     fun progress(dataDir: String): ProgressRepository =
-        progress?.takeIf { it.first == dataDir }?.second
-            ?: ProgressRepository(progressStore("$dataDir/progress.json")).also { progress = dataDir to it }
+        progress.getOrPut(dataDir) { ProgressRepository(progressStore("$dataDir/progress.json")) }
 }

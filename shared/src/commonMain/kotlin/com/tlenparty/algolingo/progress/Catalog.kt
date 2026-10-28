@@ -16,7 +16,10 @@ data class CatalogEntry(
     val caption: String? = null,
     /** CodeLang ids this lesson ships in; the generator adds "python" when a py sidecar exists. */
     val langs: List<String> = listOf("kotlin"),
-)
+) {
+    /** [lang] null = no language filter (SD tab). */
+    fun has(lang: CodeLang?) = lang == null || lang.id in langs
+}
 
 @Serializable
 data class Catalog(val schema: Int = 1, val lessons: List<CatalogEntry> = emptyList())
@@ -75,8 +78,15 @@ data class HomeModel(val streak: Int, val xp: Int, val nodes: List<HomeNode>, va
 /** [lang] null = no language filter (SD tab). */
 fun homeModel(catalog: Catalog, p: Progress, today: LocalDate, lang: CodeLang? = p.lang): HomeModel {
     val ids = catalog.lessons.map { it.id }
-    val inLang = catalog.lessons.filter { lang == null || lang.id in it.langs }.mapTo(HashSet()) { it.id }
+    val inLang = catalog.lessons.filter { it.has(lang) }.mapTo(HashSet()) { it.id }
     val available = { id: String -> id in inLang }
     val nodes = catalog.lessons.zip(lessonStatuses(ids, p, available)) { e, s -> HomeNode(e.id, e.caption ?: (e.id.removePrefix("l") + " " + e.title), s) }
     return HomeModel(visibleStreak(p, today), p.xp, nodes, dueIds(ids, p, today, available))
 }
+
+/**
+ * Language a lesson opens in: [lang] if the lesson ships in it, else Kotlin (always shipped).
+ * So a Done lesson without the selected language replays in Kotlin, and SD ([lang] null) always routes Kotlin.
+ */
+fun Catalog.routeLang(id: String, lang: CodeLang?): CodeLang =
+    if (lang != null && lessons.any { it.id == id && lang.id in it.langs }) lang else CodeLang.Kotlin

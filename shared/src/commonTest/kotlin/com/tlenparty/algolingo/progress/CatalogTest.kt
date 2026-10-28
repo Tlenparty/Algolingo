@@ -153,4 +153,15 @@ class CatalogTest {
         assertEquals(listOf("sd1"), m.due)
         assertEquals(homeModel(sd, prog.copy(lang = CodeLang.Kotlin), d), m)
     }
+
+    @Test
+    fun routeLangFallsBackToKotlinWhenLessonLacksLanguage() {
+        val c = cat("l1.1" to kt, "l1.4" to py)
+        // Kotlin-completed l1.1 is Done on Python Home; tapping it must not open a missing py file (CR-01).
+        assertEquals(CodeLang.Kotlin, c.routeLang("l1.1", CodeLang.Python))
+        assertEquals(CodeLang.Python, c.routeLang("l1.4", CodeLang.Python))
+        assertEquals(CodeLang.Kotlin, c.routeLang("l1.4", CodeLang.Kotlin))
+        // SD tab (no filter) always routes Kotlin (WR-05).
+        assertEquals(CodeLang.Kotlin, Catalog(lessons = listOf(CatalogEntry("sd1", "x", langs = py))).routeLang("sd1", null))
+    }
 }

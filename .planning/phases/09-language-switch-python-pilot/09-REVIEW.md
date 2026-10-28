@@ -37,6 +37,9 @@ findings:
   info: 6
   total: 12
 status: issues_found
+fix_status: partial
+fixed: [CR-01, WR-02, WR-03, WR-04, WR-05]
+deferred: [WR-01]
 ---
 
 # Phase 9: Code Review Report
@@ -183,6 +186,18 @@ Then add `ProgressTest` cases for `"lang":null` and `"lang":1`.
 **Issue:** `selectable { onSelect(lang) }` fires even when `on == true`, which causes a redundant DataStore write. Any write failure then shows the save-failed banner for a no-op.
 
 **Fix:** `{ if (!on) onSelect(lang) }`.
+
+## Fix Status
+
+| Finding | Status | Commit |
+|---------|--------|--------|
+| CR-01 | fixed: `Catalog.routeLang` — a lesson opens in the selected language only if its catalog entry has it, else Kotlin (Done lessons stay Done and replay in Kotlin); CatalogTest | b1b2505 |
+| WR-05 | fixed with CR-01: SD tab (no filter) always routes Kotlin | b1b2505 |
+| WR-02 | fixed: `CodeLangSerializer` reads the JSON element; null/number/object → Kotlin, progress kept; ProgressTest | d4b31bf |
+| WR-03 | fixed: AppGraph caches one repository per dataDir (A→B→A reuses A); ProgressRepositoryTest | fedfa61 |
+| WR-04 | fixed: scenarioPython derives the Soon set from the catalog; Soon UI checks only when such a lesson exists | b6a054d |
+| WR-01 | deferred to phase 10 | — |
+| IN-01..IN-06 | not in scope | — |
 
 ---
 

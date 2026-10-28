@@ -16,6 +16,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
@@ -34,12 +37,12 @@ data class Progress(
     @Serializable(with = CodeLangSerializer::class) val lang: CodeLang = CodeLang.Kotlin,
 )
 
-/** Stored as CodeLang.id; an unknown id (e.g. "java") reads as Kotlin so progress is never reset over it. */
+/** Stored as CodeLang.id; an unknown id or a non-string value (null, 3, {}) reads as Kotlin so progress is never reset over it. */
 object CodeLangSerializer : KSerializer<CodeLang> {
     override val descriptor = PrimitiveSerialDescriptor("CodeLang", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: CodeLang) = encoder.encodeString(value.id)
     override fun deserialize(decoder: Decoder): CodeLang {
-        val id = decoder.decodeString()
+        val id = if (decoder is JsonDecoder) (decoder.decodeJsonElement() as? JsonPrimitive)?.contentOrNull else decoder.decodeString()
         return CodeLang.entries.firstOrNull { it.id == id } ?: CodeLang.Kotlin
     }
 }

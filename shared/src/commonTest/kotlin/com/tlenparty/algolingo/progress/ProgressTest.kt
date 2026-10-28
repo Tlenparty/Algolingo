@@ -150,6 +150,16 @@ class ProgressTest {
         assertEquals(LessonProgress(1), p.lessons["l0.4"])
     }
 
+    @Test fun decodeNonStringLangFallsBackToKotlinKeepingProgress() {
+        for (v in listOf("null", "3", "{}")) {
+            val p = decodeProgress("{\"xp\":9,\"lang\":$v,\"lessons\":{\"l0.4\":{\"step\":1}}}")
+            assertNotNull(p, v)
+            assertEquals(CodeLang.Kotlin, p.lang, v)
+            assertEquals(9, p.xp, v)
+            assertEquals(LessonProgress(1), p.lessons["l0.4"], v)
+        }
+    }
+
     @Test fun langRoundTrip() {
         val p = Progress(xp = 3, lang = CodeLang.Python)
         val s = encodeProgress(p)
