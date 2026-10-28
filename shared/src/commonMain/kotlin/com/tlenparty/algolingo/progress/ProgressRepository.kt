@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
+import com.tlenparty.algolingo.design.CodeLang
 import com.tlenparty.algolingo.lesson.LessonResult
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -74,10 +75,15 @@ class ProgressRepository(
     val saveFailed: StateFlow<Boolean> = _saveFailed
 
     /** today() is read inside the transform: the day of the write, not of the lesson start. */
-    fun record(id: String, r: LessonResult): Job = scope.launch {
+    fun record(id: String, r: LessonResult): Job = write { applyLessonResult(it, id, r, today()) }
+
+    fun setLang(lang: CodeLang): Job = write { it.copy(lang = lang) }
+
+    /** One retry, then [saveFailed]. */
+    private fun write(transform: (Progress) -> Progress): Job = scope.launch {
         repeat(2) { attempt ->
             try {
-                store.updateData { applyLessonResult(it, id, r, today()) }
+                store.updateData { transform(it) }
                 _saveFailed.value = false
                 return@launch
             } catch (e: CancellationException) {

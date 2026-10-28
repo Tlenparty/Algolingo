@@ -1,5 +1,6 @@
 package com.tlenparty.algolingo.progress
 
+import com.tlenparty.algolingo.design.CodeLang
 import com.tlenparty.algolingo.lesson.Grade
 import com.tlenparty.algolingo.lesson.LessonResult
 import com.tlenparty.algolingo.lesson.xpFor
@@ -7,7 +8,12 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -25,7 +31,18 @@ data class Progress(
     val streak: Int = 0,
     val lastActiveDay: LocalDate? = null,
     val lessons: Map<String, LessonProgress> = emptyMap(),
+    @Serializable(with = CodeLangSerializer::class) val lang: CodeLang = CodeLang.Kotlin,
 )
+
+/** Stored as CodeLang.id; an unknown id (e.g. "java") reads as Kotlin so progress is never reset over it. */
+object CodeLangSerializer : KSerializer<CodeLang> {
+    override val descriptor = PrimitiveSerialDescriptor("CodeLang", PrimitiveKind.STRING)
+    override fun serialize(encoder: Encoder, value: CodeLang) = encoder.encodeString(value.id)
+    override fun deserialize(decoder: Decoder): CodeLang {
+        val id = decoder.decodeString()
+        return CodeLang.entries.firstOrNull { it.id == id } ?: CodeLang.Kotlin
+    }
+}
 
 /** Leitner position. due == null means mastered. */
 @Serializable
