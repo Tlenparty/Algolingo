@@ -45,7 +45,30 @@ class LessonContentTest {
             assertEquals(emptyList(), validate(l), id)
             assertEquals(id, l.id)
             val counts = l.exercises.map { it.holes.size }
-            assertTrue(counts.zipWithNext().all { (a, b) -> b > a }, "$id hole counts $counts")
+            if (l.kind == LessonKind.Code) assertTrue(counts.zipWithNext().all { (a, b) -> b > a }, "$id hole counts $counts")
         }
+    }
+
+    @Test
+    fun everySdLessonIsStrictValidDesign() {
+        val dir = File("src/commonMain/composeResources/files/content")
+        val entries = Json { ignoreUnknownKeys = true }.decodeFromString<Catalog>(File(dir, "sd/index.json").readText()).lessons
+        val ids = entries.map { it.id }
+        assertTrue(ids.isNotEmpty())
+        assertEquals(ids.size, ids.toSet().size)
+        entries.forEach { assertTrue(!it.caption.isNullOrBlank(), "${it.id}: caption") }
+        val strict = Json { ignoreUnknownKeys = false }
+        ids.forEach { id ->
+            val f = File(dir, "sd/$id.json")
+            assertTrue(f.isFile, "missing sd/$id.json")
+            assertEquals("files/content/sd/$id.json", lessonPath(id))
+            val l = strict.decodeFromString<Lesson>(f.readText())
+            assertEquals(LessonKind.Design, l.kind, id)
+            assertEquals(emptyList(), validate(l), id)
+            assertEquals(id, l.id)
+        }
+        val mainIds = Json { ignoreUnknownKeys = true }.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons.map { it.id }
+        assertEquals(emptySet(), ids.toSet() intersect mainIds.toSet())
+        assertTrue(ids.none { File(dir, "lessons/$it.json").exists() })
     }
 }

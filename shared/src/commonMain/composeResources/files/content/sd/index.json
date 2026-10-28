@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "lessons": [
+    {
+      "id": "sd1.1",
+      "title": "URL shortener",
+      "caption": "SD1.1 URL shortener"
+    }
+  ]
+}
