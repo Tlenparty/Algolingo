@@ -465,19 +465,19 @@ class PyHarness(unittest.TestCase):
 
     def test_g14_compile_tag_but_wrong(self):
         detail = self.g14(PY_BASE.replace("- `x` [wrong]: ищем само", "- `x` [compile]: ищем само", 1))
-        self.assertIn("заявлено compile, на деле wrong", detail)
+        self.assertIn("заявлено compile, на деле crash/wrong", detail)  # seen[target - x] -> KeyError too
 
     def test_g14_hang_tag_but_wrong(self):
         detail = self.g14(PY_BASE.replace("- `x` [wrong]: ищем само", "- `x` [hang]: ищем само", 1))
-        self.assertIn("заявлено hang, на деле wrong", detail)
+        self.assertIn("заявлено hang, на деле crash/wrong", detail)
 
     def test_g14_hole_scope_tag_checked(self):
-        detail = self.g14(PY_BASE.replace("- @1 `x` [wrong]", "- @1 `x` [crash]", 1))
-        self.assertIn("l1.4.e2 @1 `x`: заявлено crash, на деле wrong", detail)
+        detail = self.g14(PY_BASE.replace("- @1 `x` [wrong]", "- @1 `x` [hang]", 1))
+        self.assertIn("l1.4.e2 @1 `x`: заявлено hang, на деле crash/wrong", detail)
 
     def test_g14_over_claim_needs_every_tag(self):
         detail = self.g14(PY_BASE.replace("- `x` [wrong]: ищем само", "- `x` [compile,wrong]: ищем само", 1))
-        self.assertIn("заявлено compile/wrong, на деле wrong", detail)
+        self.assertIn("заявлено compile/wrong, на деле crash/wrong", detail)
 
     def test_g14_true_tags_pass(self):
         text = self.chip("- `x +` [compile]: не выражение: `x +`")
