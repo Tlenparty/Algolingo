@@ -19,7 +19,7 @@
 - [x] **Phase 5: Level 0 Content & End-to-End** - Генератор контента из Obsidian, размеченный уровень 0, сквозной прогон на обеих платформах (completed 2026-10-22)
 - [x] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах (completed 2026-10-22)
 - [x] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам (completed 2026-10-22)
-- [ ] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2
+- [x] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2 (completed 2026-10-28)
 - [ ] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
 
@@ -287,7 +287,7 @@ Plans:
   5. sd0.1, sd1.1, sd1.2 отревьюены заказчиком и проходятся на Android и iOS-симуляторе; `gen_content.py --check` по-прежнему зелёный
 
 **Depends on:** Phase 7
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -300,7 +300,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 08-03-PLAN.md — E2E smoke Android + iOS, скриншоты (SD-02, SD-04)
+- [x] 08-03-PLAN.md — E2E smoke Android + iOS, скриншоты (SD-02, SD-04)
 
 ### Phase 9: Language Switch + Python Pilot
 
