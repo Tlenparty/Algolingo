@@ -353,10 +353,10 @@ Plans:
   3. `СОДЕРЖАНИЕ.md` ссылается на все 12 заметок в разделе System Design
   4. `tools/sync_notes.py` переносит заметки в `files/kb/`; заметки открываются в приложении на Android и iOS-симуляторе; KB-тесты зелёные
 **Depends on:** Phase 8
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 11-01-PLAN.md — заметки 01–06 (путь запроса, HTTP, TLS, авторизация, nginx/LB, Redis) в vault + sync + тесты + проверка на устройствах
+- [x] 11-01-PLAN.md — заметки 01–06 (путь запроса, HTTP, TLS, авторизация, nginx/LB, Redis) в vault + sync + тесты + проверка на устройствах
 - [ ] 11-02-PLAN.md — заметки 07–12 (Kafka, БД, Docker/K8s, real-time, файлы/CDN, наблюдаемость) + СОДЕРЖАНИЕ + финальный sync и проверка
 
 ### Phase 12: Client-Server Basics Lessons
