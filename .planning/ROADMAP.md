@@ -334,13 +334,17 @@ Plans:
 ### Phase 10: Python Content
 
 **Goal:** Все 9 уроков с кодом проходятся на Python: свои дистракторы и грабли, оракулы на python3, ревью заказчика по каждому уроку (спека docs/superpowers/specs/2026-10-28-python-language-design.md)
-**Requirements**: TBD
+**Requirements**: PY-WR01, PY-BATCH-A, PY-BATCH-B, PY-BATCH-C, PY-E2E, PY-DEVICES
 **Depends on:** Phase 9
-**Plans:** 0 plans
+**Plans:** 5 plans
 
 Plans:
 
-- [ ] TBD (run /gsd-plan-phase 10 to break down)
+- [ ] 10-01-PLAN.md — WR-01: генератор сверяет теги неверных облачков с фактом (G14), перепроверка пилота l1.4
+- [ ] 10-02-PLAN.md — пачка A: l0.1, l0.2, l0.3 на Python + ревью заказчика
+- [ ] 10-03-PLAN.md — пачка B: l0.4, l1.1, l1.2 на Python + ревью заказчика
+- [ ] 10-04-PLAN.md — пачка C: l1.3, l1.5 на Python + ревью заказчика
+- [ ] 10-05-PLAN.md — E2E всей Python-цепочки, smoke.sh, прогон на Pixel 7 и iPhone 17 Pro
 
 ### Phase 11: Client-Server Basics Notes
 
