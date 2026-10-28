@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "id": "l1.4",
+  "level": 1,
+  "title": "Two Sum",
+  "statement": "Верни индексы двух чисел с суммой `target` или `None`, если такой пары нет.",
+  "trains": "словарь «значение → индекс», поиск дополнения `target - x`",
+  "targetTimeSec": 180,
+  "theory": [
+    {
+      "title": "Когда словарь значение → индекс",
+      "signals": [
+        "«Найди пару с суммой `target`»",
+        "Массив не отсортирован",
+        "Вернуть нужно индексы, а не сами числа"
+      ],
+      "body": "Для каждого `x` ищем дополнение `target - x` среди уже пройденных: словарь `seen` «значение → индекс» отвечает на `in` за O(1). Если массив отсортирован — это два указателя (уровень 2)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "seen = {}\nfor i, x in enumerate(nums):\n    if target - x in seen:\n        return (seen[target - x], i)\n    seen[x] = i\nreturn None",
+      "body": "Один проход: `enumerate` даёт и индекс, и число. Сначала ищем дополнение, потом кладём текущее. O(n) по времени и памяти."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Сначала `seen[x] = i`, потом проверка: `[3, 2, 4]`, `6` → `3` найдёт сам себя, ответ `(0, 0)` вместо `(1, 2)`",
+        "`seen = set()` вместо `{}`: множество не хранит индекс, `seen[x] = i` падает с `TypeError`. `{}` — это пустой словарь, а не множество",
+        "`nums.index(target - x)` вместо `seen[target - x]`: ответ верный, но `index` ищет линейно — снова O(n²)",
+        "`for i, x in nums` без `enumerate`: число `2` не распаковать в `i, x` — `TypeError`",
+        "Вернуть `-1` или `[]` вместо `None`: вызывающий код проверяет `is None`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l1.4.e1",
+      "segments": [
+        "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in enumerate(nums):\n        if target ",
+        " x ",
+        " seen:\n            return (seen[target - x], i)\n        seen[x] = i\n    return None"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "-"
+          ],
+          "wrongWhy": {
+            "in": "`target in x` ищет внутри числа: `[2, 7]`, `9` → `TypeError: argument of type 'int' is not iterable`",
+            "not in": "`target not in x` ищет внутри числа: `[2, 7]`, `9` → `TypeError: argument of type 'int' is not iterable`"
+          }
+        },
+        {
+          "ok": [
+            "in"
+          ],
+          "wrongWhy": {
+            "-": "`target - x - seen` вычитает словарь из числа: `[2, 7]`, `9` → `TypeError: unsupported operand type(s)`",
+            "+": "`target - x + seen` складывает число и словарь: `[2, 7]`, `9` → `TypeError: unsupported operand type(s)`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "-"
+        },
+        {
+          "text": "in"
+        },
+        {
+          "text": "+",
+          "why": "дополнение — это разность, а не сумма: `[2, 7]`, `9` → ищем `11` и `16`, ответ `None` вместо `(0, 1)`"
+        },
+        {
+          "text": "not in",
+          "why": "условие перевёрнуто, и читаем ключ, которого нет: `[2, 7]`, `9` → `7` нет в `seen`, `seen[7]` падает с `KeyError`"
+        }
+      ],
+      "hints": [
+        "Для текущего `x` нужно `target - x`.",
+        "Если оно уже в `seen` — ответ найден."
+      ]
+    },
+    {
+      "id": "l1.4.e2",
+      "segments": [
+        "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in ",
+        ":\n        if target - x ",
+        " seen:\n            return (seen[target - x], i)\n        seen[",
+        "] = i\n    return None"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "enumerate(nums)"
+          ],
+          "wrongWhy": {
+            "in": "после `in` нужен список, а не оператор: `for i, x in in:` — `SyntaxError`, код не запустится",
+            "not in": "после `in` нужен список, а не оператор: `for i, x in not in:` — `SyntaxError`, код не запустится",
+            "x": "`x` появится только внутри цикла: `for i, x in x:` → `UnboundLocalError` ещё до первого шага",
+            "target - x": "`x` появится только внутри цикла: `for i, x in target - x:` → `UnboundLocalError` ещё до первого шага"
+          }
+        },
+        {
+          "ok": [
+            "in"
+          ],
+          "wrongWhy": {
+            "enumerate(nums)": "между `target - x` и `seen` нужен оператор: `target - x enumerate(nums) seen` — `SyntaxError`",
+            "x": "между `target - x` и `seen` нужен оператор: `target - x x seen` — `SyntaxError`",
+            "nums": "между `target - x` и `seen` нужен оператор: `target - x nums seen` — `SyntaxError`",
+            "target - x": "между `target - x` и `seen` нужен оператор: `target - x target - x seen` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            "x"
+          ],
+          "wrongWhy": {
+            "enumerate(nums)": "ключом станет сам объект `enumerate`, числа не запоминаются: `[2, 7]`, `9` → `None` вместо `(0, 1)`",
+            "in": "в скобках нужен ключ, а не оператор: `seen[in] = i` — `SyntaxError`",
+            "not in": "в скобках нужен ключ, а не оператор: `seen[not in] = i` — `SyntaxError`",
+            "nums": "список нельзя сделать ключом словаря: `[2, 7]`, `9` → `seen[nums] = i` падает с `TypeError: unhashable type: 'list'`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "enumerate(nums)"
+        },
+        {
+          "text": "in"
+        },
+        {
+          "text": "x"
+        },
+        {
+          "text": "nums",
+          "why": "по списку идут только числа, индекса нет: `[2, 7]` → `2` не распаковать в `i, x`, `TypeError`"
+        },
+        {
+          "text": "not in",
+          "why": "условие перевёрнуто, и читаем ключ, которого нет: `[2, 7]`, `9` → `7` нет в `seen`, `seen[7]` падает с `KeyError`"
+        },
+        {
+          "text": "target - x",
+          "why": "кладём дополнение, а не само число — потом найдётся только равное число: `[2, 7]`, `9` → `seen` = `{7: 0}`, на `7` ищем `2` — нет, `None` вместо `(0, 1)`"
+        }
+      ],
+      "hints": [
+        "`enumerate(nums)` даёт пары `(i, x)`: и индекс, и число.",
+        "Для текущего `x` нужно `target - x`. Если оно уже в `seen` — ответ.",
+        "Иначе кладём `x → i`: словарь хранит «значение → индекс»."
+      ]
+    },
+    {
+      "id": "l1.4.e3",
+      "segments": [
+        "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = ",
+        "\n    for i, x in ",
+        ":\n        if target ",
+        " x in seen:\n            return ",
+        "\n        seen[",
+        "] = i\n    return None"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "{}"
+          ],
+          "wrongWhy": {
+            "enumerate(nums)": "в `enumerate` нельзя записать по ключу: `[2, 7]`, `9` → `seen[2] = 0` падает с `TypeError`",
+            "-": "после `=` нужно значение, а не оператор: `seen = -` — `SyntaxError`",
+            "(seen[target - x], i)": "читаем из `seen`, которого ещё нет: `seen = (seen[target - x], i)` → `UnboundLocalError` на первой же строке",
+            "x": "`x` появится только в цикле: `seen = x` → `UnboundLocalError` на первой же строке",
+            "+": "после `=` нужно значение, а не оператор: `seen = +` — `SyntaxError`",
+            "(i, seen[target - x])": "`i` появится только в цикле: `seen = (i, seen[target - x])` → `UnboundLocalError` на первой же строке",
+            "nums": "`seen` станет тем же списком, что и `nums`: `[2, 7]`, `9` → `7 in seen` истинно сразу, `seen[7]` падает с `IndexError`"
+          }
+        },
+        {
+          "ok": [
+            "enumerate(nums)"
+          ],
+          "wrongWhy": {
+            "{}": "перебираем пустой словарь, цикл не выполнится ни разу: `[2, 7]`, `9` → `None` вместо `(0, 1)`",
+            "-": "после `in` нужен список, а не оператор: `for i, x in -:` — `SyntaxError`",
+            "(seen[target - x], i)": "`x` появится только внутри цикла: `for i, x in (seen[target - x], i):` → `UnboundLocalError` ещё до первого шага",
+            "x": "`x` появится только внутри цикла: `for i, x in x:` → `UnboundLocalError` ещё до первого шага",
+            "set()": "перебираем пустое множество, цикл не выполнится ни разу: `[2, 7]`, `9` → `None` вместо `(0, 1)`",
+            "+": "после `in` нужен список, а не оператор: `for i, x in +:` — `SyntaxError`",
+            "(i, seen[target - x])": "`i` появится только внутри цикла: `for i, x in (i, seen[target - x]):` → `UnboundLocalError` ещё до первого шага"
+          }
+        },
+        {
+          "ok": [
+            "-"
+          ],
+          "wrongWhy": {
+            "{}": "между `target` и `x` нужен оператор: `target {} x` — `SyntaxError`",
+            "enumerate(nums)": "между `target` и `x` нужен оператор: `target enumerate(nums) x` — `SyntaxError`",
+            "(seen[target - x], i)": "между `target` и `x` нужен оператор: `target (seen[target - x], i) x` — `SyntaxError`",
+            "x": "между `target` и `x` нужен оператор: `target x x` — `SyntaxError`",
+            "set()": "между `target` и `x` нужен оператор: `target set() x` — `SyntaxError`",
+            "(i, seen[target - x])": "между `target` и `x` нужен оператор: `target (i, seen[target - x]) x` — `SyntaxError`",
+            "nums": "между `target` и `x` нужен оператор: `target nums x` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            "(seen[target - x], i)"
+          ],
+          "wrongWhy": {
+            "{}": "вернём пустой словарь, а не пару индексов: `[2, 7]`, `9` → `{}` вместо `(0, 1)`",
+            "enumerate(nums)": "вернём объект `enumerate`, а не пару индексов: `[2, 7]`, `9` → `<enumerate object>` вместо `(0, 1)`",
+            "-": "после `return` нужно значение, а не оператор: `return -` — `SyntaxError`",
+            "x": "вернём само число, а не индексы: `[2, 7]`, `9` → `7` вместо `(0, 1)`",
+            "set()": "вернём пустое множество, а не пару индексов: `[2, 7]`, `9` → `set()` вместо `(0, 1)`",
+            "+": "после `return` нужно значение, а не оператор: `return +` — `SyntaxError`",
+            "nums": "вернём весь список, а не индексы: `[2, 7]`, `9` → `[2, 7]` вместо `(0, 1)`"
+          }
+        },
+        {
+          "ok": [
+            "x"
+          ],
+          "wrongWhy": {
+            "{}": "словарь нельзя сделать ключом: `[2, 7]`, `9` → `seen[{}] = 0` падает с `TypeError: unhashable type: 'dict'`",
+            "enumerate(nums)": "ключом станет сам объект `enumerate`, числа не запоминаются: `[2, 7]`, `9` → `None` вместо `(0, 1)`",
+            "-": "в скобках нужен ключ, а не оператор: `seen[-] = i` — `SyntaxError`",
+            "(seen[target - x], i)": "сюда доходим, только когда `target - x` нет в `seen`: `[2, 7]`, `9` → `seen[7]` падает с `KeyError`",
+            "set()": "множество нельзя сделать ключом: `[2, 7]`, `9` → `seen[set()] = 0` падает с `TypeError: unhashable type: 'set'`",
+            "+": "в скобках нужен ключ, а не оператор: `seen[+] = i` — `SyntaxError`",
+            "(i, seen[target - x])": "сюда доходим, только когда `target - x` нет в `seen`: `[2, 7]`, `9` → `seen[7]` падает с `KeyError`",
+            "nums": "список нельзя сделать ключом словаря: `[2, 7]`, `9` → `seen[nums] = 0` падает с `TypeError: unhashable type: 'list'`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "{}"
+        },
+        {
+          "text": "enumerate(nums)"
+        },
+        {
+          "text": "-"
+        },
+        {
+          "text": "(seen[target - x], i)"
+        },
+        {
+          "text": "x"
+        },
+        {
+          "text": "set()",
+          "why": "множество не хранит индекс: `[2, 7]`, `9` → `seen[2] = 0` падает с `TypeError: 'set' object does not support item assignment`"
+        },
+        {
+          "text": "nums",
+          "why": "по списку идут только числа, индекса нет: `[2, 7]` → `2` не распаковать в `i, x`, `TypeError`"
+        },
+        {
+          "text": "+",
+          "why": "дополнение — это разность, а не сумма: `[2, 7]`, `9` → ищем `11` и `16`, ответ `None` вместо `(0, 1)`"
+        },
+        {
+          "text": "(i, seen[target - x])",
+          "why": "первым идёт индекс, найденный раньше: `[2, 7]`, `9` → `(1, 0)` вместо `(0, 1)`"
+        }
+      ],
+      "hints": [
+        "`{}` — пустой словарь «значение → индекс».",
+        "`enumerate(nums)` даёт пары `(i, x)`: и индекс, и число.",
+        "Для текущего `x` нужно `target - x`. Если оно уже в `seen` — ответ.",
+        "Первым в ответе идёт индекс, найденный раньше: `(seen[target - x], i)`."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return (seen[target - x], i)\n        seen[x] = i\n    return None",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "сначала проверь `target - x in seen`, потом клади `seen[x] = i` — иначе на `target = 2*x` вернёшь один индекс дважды",
+      "`{}` — пустой словарь, а `set()` — множество: индекс по числу хранит только словарь"
+    ],
+    "variations": [
+      "нужны сами числа, а не индексы: хватит `set()` и `return (target - x, x)`",
+      "массив отсортирован: два указателя, O(1) памяти (уровень 2)",
+      "нужны все пары: не `return`, а копить ответы в список"
+    ]
+  }
+}

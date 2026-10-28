@@ -58,6 +58,16 @@ class LessonContentTest {
         }
     }
 
+    /** Res.readBytes needs instrumentation on the host JVM, so read the same lessonPath from disk. */
+    @Test
+    fun pythonPilotLoadsBesideKotlin() {
+        fun load(lang: CodeLang) = parseLesson(File("src/commonMain/composeResources/" + lessonPath("l1.4", lang)).readText()).getOrThrow()
+        val py = load(CodeLang.Python)
+        assertTrue("def two_sum" in py.solution.code)
+        assertTrue(py.exercises.size in 2..3)
+        assertTrue("fun twoSum" in load(CodeLang.Kotlin).solution.code)
+    }
+
     @Test
     fun everySdLessonIsStrictValidDesign() {
         val dir = File("src/commonMain/composeResources/files/content")
