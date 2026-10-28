@@ -954,6 +954,42 @@
   "file": "n0cb98831.md"
  },
  {
+  "id": "n2edc972b",
+  "title": "07 Kafka и очереди",
+  "section": "System Design",
+  "file": "n2edc972b.md"
+ },
+ {
+  "id": "n83fb733d",
+  "title": "08 Базы данных",
+  "section": "System Design",
+  "file": "n83fb733d.md"
+ },
+ {
+  "id": "nb45a6286",
+  "title": "09 Docker и Kubernetes",
+  "section": "System Design",
+  "file": "nb45a6286.md"
+ },
+ {
+  "id": "n6bc2ce6d",
+  "title": "10 Real-time",
+  "section": "System Design",
+  "file": "n6bc2ce6d.md"
+ },
+ {
+  "id": "nc7bf1ce1",
+  "title": "11 Файлы, CDN, S3",
+  "section": "System Design",
+  "file": "nc7bf1ce1.md"
+ },
+ {
+  "id": "nd7a10f21",
+  "title": "12 Наблюдаемость",
+  "section": "System Design",
+  "file": "nd7a10f21.md"
+ },
+ {
   "id": "nde394dd4",
   "title": "System Design с учетом Kotlin Multiplatform (KMP)",
   "section": "System Design",
