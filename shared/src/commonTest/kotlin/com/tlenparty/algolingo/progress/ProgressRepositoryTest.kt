@@ -128,6 +128,15 @@ class ProgressRepositoryTest {
     fun missingSchemaVersionDecodesAsV1() =
         assertEquals(Progress(xp = 5), decodeProgress("""{"xp":5}"""))
 
+    @Test
+    fun appGraphReusesRepositoryWhenDirReturns() {
+        val a = tempPath().toString()
+        val b = tempPath().toString()
+        val repoA = AppGraph.progress(a)
+        assertTrue(repoA !== AppGraph.progress(b))
+        assertTrue(repoA === AppGraph.progress(a)) // A -> B -> A: one DataStore per file
+    }
+
     private fun tempPath() = FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "progress-${Random.nextLong().toULong()}.json"
 
     @Test
