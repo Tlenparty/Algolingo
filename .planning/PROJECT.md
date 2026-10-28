@@ -21,6 +21,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 - ✓ Уровень 1 «Hash Map / Set» (1.1–1.5): генератор проверяет эталоны и на JVM, и на Native; ревью заказчика; прогон 0.1→1.5 через UI на Android (авиарежим) и iOS — Validated in Phase 6: Level 1 Content
 - ✓ Вся база подготовки к собеседованию из «Матриц» (217 заметок, 14 разделов, 25 картинок) в приложении: сворачиваемые разделы, быстрый поиск по всей базе, картинки и ==выделение== в заметках; прогон на Android и iOS — Validated in Phase 7: Full Interview Knowledge Base
 - ✓ Каждая оценка облачка доказана тестом (метки compile/wrong/crash/hang, 253 программы, граничные случаи и оракулы на JVM+iOS), KB грузится лениво и не роняет приложение, фазз редьюсера, UI e2e-смоук всех 9 уроков на Android+iOS (`tools/smoke.sh`), monkey 0 FATAL/ANR — Validated in Phase 07.1: Content correctness & crash safety
+- ✓ Выбор языка решений «Kotlin | Python» на Home: язык сохраняется, прогресс общий, уроки без Python-версии — «Скоро на Python» (пройденные открываются на Kotlin), System Design не фильтруется; генератор проверяет Python-уроки через `python3 -I`; пилот l1.4 Two Sum на Python принят заказчиком, прогон на Android и iOS — Validated in Phase 9: Language Switch + Python Pilot
 
 ### Active
 
@@ -81,6 +82,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 | База знаний = все 23 заметки в приложении, разделы, спойлеры, поиск; фаза 01.1 сразу после каркаса | Учить теорию с телефона как можно раньше; markdown — готовой библиотекой + обработка callouts/wikilinks | — Pending |
 | Репозиторий публичный (с заметками компаний); упоминания личной инфраструктуры вычищены из истории | Решение заказчика 2026-10-21 | — Pending |
 | GSD вместо superpowers | Многофазный greenfield-проект, нужен roadmap и состояние между сессиями | — Pending |
+| Язык решений — рантайм-настройка (не flavour), отдельный файл урока на язык (`lessons/py/<id>.json`), общий прогресс; ветвление по языку только в `lessonPath`, правилах подсветки и фильтре `langs` каталога | Одно приложение в сторе, переключение одним тапом; третий язык = enum + правила подсветки + папка контента | — Phase 9 |
 
 ## Evolution
 
@@ -100,4 +102,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-10-23 after Phase 07.1*
+*Last updated: 2026-10-28 after Phase 9*
