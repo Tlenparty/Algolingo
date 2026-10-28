@@ -310,11 +310,22 @@ Plans:
 **Plans:** 6 plans
 
 Plans:
+**Wave 1**
+
 - [ ] 09-01-PLAN.md — CodeLang, LocalCodeLang, подсветка Python
-- [ ] 09-02-PLAN.md — Progress.lang, setLang, lessonPath по языку, фильтр каталога
 - [ ] 09-03-PLAN.md — генератор: py-sidecar, харнесс python3 -I, G12/G13
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 09-02-PLAN.md — Progress.lang, setLang, lessonPath по языку, фильтр каталога
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 09-04-PLAN.md — UI: сегмент на Home, узел «Скоро на Python», язык в урок
 - [ ] 09-05-PLAN.md — пилотный урок l1.4 на Python + ревью заказчика
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
 - [ ] 09-06-PLAN.md — E2E-сценарий и прогон на Android/iOS
 
 ### Phase 10: Python Content
@@ -325,4 +336,5 @@ Plans:
 **Plans:** 0 plans
 
 Plans:
+
 - [ ] TBD (run /gsd-plan-phase 10 to break down)
