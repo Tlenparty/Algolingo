@@ -20,6 +20,6 @@ class E2eSmokeTest {
         scenarioLaunch()
         scenarioWrongChip() // exits without saving: progress stays clean for the full run
         scenarioKb()
-        scenarioAllLessons()
+        scenarioSystemDesign(startXp = scenarioAllLessons())
     }
 }

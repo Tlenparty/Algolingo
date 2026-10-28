@@ -29,8 +29,10 @@ import com.tlenparty.algolingo.lesson.loadLesson
 import com.tlenparty.algolingo.lesson.panelModel
 import com.tlenparty.algolingo.lesson.screenKey
 import com.tlenparty.algolingo.lesson.xpFor
+import com.tlenparty.algolingo.progress.CATALOG_PATH
 import com.tlenparty.algolingo.progress.HomeNode
 import com.tlenparty.algolingo.progress.Progress
+import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
 import com.tlenparty.algolingo.progress.homeModel
 import com.tlenparty.algolingo.progress.loadCatalog
 import kotlinx.coroutines.runBlocking
@@ -49,8 +51,8 @@ private const val WAIT = 15_000L
 fun ComposeUiTest.launchApp(dataDir: String) = setContent { App(dataDir) }
 
 /** Home nodes in catalog order (fresh progress), via the app's own homeModel. */
-private fun nodes(): List<HomeNode> {
-    val catalog = runBlocking { loadCatalog() }
+private fun nodes(path: String = CATALOG_PATH): List<HomeNode> {
+    val catalog = runBlocking { loadCatalog(path) }
     check(catalog.lessons.isNotEmpty()) { "catalog is empty: Res.readBytes found no content" }
     return homeModel(catalog, Progress(), LocalDate(2000, 1, 1)).nodes
 }
@@ -212,11 +214,20 @@ fun ComposeUiTest.scenarioKb() {
     click(hasText("Главная"), "home tab")
 }
 
-/** Every catalog lesson from clean progress: grade «Чисто!», XP adds up, streak 1, next lesson unlocks. */
+/** Every code-catalog lesson from clean progress: grade «Чисто!», XP adds up, streak 1, next lesson unlocks. Returns total XP. */
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.scenarioAllLessons() {
-    val nodes = nodes()
-    var xp = 0
+fun ComposeUiTest.scenarioAllLessons(): Int = playCatalog(nodes(), 0)
+
+/** System Design tab: every SD lesson, same checks; XP continues from [startXp] (progress is shared with code lessons). */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.scenarioSystemDesign(startXp: Int): Int {
+    click(hasText("System Design") and hasClickAction(), "sd tab")
+    return playCatalog(nodes(SD_CATALOG_PATH), startXp)
+}
+
+@OptIn(ExperimentalTestApi::class)
+private fun ComposeUiTest.playCatalog(nodes: List<HomeNode>, startXp: Int): Int {
+    var xp = startXp
     nodes.forEachIndexed { i, n ->
         openLesson(n)
         val s = playLesson(lesson(n.id))
@@ -234,4 +245,5 @@ fun ComposeUiTest.scenarioAllLessons() {
         }
     }
     println("e2e: played ${nodes.size} lessons through the UI, $xp XP")
+    return xp
 }
