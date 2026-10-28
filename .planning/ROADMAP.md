@@ -371,8 +371,8 @@ Plans:
   3. Тексты отревьюены заказчиком
   4. smoke.sh проходит все SD-уроки на Android-эмуляторе и iOS-симуляторе (физический телефон не используется)
 **Depends on:** Phase 11
-**Plans:** 1/2 plans executed
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 12-01-PLAN.md — 4 SD-урока (sd0.3-sd0.6) + каталог + ревью заказчика (SD-06)
-- [ ] 12-02-PLAN.md — smoke.sh на Android-эмуляторе и iOS-симуляторе (SD-06)
+- [x] 12-02-PLAN.md — smoke.sh на Android-эмуляторе и iOS-симуляторе (SD-06)
