@@ -390,7 +390,17 @@ Plans:
   3. Тексты отревьюены заказчиком (две порции: классика, надёжность)
   4. smoke.sh проходит все SD-уроки на Android-эмуляторе и iOS-симуляторе (физический Pixel 7 не используется)
 **Depends on:** Phase 12
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 13 to break down)
+**Wave 1**
+
+- [ ] 13-01-PLAN.md — sd1.3-sd1.7 (Авторизация, Уведомления, Лента, Чат, Платежи) + каталог, самосверка фактов (SD-07)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 13-02-PLAN.md — sd2.1-sd2.3 (Потеря связи, Несколько БД, Наблюдаемость) + каталог (SD-07)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 13-03-PLAN.md — E2E smoke на Android-эмуляторе и iOS-симуляторе, gen_content --check, host-тесты (SD-07)
