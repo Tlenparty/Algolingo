@@ -14,10 +14,10 @@ import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.highlight
 
 @Composable
-fun CodeBlock(code: String, modifier: Modifier = Modifier, highlightRanges: List<IntRange> = emptyList(), highlight: Boolean = true) {
+fun CodeBlock(code: String, modifier: Modifier = Modifier, highlightRanges: List<IntRange> = emptyList(), syntax: Boolean = true) {
     val colors = AlgoTheme.colors
     val text = buildAnnotatedString {
-        if (highlight) append(com.tlenparty.algolingo.design.highlight(code, colors)) else append(code)
+        if (syntax) append(highlight(code, colors)) else append(code)
         for (r in highlightRanges) {
             val start = r.first.coerceIn(0, code.length)
             val end = (r.last + 1).coerceIn(start, code.length)

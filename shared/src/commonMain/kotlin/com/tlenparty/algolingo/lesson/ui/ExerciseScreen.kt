@@ -109,7 +109,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                         selected = if (solving) cur.selected else null,
                         onHoleTap = { on(LessonAction.TapHole(it)) },
                         enabled = solving,
-                        highlight = code,
+                        syntax = code,
                     )
                 }
                 Column(Modifier.height(AlgoTheme.spacing.md)) {}
@@ -130,7 +130,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                                     if (placed) ChipState.Ghost else ChipState.Normal,
                                     if (placed || !solving) null else ({ on(LessonAction.TapChip(id)) }),
                                     Modifier.testTag("chip"), // e2e (E2eScenarios)
-                                    highlight = code,
+                                    syntax = code,
                                 )
                             }
                         }
@@ -146,7 +146,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
 }
 
 @Composable
-private fun ResultPanelHost(check: CheckResult, maxBody: Dp, highlight: Boolean, onNext: () -> Unit) {
+private fun ResultPanelHost(check: CheckResult, maxBody: Dp, syntax: Boolean, onNext: () -> Unit) {
     // Enter animation: visible flips to true on first composition.
     val visible = remember { MutableTransitionState(false).apply { targetState = true } }
     AnimatedVisibility(
@@ -155,6 +155,6 @@ private fun ResultPanelHost(check: CheckResult, maxBody: Dp, highlight: Boolean,
     ) {
         // Solving -> Feedback keeps the same screen key, so a second tap on «Проверить» could land on the
         // panel button as it slides in; ignore taps until the enter animation has settled (CR-01).
-        ResultPanel(panelModel(check), maxBody, onNext = { if (visible.isIdle && visible.currentState) onNext() }, highlight = highlight)
+        ResultPanel(panelModel(check), maxBody, onNext = { if (visible.isIdle && visible.currentState) onNext() }, syntax = syntax)
     }
 }

@@ -63,7 +63,7 @@ fun LessonScreen(state: LessonState, on: (LessonAction) -> Unit, onExit: () -> U
                 modifier = Modifier.weight(1f),
             ) { s ->
                 when (val p = s.phase) {
-                    is Phase.Theory -> s.lesson.theory.getOrNull(p.index)?.let { TheoryScreen(it, onNext = { on(LessonAction.NextTheory(p.index)) }, highlight = s.lesson.kind == LessonKind.Code) }
+                    is Phase.Theory -> s.lesson.theory.getOrNull(p.index)?.let { TheoryScreen(it, onNext = { on(LessonAction.NextTheory(p.index)) }, syntax = s.lesson.kind == LessonKind.Code) }
                     Phase.Solving, is Phase.Feedback -> ExerciseScreen(s, on)
                     is Phase.Reveal -> RevealScreen(s, p.solved, on)
                     Phase.Done -> SummaryScreen(LessonReducer.result(s), onDone = onExit)

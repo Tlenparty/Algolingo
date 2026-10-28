@@ -52,7 +52,7 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
                 Text(head, style = t.display, color = ink)
                 Section("Эталон") {
                     // design: each step is its own reference (requirements/API/scheme), not the final solution.code
-                    CodeBlock(if (design) assembled(ex) else sol.code, highlightRanges = solutionSpans(ex), highlight = !design)
+                    CodeBlock(if (design) assembled(ex) else sol.code, highlightRanges = solutionSpans(ex), syntax = !design)
                 }
                 if (isLastExercise(state)) {
                     if (sol.time.isNotBlank() || sol.space.isNotBlank()) Section("Сложность") {

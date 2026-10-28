@@ -34,7 +34,7 @@ import com.tlenparty.algolingo.design.highlight
 internal fun richText(s: String): AnnotatedString = inlineText(parseInline(s))
 
 @Composable
-fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifier: Modifier = Modifier, highlight: Boolean = true) {
+fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifier: Modifier = Modifier, syntax: Boolean = true) {
     val c = AlgoTheme.colors
     val t = AlgoTheme.typography
     val style = when (model.kind) {
@@ -57,11 +57,11 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
                     Modifier.padding(top = AlgoTheme.spacing.smd).heightIn(max = maxBodyHeight).verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.md),
                 ) {
-                    for (w in model.wrong) Item(w, inkC, highlight)
+                    for (w in model.wrong) Item(w, inkC, syntax)
                     if (model.wrong.isNotEmpty() && model.acceptable.isNotEmpty()) {
                         Text("Принято, но…", style = t.label, color = c.acceptableText)
                     }
-                    for (a in model.acceptable) Item(a, inkC, highlight)
+                    for (a in model.acceptable) Item(a, inkC, syntax)
                 }
             }
             ChunkyButton(model.button, onNext, Modifier.padding(top = AlgoTheme.spacing.md), style = style)
@@ -70,9 +70,9 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
 }
 
 @Composable
-private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color, highlight: Boolean) {
+private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color, syntax: Boolean) {
     val c = AlgoTheme.colors
-    fun code(s: String) = if (highlight) highlight(s, c) else AnnotatedString(s)
+    fun code(s: String) = if (syntax) highlight(s, c) else AnnotatedString(s)
     val t = AlgoTheme.typography
     Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xs)) {
         Text(code(item.chip), style = t.codeBold, color = ink, softWrap = false)

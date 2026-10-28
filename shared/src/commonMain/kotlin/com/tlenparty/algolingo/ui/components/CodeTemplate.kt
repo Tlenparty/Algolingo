@@ -45,7 +45,7 @@ fun CodeTemplate(
     onHoleTap: (Int) -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
-    highlight: Boolean = true,
+    syntax: Boolean = true,
 ) {
     val colors = AlgoTheme.colors
     val t = AlgoTheme.typography
@@ -65,12 +65,12 @@ fun CodeTemplate(
                 Row(Modifier.height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
                     for (p in line) when (p) {
                         is Piece.Code -> Text(
-                            if (highlight) highlight(p.s, colors) else AnnotatedString(p.s), style = t.codeRegular,
+                            if (syntax) highlight(p.s, colors) else AnnotatedString(p.s), style = t.codeRegular,
                             color = MaterialTheme.colorScheme.onBackground, softWrap = false, maxLines = 1,
                         )
                         is Piece.HoleAt -> Hole(
                             p.h, placedText.getOrNull(p.h), visuals.getOrNull(p.h) ?: HoleVisual.Empty,
-                            { onHoleTap(p.h) }, enabled, focused = p.h == focus, highlight = highlight,
+                            { onHoleTap(p.h) }, enabled, focused = p.h == focus, syntax = syntax,
                         )
                     }
                 }
@@ -80,7 +80,7 @@ fun CodeTemplate(
 }
 
 @Composable
-private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean, highlight: Boolean) {
+private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean, syntax: Boolean) {
     val c = AlgoTheme.colors
     val s = MaterialTheme.colorScheme
     // fill, border, text color
@@ -125,7 +125,7 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
             Crossfade(text, animationSpec = tween(100)) { shown ->
                 if (shown != null) {
                     Text(
-                        if (highlight) highlight(shown, c) else AnnotatedString(shown), style = AlgoTheme.typography.codeBold, color = ink,
+                        if (syntax) highlight(shown, c) else AnnotatedString(shown), style = AlgoTheme.typography.codeBold, color = ink,
                         softWrap = false, maxLines = 1,
                     )
                 }
