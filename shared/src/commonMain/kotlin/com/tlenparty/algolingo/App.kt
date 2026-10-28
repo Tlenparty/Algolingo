@@ -95,7 +95,7 @@ fun App(dataDir: String) {
         ) { pad ->
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
                 composable<Home> { entry -> HomeTab(entry, catalog, progressRepo, nav) }
-                composable<SdHome> { entry -> HomeTab(entry, sdCatalog, progressRepo, nav) }
+                composable<SdHome> { entry -> HomeTab(entry, sdCatalog, progressRepo, nav, byLang = false) }
                 composable<LessonRoute> { entry ->
                     val route = entry.toRoute<LessonRoute>()
                     LessonHost(route.id, route.review, onFinish = { progressRepo.record(route.id, it) }) { entry.ifResumed { nav.popBackStack() } }
@@ -131,7 +131,7 @@ fun App(dataDir: String) {
 
 /** One Home screen per tab: the path and due reviews come from that tab's catalog; progress is shared. */
 @Composable
-private fun HomeTab(entry: NavBackStackEntry, catalog: Catalog?, progressRepo: ProgressRepository, nav: NavController) {
+private fun HomeTab(entry: NavBackStackEntry, catalog: Catalog?, progressRepo: ProgressRepository, nav: NavController, byLang: Boolean = true) {
     val progress by progressRepo.progress.collectAsStateWithLifecycle()
     // The process can outlive midnight: re-read the date on every resume, then once a minute while visible.
     var today by remember { mutableStateOf(progressRepo.today()) }
@@ -144,7 +144,7 @@ private fun HomeTab(entry: NavBackStackEntry, catalog: Catalog?, progressRepo: P
     val saveFailed by progressRepo.saveFailed.collectAsStateWithLifecycle()
     val c = catalog
     val p = progress
-    val model = if (c != null && p != null) homeModel(c, p, today) else null
+    val model = if (c != null && p != null) homeModel(c, p, today, lang = if (byLang) p.lang else null) else null
     HomeScreen(
         model,
         onStart = { id -> entry.ifResumed { nav.navigate(LessonRoute(id)) } },
