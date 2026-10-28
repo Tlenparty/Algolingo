@@ -26,8 +26,11 @@ fun parseCatalog(text: String): Catalog? = try {
 }
 
 /** Any read/parse failure gives an empty catalog (Home empty state), never a crash. */
-suspend fun loadCatalog(): Catalog = try {
-    parseCatalog(Res.readBytes("files/content/index.json").decodeToString()) ?: Catalog()
+const val CATALOG_PATH = "files/content/index.json"
+const val SD_CATALOG_PATH = "files/content/sd/index.json"
+
+suspend fun loadCatalog(path: String = CATALOG_PATH): Catalog = try {
+    parseCatalog(Res.readBytes(path).decodeToString()) ?: Catalog()
 } catch (e: CancellationException) {
     throw e
 } catch (_: Exception) {

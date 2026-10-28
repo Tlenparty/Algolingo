@@ -21,9 +21,13 @@ fun parseLesson(text: String): Result<Lesson> {
     else Result.failure(IllegalArgumentException(errors.joinToString("; ")))
 }
 
+/** Only two fixed folders; the id comes from a route, never a free path. */
+internal fun lessonPath(id: String): String =
+    if (id.startsWith("sd")) "files/content/sd/$id.json" else "files/content/lessons/$id.json"
+
 suspend fun loadLesson(id: String): Result<Lesson> {
     val text = try {
-        Res.readBytes("files/content/lessons/$id.json").decodeToString()
+        Res.readBytes(lessonPath(id)).decodeToString()
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) { // missing file, platform IO, resource reader state: all go to the error screen

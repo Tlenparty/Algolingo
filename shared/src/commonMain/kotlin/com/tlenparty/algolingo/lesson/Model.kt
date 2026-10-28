@@ -1,11 +1,19 @@
 package com.tlenparty.algolingo.lesson
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
+@Serializable
+enum class LessonKind {
+    @SerialName("code") Code,
+    @SerialName("design") Design,
+}
 
 @Serializable
 data class Lesson(
     val schema: Int = 1,
     val id: String,
+    val kind: LessonKind = LessonKind.Code,
     val level: Int = 0,
     val title: String,
     val statement: String,
@@ -32,6 +40,8 @@ data class Exercise(
     val holes: List<Hole>,
     val bank: List<Chip>,
     val hints: List<String> = emptyList(),
+    /** Design step caption («Шаг 2 · API»), shown above the template. */
+    val title: String? = null,
 )
 
 @Serializable
@@ -51,23 +61,36 @@ data class Chip(val text: String, val why: String? = null)
 @Serializable
 data class Solution(
     val code: String,
-    val time: String,
-    val space: String,
+    val time: String = "",
+    val space: String = "",
     val pitfalls: List<String> = emptyList(),
     val variations: List<String> = emptyList(),
 )
 
 const val MAX_BANK = 10
 
+/** Widest design line that fits the phone screen without horizontal scroll. */
+const val MAX_DESIGN_LINE = 34
+
+/** segments interleaved with each hole's reference answer (ok[0]). */
+fun assembled(ex: Exercise): String = buildString {
+    ex.segments.forEachIndexed { i, s ->
+        append(s)
+        ex.holes.getOrNull(i)?.ok?.firstOrNull()?.let { append(it) }
+    }
+}
+
 /** Returns human-readable problems; empty = valid. Never throws. */
 fun validate(lesson: Lesson): List<String> {
     val errors = mutableListOf<String>()
     if (lesson.schema != 1) errors += "lesson: schema ${lesson.schema} != 1"
-    if (lesson.exercises.size !in 2..3) errors += "lesson: ${lesson.exercises.size} exercises, expected 2..3"
+    val design = lesson.kind == LessonKind.Design
+    val steps = if (design) 2..4 else 2..3
+    if (lesson.exercises.size !in steps) errors += "lesson: ${lesson.exercises.size} exercises, expected ${steps.first}..${steps.last}"
     val ids = lesson.exercises.map { it.id }
     if (ids.size != ids.toSet().size) errors += "lesson: duplicate exercise ids"
     val counts = lesson.exercises.map { it.holes.size }
-    if (counts.zipWithNext().any { (a, b) -> b <= a }) errors += "lesson: hole counts $counts not strictly increasing"
+    if (!design && counts.zipWithNext().any { (a, b) -> b <= a }) errors += "lesson: hole counts $counts not strictly increasing"
 
     for (ex in lesson.exercises) {
         val e = ex.id
@@ -107,13 +130,13 @@ fun validate(lesson: Lesson): List<String> {
             }
         }
         if (shapeOk && ex.holes.all { it.ok.isNotEmpty() }) {
-            val rebuilt = buildString {
-                ex.segments.forEachIndexed { i, s ->
-                    append(s)
-                    ex.holes.getOrNull(i)?.let { append(it.ok[0]) }
-                }
+            val rebuilt = assembled(ex)
+            // design: only the final step is the reference scheme; earlier steps are requirements/API/decisions
+            if ((!design || ex === lesson.exercises.last()) && rebuilt != lesson.solution.code)
+                errors += "$e: segments + ok[0] differ from solution.code"
+            if (design) rebuilt.split('\n').forEachIndexed { n, line ->
+                if (line.length > MAX_DESIGN_LINE) errors += "$e: line ${n + 1} has ${line.length} chars (max $MAX_DESIGN_LINE)"
             }
-            if (rebuilt != lesson.solution.code) errors += "$e: segments + ok[0] differ from solution.code"
         }
     }
     return errors
