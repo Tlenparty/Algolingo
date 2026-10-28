@@ -274,7 +274,7 @@ private fun ComposeUiTest.playCatalog(nodes: List<HomeNode>, startXp: Int): Int 
 }
 
 /**
- * Python on fresh progress: lessons without Python show «Скоро на Python», the first Python lesson plays to «Чисто!»,
+ * Python on fresh progress: lessons the catalog ships without Python (if any) show «Скоро на Python», the first Python lesson plays to «Чисто!»,
  * the language survives App recreation, and the lesson is Done on the Kotlin path too (progress is shared).
  */
 @OptIn(ExperimentalTestApi::class)
@@ -282,9 +282,12 @@ fun ComposeUiTest.scenarioPython() {
     val catalog = runBlocking { loadCatalog() }
     val py = homeModel(catalog, Progress(lang = CodeLang.Python), LocalDate(2000, 1, 1)).nodes
     val pilot = py.firstOrNull { it.status == LessonStatus.Available } ?: fail("no Python lesson in the catalog")
-    val soon = py.firstOrNull { it.status == LessonStatus.Soon } ?: fail("every lesson has Python: nothing to show as Soon")
+    // Soon only for lessons the catalog ships without Python; none once every lesson is translated (phase 10).
+    val noPy = catalog.lessons.filterNot { it.has(CodeLang.Python) }.mapTo(HashSet()) { it.id }
+    assertEquals(noPy, py.filter { it.status == LessonStatus.Soon }.mapTo(HashSet()) { it.id }, "python: Soon set")
+    val soon = py.firstOrNull { it.id in noPy }
     click(hasTestTag("lang-python"), "lang python")
-    onHome(hasContentDescription("Скоро на Python: ${soon.caption}"), "python: ${soon.id} soon")
+    soon?.let { onHome(hasContentDescription("Скоро на Python: ${it.caption}"), "python: ${it.id} soon") }
     openLesson(pilot)
     val s = playLesson(lesson(pilot.id, CodeLang.Python))
     waitFor(hasText("Чисто!"), "${pilot.id} py: summary")
@@ -295,7 +298,7 @@ fun ComposeUiTest.scenarioPython() {
     recreateApp()
     waitFor(hasTestTag("lang-python"), "after recreate: segment")
     onNodeWithTag("lang-python").assertIsSelected()
-    onHome(hasContentDescription("Скоро на Python: ${soon.caption}"), "after recreate: still python")
+    soon?.let { onHome(hasContentDescription("Скоро на Python: ${it.caption}"), "after recreate: still python") }
     onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "after recreate: ${pilot.id} done")
 
     click(hasTestTag("lang-kotlin"), "lang kotlin")
