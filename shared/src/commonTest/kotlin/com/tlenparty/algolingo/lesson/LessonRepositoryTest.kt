@@ -1,5 +1,6 @@
 package com.tlenparty.algolingo.lesson
 
+import com.tlenparty.algolingo.design.CodeLang
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
@@ -38,7 +39,11 @@ class LessonRepositoryTest {
     }
 
     @Test fun pathByPrefix() {
-        assertEquals("files/content/lessons/l1.1.json", lessonPath("l1.1"))
-        assertEquals("files/content/sd/sd1.1.json", lessonPath("sd1.1"))
+        assertEquals("files/content/lessons/l1.1.json", lessonPath("l1.1", CodeLang.Kotlin))
+        assertEquals("files/content/lessons/py/l1.1.json", lessonPath("l1.1", CodeLang.Python))
+        assertEquals("files/content/sd/sd1.1.json", lessonPath("sd1.1", CodeLang.Kotlin))
+        assertEquals("files/content/sd/sd1.1.json", lessonPath("sd1.1", CodeLang.Python))
+        // T-09-04: a hostile id stays under the fixed prefix and just misses the file
+        assertTrue(lessonPath("../x", CodeLang.Python).startsWith("files/content/lessons/py/"))
     }
 }
