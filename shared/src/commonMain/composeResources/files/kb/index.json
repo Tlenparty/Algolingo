@@ -918,6 +918,42 @@
   "file": "n90ea9c5e.md"
  },
  {
+  "id": "n888f1e38",
+  "title": "01 Путь запроса",
+  "section": "System Design",
+  "file": "n888f1e38.md"
+ },
+ {
+  "id": "na03399af",
+  "title": "02 HTTP",
+  "section": "System Design",
+  "file": "na03399af.md"
+ },
+ {
+  "id": "n2550a79e",
+  "title": "03 HTTPS, TLS, SSL",
+  "section": "System Design",
+  "file": "n2550a79e.md"
+ },
+ {
+  "id": "ne6789c0a",
+  "title": "04 Авторизация",
+  "section": "System Design",
+  "file": "ne6789c0a.md"
+ },
+ {
+  "id": "n68068a31",
+  "title": "05 nginx, reverse proxy, load balancer, API Gateway",
+  "section": "System Design",
+  "file": "n68068a31.md"
+ },
+ {
+  "id": "n0cb98831",
+  "title": "06 Redis",
+  "section": "System Design",
+  "file": "n0cb98831.md"
+ },
+ {
   "id": "nde394dd4",
   "title": "System Design с учетом Kotlin Multiplatform (KMP)",
   "section": "System Design",
