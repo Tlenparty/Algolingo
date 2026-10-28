@@ -34,6 +34,7 @@ import com.tlenparty.algolingo.lesson.HoleVisual
 import com.tlenparty.algolingo.lesson.Piece
 import com.tlenparty.algolingo.lesson.templateLines
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.LocalCodeLang
 import com.tlenparty.algolingo.design.highlight
 
 @Composable
@@ -48,6 +49,7 @@ fun CodeTemplate(
     syntax: Boolean = true,
 ) {
     val colors = AlgoTheme.colors
+    val lang = LocalCodeLang.current
     val t = AlgoTheme.typography
     val lines = templateLines(segments)
     // Hole to keep on screen: the first Wrong after Check, else the selected one. With neither
@@ -65,7 +67,7 @@ fun CodeTemplate(
                 Row(Modifier.height(rowHeight), verticalAlignment = Alignment.CenterVertically) {
                     for (p in line) when (p) {
                         is Piece.Code -> Text(
-                            if (syntax) highlight(p.s, colors) else AnnotatedString(p.s), style = t.codeRegular,
+                            if (syntax) highlight(p.s, colors, lang) else AnnotatedString(p.s), style = t.codeRegular,
                             color = MaterialTheme.colorScheme.onBackground, softWrap = false, maxLines = 1,
                         )
                         is Piece.HoleAt -> Hole(
@@ -82,6 +84,7 @@ fun CodeTemplate(
 @Composable
 private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean, syntax: Boolean) {
     val c = AlgoTheme.colors
+    val lang = LocalCodeLang.current
     val s = MaterialTheme.colorScheme
     // fill, border, text color
     val target = when (visual) {
@@ -125,7 +128,7 @@ private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Uni
             Crossfade(text, animationSpec = tween(100)) { shown ->
                 if (shown != null) {
                     Text(
-                        if (syntax) highlight(shown, c) else AnnotatedString(shown), style = AlgoTheme.typography.codeBold, color = ink,
+                        if (syntax) highlight(shown, c, lang) else AnnotatedString(shown), style = AlgoTheme.typography.codeBold, color = ink,
                         softWrap = false, maxLines = 1,
                     )
                 }

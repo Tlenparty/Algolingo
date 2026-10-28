@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.LocalCodeLang
 import com.tlenparty.algolingo.design.highlight
 
 enum class ChipState { Normal, Ghost }
@@ -18,6 +19,7 @@ enum class ChipState { Normal, Ghost }
 fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: Modifier = Modifier, syntax: Boolean = true) {
     val s = MaterialTheme.colorScheme
     val ghost = state == ChipState.Ghost
+    val lang = LocalCodeLang.current
     ChunkyBox(
         face = if (ghost) s.outline else s.background,
         ledge = if (ghost) null else s.outline,
@@ -30,7 +32,7 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
     ) {
         Text(
             // Ghost: plain text, otherwise highlight spans (numbers, keywords) override the transparent color.
-            if (ghost || !syntax) AnnotatedString(text) else highlight(text, AlgoTheme.colors),
+            if (ghost || !syntax) AnnotatedString(text) else highlight(text, AlgoTheme.colors, lang),
             style = AlgoTheme.typography.codeChip,
             color = if (ghost) Color.Transparent else s.onBackground,
             softWrap = false,

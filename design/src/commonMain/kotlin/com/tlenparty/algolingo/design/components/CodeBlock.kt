@@ -11,13 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import com.tlenparty.algolingo.design.AlgoTheme
+import com.tlenparty.algolingo.design.LocalCodeLang
 import com.tlenparty.algolingo.design.highlight
 
 @Composable
 fun CodeBlock(code: String, modifier: Modifier = Modifier, highlightRanges: List<IntRange> = emptyList(), syntax: Boolean = true) {
     val colors = AlgoTheme.colors
+    val lang = LocalCodeLang.current
     val text = buildAnnotatedString {
-        if (syntax) append(highlight(code, colors)) else append(code)
+        if (syntax) append(highlight(code, colors, lang)) else append(code)
         for (r in highlightRanges) {
             val start = r.first.coerceIn(0, code.length)
             val end = (r.last + 1).coerceIn(start, code.length)
