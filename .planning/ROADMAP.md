@@ -24,6 +24,7 @@
 - [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
 - [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
 - [x] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ» (completed 2026-10-28)
+- [ ] **Phase 13: SD Classics and Reliability** - 8 SD-уроков: авторизация, уведомления, лента, чат, платежи, потеря связи, несколько БД, наблюдаемость
 
 ## Phase Details
 
@@ -376,3 +377,20 @@ Plans:
 Plans:
 - [x] 12-01-PLAN.md — 4 SD-урока (sd0.3-sd0.6) + каталог + ревью заказчика (SD-06)
 - [x] 12-02-PLAN.md — smoke.sh на Android-эмуляторе и iOS-симуляторе (SD-06)
+
+### Phase 13: SD Classics and Reliability
+
+**Goal:** На вкладке System Design есть 8 новых design-уроков: классические задачи sd1.3 «Авторизация», sd1.4 «Уведомления», sd1.5 «Лента», sd1.6 «Чат», sd1.7 «Платежи» и надёжность sd2.1 «Потеря связи», sd2.2 «Несколько БД», sd2.3 «Наблюдаемость»
+**Mode:** mvp
+**Requirements**: SD-07
+**Success Criteria** (what must be TRUE):
+
+  1. 8 уроков валидны (validate, LessonContentTest) и стоят в SD-каталоге после sd1.2 в порядке sd1.3…sd1.7, sd2.1…sd2.3
+  2. У каждого неверного облачка и каждой перестановки правильных есть объяснение; факты не противоречат заметкам «Основы» 01–12 и спеке SD
+  3. Тексты отревьюены заказчиком (две порции: классика, надёжность)
+  4. smoke.sh проходит все SD-уроки на Android-эмуляторе и iOS-симуляторе (физический Pixel 7 не используется)
+**Depends on:** Phase 12
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 13 to break down)

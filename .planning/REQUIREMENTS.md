@@ -100,6 +100,7 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 - **SD-04**: Уроки sd0.1 «Как вести интервью», sd1.1 «URL shortener», sd1.2 «Rate limiter» отревьюены заказчиком и проходятся на Android и iOS-симуляторе
 - **SD-05**: 12 заметок «Основы клиент-сервера» для мобильного разработчика (Kafka, Redis, nginx, Docker, HTTPS/TLS, HTTP, авторизация, БД, real-time, CDN, наблюдаемость) читаются в Базе знаний
 - **SD-06**: SD-уроки с облачками закрепляют заметки «Основы» (Phase 12)
+- **SD-07**: 8 SD-уроков «Классика» (sd1.3–sd1.7) и «Надёжность» (sd2.1–sd2.3) проходятся на вкладке System Design
 
 ## Out of Scope
 
@@ -165,6 +166,7 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | SD-02 | Phase 8 | Complete |
 | SD-03 | Phase 8 | Complete |
 | SD-05 | Phase 11 | Complete |
+| SD-07 | Phase 13 | Pending |
 | SD-06 | Phase 12 | Complete |
 | SD-04 | Phase 8 | Complete |
 
