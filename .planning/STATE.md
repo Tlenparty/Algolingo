@@ -121,6 +121,8 @@ Recent decisions affecting current work:
 - Phase 7 added: Full Interview Knowledge Base (вся подготовка из хранилища «Матрицы», ~217 заметок)
 - Phase 07.1 inserted after Phase 7: Content correctness & crash safety — closes v1.0 audit GAP-1..5 (URGENT)
 - Phase 8 added: System Design Section (спека docs/superpowers/specs/2026-10-28-system-design-section-design.md)
+- Phase 9 added: Language Switch + Python Pilot (спека docs/superpowers/specs/2026-10-28-python-language-design.md)
+- Phase 10 added: Python Content — остальные 8 уроков на Python
 
 ### Pending Todos
 

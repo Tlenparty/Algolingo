@@ -20,6 +20,8 @@
 - [x] **Phase 6: Level 1 Content — Hash Map / Set** - Уроки 1.1–1.5 из заметки 05 размечены, отревьюены заказчиком и проходятся на обеих платформах (completed 2026-10-22)
 - [x] **Phase 7: Full Interview Knowledge Base** - Вся база подготовки к собесам (~217 заметок: алгоритмы, вопросы с собесов, матрицы, System Design) читается в приложении по разделам (completed 2026-10-22)
 - [ ] **Phase 8: System Design Section** - Вкладка «System Design»: шаги + схема из облачков, первый срез sd0.1 / sd1.1 / sd1.2
+- [ ] **Phase 9: Language Switch + Python Pilot** - Переключатель «Kotlin | Python» на Home, Python-конвейер контента, пилотный урок l1.4 на Python
+- [ ] **Phase 10: Python Content** - Остальные 8 уроков (l0.1–l0.4, l1.1–l1.3, l1.5) на Python с ревью заказчика
 
 ## Phase Details
 
@@ -299,3 +301,23 @@ Plans:
 **Wave 3** *(blocked on Wave 2 completion)*
 
 - [ ] 08-03-PLAN.md — E2E smoke Android + iOS, скриншоты (SD-02, SD-04)
+
+### Phase 9: Language Switch + Python Pilot
+
+**Goal:** Пользователь переключает «Kotlin | Python» на Home, и пилотный урок l1.4 Two Sum собирается из Python-облачков; прогресс общий, выбор языка сохраняется (спека docs/superpowers/specs/2026-10-28-python-language-design.md, компоненты 1–7)
+**Requirements**: TBD
+**Depends on:** Phase 8
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 9 to break down)
+
+### Phase 10: Python Content
+
+**Goal:** Все 9 уроков с кодом проходятся на Python: свои дистракторы и грабли, оракулы на python3, ревью заказчика по каждому уроку (спека docs/superpowers/specs/2026-10-28-python-language-design.md)
+**Requirements**: TBD
+**Depends on:** Phase 9
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 10 to break down)
