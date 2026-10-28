@@ -450,6 +450,61 @@ class PyHarness(unittest.TestCase):
         finally:
             gen_content.PY_TIMEOUT = old
 
+    def g14(self, text):
+        """Render must stop with G14 (claimed kind tags not observed); returns the detail."""
+        with self.assertRaises(gen_content.GenError) as cm:
+            self.render(text)
+        self.assertEqual(cm.exception.rule, "G14", cm.exception.detail)
+        return cm.exception.detail
+
+    def chip(self, bullet):
+        return PY_BASE.replace(self.E1_TAIL, bullet + "\n" + self.E1_TAIL, 1)
+
+    def test_g14_wrong_tag_but_crash(self):
+        detail = self.g14(self.chip("- `y` [wrong]: нет такого имени: `[2, 7]`, `9` → `None`"))
+        self.assertIn("l1.4.e1 `y`: заявлено wrong, на деле crash", detail)
+
+    def test_g14_compile_tag_but_wrong(self):
+        detail = self.g14(PY_BASE.replace("- `x` [wrong]: ищем само", "- `x` [compile]: ищем само", 1))
+        self.assertIn("заявлено compile, на деле crash/wrong", detail)  # seen[target - x] -> KeyError too
+
+    def test_g14_hang_tag_but_wrong(self):
+        detail = self.g14(PY_BASE.replace("- `x` [wrong]: ищем само", "- `x` [hang]: ищем само", 1))
+        self.assertIn("заявлено hang, на деле crash/wrong", detail)
+
+    def test_g14_hole_scope_tag_checked(self):
+        detail = self.g14(PY_BASE.replace("- @1 `x` [wrong]", "- @1 `x` [hang]", 1))
+        self.assertIn("l1.4.e2 @1 `x`: заявлено hang, на деле crash/wrong", detail)
+
+    def test_g14_over_claim_needs_every_tag(self):
+        detail = self.g14(PY_BASE.replace("- `x` [wrong]: ищем само", "- `x` [compile,wrong]: ищем само", 1))
+        self.assertIn("заявлено compile/wrong, на деле crash/wrong", detail)
+
+    def test_g14_true_tags_pass(self):
+        """G14 accepts tags that match: real SyntaxError [compile], real NameError [crash]."""
+        text = self.chip("- `x +` [compile]: не выражение: `x +`")
+        text = text.replace(self.E1_TAIL, "- `y` [crash]: нет такого имени: `NameError`\n" + self.E1_TAIL, 1)
+        self.assertIn(gen_content.LESSONS_PY + "/l1.4.json", self.render(text))
+
+    def test_outcome_kinds(self):
+        k = gen_content.python_kinds
+        self.assertEqual(k("x = (\n"), {"compile"})
+        self.assertEqual(k("import sys\nsys.exit(0)"), set())
+        self.assertEqual(k("raise KeyError(1)"), {"crash"})  # top level, no GSD_KINDS line
+        mixed = gen_content.py_module("def f(x):\n    return x", ["assert f(1) == 2"],
+                                      "".join("with case():\n    assert f(%d) == 0\n" % i for i in range(1, 6))
+                                      + "with case():\n    f(1) + 'a'\n")
+        self.assertEqual(k(mixed), {"wrong", "crash"})  # TypeError after 6 assert failures is not hidden
+        self.assertEqual(k("while True:\n    pass", timeout=1), {"hang"})
+
+    def test_g14_skips_untagged_and_unclaimed(self):
+        """G14 ignores empty tags and programs without a claim; chip tags check the union."""
+        e = {"claims": [{"bullet": "b", "scope": "chip", "tags": []}]}
+        self.assertIsNone(gen_content.claim_mismatch([(e, {"crash"}), ({"claims": []}, {"wrong"})]))
+        e2 = {"claims": [{"bullet": "c", "scope": "chip", "tags": ["wrong"]}]}
+        self.assertIsNone(gen_content.claim_mismatch([(e2, {"crash"}), (e2.copy(), {"wrong"})]))  # union
+        self.assertEqual(gen_content.claim_mismatch([(e2, {"crash"})]), "c: заявлено wrong, на деле crash")
+
 
 class Tags(unittest.TestCase):
     assertRule = Validation.assertRule

@@ -12,7 +12,7 @@ files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt
 acceptable variants, JVM + Native) and androidHostTest/resources/wrong_variants.json (one full
 program per wrong (hole, chip) pair plus one "control" reference per lesson, classified on JVM by
 WrongChipsTest).
-Any validation error (G1-G11) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
+Any validation error (G1-G14; G12-G14 run the python harness) prints `ERROR <file>: <rule>: <detail>` and writes nothing.
 
 Sidecar grammar (content/authoring/l0.N.md):
 
@@ -659,6 +659,7 @@ PY_PRELUDE = """
 import sys as _sys
 import traceback as _tb
 _fails = []
+_kinds = set()
 
 
 class case:
@@ -669,6 +670,7 @@ class case:
     def __exit__(self, t, e, tb):
         if t is not None and issubclass(t, Exception):
             _fails.append("line %d: %s" % (tb.tb_lineno, "".join(_tb.format_exception_only(t, e)).strip()))
+            _kinds.add(t.__name__)
             return True
 
 
@@ -682,11 +684,21 @@ def py_module(code, examples, checks):
     The __future__ import lets `tuple[int, int] | None` annotations run on python3 < 3.10."""
     return ("from __future__ import annotations\n" + code + "\n\n" + PY_PRELUDE + "\n"
             + "".join("with case():\n    %s\n" % e for e in examples) + (checks or "")
-            + "\n\nif _fails:\n    print(\"%d failed, first: %s\" % (len(_fails), _fails[0]))\n    _sys.exit(1)\n")
+            + "\n\nif _fails:\n    print(\"%d failed, first: %s\" % (len(_fails), _fails[0]))\n"
+            + "    print(\"" + KINDS_LINE + "\" + \",\".join(sorted(_kinds)))\n    _sys.exit(1)\n")
+
+
+KINDS_LINE = "GSD_KINDS: "  # last stdout line of a failing py_module: sorted exception type names of failed cases
 
 
 def run_python(source, timeout=None):
     """(ok, detail): run source with `python3 -I` in a fresh temp dir, env = PATH only."""
+    return run_python_kinds(source, timeout)[:2]
+
+
+def run_python_kinds(source, timeout=None):
+    """(ok, detail, exception type names): None = timeout; no KINDS_LINE on a failing run = {"?"}
+    (crashed outside any case). detail = last 3 output lines without the KINDS_LINE."""
     exe = shutil.which("python3")
     if not exe:
         raise GenError("python3", "G12", "python3 not found in PATH (needed to check python lessons)")
@@ -700,22 +712,65 @@ def run_python(source, timeout=None):
                                stderr=subprocess.STDOUT, env={"PATH": os.environ.get("PATH", "")},
                                timeout=timeout, encoding="utf-8", errors="replace")
         except subprocess.TimeoutExpired:
-            return False, "timeout after %ss" % timeout
+            return False, "timeout after %ss" % timeout, None
     lines = r.stdout.strip().splitlines()
-    return r.returncode == 0, " | ".join(lines[-3:]) or "exit code %d" % r.returncode
+    names = set() if r.returncode == 0 else {"?"}
+    if lines and lines[-1].startswith(KINDS_LINE):
+        names = set(n for n in lines.pop()[len(KINDS_LINE):].split(",") if n)
+    return r.returncode == 0, " | ".join(lines[-3:]) or "exit code %d" % r.returncode, names
+
+
+def python_kinds(source, timeout=None):
+    """Observed outcome kinds of a program: {compile} on SyntaxError (compiled only, never exec'd here),
+    {hang} on timeout, else wrong per AssertionError and crash per any other exception; set() = runs clean.
+    ponytail: a timeout hides the kinds of the cases that ran before it; per-case step limits like
+    Kotlin's Probe if a lesson ever needs [hang] together with another tag on one chip."""
+    try:
+        compile(source, "variant", "exec")
+    except SyntaxError:
+        return {"compile"}
+    names = run_python_kinds(source, timeout)[2]
+    if names is None:
+        return {"hang"}
+    return set("wrong" if n == "AssertionError" else "crash" for n in names)
+
+
+def claim_mismatch(observed):
+    """G14 over [(wrong program entry, its kinds)], like WrongChipsTest: a hole claim's tags must all be
+    seen in its own program, a chip claim's tags in the union over every program carrying that claim.
+    Returns the first "bullet: заявлено X, на деле Y" or None."""
+    union = {}
+    for e, kinds in observed:
+        for c in e["claims"]:
+            if c["scope"] == "chip":
+                union.setdefault(c["bullet"], set()).update(kinds)
+    for e, kinds in observed:
+        for c in e["claims"]:
+            seen = kinds if c["scope"] == "hole" else union[c["bullet"]]
+            if not set(c["tags"]) <= seen:
+                return "%s: заявлено %s, на деле %s" % (c["bullet"], "/".join(c["tags"]),
+                                                       "/".join(sorted(seen)) or "ok")
+    return None
 
 
 def python_gates(lesson, sc):
     """G12: reference + every ok/acceptable variant passes examples + checks.
-    G13: every wrong (hole, chip) program fails them (kind tags are not compared, only G9-validated)."""
+    G13: every wrong (hole, chip) program fails them.
+    G14: the kind tags of each claim are all observed (python_kinds, claim_mismatch)."""
     ex, chk = sc["top"]["examples"], sc["top"]["checks"]
     for code, label, _ in variants(lesson):
         ok, detail = run_python(py_module(code, ex, chk))
         if not ok:
             raise GenError(sc["file"], "G12", "%s: %s" % (label, detail))
+    observed = []
     for code, e in wrong_programs(lesson, sc):
-        if run_python(py_module(code, ex, chk))[0]:
+        kinds = python_kinds(py_module(code, ex, chk))
+        if not kinds:
             raise GenError(sc["file"], "G13", "%s: chip does not fail any check" % e["label"])
+        observed.append((e, kinds))
+    bad = claim_mismatch(observed)
+    if bad:
+        raise GenError(sc["file"], "G14", bad)
 
 
 def render_all(repo_root, allow_removed=()):
