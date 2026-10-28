@@ -54,7 +54,9 @@ fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit
                     // design: each step is its own reference (requirements/API/scheme), not the final solution.code
                     CodeBlock(if (design) assembled(ex) else sol.code, highlightRanges = solutionSpans(ex), syntax = !design)
                 }
-                if (isLastExercise(state)) {
+                // design: the outro belongs to the final scheme step, even if a failed step was requeued after it
+                val showOutro = if (design) ex.id == state.lesson.exercises.last().id else isLastExercise(state)
+                if (showOutro) {
                     if (sol.time.isNotBlank() || sol.space.isNotBlank()) Section("Сложность") {
                         Text("Время ${sol.time} · Память ${sol.space}", style = t.body, color = ink)
                     }
