@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-10-29T12:45:00.000Z",
+  "phase": "10",
+  "phase_name": "Python Content",
+  "phase_dir": ".planning/phases/10-python-content",
+  "plan": 5,
+  "task": 2,
+  "total_tasks": 2,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "10-03 batch B (customer approved)", "status": "done"},
+    {"id": 2, "name": "10-04 batch C l1.3, l1.5 (customer approved, NameError why fixed)", "status": "done"},
+    {"id": 3, "name": "10-05 task 1: scenarioPythonChain + pythonChain tests", "status": "done", "commit": "50a3394"},
+    {"id": 4, "name": "10-05 task 2 Android: E2eSmokeTest 3/3 green + live adb run on Galaxy S10e", "status": "done", "commit": "f09b4db"}
+  ],
+  "remaining_tasks": [
+    {"id": 5, "name": "10-05 task 2 iOS: tools/smoke.sh (needs booted iPhone 17 Pro sim) + live idb run (Python mode, no «Скоро на Python», l0.1 to «Чисто!», restart keeps Python, Kotlin path)", "status": "not_started"},
+    {"id": 6, "name": "fill iOS section of 10-VERIFICATION-DEVICES.md, write 10-05-SUMMARY.md, mark 10-05 in ROADMAP", "status": "not_started"},
+    {"id": 7, "name": "phase 10 code review + verifier + phase.complete 10 + PROJECT.md", "status": "not_started"}
+  ],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "Android device run done on Galaxy S10e instead of Pixel 7 (not on that machine); iOS deferred to the Xcode machine", "rationale": "user 2026-10-29", "phase": "10"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "On the Xcode machine: boot iPhone 17 Pro simulator, run tools/smoke.sh (Android part already green; a Pixel 7 can be attached too), do the live iOS run with idb, update 10-VERIFICATION-DEVICES.md iOS section, write 10-05-SUMMARY.md, then close phase 10",
+  "context_notes": "All commits authored by tlenparty, never add Co-Authored-By/Claude trailers. Warn before pm clear on com.tlenparty.algolingo.debug. Delete this file after resuming."
+}
