@@ -3,15 +3,27 @@
   "lessons": [
     {
       "id": "l0.1",
-      "title": "Сумма и максимум"
+      "title": "Сумма и максимум",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
     },
     {
       "id": "l0.2",
-      "title": "Разворот строки"
+      "title": "Разворот строки",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
     },
     {
       "id": "l0.3",
-      "title": "Палиндром"
+      "title": "Палиндром",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
     },
     {
       "id": "l0.4",
