@@ -46,12 +46,17 @@ private fun pw(b: Int, e: Int): Int {
 
 private object L0_1_v0 { // reference
     fun sumAndMax(nums: IntArray): Pair<Int, Int> {
+        // сумма всех чисел
         var sum = 0
+        // текущий максимум
         var max = nums[0]
-        for (x in nums) {
-            sum += x
-            if (x > max) max = x
+        // один проход по массиву
+        for (num in nums) {
+            sum += num
+            // новый максимум
+            if (num > max) max = num
         }
+        // пара (сумма, максимум)
         return sum to max
     }
 
@@ -88,12 +93,17 @@ private object L0_1_v0 { // reference
 
 private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
     fun sumAndMax(nums: IntArray): Pair<Int, Int> {
+        // сумма всех чисел
         var sum = 0
+        // текущий максимум
         var max = Int.MIN_VALUE
-        for (x in nums) {
-            sum += x
-            if (x > max) max = x
+        // один проход по массиву
+        for (num in nums) {
+            sum += num
+            // новый максимум
+            if (num > max) max = num
         }
+        // пара (сумма, максимум)
         return sum to max
     }
 
@@ -130,11 +140,16 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
 
 private object L0_2_v0 { // reference
     fun reverse(s: CharArray) {
-        var l = 0
-        var r = s.size - 1
-        while (l < r) { tick()
-            val t = s[l]; s[l] = s[r]; s[r] = t
-            l++; r--
+        // левый указатель — с начала
+        var left = 0
+        // правый указатель — с конца
+        var right = s.size - 1
+        // идём навстречу
+        while (left < right) { tick()
+            // обмен через temp
+            val temp = s[left]; s[left] = s[right]; s[right] = temp
+            // оба указателя — к центру
+            left++; right--
         }
     }
 
@@ -163,13 +178,18 @@ private object L0_2_v0 { // reference
     }
 }
 
-private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
+private object L0_2_v1 { // l0.2.e1 hole 1 = left <= right (acceptable)
     fun reverse(s: CharArray) {
-        var l = 0
-        var r = s.size - 1
-        while (l <= r) { tick()
-            val t = s[l]; s[l] = s[r]; s[r] = t
-            l++; r--
+        // левый указатель — с начала
+        var left = 0
+        // правый указатель — с конца
+        var right = s.size - 1
+        // идём навстречу
+        while (left <= right) { tick()
+            // обмен через temp
+            val temp = s[left]; s[left] = s[right]; s[right] = temp
+            // оба указателя — к центру
+            left++; right--
         }
     }
 
@@ -200,12 +220,18 @@ private object L0_2_v1 { // l0.2.e1 hole 1 = l <= r (acceptable)
 
 private object L0_3_v0 { // reference
     fun isPalindrome(s: String): Boolean {
-        var l = 0
-        var r = s.length - 1
-        while (l < r) { tick()
-            if (s[l] != s[r]) return false
-            l++; r--
+        // левый указатель — с начала
+        var left = 0
+        // правый указатель — с конца
+        var right = s.length - 1
+        // идём навстречу
+        while (left < right) { tick()
+            // края разные — нет
+            if (s[left] != s[right]) return false
+            // оба указателя — к центру
+            left++; right--
         }
+        // все пары совпали
         return true
     }
 
@@ -234,14 +260,20 @@ private object L0_3_v0 { // reference
     }
 }
 
-private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
+private object L0_3_v1 { // l0.3.e1 hole 1 = left <= right (acceptable)
     fun isPalindrome(s: String): Boolean {
-        var l = 0
-        var r = s.length - 1
-        while (l <= r) { tick()
-            if (s[l] != s[r]) return false
-            l++; r--
+        // левый указатель — с начала
+        var left = 0
+        // правый указатель — с конца
+        var right = s.length - 1
+        // идём навстречу
+        while (left <= right) { tick()
+            // края разные — нет
+            if (s[left] != s[right]) return false
+            // оба указателя — к центру
+            left++; right--
         }
+        // все пары совпали
         return true
     }
 
@@ -272,16 +304,23 @@ private object L0_3_v1 { // l0.3.e1 hole 1 = l <= r (acceptable)
 
 private object L0_4_v0 { // reference
     fun binarySearch(nums: IntArray, target: Int): Int {
-        var lo = 0
-        var hi = nums.size - 1
-        while (lo <= hi) { tick()
-            val mid = lo + (hi - lo) / 2
+        // ответ внутри [left, right]
+        var left = 0
+        var right = nums.size - 1
+        // сужаем диапазон
+        while (left <= right) { tick()
+            // середина диапазона
+            val mid = left + (right - left) / 2
             when {
+                // нашли target
                 nums[mid] == target -> return mid
-                nums[mid] < target  -> lo = mid + 1
-                else                -> hi = mid - 1
+                // target правее
+                nums[mid] < target  -> left = mid + 1
+                // target левее
+                else                -> right = mid - 1
             }
         }
+        // target в массиве нет
         return -1
     }
 
@@ -321,18 +360,25 @@ private object L0_4_v0 { // reference
     }
 }
 
-private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
+private object L0_4_v1 { // l0.4.e2 hole 2 = (left + right) ushr 1 (acceptable)
     fun binarySearch(nums: IntArray, target: Int): Int {
-        var lo = 0
-        var hi = nums.size - 1
-        while (lo <= hi) { tick()
-            val mid = (lo + hi) ushr 1
+        // ответ внутри [left, right]
+        var left = 0
+        var right = nums.size - 1
+        // сужаем диапазон
+        while (left <= right) { tick()
+            // середина диапазона
+            val mid = (left + right) ushr 1
             when {
+                // нашли target
                 nums[mid] == target -> return mid
-                nums[mid] < target  -> lo = mid + 1
-                else                -> hi = mid - 1
+                // target правее
+                nums[mid] < target  -> left = mid + 1
+                // target левее
+                else                -> right = mid - 1
             }
         }
+        // target в массиве нет
         return -1
     }
 
@@ -372,18 +418,25 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (lo + hi) ushr 1 (acceptable)
     }
 }
 
-private object L0_4_v2 { // l0.4.e2 hole 2 = (lo + hi) / 2 (acceptable)
+private object L0_4_v2 { // l0.4.e2 hole 2 = (left + right) / 2 (acceptable)
     fun binarySearch(nums: IntArray, target: Int): Int {
-        var lo = 0
-        var hi = nums.size - 1
-        while (lo <= hi) { tick()
-            val mid = (lo + hi) / 2
+        // ответ внутри [left, right]
+        var left = 0
+        var right = nums.size - 1
+        // сужаем диапазон
+        while (left <= right) { tick()
+            // середина диапазона
+            val mid = (left + right) / 2
             when {
+                // нашли target
                 nums[mid] == target -> return mid
-                nums[mid] < target  -> lo = mid + 1
-                else                -> hi = mid - 1
+                // target правее
+                nums[mid] < target  -> left = mid + 1
+                // target левее
+                else                -> right = mid - 1
             }
         }
+        // target в массиве нет
         return -1
     }
 
@@ -423,18 +476,25 @@ private object L0_4_v2 { // l0.4.e2 hole 2 = (lo + hi) / 2 (acceptable)
     }
 }
 
-private object L0_4_v3 { // l0.4.e2 hole 2 = hi - lo / 2 (acceptable)
+private object L0_4_v3 { // l0.4.e2 hole 2 = right - left / 2 (acceptable)
     fun binarySearch(nums: IntArray, target: Int): Int {
-        var lo = 0
-        var hi = nums.size - 1
-        while (lo <= hi) { tick()
-            val mid = hi - lo / 2
+        // ответ внутри [left, right]
+        var left = 0
+        var right = nums.size - 1
+        // сужаем диапазон
+        while (left <= right) { tick()
+            // середина диапазона
+            val mid = right - left / 2
             when {
+                // нашли target
                 nums[mid] == target -> return mid
-                nums[mid] < target  -> lo = mid + 1
-                else                -> hi = mid - 1
+                // target правее
+                nums[mid] < target  -> left = mid + 1
+                // target левее
+                else                -> right = mid - 1
             }
         }
+        // target в массиве нет
         return -1
     }
 
@@ -476,8 +536,11 @@ private object L0_4_v3 { // l0.4.e2 hole 2 = hi - lo / 2 (acceptable)
 
 private object L1_1_v0 { // reference
     fun hasDuplicate(nums: IntArray): Boolean {
+        // уже встреченные числа
         val seen = HashSet<Int>()
-        for (x in nums) if (!seen.add(x)) return true
+        // num уже был — повтор
+        for (num in nums) if (!seen.add(num)) return true
+        // повторов не было
         return false
     }
 
@@ -511,10 +574,13 @@ private object L1_1_v0 { // reference
     }
 }
 
-private object L1_1_v1 { // l1.1.e3 hole 3 = !seen.add(x) (acceptable)
+private object L1_1_v1 { // l1.1.e3 hole 3 = !seen.add(num) (acceptable)
     fun hasDuplicate(nums: IntArray): Boolean {
+        // уже встреченные числа
         val seen = HashSet<Int>()
-        for (x in nums) if (!seen.add(x)) return !seen.add(x)
+        // num уже был — повтор
+        for (num in nums) if (!seen.add(num)) return !seen.add(num)
+        // повторов не было
         return false
     }
 
@@ -548,10 +614,13 @@ private object L1_1_v1 { // l1.1.e3 hole 3 = !seen.add(x) (acceptable)
     }
 }
 
-private object L1_1_v2 { // l1.1.e3 hole 3 = seen.contains(x) (acceptable)
+private object L1_1_v2 { // l1.1.e3 hole 3 = seen.contains(num) (acceptable)
     fun hasDuplicate(nums: IntArray): Boolean {
+        // уже встреченные числа
         val seen = HashSet<Int>()
-        for (x in nums) if (!seen.add(x)) return seen.contains(x)
+        // num уже был — повтор
+        for (num in nums) if (!seen.add(num)) return seen.contains(num)
+        // повторов не было
         return false
     }
 
@@ -587,9 +656,13 @@ private object L1_1_v2 { // l1.1.e3 hole 3 = seen.contains(x) (acceptable)
 
 private object L1_2_v0 { // reference
     fun firstUniqueChar(s: String): Char? {
-        val cnt = HashMap<Char, Int>()
-        for (c in s) cnt[c] = cnt.getOrDefault(c, 0) + 1
-        for (c in s) if (cnt[c] == 1) return c
+        // символ -> сколько раз
+        val counts = HashMap<Char, Int>()
+        // 1-й проход: считаем частоты
+        for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1
+        // 2-й проход: первый уникальный
+        for (char in s) if (counts[char] == 1) return char
+        // уникального символа нет
         return null
     }
 
@@ -623,14 +696,21 @@ private object L1_2_v0 { // reference
 
 private object L1_3_v0 { // reference
     fun sameLetters(a: String, b: String): Boolean {
+        // быстрая проверка длин
         if (a.length != b.length) return false
-        val cnt = HashMap<Char, Int>()
-        for (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1
-        for (c in b) {
-            val left = (cnt[c] ?: 0) - 1
-            if (left < 0) return false
-            cnt[c] = left
+        // буква -> сколько раз
+        val counts = HashMap<Char, Int>()
+        // считаем буквы первого слова
+        for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1
+        // вычитаем буквы второго слова
+        for (char in b) {
+            // остаток этой буквы
+            val remaining = (counts[char] ?: 0) - 1
+            // в b лишняя буква
+            if (remaining < 0) return false
+            counts[char] = remaining
         }
+        // длины равны, минуса не было
         return true
     }
 
@@ -665,12 +745,17 @@ private object L1_3_v0 { // reference
 
 private object L1_4_v0 { // reference
     fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {
+        // значение -> индекс
         val seen = HashMap<Int, Int>()
         for (i in nums.indices) {
+            // кого не хватает до target
             val need = target - nums[i]
+            // пара найдена
             seen[need]?.let { return it to i }
+            // потом запоминаем текущее
             seen[nums[i]] = i
         }
+        // пары нет
         return null
     }
 
@@ -713,18 +798,25 @@ private object L1_5_v0 { // reference
     data class ChampionResult(val userIds: List<Int>, val steps: Int)
 
     fun findChampions(statistics: List<List<StepEntry>>): ChampionResult {
+        // сколько всего дней
         val totalDays = statistics.size
+        // userId -> сумма шагов
         val totalSteps = HashMap<Int, Int>()
+        // userId -> дней участия
         val daysActive = HashMap<Int, Int>()
 
-        for (day in statistics) for (e in day) {
-            totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + e.steps
-            daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + 1
+        // один проход по всем записям
+        for (day in statistics) for (entry in day) {
+            totalSteps[entry.userId] = totalSteps.getOrDefault(entry.userId, 0) + entry.steps
+            daysActive[entry.userId] = daysActive.getOrDefault(entry.userId, 0) + 1
         }
 
-        val full = daysActive.filterValues { it == totalDays }.keys
-        val maxSteps = full.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0
-        val champions = full.filter { totalSteps[it] == maxSteps }
+        // кто участвовал во все дни
+        val allDaysUsers = daysActive.filterValues { it == totalDays }.keys
+        // лучший результат среди них
+        val maxSteps = allDaysUsers.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0
+        // все с максимумом
+        val champions = allDaysUsers.filter { totalSteps[it] == maxSteps }
         return ChampionResult(champions, maxSteps)
     }
 

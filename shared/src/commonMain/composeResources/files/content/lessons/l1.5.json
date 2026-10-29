@@ -18,7 +18,7 @@
     },
     {
       "title": "Каркас",
-      "skeleton": "for (day in statistics) for (e in day) {\n    totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + e.steps\n    daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + 1\n}\nval full = daysActive.filterValues { it == totalDays }.keys\nval maxSteps = full.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\nval champions = full.filter { totalSteps[it] == maxSteps }",
+      "skeleton": "// один проход по всем записям\nfor (day in statistics) for (entry in day) {\n    totalSteps[entry.userId] = totalSteps.getOrDefault(entry.userId, 0) + entry.steps\n    daysActive[entry.userId] = daysActive.getOrDefault(entry.userId, 0) + 1\n}\n// кто участвовал во все дни\nval allDaysUsers = daysActive.filterValues { it == totalDays }.keys\n// лучший результат среди них\nval maxSteps = allDaysUsers.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n// все с максимумом\nval champions = allDaysUsers.filter { totalSteps[it] == maxSteps }",
       "body": "Фильтр → максимум → сбор всех с этим максимумом. Сначала отфильтруй тех, кто был все дни, и только среди них ищи максимум."
     },
     {
@@ -34,19 +34,19 @@
     {
       "id": "l1.5.e1",
       "segments": [
-        "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    val totalDays = statistics.size\n    val totalSteps = HashMap<Int, Int>()\n    val daysActive = HashMap<Int, Int>()\n\n    for (day in statistics) for (e in day) {\n        totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + e.steps\n        daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + 1\n    }\n\n    val full = daysActive.filterValues { it == totalDays }.keys\n    val maxSteps = ",
-        ".maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    val champions = full.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(champions, maxSteps)\n}"
+        "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    // сколько всего дней\n    val totalDays = statistics.size\n    // userId -> сумма шагов\n    val totalSteps = HashMap<Int, Int>()\n    // userId -> дней участия\n    val daysActive = HashMap<Int, Int>()\n\n    // один проход по всем записям\n    for (day in statistics) for (entry in day) {\n        totalSteps[entry.userId] = totalSteps.getOrDefault(entry.userId, 0) + entry.steps\n        daysActive[entry.userId] = daysActive.getOrDefault(entry.userId, 0) + 1\n    }\n\n    // кто участвовал во все дни\n    val allDaysUsers = daysActive.filterValues { it == totalDays }.keys\n    // лучший результат среди них\n    val maxSteps = ",
+        ".maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    // все с максимумом\n    val champions = allDaysUsers.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(champions, maxSteps)\n}"
       ],
       "holes": [
         {
           "ok": [
-            "full"
+            "allDaysUsers"
           ]
         }
       ],
       "bank": [
         {
-          "text": "full"
+          "text": "allDaysUsers"
         },
         {
           "text": "totalSteps.keys",
@@ -64,14 +64,14 @@
     {
       "id": "l1.5.e2",
       "segments": [
-        "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    val totalDays = statistics.size\n    val totalSteps = HashMap<Int, Int>()\n    val daysActive = HashMap<Int, Int>()\n\n    for (day in statistics) for (e in day) {\n        totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + e.steps\n        daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + 1\n    }\n\n    val full = daysActive.filterValues { it == totalDays }.keys\n    val maxSteps = ",
-        ".maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    val champions = full.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(",
+        "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    // сколько всего дней\n    val totalDays = statistics.size\n    // userId -> сумма шагов\n    val totalSteps = HashMap<Int, Int>()\n    // userId -> дней участия\n    val daysActive = HashMap<Int, Int>()\n\n    // один проход по всем записям\n    for (day in statistics) for (entry in day) {\n        totalSteps[entry.userId] = totalSteps.getOrDefault(entry.userId, 0) + entry.steps\n        daysActive[entry.userId] = daysActive.getOrDefault(entry.userId, 0) + 1\n    }\n\n    // кто участвовал во все дни\n    val allDaysUsers = daysActive.filterValues { it == totalDays }.keys\n    // лучший результат среди них\n    val maxSteps = ",
+        ".maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    // все с максимумом\n    val champions = allDaysUsers.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(",
         ", maxSteps)\n}"
       ],
       "holes": [
         {
           "ok": [
-            "full"
+            "allDaysUsers"
           ],
           "wrongWhy": {
             "champions": "`champions` объявлен строкой ниже: `champions.maxOfOrNull { … }` не скомпилируется",
@@ -84,14 +84,14 @@
             "champions"
           ],
           "wrongWhy": {
-            "full": "`keys` — это `Set`, а `ChampionResult` ждёт `List<Int>`: `ChampionResult(full, maxSteps)` не скомпилируется",
+            "allDaysUsers": "`keys` — это `Set`, а `ChampionResult` ждёт `List<Int>`: `ChampionResult(allDaysUsers, maxSteps)` не скомпилируется",
             "totalSteps.keys": "`keys` — это `Set`, а `ChampionResult` ждёт `List<Int>`: `ChampionResult(totalSteps.keys, maxSteps)` не скомпилируется"
           }
         }
       ],
       "bank": [
         {
-          "text": "full"
+          "text": "allDaysUsers"
         },
         {
           "text": "champions"
@@ -116,21 +116,21 @@
     {
       "id": "l1.5.e3",
       "segments": [
-        "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    val totalDays = statistics.size\n    val totalSteps = HashMap<Int, Int>()\n    val daysActive = HashMap<Int, Int>()\n\n    for (day in statistics) for (e in day) {\n        totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + ",
-        "\n        daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + ",
-        "\n    }\n\n    val full = daysActive.filterValues { it == ",
-        " }.keys\n    val maxSteps = ",
-        ".maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    val champions = full.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(champions, maxSteps)\n}"
+        "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    // сколько всего дней\n    val totalDays = statistics.size\n    // userId -> сумма шагов\n    val totalSteps = HashMap<Int, Int>()\n    // userId -> дней участия\n    val daysActive = HashMap<Int, Int>()\n\n    // один проход по всем записям\n    for (day in statistics) for (entry in day) {\n        totalSteps[entry.userId] = totalSteps.getOrDefault(entry.userId, 0) + ",
+        "\n        daysActive[entry.userId] = daysActive.getOrDefault(entry.userId, 0) + ",
+        "\n    }\n\n    // кто участвовал во все дни\n    val allDaysUsers = daysActive.filterValues { it == ",
+        " }.keys\n    // лучший результат среди них\n    val maxSteps = ",
+        ".maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    // все с максимумом\n    val champions = allDaysUsers.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(champions, maxSteps)\n}"
       ],
       "holes": [
         {
           "ok": [
-            "e.steps"
+            "entry.steps"
           ],
           "wrongWhy": {
             "1": "`totalSteps` считает записи, а не шаги: день `[(1, 100), (2, 50)]` → ничья `1` и `2` с `steps = 1` вместо `([1], 100)`",
             "totalDays": "за каждую запись прибавляется число дней, а не шаги: день `[(1, 100), (2, 50)]` → ничья `1` и `2` с `steps = 1` вместо `([1], 100)`",
-            "full": "`full` объявлен ниже, после цикла: `+ full` не скомпилируется",
+            "allDaysUsers": "`allDaysUsers` объявлен ниже, после цикла: `+ allDaysUsers` не скомпилируется",
             "totalSteps.keys": "к числу не прибавить множество: `+ totalSteps.keys` не скомпилируется",
             "daysActive.size": "к шагам прибавляется текущее число юзеров в `daysActive`: день `[(1, 100), (2, 50)]` → `ChampionResult([2], 1)` вместо `([1], 100)`"
           }
@@ -140,12 +140,12 @@
             "1"
           ],
           "wrongWhy": {
-            "e.steps": "`daysActive` копит шаги, а не дни, и не совпадёт с `totalDays`: день `[(1, 100)]` → `daysActive[1] = 100`, ответ `([], 0)` вместо `([1], 100)`",
+            "entry.steps": "`daysActive` копит шаги, а не дни, и не совпадёт с `totalDays`: день `[(1, 100)]` → `daysActive[1] = 100`, ответ `([], 0)` вместо `([1], 100)`",
             "totalDays": "за каждый день прибавляется число дней: дни `[(1, 100)]`, `[(1, 100)]` → `daysActive[1] = 4` вместо `2`, ответ `([], 0)` вместо `([1], 200)`",
-            "full": "`full` объявлен ниже, после цикла: `+ full` не скомпилируется",
+            "allDaysUsers": "`allDaysUsers` объявлен ниже, после цикла: `+ allDaysUsers` не скомпилируется",
             "totalSteps.keys": "к числу не прибавить множество: `+ totalSteps.keys` не скомпилируется",
             "daysActive.size": "первая запись юзера прибавляет `0` — пока в `daysActive` никого нет: день `[(1, 100)]` → `daysActive[1] = 0`, ответ `([], 0)` вместо `([1], 100)`",
-            "e.userId": "прибавляется номер юзера, а не `1` за день: день `[(2, 100)]` → `daysActive[2] = 2` вместо `1`, ответ `([], 0)` вместо `([2], 100)`"
+            "entry.userId": "прибавляется номер юзера, а не `1` за день: день `[(2, 100)]` → `daysActive[2] = 2` вместо `1`, ответ `([], 0)` вместо `([2], 100)`"
           }
         },
         {
@@ -153,29 +153,29 @@
             "totalDays"
           ],
           "wrongWhy": {
-            "e.steps": "после цикла `e` вне области видимости: `it == e.steps` не скомпилируется",
+            "entry.steps": "после цикла `entry` вне области видимости: `it == entry.steps` не скомпилируется",
             "1": "остаются те, кто был ровно один день, а не все дни: дни `[(1, 100)]`, `[(1, 100)]` → `([], 0)` вместо `([1], 200)`",
-            "full": "`full` ссылается на саму себя: `val full = daysActive.filterValues { it == full }` не скомпилируется",
+            "allDaysUsers": "`allDaysUsers` ссылается на саму себя: `val allDaysUsers = daysActive.filterValues { it == allDaysUsers }` не скомпилируется",
             "totalSteps.keys": "число дней не сравнить с множеством: `it == totalSteps.keys` не скомпилируется",
-            "e.userId": "после цикла `e` вне области видимости: `it == e.userId` не скомпилируется"
+            "entry.userId": "после цикла `entry` вне области видимости: `it == entry.userId` не скомпилируется"
           }
         },
         {
           "ok": [
-            "full"
+            "allDaysUsers"
           ],
           "wrongWhy": {
-            "e.steps": "после цикла `e` вне области видимости: `e.steps.maxOfOrNull { … }` не скомпилируется",
+            "entry.steps": "после цикла `entry` вне области видимости: `entry.steps.maxOfOrNull { … }` не скомпилируется",
             "1": "у числа нет `maxOfOrNull`, нужна коллекция юзеров: `1.maxOfOrNull { … }` не скомпилируется",
             "totalDays": "у числа нет `maxOfOrNull`, нужна коллекция юзеров: `totalDays.maxOfOrNull { … }` не скомпилируется",
             "daysActive.size": "у числа нет `maxOfOrNull`, нужна коллекция юзеров: `daysActive.size.maxOfOrNull { … }` не скомпилируется",
-            "e.userId": "после цикла `e` вне области видимости: `e.userId.maxOfOrNull { … }` не скомпилируется"
+            "entry.userId": "после цикла `entry` вне области видимости: `entry.userId.maxOfOrNull { … }` не скомпилируется"
           }
         }
       ],
       "bank": [
         {
-          "text": "e.steps"
+          "text": "entry.steps"
         },
         {
           "text": "1"
@@ -184,7 +184,7 @@
           "text": "totalDays"
         },
         {
-          "text": "full"
+          "text": "allDaysUsers"
         },
         {
           "text": "totalSteps.keys",
@@ -195,20 +195,20 @@
           "why": "это число юзеров, а не дней: день `[(1, 100), (2, 50)]` → дней `1`, юзеров `2`, ответ `([], 0)` вместо `([1], 100)`"
         },
         {
-          "text": "e.userId",
+          "text": "entry.userId",
           "why": "к шагам прибавляется номер юзера: день `[(1, 100), (2, 50)]` → `ChampionResult([2], 2)` вместо `([1], 100)`"
         }
       ],
       "hints": [
         "Тебе нужны две вещи на каждого юзера: суммарные шаги и в скольких днях он участвовал. Две `Map` за один двойной проход.",
-        "Шаги копим по `e.steps`, дни — по одному за запись.",
+        "Шаги копим по `entry.steps`, дни — по одному за запись.",
         "«Без пропусков» = число дней участия равно `statistics.size`.",
         "Сначала отфильтруй таких, потом среди них ищи максимум, потом собери всех с этим максимумом (их может быть несколько!)."
       ]
     }
   ],
   "solution": {
-    "code": "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    val totalDays = statistics.size\n    val totalSteps = HashMap<Int, Int>()\n    val daysActive = HashMap<Int, Int>()\n\n    for (day in statistics) for (e in day) {\n        totalSteps[e.userId] = totalSteps.getOrDefault(e.userId, 0) + e.steps\n        daysActive[e.userId] = daysActive.getOrDefault(e.userId, 0) + 1\n    }\n\n    val full = daysActive.filterValues { it == totalDays }.keys\n    val maxSteps = full.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    val champions = full.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(champions, maxSteps)\n}",
+    "code": "data class StepEntry(val userId: Int, val steps: Int)\ndata class ChampionResult(val userIds: List<Int>, val steps: Int)\n\nfun findChampions(statistics: List<List<StepEntry>>): ChampionResult {\n    // сколько всего дней\n    val totalDays = statistics.size\n    // userId -> сумма шагов\n    val totalSteps = HashMap<Int, Int>()\n    // userId -> дней участия\n    val daysActive = HashMap<Int, Int>()\n\n    // один проход по всем записям\n    for (day in statistics) for (entry in day) {\n        totalSteps[entry.userId] = totalSteps.getOrDefault(entry.userId, 0) + entry.steps\n        daysActive[entry.userId] = daysActive.getOrDefault(entry.userId, 0) + 1\n    }\n\n    // кто участвовал во все дни\n    val allDaysUsers = daysActive.filterValues { it == totalDays }.keys\n    // лучший результат среди них\n    val maxSteps = allDaysUsers.maxOfOrNull { totalSteps[it] ?: 0 } ?: 0\n    // все с максимумом\n    val champions = allDaysUsers.filter { totalSteps[it] == maxSteps }\n    return ChampionResult(champions, maxSteps)\n}",
     "time": "O(N)",
     "space": "O(U)",
     "pitfalls": [

@@ -148,6 +148,7 @@ None yet.
 | # | Description | Date | Directory |
 |---|-------------|------|-----------|
 | 261027-e0g | Напоминания «пора потренироваться» + иконка | 2026-10-27 | [261027-e0g](./quick/261027-e0g-practice-reminders-app-icon/) |
+| 261029-pbe | Комментарии и понятные имена в Kotlin-коде уроков | 2026-10-29 | [261029-pbe](./quick/261029-pbe-kotlin/) |
 
 ## Deferred Items
 

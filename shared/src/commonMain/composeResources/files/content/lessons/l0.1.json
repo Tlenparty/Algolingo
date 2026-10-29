@@ -17,7 +17,7 @@
     },
     {
       "title": "Каркас",
-      "skeleton": "var acc = start\nfor (x in nums) {\n    // обновить acc по x\n}",
+      "skeleton": "// аккумулятор: сумма, максимум…\nvar acc = start\n// один проход по массиву\nfor (num in nums) {\n    // обновить acc по num\n}",
       "body": "Старт для суммы — `0`, для максимума — первый элемент `nums[0]`."
     },
     {
@@ -32,8 +32,8 @@
     {
       "id": "l0.1.e1",
       "segments": [
-        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    var sum = 0\n    var max = ",
-        "\n    for (x in nums) {\n        sum += x\n        if (x > max) max = x\n    }\n    return sum to max\n}"
+        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = 0\n    // текущий максимум\n    var max = ",
+        "\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}"
       ],
       "holes": [
         {
@@ -57,11 +57,11 @@
         },
         {
           "text": "0",
-          "why": "на отрицательных числах `x > max` не сработает: `[-5, -2]` вернёт max `0`, а такого элемента нет"
+          "why": "на отрицательных числах `num > max` не сработает: `[-5, -2]` вернёт max `0`, а такого элемента нет"
         },
         {
           "text": "Int.MAX_VALUE",
-          "why": "`x > max` никогда не сработает: `[1, 2]` вернёт max `2147483647`"
+          "why": "`num > max` никогда не сработает: `[1, 2]` вернёт max `2147483647`"
         },
         {
           "text": "nums[1]",
@@ -75,9 +75,9 @@
     {
       "id": "l0.1.e2",
       "segments": [
-        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    var sum = ",
-        "\n    var max = ",
-        "\n    for (x in nums) {\n        sum += x\n        if (x > max) max = x\n    }\n    return sum to max\n}"
+        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = ",
+        "\n    // текущий максимум\n    var max = ",
+        "\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}"
       ],
       "holes": [
         {
@@ -102,8 +102,8 @@
             }
           ],
           "wrongWhy": {
-            "0": "на отрицательных числах `x > max` не сработает: `[-5, -2]` вернёт max `0`, а такого элемента нет",
-            "1": "`x > max` не сработает на числах меньше `1`: `[-5, -2]` вернёт max `1`"
+            "0": "на отрицательных числах `num > max` не сработает: `[-5, -2]` вернёт max `0`, а такого элемента нет",
+            "1": "`num > max` не сработает на числах меньше `1`: `[-5, -2]` вернёт max `1`"
           }
         }
       ],
@@ -122,7 +122,7 @@
         },
         {
           "text": "Int.MAX_VALUE",
-          "why": "`x > max` никогда не сработает: `[1, 2]` вернёт max `2147483647`"
+          "why": "`num > max` никогда не сработает: `[1, 2]` вернёт max `2147483647`"
         }
       ],
       "hints": [
@@ -133,11 +133,11 @@
     {
       "id": "l0.1.e3",
       "segments": [
-        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    var sum = ",
-        "\n    var max = ",
-        "\n    for (x in nums) {\n        sum ",
-        " x\n        if (x ",
-        " max) max = x\n    }\n    return sum to max\n}"
+        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = ",
+        "\n    // текущий максимум\n    var max = ",
+        "\n    // один проход по массиву\n    for (num in nums) {\n        sum ",
+        " num\n        // новый максимум\n        if (num ",
+        " max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}"
       ],
       "holes": [
         {
@@ -162,7 +162,7 @@
             }
           ],
           "wrongWhy": {
-            "0": "на отрицательных числах `x > max` не сработает: `[-5, -2]` вернёт max `0`, а такого элемента нет",
+            "0": "на отрицательных числах `num > max` не сработает: `[-5, -2]` вернёт max `0`, а такого элемента нет",
             "=": "`var max = =` не скомпилируется: здесь нужно начальное значение",
             "<": "`var max = <` не скомпилируется: здесь нужно начальное значение"
           }
@@ -172,7 +172,7 @@
             "+="
           ],
           "wrongWhy": {
-            "<": "`sum < x` только сравнивает и ничего не копит: `[1, 2]` даст sum `0`"
+            "<": "`sum < num` только сравнивает и ничего не копит: `[1, 2]` даст sum `0`"
           }
         },
         {
@@ -180,7 +180,7 @@
             ">"
           ],
           "wrongWhy": {
-            "=": "`if (x = max)` не скомпилируется: присваивание в Kotlin не выражение, а `if` ждёт `Boolean`"
+            "=": "`if (num = max)` не скомпилируется: присваивание в Kotlin не выражение, а `if` ждёт `Boolean`"
           }
         }
       ],
@@ -202,21 +202,21 @@
         },
         {
           "text": "=",
-          "why": "`sum = x` перезаписывает, а не копит: `[1, 2]` даст sum `2`"
+          "why": "`sum = num` перезаписывает, а не копит: `[1, 2]` даст sum `2`"
         },
         {
           "text": "<",
-          "why": "`x < max` ищет минимум: `[3, 1]` вернёт max `1`"
+          "why": "`num < max` ищет минимум: `[3, 1]` вернёт max `1`"
         }
       ],
       "hints": [
-        "Одна переменная-аккумулятор, один `for`: `sum += x` копит сумму.",
-        "Максимум обновляем, когда встретили больший элемент: `x > max`."
+        "Одна переменная-аккумулятор, один `for`: `sum += num` копит сумму.",
+        "Максимум обновляем, когда встретили больший элемент: `num > max`."
       ]
     }
   ],
   "solution": {
-    "code": "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    var sum = 0\n    var max = nums[0]\n    for (x in nums) {\n        sum += x\n        if (x > max) max = x\n    }\n    return sum to max\n}",
+    "code": "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = 0\n    // текущий максимум\n    var max = nums[0]\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

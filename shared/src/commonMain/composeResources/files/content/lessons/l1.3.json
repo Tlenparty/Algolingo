@@ -18,7 +18,7 @@
     },
     {
       "title": "Каркас",
-      "skeleton": "if (a.length != b.length) return false\nfor (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1\nfor (c in b) {\n    val left = (cnt[c] ?: 0) - 1\n    if (left < 0) return false\n    cnt[c] = left\n}\nreturn true",
+      "skeleton": "// быстрая проверка длин\nif (a.length != b.length) return false\n// считаем буквы первого слова\nfor (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n// вычитаем буквы второго слова\nfor (char in b) {\n    // остаток этой буквы\n    val remaining = (counts[char] ?: 0) - 1\n    // в b лишняя буква\n    if (remaining < 0) return false\n    counts[char] = remaining\n}\n// длины равны, минуса не было\nreturn true",
       "body": "Длины равны и счётчик ни разу не ушёл в минус ⇒ частоты совпали. Однострочник `a.groupingBy { it }.eachCount() == b.groupingBy { it }.eachCount()` тоже верен, но на собесе пиши цикл."
     },
     {
@@ -26,7 +26,7 @@
       "pitfalls": [
         "«Отсортировать обе строки и сравнить» — O(n log n), а `Map` даёт O(n)",
         "Без проверки длины `\"ab\"` и `\"a\"` пройдут: лишние буквы `a` никто не заметит",
-        "Буква, которой нет в `a`, должна дать `-1`: старт `(cnt[c] ?: 0)`, а не `1`"
+        "Буква, которой нет в `a`, должна дать `-1`: старт `(counts[char] ?: 0)`, а не `1`"
       ]
     }
   ],
@@ -34,8 +34,8 @@
     {
       "id": "l1.3.e1",
       "segments": [
-        "fun sameLetters(a: String, b: String): Boolean {\n    if (a.length != b.length) return false\n    val cnt = HashMap<Char, Int>()\n    for (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1\n    for (c in b) {\n        val left = (cnt[c] ?: 0) - 1\n        if (left ",
-        " 0) return false\n        cnt[c] = left\n    }\n    return true\n}"
+        "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length != b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining ",
+        " 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}"
       ],
       "holes": [
         {
@@ -68,9 +68,9 @@
     {
       "id": "l1.3.e2",
       "segments": [
-        "fun sameLetters(a: String, b: String): Boolean {\n    if (a.length ",
-        " b.length) return false\n    val cnt = HashMap<Char, Int>()\n    for (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1\n    for (c in b) {\n        val left = (cnt[c] ?: 0) - 1\n        if (left ",
-        " 0) return false\n        cnt[c] = left\n    }\n    return true\n}"
+        "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length ",
+        " b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining ",
+        " 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}"
       ],
       "holes": [
         {
@@ -116,11 +116,11 @@
     {
       "id": "l1.3.e3",
       "segments": [
-        "fun sameLetters(a: String, b: String): Boolean {\n    if (a.length ",
-        " b.length) return false\n    val cnt = HashMap<Char, Int>()\n    for (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1\n    for (c in b) {\n        val left = (cnt[c] ?: ",
-        ") - 1\n        if (left ",
-        " 0) return false\n        cnt[c] = ",
-        "\n    }\n    return true\n}"
+        "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length ",
+        " b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: ",
+        ") - 1\n        // в b лишняя буква\n        if (remaining ",
+        " 0) return false\n        counts[char] = ",
+        "\n    }\n    // длины равны, минуса не было\n    return true\n}"
       ],
       "holes": [
         {
@@ -130,10 +130,10 @@
           "wrongWhy": {
             "0": "между длинами нужен оператор сравнения: `a.length 0 b.length` не скомпилируется",
             "<": "длинная `a` проскочит, её лишние буквы никто не проверит: `\"ab\"` / `\"a\"` → `true` вместо `false`",
-            "left": "`left` ещё не объявлен и это не оператор: `a.length left b.length` не скомпилируется",
+            "remaining": "`remaining` ещё не объявлен и это не оператор: `a.length remaining b.length` не скомпилируется",
             "<=": "равные длины сразу дают «не анаграмма»: `\"a\"` / `\"a\"` → `false` вместо `true`",
             "1": "между длинами нужен оператор сравнения: `a.length 1 b.length` не скомпилируется",
-            "left + 1": "`left` ещё не объявлен и это не оператор: `a.length left + 1 b.length` не скомпилируется"
+            "remaining + 1": "`remaining` ещё не объявлен и это не оператор: `a.length remaining + 1 b.length` не скомпилируется"
           }
         },
         {
@@ -141,12 +141,12 @@
             "0"
           ],
           "wrongWhy": {
-            "!=": "после `?:` нужно значение, а не оператор: `(cnt[c] ?: !=) - 1` не скомпилируется",
-            "<": "после `?:` нужно значение, а не оператор: `(cnt[c] ?: <) - 1` не скомпилируется",
-            "left": "внутри своего же объявления `left` ещё не существует: `val left = (cnt[c] ?: left) - 1` не скомпилируется",
-            "==": "после `?:` нужно значение, а не оператор: `(cnt[c] ?: ==) - 1` не скомпилируется",
-            "<=": "после `?:` нужно значение, а не оператор: `(cnt[c] ?: <=) - 1` не скомпилируется",
-            "left + 1": "внутри своего же объявления `left` ещё не существует: `val left = (cnt[c] ?: left + 1) - 1` не скомпилируется"
+            "!=": "после `?:` нужно значение, а не оператор: `(counts[char] ?: !=) - 1` не скомпилируется",
+            "<": "после `?:` нужно значение, а не оператор: `(counts[char] ?: <) - 1` не скомпилируется",
+            "remaining": "внутри своего же объявления `remaining` ещё не существует: `val remaining = (counts[char] ?: remaining) - 1` не скомпилируется",
+            "==": "после `?:` нужно значение, а не оператор: `(counts[char] ?: ==) - 1` не скомпилируется",
+            "<=": "после `?:` нужно значение, а не оператор: `(counts[char] ?: <=) - 1` не скомпилируется",
+            "remaining + 1": "внутри своего же объявления `remaining` ещё не существует: `val remaining = (counts[char] ?: remaining + 1) - 1` не скомпилируется"
           }
         },
         {
@@ -155,24 +155,24 @@
           ],
           "wrongWhy": {
             "!=": "любой остаток кроме `0` — уже «лишняя»: `\"aa\"` / `\"aa\"` → `false` вместо `true`",
-            "0": "между `left` и `0` нужен оператор: `if (left 0 0)` не скомпилируется",
-            "left": "между `left` и `0` нужен оператор: `if (left left 0)` не скомпилируется",
+            "0": "между `remaining` и `0` нужен оператор: `if (remaining 0 0)` не скомпилируется",
+            "remaining": "между `remaining` и `0` нужен оператор: `if (remaining remaining 0)` не скомпилируется",
             "==": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `false` вместо `true`",
-            "1": "между `left` и `0` нужен оператор: `if (left 1 0)` не скомпилируется",
-            "left + 1": "между `left` и `0` нужен оператор: `if (left left + 1 0)` не скомпилируется"
+            "1": "между `remaining` и `0` нужен оператор: `if (remaining 1 0)` не скомпилируется",
+            "remaining + 1": "между `remaining` и `0` нужен оператор: `if (remaining remaining + 1 0)` не скомпилируется"
           }
         },
         {
           "ok": [
-            "left"
+            "remaining"
           ],
           "wrongWhy": {
-            "!=": "справа от `=` нужно значение, а не оператор: `cnt[c] = !=` не скомпилируется",
+            "!=": "справа от `=` нужно значение, а не оператор: `counts[char] = !=` не скомпилируется",
             "0": "счётчик обнуляется после первой же буквы: `\"aa\"` / `\"aa\"` → `false` вместо `true`",
-            "<": "справа от `=` нужно значение, а не оператор: `cnt[c] = <` не скомпилируется",
-            "==": "справа от `=` нужно значение, а не оператор: `cnt[c] = ==` не скомпилируется",
+            "<": "справа от `=` нужно значение, а не оператор: `counts[char] = <` не скомпилируется",
+            "==": "справа от `=` нужно значение, а не оператор: `counts[char] = ==` не скомпилируется",
             "1": "счётчик снова `1`, сколько раз ни трать букву: `\"ab\"` / `\"aa\"` → `true` вместо `false`",
-            "<=": "справа от `=` нужно значение, а не оператор: `cnt[c] = <=` не скомпилируется"
+            "<=": "справа от `=` нужно значение, а не оператор: `counts[char] = <=` не скомпилируется"
           }
         }
       ],
@@ -187,7 +187,7 @@
           "text": "<"
         },
         {
-          "text": "left"
+          "text": "remaining"
         },
         {
           "text": "==",
@@ -202,19 +202,19 @@
           "why": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `false` вместо `true`"
         },
         {
-          "text": "left + 1",
-          "why": "в `cnt` возвращается старое значение, уменьшение теряется: `\"ab\"` / `\"aa\"` → `true` вместо `false`"
+          "text": "remaining + 1",
+          "why": "в `counts` возвращается старое значение, уменьшение теряется: `\"ab\"` / `\"aa\"` → `true` вместо `false`"
         }
       ],
       "hints": [
         "Быстрый выход: разная длина → сразу `false`. Дальше — одна `Map`: плюсуем буквы `a`, минусуем буквы `b`.",
-        "Буква из `b`, которой нет в `cnt`, «была 0 раз» — после вычитания уходит в минус.",
+        "Буква из `b`, которой нет в `counts`, «была 0 раз» — после вычитания уходит в минус.",
         "Записываем уменьшенный счётчик обратно."
       ]
     }
   ],
   "solution": {
-    "code": "fun sameLetters(a: String, b: String): Boolean {\n    if (a.length != b.length) return false\n    val cnt = HashMap<Char, Int>()\n    for (c in a) cnt[c] = cnt.getOrDefault(c, 0) + 1\n    for (c in b) {\n        val left = (cnt[c] ?: 0) - 1\n        if (left < 0) return false\n        cnt[c] = left\n    }\n    return true\n}",
+    "code": "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length != b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining < 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}",
     "time": "O(n)",
     "space": "O(k)",
     "pitfalls": [

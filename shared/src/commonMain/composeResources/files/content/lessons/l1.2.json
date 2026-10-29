@@ -18,7 +18,7 @@
     },
     {
       "title": "Каркас: два прохода",
-      "skeleton": "val cnt = HashMap<Char, Int>()\nfor (c in s) cnt[c] = cnt.getOrDefault(c, 0) + 1\nfor (c in s) if (cnt[c] == 1) return c",
+      "skeleton": "// символ -> сколько раз\nval counts = HashMap<Char, Int>()\n// 1-й проход: считаем частоты\nfor (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n// 2-й проход: первый уникальный\nfor (char in s) if (counts[char] == 1) return char",
       "body": "Первый проход считает, второй идёт снова по строке `s`: только она знает, какой символ был первым."
     },
     {
@@ -34,8 +34,8 @@
     {
       "id": "l1.2.e1",
       "segments": [
-        "fun firstUniqueChar(s: String): Char? {\n    val cnt = HashMap<Char, Int>()\n    for (c in s) cnt[c] = cnt.getOrDefault(c, 0) + 1\n    for (c in ",
-        ") if (cnt[c] == 1) return c\n    return null\n}"
+        "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n    // 2-й проход: первый уникальный\n    for (char in ",
+        ") if (counts[char] == 1) return char\n    // уникального символа нет\n    return null\n}"
       ],
       "holes": [
         {
@@ -49,7 +49,7 @@
           "text": "s"
         },
         {
-          "text": "cnt.keys",
+          "text": "counts.keys",
           "why": "`HashMap` не обещает порядок обхода: на JVM `\"ba\"` → `'a'` вместо `'b'`. Что iOS случайно обходит по вставке, — не гарантия"
         },
         {
@@ -64,9 +64,9 @@
     {
       "id": "l1.2.e2",
       "segments": [
-        "fun firstUniqueChar(s: String): Char? {\n    val cnt = HashMap<Char, Int>()\n    for (c in s) cnt[c] = cnt.getOrDefault(c, ",
-        ") + 1\n    for (c in s) if (cnt[c] == ",
-        ") return c\n    return null\n}"
+        "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, ",
+        ") + 1\n    // 2-й проход: первый уникальный\n    for (char in s) if (counts[char] == ",
+        ") return char\n    // уникального символа нет\n    return null\n}"
       ],
       "holes": [
         {
@@ -100,17 +100,17 @@
         }
       ],
       "hints": [
-        "Нового символа в `cnt` ещё нет — сколько раз мы его видели до этого?",
+        "Нового символа в `counts` ещё нет — сколько раз мы его видели до этого?",
         "Уникальный — тот, что встретился ровно один раз."
       ]
     },
     {
       "id": "l1.2.e3",
       "segments": [
-        "fun firstUniqueChar(s: String): Char? {\n    val cnt = HashMap<Char, Int>()\n    for (c in s) cnt[c] = cnt.getOrDefault(c, ",
-        ") + 1\n    for (c in ",
-        ") if (cnt[c] == ",
-        ") return c\n    return ",
+        "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, ",
+        ") + 1\n    // 2-й проход: первый уникальный\n    for (char in ",
+        ") if (counts[char] == ",
+        ") return char\n    // уникального символа нет\n    return ",
         "\n}"
       ],
       "holes": [
@@ -119,11 +119,11 @@
             "0"
           ],
           "wrongWhy": {
-            "s": "значение по умолчанию станет общим типом `Int` и `String`, к нему не прибавить `1`: `cnt.getOrDefault(c, s) + 1` не скомпилируется",
+            "s": "значение по умолчанию станет общим типом `Int` и `String`, к нему не прибавить `1`: `counts.getOrDefault(char, s) + 1` не скомпилируется",
             "1": "счёт начинается с `1`, у одиночки частота `2`: `\"z\"` → `null` вместо `'z'`",
-            "null": "`getOrDefault(c, null)` вернёт `Int?`, и `+ 1` не скомпилируется",
-            "cnt.keys": "результат — `Any`, к нему не прибавить `1`: `cnt.getOrDefault(c, cnt.keys) + 1` не скомпилируется",
-            "' '": "результат — не число, к нему не прибавить `1`: `cnt.getOrDefault(c, ' ') + 1` не скомпилируется"
+            "null": "`getOrDefault(char, null)` вернёт `Int?`, и `+ 1` не скомпилируется",
+            "counts.keys": "результат — `Any`, к нему не прибавить `1`: `counts.getOrDefault(char, counts.keys) + 1` не скомпилируется",
+            "' '": "результат — не число, к нему не прибавить `1`: `counts.getOrDefault(char, ' ') + 1` не скомпилируется"
           }
         },
         {
@@ -131,10 +131,10 @@
             "s"
           ],
           "wrongWhy": {
-            "0": "по числу не пройти циклом: `for (c in 0)` не скомпилируется",
-            "1": "по числу не пройти циклом: `for (c in 1)` не скомпилируется",
-            "null": "по `null` не пройти циклом: `for (c in null)` не скомпилируется",
-            "' '": "по одному символу не пройти циклом: `for (c in ' ')` не скомпилируется"
+            "0": "по числу не пройти циклом: `for (char in 0)` не скомпилируется",
+            "1": "по числу не пройти циклом: `for (char in 1)` не скомпилируется",
+            "null": "по `null` не пройти циклом: `for (char in null)` не скомпилируется",
+            "' '": "по одному символу не пройти циклом: `for (char in ' ')` не скомпилируется"
           }
         },
         {
@@ -143,10 +143,10 @@
           ],
           "wrongWhy": {
             "0": "символ из строки встретился хотя бы раз, `0` не бывает: `\"z\"` → `null` вместо `'z'`",
-            "s": "частота — `Int?`, со строкой её не сравнить: `cnt[c] == s` не скомпилируется",
-            "null": "каждый символ строки есть в `cnt`, условие всегда ложно: `\"z\"` → `null` вместо `'z'`",
-            "cnt.keys": "частота — `Int?`, с множеством её не сравнить: `cnt[c] == cnt.keys` не скомпилируется",
-            "' '": "частота — `Int?`, с символом её не сравнить: `cnt[c] == ' '` не скомпилируется"
+            "s": "частота — `Int?`, со строкой её не сравнить: `counts[char] == s` не скомпилируется",
+            "null": "каждый символ строки есть в `counts`, условие всегда ложно: `\"z\"` → `null` вместо `'z'`",
+            "counts.keys": "частота — `Int?`, с множеством её не сравнить: `counts[char] == counts.keys` не скомпилируется",
+            "' '": "частота — `Int?`, с символом её не сравнить: `counts[char] == ' '` не скомпилируется"
           }
         },
         {
@@ -157,7 +157,7 @@
             "0": "функция возвращает `Char?`, а не число: `return 0` не скомпилируется",
             "s": "функция возвращает `Char?`, а не строку: `return s` не скомпилируется",
             "1": "функция возвращает `Char?`, а не число: `return 1` не скомпилируется",
-            "cnt.keys": "функция возвращает `Char?`, а не множество: `return cnt.keys` не скомпилируется"
+            "counts.keys": "функция возвращает `Char?`, а не множество: `return counts.keys` не скомпилируется"
           }
         }
       ],
@@ -175,7 +175,7 @@
           "text": "null"
         },
         {
-          "text": "cnt.keys",
+          "text": "counts.keys",
           "why": "`HashMap` не обещает порядок обхода: на JVM `\"ba\"` → `'a'` вместо `'b'`. Что iOS случайно обходит по вставке, — не гарантия"
         },
         {
@@ -190,7 +190,7 @@
     }
   ],
   "solution": {
-    "code": "fun firstUniqueChar(s: String): Char? {\n    val cnt = HashMap<Char, Int>()\n    for (c in s) cnt[c] = cnt.getOrDefault(c, 0) + 1\n    for (c in s) if (cnt[c] == 1) return c\n    return null\n}",
+    "code": "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n    // 2-й проход: первый уникальный\n    for (char in s) if (counts[char] == 1) return char\n    // уникального символа нет\n    return null\n}",
     "time": "O(n)",
     "space": "O(k)",
     "pitfalls": [

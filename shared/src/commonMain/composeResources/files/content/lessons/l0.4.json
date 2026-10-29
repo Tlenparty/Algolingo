@@ -4,7 +4,7 @@
   "level": 0,
   "title": "Бинарный поиск",
   "statement": "Найди индекс `target` в **отсортированном** массиве за O(log n), иначе `-1`.",
-  "trains": "каркас бинпоиска и инвариант «ответ всегда внутри `[lo, hi]`»",
+  "trains": "каркас бинпоиска и инвариант «ответ всегда внутри `[left, right]`»",
   "targetTimeSec": 180,
   "theory": [
     {
@@ -18,14 +18,14 @@
     },
     {
       "title": "Каркас",
-      "skeleton": "var lo = 0\nvar hi = nums.size - 1\nwhile (lo <= hi) {\n    val mid = lo + (hi - lo) / 2\n    // нашли / вправо / влево\n}",
-      "body": "Инвариант: ответ, если он есть, всегда внутри `[lo, hi]`."
+      "skeleton": "// ответ внутри [left, right]\nvar left = 0\nvar right = nums.size - 1\n// сужаем диапазон\nwhile (left <= right) {\n    // середина диапазона\n    val mid = left + (right - left) / 2\n    // нашли / вправо / влево\n}",
+      "body": "Инвариант: ответ, если он есть, всегда внутри `[left, right]`."
     },
     {
       "title": "Грабли",
       "pitfalls": [
-        "`lo < hi` вместо `<=` пропустит последний элемент",
-        "`(lo + hi) / 2` может переполниться на больших индексах"
+        "`left < right` вместо `<=` пропустит последний элемент",
+        "`(left + right) / 2` может переполниться на больших индексах"
       ]
     }
   ],
@@ -33,116 +33,116 @@
     {
       "id": "l0.4.e1",
       "segments": [
-        "fun binarySearch(nums: IntArray, target: Int): Int {\n    var lo = 0\n    var hi = nums.size - 1\n    while (",
-        ") {\n        val mid = lo + (hi - lo) / 2\n        when {\n            nums[mid] == target -> return mid\n            nums[mid] < target  -> lo = mid + 1\n            else                -> hi = mid - 1\n        }\n    }\n    return -1\n}"
+        "fun binarySearch(nums: IntArray, target: Int): Int {\n    // ответ внутри [left, right]\n    var left = 0\n    var right = nums.size - 1\n    // сужаем диапазон\n    while (",
+        ") {\n        // середина диапазона\n        val mid = left + (right - left) / 2\n        when {\n            // нашли target\n            nums[mid] == target -> return mid\n            // target правее\n            nums[mid] < target  -> left = mid + 1\n            // target левее\n            else                -> right = mid - 1\n        }\n    }\n    // target в массиве нет\n    return -1\n}"
       ],
       "holes": [
         {
           "ok": [
-            "lo <= hi"
+            "left <= right"
           ]
         }
       ],
       "bank": [
         {
-          "text": "lo <= hi"
+          "text": "left <= right"
         },
         {
-          "text": "lo < hi",
-          "why": "при `lo == hi` цикл не зайдёт и последний кандидат пропущен: `[5]`, target `5` вернёт `-1`"
+          "text": "left < right",
+          "why": "при `left == right` цикл не зайдёт и последний кандидат пропущен: `[5]`, target `5` вернёт `-1`"
         },
         {
-          "text": "lo != hi",
-          "why": "при `lo == hi` цикл останавливается, не проверив последний кандидат: `[1, 3]`, target `3` вернёт `-1`; а если `hi` уйдёт ниже `lo`, условие останется истинным: `[1, 3]`, target `0` зацикливается"
+          "text": "left != right",
+          "why": "при `left == right` цикл останавливается, не проверив последний кандидат: `[1, 3]`, target `3` вернёт `-1`; а если `right` уйдёт ниже `left`, условие останется истинным: `[1, 3]`, target `0` зацикливается"
         },
         {
-          "text": "lo >= hi",
+          "text": "left >= right",
           "why": "условие ложно с самого начала: на `[1, 3]`, target `1` цикл не выполнится ни разу"
         }
       ],
       "hints": [
-        "Цикл идёт, пока диапазон `[lo, hi]` не пуст, то есть пока `lo <= hi`."
+        "Цикл идёт, пока диапазон `[left, right]` не пуст, то есть пока `left <= right`."
       ]
     },
     {
       "id": "l0.4.e2",
       "segments": [
-        "fun binarySearch(nums: IntArray, target: Int): Int {\n    var lo = 0\n    var hi = nums.size - 1\n    while (",
-        ") {\n        val mid = ",
-        "\n        when {\n            nums[mid] == target -> return mid\n            nums[mid] < target  -> lo = mid + 1\n            else                -> hi = mid - 1\n        }\n    }\n    return -1\n}"
+        "fun binarySearch(nums: IntArray, target: Int): Int {\n    // ответ внутри [left, right]\n    var left = 0\n    var right = nums.size - 1\n    // сужаем диапазон\n    while (",
+        ") {\n        // середина диапазона\n        val mid = ",
+        "\n        when {\n            // нашли target\n            nums[mid] == target -> return mid\n            // target правее\n            nums[mid] < target  -> left = mid + 1\n            // target левее\n            else                -> right = mid - 1\n        }\n    }\n    // target в массиве нет\n    return -1\n}"
       ],
       "holes": [
         {
           "ok": [
-            "lo <= hi"
+            "left <= right"
           ],
           "wrongWhy": {
-            "(lo + hi) / 2": "`while` ждёт `Boolean`, а это `Int`: не скомпилируется",
-            "hi - lo / 2": "`while` ждёт `Boolean`, а это `Int`: не скомпилируется"
+            "(left + right) / 2": "`while` ждёт `Boolean`, а это `Int`: не скомпилируется",
+            "right - left / 2": "`while` ждёт `Boolean`, а это `Int`: не скомпилируется"
           }
         },
         {
           "ok": [
-            "lo + (hi - lo) / 2"
+            "left + (right - left) / 2"
           ],
           "acceptable": [
             {
-              "text": "(lo + hi) ushr 1",
+              "text": "(left + right) ushr 1",
               "note": "работает, но эталон читаемее и не опирается на беззнаковый сдвиг"
             },
             {
-              "text": "(lo + hi) / 2",
-              "note": "работает, пока в массиве меньше 2^30 элементов; на огромных индексах `lo + hi` переполнит `Int`, эталон `lo + (hi - lo) / 2` безопаснее"
+              "text": "(left + right) / 2",
+              "note": "работает, пока в массиве меньше 2^30 элементов; на огромных индексах `left + right` переполнит `Int`, эталон `left + (right - left) / 2` безопаснее"
             },
             {
-              "text": "hi - lo / 2",
-              "note": "верно, но это линейный проход O(n) справа налево, а не бинпоиск: `lo / 2` всегда `0`"
+              "text": "right - left / 2",
+              "note": "верно, но это линейный проход O(n) справа налево, а не бинпоиск: `left / 2` всегда `0`"
             }
           ],
           "wrongWhy": {
-            "lo < hi": "`mid` станет `Boolean`, и `nums[mid]` не скомпилируется"
+            "left < right": "`mid` станет `Boolean`, и `nums[mid]` не скомпилируется"
           }
         }
       ],
       "bank": [
         {
-          "text": "lo <= hi"
+          "text": "left <= right"
         },
         {
-          "text": "lo + (hi - lo) / 2"
+          "text": "left + (right - left) / 2"
         },
         {
-          "text": "(lo + hi) ushr 1"
+          "text": "(left + right) ushr 1"
         },
         {
-          "text": "(lo + hi) / 2"
+          "text": "(left + right) / 2"
         },
         {
-          "text": "hi - lo / 2"
+          "text": "right - left / 2"
         },
         {
-          "text": "lo < hi",
-          "why": "при `lo == hi` цикл не зайдёт: `[5]`, target `5` вернёт `-1`"
+          "text": "left < right",
+          "why": "при `left == right` цикл не зайдёт: `[5]`, target `5` вернёт `-1`"
         }
       ],
       "hints": [
-        "Цикл идёт, пока диапазон `[lo, hi]` не пуст, то есть пока `lo <= hi`.",
-        "Середина `mid = lo + (hi - lo) / 2` (защита от переполнения). Три ветки: нашли / ушли вправо / ушли влево."
+        "Цикл идёт, пока диапазон `[left, right]` не пуст, то есть пока `left <= right`.",
+        "Середина `mid = left + (right - left) / 2` (защита от переполнения). Три ветки: нашли / ушли вправо / ушли влево."
       ]
     },
     {
       "id": "l0.4.e3",
       "segments": [
-        "fun binarySearch(nums: IntArray, target: Int): Int {\n    var lo = 0\n    var hi = nums.size - 1\n    while (",
-        ") {\n        val mid = lo + (hi - lo) / 2\n        when {\n            nums[mid] == target -> return ",
-        "\n            nums[mid] < target  -> lo = mid + ",
-        "\n            else                -> hi = mid - ",
-        "\n        }\n    }\n    return -1\n}"
+        "fun binarySearch(nums: IntArray, target: Int): Int {\n    // ответ внутри [left, right]\n    var left = 0\n    var right = nums.size - 1\n    // сужаем диапазон\n    while (",
+        ") {\n        // середина диапазона\n        val mid = left + (right - left) / 2\n        when {\n            // нашли target\n            nums[mid] == target -> return ",
+        "\n            // target правее\n            nums[mid] < target  -> left = mid + ",
+        "\n            // target левее\n            else                -> right = mid - ",
+        "\n        }\n    }\n    // target в массиве нет\n    return -1\n}"
       ],
       "holes": [
         {
           "ok": [
-            "lo <= hi"
+            "left <= right"
           ],
           "wrongWhy": {
             "0": "`while` ждёт `Boolean`, а это `Int`: не скомпилируется",
@@ -156,7 +156,7 @@
           "wrongWhy": {
             "0": "вернёт `0` вместо найденного индекса: `[1, 3]`, target `3` даст `0`",
             "-1": "скажет «не найдено», хотя элемент есть: `[5]`, target `5` даст `-1`",
-            "lo < hi": "здесь нужен `Int`, а `lo < hi` — `Boolean`: не скомпилируется",
+            "left < right": "здесь нужен `Int`, а `left < right` — `Boolean`: не скомпилируется",
             "1": "вернёт константу `1`, а не индекс: `[5]`, target `5` даст `1` — такого индекса нет"
           }
         },
@@ -165,8 +165,8 @@
             "1"
           ],
           "wrongWhy": {
-            "lo < hi": "здесь нужен `Int`, а `lo < hi` — `Boolean`: не скомпилируется",
-            "mid": "`lo = mid + mid` = 2·`mid`: `[1, 3]`, target `3` — `mid = 0`, `lo` остаётся `0`, цикл бесконечный"
+            "left < right": "здесь нужен `Int`, а `left < right` — `Boolean`: не скомпилируется",
+            "mid": "`left = mid + mid` = 2·`mid`: `[1, 3]`, target `3` — `mid = 0`, `left` остаётся `0`, цикл бесконечный"
           }
         },
         {
@@ -174,16 +174,16 @@
             "1"
           ],
           "wrongWhy": {
-            "0": "`hi = mid - 0` не исключает `mid`: `[1, 3]`, target `0` — `hi = 0`, `mid` снова `0`, цикл бесконечный",
-            "-1": "`hi = mid - -1 = mid + 1` не сужает диапазон: `[1, 3]`, target `0` — `mid = 0`, `hi` снова `1`, цикл бесконечный",
-            "lo < hi": "здесь нужен `Int`, а `lo < hi` — `Boolean`: не скомпилируется",
-            "mid": "`hi = mid - mid` всегда `0`: `[1, 3, 5, 7, 9]`, target `3` — `hi = 0`, вернёт `-1`"
+            "0": "`right = mid - 0` не исключает `mid`: `[1, 3]`, target `0` — `right = 0`, `mid` снова `0`, цикл бесконечный",
+            "-1": "`right = mid - -1 = mid + 1` не сужает диапазон: `[1, 3]`, target `0` — `mid = 0`, `right` снова `1`, цикл бесконечный",
+            "left < right": "здесь нужен `Int`, а `left < right` — `Boolean`: не скомпилируется",
+            "mid": "`right = mid - mid` всегда `0`: `[1, 3, 5, 7, 9]`, target `3` — `right = 0`, вернёт `-1`"
           }
         }
       ],
       "bank": [
         {
-          "text": "lo <= hi"
+          "text": "left <= right"
         },
         {
           "text": "mid"
@@ -195,31 +195,31 @@
           "text": "1"
         },
         {
-          "text": "lo < hi",
-          "why": "при `lo == hi` цикл не зайдёт: `[5]`, target `5` вернёт `-1`"
+          "text": "left < right",
+          "why": "при `left == right` цикл не зайдёт: `[5]`, target `5` вернёт `-1`"
         },
         {
           "text": "0",
-          "why": "`lo = mid + 0` зацикливается: на `[1, 3]`, target `3` `lo` остаётся `0` навсегда"
+          "why": "`left = mid + 0` зацикливается: на `[1, 3]`, target `3` `left` остаётся `0` навсегда"
         },
         {
           "text": "-1",
-          "why": "`lo = mid + -1` уводит границу назад: на `[1, 3]`, target `3` `lo = -1`, `mid` снова `0`, цикл бесконечный"
+          "why": "`left = mid + -1` уводит границу назад: на `[1, 3]`, target `3` `left = -1`, `mid` снова `0`, цикл бесконечный"
         }
       ],
       "hints": [
-        "Середина `mid = lo + (hi - lo) / 2` (защита от переполнения). Три ветки: нашли / ушли вправо / ушли влево.",
-        "Если нашли, возвращаем `mid`; иначе сдвигаем границу за `mid`: `lo = mid + 1` или `hi = mid - 1`."
+        "Середина `mid = left + (right - left) / 2` (защита от переполнения). Три ветки: нашли / ушли вправо / ушли влево.",
+        "Если нашли, возвращаем `mid`; иначе сдвигаем границу за `mid`: `left = mid + 1` или `right = mid - 1`."
       ]
     }
   ],
   "solution": {
-    "code": "fun binarySearch(nums: IntArray, target: Int): Int {\n    var lo = 0\n    var hi = nums.size - 1\n    while (lo <= hi) {\n        val mid = lo + (hi - lo) / 2\n        when {\n            nums[mid] == target -> return mid\n            nums[mid] < target  -> lo = mid + 1\n            else                -> hi = mid - 1\n        }\n    }\n    return -1\n}",
+    "code": "fun binarySearch(nums: IntArray, target: Int): Int {\n    // ответ внутри [left, right]\n    var left = 0\n    var right = nums.size - 1\n    // сужаем диапазон\n    while (left <= right) {\n        // середина диапазона\n        val mid = left + (right - left) / 2\n        when {\n            // нашли target\n            nums[mid] == target -> return mid\n            // target правее\n            nums[mid] < target  -> left = mid + 1\n            // target левее\n            else                -> right = mid - 1\n        }\n    }\n    // target в массиве нет\n    return -1\n}",
     "time": "O(log n)",
     "space": "O(1)",
     "pitfalls": [
-      "`lo < hi` вместо `<=` пропустит последний элемент",
-      "`(lo + hi) / 2` может переполниться на больших индексах"
+      "`left < right` вместо `<=` пропустит последний элемент",
+      "`(left + right) / 2` может переполниться на больших индексах"
     ],
     "variations": []
   }

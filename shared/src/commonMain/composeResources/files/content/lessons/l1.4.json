@@ -18,7 +18,7 @@
     },
     {
       "title": "Каркас",
-      "skeleton": "for (i in nums.indices) {\n    val need = target - nums[i]\n    seen[need]?.let { return it to i }\n    seen[nums[i]] = i\n}",
+      "skeleton": "for (i in nums.indices) {\n    // кого не хватает до target\n    val need = target - nums[i]\n    // пара найдена\n    seen[need]?.let { return it to i }\n    // потом запоминаем текущее\n    seen[nums[i]] = i\n}",
       "body": "Один проход, не два: сначала ищем дополнение, потом кладём текущее число. O(n) по времени и памяти."
     },
     {
@@ -34,8 +34,8 @@
     {
       "id": "l1.4.e1",
       "segments": [
-        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        val need = target - nums[i]\n        seen[",
-        "]?.let { return it to i }\n        seen[nums[i]] = i\n    }\n    return null\n}"
+        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    // значение -> индекс\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        // кого не хватает до target\n        val need = target - nums[i]\n        // пара найдена\n        seen[",
+        "]?.let { return it to i }\n        // потом запоминаем текущее\n        seen[nums[i]] = i\n    }\n    // пары нет\n    return null\n}"
       ],
       "holes": [
         {
@@ -64,9 +64,9 @@
     {
       "id": "l1.4.e2",
       "segments": [
-        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        val need = target ",
-        " nums[i]\n        seen[",
-        "]?.let { return it to i }\n        seen[nums[i]] = i\n    }\n    return null\n}"
+        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    // значение -> индекс\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        // кого не хватает до target\n        val need = target ",
+        " nums[i]\n        // пара найдена\n        seen[",
+        "]?.let { return it to i }\n        // потом запоминаем текущее\n        seen[nums[i]] = i\n    }\n    // пары нет\n    return null\n}"
       ],
       "holes": [
         {
@@ -111,11 +111,11 @@
     {
       "id": "l1.4.e3",
       "segments": [
-        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in ",
-        ") {\n        val need = target ",
-        " nums[i]\n        seen[",
-        "]?.let { return it to i }\n        seen[",
-        "] = i\n    }\n    return null\n}"
+        "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    // значение -> индекс\n    val seen = HashMap<Int, Int>()\n    for (i in ",
+        ") {\n        // кого не хватает до target\n        val need = target ",
+        " nums[i]\n        // пара найдена\n        seen[",
+        "]?.let { return it to i }\n        // потом запоминаем текущее\n        seen[",
+        "] = i\n    }\n    // пары нет\n    return null\n}"
       ],
       "holes": [
         {
@@ -202,7 +202,7 @@
     }
   ],
   "solution": {
-    "code": "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        val need = target - nums[i]\n        seen[need]?.let { return it to i }\n        seen[nums[i]] = i\n    }\n    return null\n}",
+    "code": "fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    // значение -> индекс\n    val seen = HashMap<Int, Int>()\n    for (i in nums.indices) {\n        // кого не хватает до target\n        val need = target - nums[i]\n        // пара найдена\n        seen[need]?.let { return it to i }\n        // потом запоминаем текущее\n        seen[nums[i]] = i\n    }\n    // пары нет\n    return null\n}",
     "time": "O(n)",
     "space": "O(n)",
     "pitfalls": [
