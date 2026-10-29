@@ -336,7 +336,7 @@ Plans:
 **Goal:** Все 9 уроков с кодом проходятся на Python: свои дистракторы и грабли, оракулы на python3, ревью заказчика по каждому уроку (спека docs/superpowers/specs/2026-10-28-python-language-design.md)
 **Requirements**: PY-WR01, PY-BATCH-A, PY-BATCH-B, PY-BATCH-C, PY-E2E, PY-DEVICES
 **Depends on:** Phase 9
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 
 Plans:
 
@@ -346,7 +346,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 10-02-PLAN.md — пачка A: l0.1, l0.2, l0.3 на Python + ревью заказчика
+- [x] 10-02-PLAN.md — пачка A: l0.1, l0.2, l0.3 на Python + ревью заказчика
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
