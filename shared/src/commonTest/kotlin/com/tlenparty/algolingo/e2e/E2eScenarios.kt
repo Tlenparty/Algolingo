@@ -37,6 +37,7 @@ import com.tlenparty.algolingo.lesson.xpFor
 import com.tlenparty.algolingo.progress.AppGraph
 import com.tlenparty.algolingo.progress.CATALOG_PATH
 import com.tlenparty.algolingo.progress.HomeNode
+import com.tlenparty.algolingo.progress.LessonProgress
 import com.tlenparty.algolingo.progress.LessonStatus
 import com.tlenparty.algolingo.progress.Progress
 import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
@@ -251,11 +252,11 @@ fun ComposeUiTest.scenarioSystemDesign(startXp: Int): Int {
 }
 
 @OptIn(ExperimentalTestApi::class)
-private fun ComposeUiTest.playCatalog(nodes: List<HomeNode>, startXp: Int): Int {
+private fun ComposeUiTest.playCatalog(nodes: List<HomeNode>, startXp: Int, lang: CodeLang = CodeLang.Kotlin): Int {
     var xp = startXp
     nodes.forEachIndexed { i, n ->
         openLesson(n)
-        val s = playLesson(lesson(n.id))
+        val s = playLesson(lesson(n.id, lang))
         val gained = xpFor(LessonReducer.result(s))
         xp += gained
         waitFor(hasText("Чисто!"), "${n.id}: summary")
@@ -269,7 +270,7 @@ private fun ComposeUiTest.playCatalog(nodes: List<HomeNode>, startXp: Int): Int 
             assertEquals(0, onAllNodes(hasContentDescription("Закрыт: ${next.caption}")).fetchSemanticsNodes().size, "${next.id}: still locked")
         }
     }
-    println("e2e: played ${nodes.size} lessons through the UI, $xp XP")
+    println("e2e: played ${nodes.size} ${lang.id} lessons through the UI, $xp XP")
     return xp
 }
 
@@ -304,6 +305,31 @@ fun ComposeUiTest.scenarioPython() {
     click(hasTestTag("lang-kotlin"), "lang kotlin")
     onNodeWithTag("lang-kotlin").assertIsSelected()
     onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "kotlin: ${pilot.id} done")
-    onHome(hasContentDescription("Начать: ${nodes().first().caption}"), "kotlin: chain starts over")
+    // Kotlin path continues after pilot (progress is shared): first Available with pilot Done, not fresh nodes() (pilot may be l0.1).
+    val next = homeModel(catalog, Progress(lessons = mapOf(pilot.id to LessonProgress()), lang = CodeLang.Kotlin), LocalDate(2000, 1, 1)).nodes
+        .firstOrNull { it.status == LessonStatus.Available } ?: fail("kotlin: no Available lesson after ${pilot.id}")
+    onHome(hasContentDescription("Начать: ${next.caption}"), "kotlin: ${next.id} next after ${pilot.id}")
     assertEquals(0, onAllNodes(hasContentDescription("Скоро на Python", substring = true)).fetchSemanticsNodes().size, "kotlin: Soon nodes left")
+}
+
+/**
+ * The whole Python chain on fresh progress: no «Скоро на Python» anywhere in Python mode (every code lesson ships Python),
+ * then every lesson by its Python references with the same checks as [scenarioAllLessons]. Returns total XP.
+ */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.scenarioPythonChain(): Int {
+    val catalog = runBlocking { loadCatalog() }
+    val py = homeModel(catalog, Progress(lang = CodeLang.Python), LocalDate(2000, 1, 1)).nodes
+    val kotlinIds = nodes().map { it.id }
+    assertEquals(kotlinIds, py.map { it.id }, "python: catalog nodes")
+    assertEquals(emptyList(), py.filter { it.status == LessonStatus.Soon }.map { it.id }, "python: Soon nodes in the model")
+    assertEquals(emptyList(), catalog.lessons.filterNot { it.has(CodeLang.Python) }.map { it.id }, "python: lessons without Python")
+    click(hasTestTag("lang-python"), "lang python")
+    onNodeWithTag("lang-python").assertIsSelected()
+    waitFor(hasScrollAction(), "python: Home list")
+    assertEquals(0, onAllNodes(hasContentDescription("Скоро на Python", substring = true)).fetchSemanticsNodes().size, "python: Soon nodes on Home")
+    val xp = playCatalog(py, 0, CodeLang.Python)
+    assertEquals(0, onAllNodes(hasContentDescription("Скоро на Python", substring = true)).fetchSemanticsNodes().size, "python: Soon nodes after the chain")
+    println("e2e: python chain ${py.first().id}..${py.last().id} (${py.size} lessons) done")
+    return xp
 }

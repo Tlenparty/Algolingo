@@ -28,4 +28,10 @@ class E2eSmokeTest {
         launchApp(freshDir())
         scenarioPython()
     }
+
+    @Test
+    fun pythonChain() = runComposeUiTest(testTimeout = 10.minutes) { // every Python lesson, like smoke()
+        launchApp(freshDir())
+        scenarioPythonChain()
+    }
 }
