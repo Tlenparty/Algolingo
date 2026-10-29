@@ -1,0 +1,234 @@
+{
+  "schema": 1,
+  "id": "l1.5",
+  "level": 1,
+  "title": "Победители соревнования",
+  "statement": "Дана статистика шагов по дням: список дней, день — список пар `(user_id, steps)`. Верни пару `(user_ids, steps)`: всех, кто набрал **максимум шагов**, **участвуя во все дни без пропусков**, и сам этот максимум. Порядок `user_ids` любой.",
+  "trains": "два словаря одновременно (сумма + счётчик дней) + фильтр",
+  "targetTimeSec": 420,
+  "theory": [
+    {
+      "title": "Когда два словаря",
+      "signals": [
+        "По каждому юзеру нужны и сумма, и счётчик",
+        "«Во все дни», «без пропусков» — счётчик дней равен числу дней",
+        "«Максимум среди тех, кто…» — сначала фильтр, потом максимум"
+      ],
+      "body": "Два `dict` за один двойной проход: `total_steps` копит шаги, `days_active` — дни участия. O(N) по числу записей, O(U) по числу юзеров."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "for day in statistics:\n    for user, steps in day:\n        total_steps[user] = total_steps.get(user, 0) + steps\n        days_active[user] = days_active.get(user, 0) + 1\nfull = [u for u in days_active if days_active[u] == total_days]\nmax_steps = max((total_steps[u] for u in full), default=0)\nchampions = [u for u in full if total_steps[u] == max_steps]",
+      "body": "Фильтр → максимум → сбор всех с этим максимумом. Сначала отфильтруй тех, кто был все дни, и только среди них ищи максимум. `default=0` нужен, когда таких нет: пустой `max()` падает с `ValueError`. Порядок `user_ids` в ответе условие не задаёт; в Python он совпадёт с порядком первого появления юзера, потому что `dict` помнит порядок вставки."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`total_steps[user] += steps` без начального значения: нового юзера в словаре ещё нет, `[[(1, 100)]]` → `KeyError: 1`",
+        "`max(...)` без `default=0`: никто не был все дни, `[[(1, 100)], [(2, 100)]]` → `ValueError: max() arg is an empty sequence`",
+        "Максимум по всем юзерам, а не по `full`: `[[(1, 100), (2, 500)], [(1, 100)]]` → `([], 500)` вместо `([1], 200)`",
+        "Удалять «неполных» из `days_active` прямо в цикле по нему: `[[(1, 100), (2, 500)], [(1, 100)]]` → `RuntimeError: dictionary changed size during iteration`; фильтр — это новый список",
+        "Вернуть одного победителя вместо списка: при равном максимуме `[[(1, 100), (2, 100)]]` второй потеряется"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l1.5.e1",
+      "segments": [
+        "def find_champions(statistics: list[list[tuple[int, int]]]) -> tuple[list[int], int]:\n    total_days = len(statistics)\n    total_steps = {}\n    days_active = {}\n    for day in statistics:\n        for user, steps in day:\n            total_steps[user] = total_steps.get(user, 0) + steps\n            days_active[user] = days_active.get(user, 0) + 1\n    full = [u for u in days_active if days_active[u] == total_days]\n    max_steps = max((total_steps[u] for u in ",
+        "), default=0)\n    champions = [u for u in full if total_steps[u] == max_steps]\n    return (champions, max_steps)"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "full"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "full"
+        },
+        {
+          "text": "total_steps",
+          "why": "максимум по всем, а юзер с пропуском задаёт недостижимую планку: дни `[(1, 100), (2, 500)]`, `[(1, 100)]` → `([], 500)` вместо `([1], 200)`"
+        },
+        {
+          "text": "days_active",
+          "why": "те же ключи, что у `total_steps`, — максимум по всем, а юзер с пропуском задаёт недостижимую планку: дни `[(1, 100), (2, 500)]`, `[(1, 100)]` → `([], 500)` вместо `([1], 200)`"
+        },
+        {
+          "text": "total_steps.values()",
+          "why": "перебираем суммы шагов, а не юзеров: дни `[(1, 100), (2, 500)]`, `[(1, 100)]` → `total_steps[200]` падает с `KeyError: 200`"
+        }
+      ],
+      "hints": [
+        "«Без пропусков» = число дней участия равно `len(statistics)`. Сначала отфильтруй таких, потом среди них ищи максимум, потом собери всех с этим максимумом (их может быть несколько!)."
+      ]
+    },
+    {
+      "id": "l1.5.e2",
+      "segments": [
+        "def find_champions(statistics: list[list[tuple[int, int]]]) -> tuple[list[int], int]:\n    total_days = len(statistics)\n    total_steps = {}\n    days_active = {}\n    for day in statistics:\n        for user, steps in day:\n            total_steps[user] = total_steps.get(user, 0) + steps\n            days_active[user] = days_active.get(user, 0) + 1\n    full = [u for u in days_active if days_active[u] == total_days]\n    max_steps = max((total_steps[u] for u in ",
+        "), default=0)\n    champions = [u for u in full if total_steps[u] == max_steps]\n    return (",
+        ", max_steps)"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "full"
+          ],
+          "wrongWhy": {
+            "champions": "`champions` появится строкой ниже: `for u in champions` → `UnboundLocalError` на любом входе",
+            "[champions[0]]": "`champions` появится строкой ниже: `for u in [champions[0]]` → `UnboundLocalError` на любом входе",
+            "[max_steps]": "`max_steps` ещё считается в этой самой строке: `for u in [max_steps]` → `UnboundLocalError` на любом входе"
+          }
+        },
+        {
+          "ok": [
+            "champions"
+          ],
+          "wrongWhy": {
+            "full": "вернём всех, кто был все дни, а не только с максимумом: день `[(1, 100), (2, 50)]` → `([1, 2], 100)` вместо `([1], 100)`",
+            "total_steps": "вернём словарь сумм, а не список победителей: день `[(1, 100)]` → `({1: 100}, 100)` вместо `([1], 100)`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "full"
+        },
+        {
+          "text": "champions"
+        },
+        {
+          "text": "total_steps",
+          "why": "максимум по всем, а юзер с пропуском задаёт недостижимую планку: дни `[(1, 100), (2, 500)]`, `[(1, 100)]` → `([], 500)` вместо `([1], 200)`"
+        },
+        {
+          "text": "[champions[0]]",
+          "why": "при равном максимуме теряется второй победитель: день `[(1, 100), (2, 100)]` → `([1], 100)` вместо `([1, 2], 100)`"
+        },
+        {
+          "text": "[max_steps]",
+          "why": "в список победителей попадают шаги, а не `user_id`: день `[(1, 100)]` → `([100], 100)` вместо `([1], 100)`"
+        }
+      ],
+      "hints": [
+        "«Без пропусков» = число дней участия равно `len(statistics)`. Сначала отфильтруй таких, потом среди них ищи максимум.",
+        "Потом собери всех с этим максимумом — их может быть несколько!"
+      ]
+    },
+    {
+      "id": "l1.5.e3",
+      "segments": [
+        "def find_champions(statistics: list[list[tuple[int, int]]]) -> tuple[list[int], int]:\n    total_days = len(statistics)\n    total_steps = {}\n    days_active = {}\n    for day in statistics:\n        for user, steps in day:\n            total_steps[user] = total_steps.get(user, 0) + ",
+        "\n            days_active[user] = days_active.get(user, 0) + ",
+        "\n    full = [u for u in days_active if days_active[u] == ",
+        "]\n    max_steps = max((total_steps[u] for u in ",
+        "), default=0)\n    champions = [u for u in full if total_steps[u] == max_steps]\n    return (champions, max_steps)"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "steps"
+          ],
+          "wrongWhy": {
+            "1": "`total_steps` считает записи, а не шаги: день `[(1, 100), (2, 50)]` → ничья `1` и `2` с `1` шагом вместо `([1], 100)`",
+            "total_days": "за каждую запись прибавляется число дней, а не шаги: день `[(1, 100), (2, 50)]` → ничья `1` и `2` с `1` шагом вместо `([1], 100)`",
+            "full": "`full` появится только после цикла: день `[(1, 100)]` → `UnboundLocalError`",
+            "total_steps": "к числу не прибавить словарь: день `[(1, 100)]` → `TypeError: unsupported operand type(s) for +: 'int' and 'dict'`",
+            "len(days_active)": "к шагам прибавляется текущее число юзеров в `days_active`: день `[(1, 100), (2, 50)]` → `([2], 1)` вместо `([1], 100)`"
+          }
+        },
+        {
+          "ok": [
+            "1"
+          ],
+          "wrongWhy": {
+            "steps": "`days_active` копит шаги, а не дни, и не совпадёт с `total_days`: день `[(1, 100)]` → `days_active[1] = 100`, ответ `([], 0)` вместо `([1], 100)`",
+            "total_days": "за каждый день прибавляется число дней: дни `[(1, 100)]`, `[(1, 100)]` → `days_active[1] = 4` вместо `2`, ответ `([], 0)` вместо `([1], 200)`",
+            "full": "`full` появится только после цикла: день `[(1, 100)]` → `UnboundLocalError`",
+            "total_steps": "к числу не прибавить словарь: день `[(1, 100)]` → `TypeError: unsupported operand type(s) for +: 'int' and 'dict'`",
+            "len(days_active)": "первая запись юзера прибавляет `0` — пока в `days_active` никого нет: день `[(1, 100)]` → `days_active[1] = 0`, ответ `([], 0)` вместо `([1], 100)`",
+            "user": "прибавляется номер юзера, а не `1` за день: день `[(2, 100)]` → `days_active[2] = 2` вместо `1`, ответ `([], 0)` вместо `([2], 100)`"
+          }
+        },
+        {
+          "ok": [
+            "total_days"
+          ],
+          "wrongWhy": {
+            "steps": "в Python переменная цикла живёт и после него, `steps` — это шаги последней записи: день `[(1, 100)]` → `1 == 100` ложно, ответ `([], 0)` вместо `([1], 100)`",
+            "1": "остаются те, кто был ровно один день, а не все дни: дни `[(1, 100)]`, `[(1, 100)]` → `([], 0)` вместо `([1], 200)`",
+            "full": "`full` ещё считается в этой самой строке: день `[(1, 100)]` → `NameError`",
+            "total_steps": "число дней никогда не равно словарю: день `[(1, 100)]` → `([], 0)` вместо `([1], 100)`",
+            "user": "в Python переменная цикла живёт и после него, `user` — это номер последнего юзера: дни `[(1, 100)]`, `[(1, 100)]` → `2 == 1` ложно, ответ `([], 0)` вместо `([1], 200)`"
+          }
+        },
+        {
+          "ok": [
+            "full"
+          ],
+          "wrongWhy": {
+            "steps": "по числу не пройти циклом: день `[(1, 100)]` → `TypeError: 'int' object is not iterable`",
+            "1": "по числу не пройти циклом: день `[(1, 100)]` → `TypeError: 'int' object is not iterable`",
+            "total_days": "по числу не пройти циклом: день `[(1, 100)]` → `TypeError: 'int' object is not iterable`",
+            "len(days_active)": "по числу не пройти циклом: день `[(1, 100)]` → `TypeError: 'int' object is not iterable`",
+            "user": "по числу не пройти циклом: день `[(1, 100)]` → `TypeError: 'int' object is not iterable`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "steps"
+        },
+        {
+          "text": "1"
+        },
+        {
+          "text": "total_days"
+        },
+        {
+          "text": "full"
+        },
+        {
+          "text": "total_steps",
+          "why": "максимум по всем, а юзер с пропуском задаёт недостижимую планку: дни `[(1, 100), (2, 500)]`, `[(1, 100)]` → `([], 500)` вместо `([1], 200)`"
+        },
+        {
+          "text": "len(days_active)",
+          "why": "это число юзеров, а не дней: день `[(1, 100), (2, 50)]` → дней `1`, юзеров `2`, ответ `([], 0)` вместо `([1], 100)`"
+        },
+        {
+          "text": "user",
+          "why": "к шагам прибавляется номер юзера: день `[(1, 100), (2, 50)]` → `([2], 2)` вместо `([1], 100)`"
+        }
+      ],
+      "hints": [
+        "Тебе нужны две вещи на каждого юзера: суммарные шаги и в скольких днях он участвовал. Два словаря за один двойной проход.",
+        "Шаги копим по `steps`, дни — по одному за запись.",
+        "«Без пропусков» = число дней участия равно `len(statistics)`.",
+        "Сначала отфильтруй таких, потом среди них ищи максимум, потом собери всех с этим максимумом (их может быть несколько!)."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "def find_champions(statistics: list[list[tuple[int, int]]]) -> tuple[list[int], int]:\n    total_days = len(statistics)\n    total_steps = {}\n    days_active = {}\n    for day in statistics:\n        for user, steps in day:\n            total_steps[user] = total_steps.get(user, 0) + steps\n            days_active[user] = days_active.get(user, 0) + 1\n    full = [u for u in days_active if days_active[u] == total_days]\n    max_steps = max((total_steps[u] for u in full), default=0)\n    champions = [u for u in full if total_steps[u] == max_steps]\n    return (champions, max_steps)",
+    "time": "O(N)",
+    "space": "O(U)",
+    "pitfalls": [
+      "Победителей может быть несколько (равный максимум) → возвращаем список, а не одного",
+      "Максимум ищем только среди тех, кто был все дни: юзер с пропуском задаст недостижимую планку, и победителей не останется",
+      "`max()` на пустой последовательности падает с `ValueError` — нужен `default=0`",
+      "`total_steps[user] += steps` для нового юзера падает с `KeyError`: нужен `total_steps.get(user, 0) + steps`",
+      "Ответ — кортеж `(champions, max_steps)`: список `[champions, max_steps]` с кортежем не равен"
+    ],
+    "variations": [
+      "в проде: `collections.Counter` для сумм; но `most_common(1)` вернёт одного, а победителей может быть несколько — на собесе покажи два словаря",
+      "вместо счётчика дней: множество юзеров каждого дня и их пересечение `set.intersection(*({u for u, _ in day} for day in statistics))` — устойчиво, если юзер встречается в дне дважды",
+      "нужен порядок по `user_id`: `sorted(champions)` перед возвратом, это ещё O(k log k)"
+    ]
+  }
+}
