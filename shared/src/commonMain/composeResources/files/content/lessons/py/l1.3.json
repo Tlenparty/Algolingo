@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "id": "l1.3",
+  "level": 1,
+  "title": "Анаграмма",
+  "statement": "Даны два слова. Верни `True`, если они состоят из одинакового набора букв с учётом количества, иначе `False`.",
+  "trains": "словарь частот `dict`: плюсуем буквы `a`, минусуем буквы `b`",
+  "targetTimeSec": 180,
+  "theory": [
+    {
+      "title": "Когда сравнивать частоты",
+      "signals": [
+        "«Одинаковый набор букв», «перестановка», «анаграмма»",
+        "«С учётом количества» — важно, сколько раз, а не только есть ли",
+        "Нужно уложиться в O(n)"
+      ],
+      "body": "Один словарь `counts` «буква → сколько осталось»: плюсуем буквы `a`, минусуем буквы `b`. O(n) по времени, O(k) по памяти, где k — число разных букв. Готовые `collections.Counter(a) == Counter(b)` и `sorted(a) == sorted(b)` тоже верны, но на собесе покажи словарь: `sorted` — это O(n log n)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "if len(a) != len(b):\n    return False\ncounts = {}\nfor ch in a:\n    counts[ch] = counts.get(ch, 0) + 1\nfor ch in b:\n    left = counts.get(ch, 0) - 1\n    if left < 0:\n        return False\n    counts[ch] = left\nreturn True",
+      "body": "Длины равны и счётчик ни разу не ушёл в минус ⇒ частоты совпали: если бы какой-то буквы `b` не хватило, её счётчик стал бы `-1`. `counts.get(ch, 0)` вернёт `0` для буквы, которой нет в словаре, а `counts[ch]` на ней упадёт с `KeyError`."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Без проверки длины лишние буквы `a` никто не заметит: `\"ab\"` / `\"a\"` → `True` вместо `False`",
+        "`counts[ch] - 1` вместо `get`: буквы `c` нет в `a`, `\"ab\"` / `\"ac\"` → `KeyError: 'c'`",
+        "Запасное значение `1` вместо `0`: буква, которой нет в `a`, даст `0`, а не минус: `\"ab\"` / `\"ac\"` → `True` вместо `False`",
+        "`counts = set()`: у множества нет `get`, `\"ab\"` / `\"ba\"` → `AttributeError: 'set' object has no attribute 'get'`",
+        "`left <= 0`: `0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l1.3.e1",
+      "segments": [
+        "def same_letters(a: str, b: str) -> bool:\n    if len(a) != len(b):\n        return False\n    counts = {}\n    for ch in a:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in b:\n        left = counts.get(ch, 0) - 1\n        if left ",
+        " 0:\n            return False\n        counts[ch] = left\n    return True"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "<"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "<"
+        },
+        {
+          "text": "<=",
+          "why": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+        },
+        {
+          "text": "==",
+          "why": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+        },
+        {
+          "text": ">",
+          "why": "условие перевёрнуто, минус никогда не ловится: `\"ab\"` / `\"ac\"` → `True` вместо `False`"
+        }
+      ],
+      "hints": [
+        "Буква лишняя, если её счётчик ушёл в минус."
+      ]
+    },
+    {
+      "id": "l1.3.e2",
+      "segments": [
+        "def same_letters(a: str, b: str) -> bool:\n    if len(a) ",
+        " len(b):\n        return False\n    counts = {}\n    for ch in a:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in b:\n        left = counts.get(ch, 0) - 1\n        if left ",
+        " 0:\n            return False\n        counts[ch] = left\n    return True"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "!="
+          ],
+          "wrongWhy": {
+            "<": "длинная `a` проскочит, её лишние буквы никто не проверит: `\"ab\"` / `\"a\"` → `True` вместо `False`",
+            "<=": "равные длины сразу дают «не анаграмма»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+          }
+        },
+        {
+          "ok": [
+            "<"
+          ],
+          "wrongWhy": {
+            "!=": "любой остаток, кроме `0`, считается «лишней» буквой: `\"aa\"` / `\"aa\"` → после первой `a` остаток `1`, ответ `False` вместо `True`",
+            "==": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "!="
+        },
+        {
+          "text": "<"
+        },
+        {
+          "text": "==",
+          "why": "равные длины сразу дают «не анаграмма»: `\"ab\"` / `\"ba\"` → `False` вместо `True`"
+        },
+        {
+          "text": "<=",
+          "why": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+        }
+      ],
+      "hints": [
+        "Быстрый выход: разная длина → сразу `False`.",
+        "Буква лишняя, если её счётчик ушёл в минус."
+      ]
+    },
+    {
+      "id": "l1.3.e3",
+      "segments": [
+        "def same_letters(a: str, b: str) -> bool:\n    if len(a) ",
+        " len(b):\n        return False\n    counts = ",
+        "\n    for ch in a:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in b:\n        left = ",
+        " - 1\n        if left ",
+        " 0:\n            return False\n        counts[ch] = left\n    return True"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "!="
+          ],
+          "wrongWhy": {
+            "{}": "между длинами нужен оператор сравнения: `len(a) {} len(b)` — `SyntaxError`, код не запустится",
+            "counts.get(ch, 0)": "между длинами нужен оператор сравнения: `len(a) counts.get(ch, 0) len(b)` — `SyntaxError`",
+            "<": "длинная `a` проскочит, её лишние буквы никто не проверит: `\"ab\"` / `\"a\"` → `True` вместо `False`",
+            "set()": "между длинами нужен оператор сравнения: `len(a) set() len(b)` — `SyntaxError`",
+            "counts[ch]": "между длинами нужен оператор сравнения: `len(a) counts[ch] len(b)` — `SyntaxError`",
+            "counts.get(ch, 1)": "между длинами нужен оператор сравнения: `len(a) counts.get(ch, 1) len(b)` — `SyntaxError`",
+            "<=": "равные длины сразу дают «не анаграмма»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+          }
+        },
+        {
+          "ok": [
+            "{}"
+          ],
+          "wrongWhy": {
+            "!=": "после `=` нужно значение, а не оператор: `counts = !=` — `SyntaxError`",
+            "counts.get(ch, 0)": "читаем из `counts`, которого ещё нет: `\"ab\"` / `\"ba\"` → `counts = counts.get(ch, 0)` падает с `UnboundLocalError`",
+            "<": "после `=` нужно значение, а не оператор: `counts = <` — `SyntaxError`",
+            "==": "после `=` нужно значение, а не оператор: `counts = ==` — `SyntaxError`",
+            "counts[ch]": "читаем из `counts`, которого ещё нет: `\"ab\"` / `\"ba\"` → `counts = counts[ch]` падает с `UnboundLocalError`",
+            "counts.get(ch, 1)": "читаем из `counts`, которого ещё нет: `\"ab\"` / `\"ba\"` → `counts = counts.get(ch, 1)` падает с `UnboundLocalError`",
+            "<=": "после `=` нужно значение, а не оператор: `counts = <=` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            "counts.get(ch, 0)"
+          ],
+          "wrongWhy": {
+            "!=": "после `=` нужно значение, а не оператор: `left = != - 1` — `SyntaxError`",
+            "{}": "из словаря не вычесть `1`: `\"ab\"` / `\"ba\"` → `TypeError: unsupported operand type(s) for -: 'dict' and 'int'`",
+            "<": "после `=` нужно значение, а не оператор: `left = < - 1` — `SyntaxError`",
+            "==": "после `=` нужно значение, а не оператор: `left = == - 1` — `SyntaxError`",
+            "set()": "из множества не вычесть `1`: `\"ab\"` / `\"ba\"` → `TypeError: unsupported operand type(s) for -: 'set' and 'int'`",
+            "<=": "после `=` нужно значение, а не оператор: `left = <= - 1` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            "<"
+          ],
+          "wrongWhy": {
+            "!=": "любой остаток, кроме `0`, считается «лишней» буквой: `\"aa\"` / `\"aa\"` → после первой `a` остаток `1`, ответ `False` вместо `True`",
+            "{}": "между `left` и `0` нужен оператор: `if left {} 0:` — `SyntaxError`",
+            "counts.get(ch, 0)": "между `left` и `0` нужен оператор: `if left counts.get(ch, 0) 0:` — `SyntaxError`",
+            "==": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`",
+            "set()": "между `left` и `0` нужен оператор: `if left set() 0:` — `SyntaxError`",
+            "counts[ch]": "между `left` и `0` нужен оператор: `if left counts[ch] 0:` — `SyntaxError`",
+            "counts.get(ch, 1)": "между `left` и `0` нужен оператор: `if left counts.get(ch, 1) 0:` — `SyntaxError`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "!="
+        },
+        {
+          "text": "{}"
+        },
+        {
+          "text": "counts.get(ch, 0)"
+        },
+        {
+          "text": "<"
+        },
+        {
+          "text": "==",
+          "why": "равные длины сразу дают «не анаграмма»: `\"ab\"` / `\"ba\"` → `False` вместо `True`"
+        },
+        {
+          "text": "set()",
+          "why": "множество не хранит частоты, у него нет `get`: `\"ab\"` / `\"ba\"` → `AttributeError: 'set' object has no attribute 'get'`"
+        },
+        {
+          "text": "counts[ch]",
+          "why": "буквы из `b` может не быть в словаре: `\"ab\"` / `\"ac\"` → `KeyError: 'c'`"
+        },
+        {
+          "text": "counts.get(ch, 1)",
+          "why": "буква, которой нет в `a`, даст `0`, а не минус: `\"ab\"` / `\"ac\"` → `True` вместо `False`"
+        },
+        {
+          "text": "<=",
+          "why": "`0` — это «буква израсходована ровно», а не «лишняя»: `\"a\"` / `\"a\"` → `False` вместо `True`"
+        }
+      ],
+      "hints": [
+        "Быстрый выход: разная длина → сразу `False`. Дальше — один словарь: плюсуем буквы `a`, минусуем буквы `b`.",
+        "Частоты хранит словарь `{}`.",
+        "Буквы из `b` может не быть в `counts` — значит, её было `0`: `counts.get(ch, 0)`. После вычитания она уйдёт в минус.",
+        "Буква лишняя, если её счётчик ушёл в минус."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "def same_letters(a: str, b: str) -> bool:\n    if len(a) != len(b):\n        return False\n    counts = {}\n    for ch in a:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in b:\n        left = counts.get(ch, 0) - 1\n        if left < 0:\n            return False\n        counts[ch] = left\n    return True",
+    "time": "O(n)",
+    "space": "O(k)",
+    "pitfalls": [
+      "Сначала сравни длины: без этого `\"ab\"` и `\"a\"` пройдут — лишнюю букву `a` никто не заметит",
+      "`counts[ch] - 1` для буквы, которой нет в `a`, падает с `KeyError`: нужен `counts.get(ch, 0) - 1`",
+      "`{}` — пустой словарь, а `set()` — множество: частоты хранит только словарь",
+      "«Отсортировать обе строки и сравнить» — O(n log n), а словарь даёт O(n)"
+    ],
+    "variations": [
+      "в проде: `collections.Counter(a) == Counter(b)` — на собесе покажи словарь руками",
+      "`sorted(a) == sorted(b)` тоже верно, но это O(n log n); скажи, что словарь даёт O(n)",
+      "без учёта регистра и пробелов: сначала нормализуй строки, например `a.lower().replace(\" \", \"\")`",
+      "без проверки длины: плюсуем `a`, минусуем `b`, а в конце проверяем, что все счётчики стали нулями: `all(v == 0 for v in counts.values())`"
+    ]
+  }
+}
