@@ -1,0 +1,261 @@
+{
+  "schema": 1,
+  "id": "l1.2",
+  "level": 1,
+  "title": "Первый уникальный символ",
+  "statement": "Верни первый символ строки, встречающийся ровно один раз, иначе `None`.",
+  "trains": "словарь частот `dict` + второй проход по строке",
+  "targetTimeSec": 180,
+  "theory": [
+    {
+      "title": "Когда словарь частот",
+      "signals": [
+        "«Сколько раз встречается?»",
+        "«Ровно один раз», «чаще всего»",
+        "«Первый такой» — важен порядок исходных данных"
+      ],
+      "body": "Словарь `counts` «символ → сколько раз» считается за один проход O(n); память O(k), где k — число разных символов. Готовый `collections.Counter` делает то же самое, но на собесе покажи словарь руками."
+    },
+    {
+      "title": "Каркас: два прохода",
+      "skeleton": "counts = {}\nfor ch in s:\n    counts[ch] = counts.get(ch, 0) + 1\nfor ch in s:\n    if counts[ch] == 1:\n        return ch\nreturn None",
+      "body": "Первый проход считает, второй идёт снова по строке `s`: она знает, какой символ был первым. `counts.get(ch, 0)` вернёт `0` для символа, которого ещё нет, а `counts[ch]` на нём упадёт с `KeyError`. Обход самого словаря тоже даст верный ответ: с Python 3.7 `dict` помнит порядок вставки, а ключи вставлены в порядке первого появления. Но приём «второй проход по строке» не зависит от этой гарантии и работает в любом языке (в Kotlin `HashMap` порядок не хранит)."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`counts[ch] + 1` без `get`: на первом же символе ключа ещё нет, `\"abacb\"` → `KeyError: 'a'`",
+        "`counts.get(ch)` без значения по умолчанию вернёт `None`: `\"abacb\"` → `TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'`",
+        "Стартовое значение `1` вместо `0`: каждый символ посчитается на раз больше, `\"z\"` → `None` вместо `\"z\"`",
+        "`counts = set()`: у множества нет `get`, `\"abacb\"` → `AttributeError: 'set' object has no attribute 'get'`",
+        "Пытаться в один проход: пока строка не дочитана, неизвестно, повторится ли символ"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l1.2.e1",
+      "segments": [
+        "def first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in ",
+        ":\n        if counts[ch] == 1:\n            return ch\n    return None"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "s"
+          ],
+          "acceptable": [
+            {
+              "text": "counts",
+              "note": "работает: с Python 3.7 словарь помнит порядок вставки, а ключи вставлены в порядке первого появления; но приём — второй проход по строке, он не зависит от этой гарантии"
+            }
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "s"
+        },
+        {
+          "text": "counts"
+        },
+        {
+          "text": "reversed(s)",
+          "why": "с конца найдётся последний уникальный, а не первый: `\"ba\"` → `\"a\"` вместо `\"b\"`"
+        },
+        {
+          "text": "sorted(s)",
+          "why": "после сортировки порядок строки потерян, найдётся наименьший уникальный: `\"ba\"` → `\"a\"` вместо `\"b\"`"
+        }
+      ],
+      "hints": [
+        "Первый проход считает частоты. Второй проход **по исходной строке** (порядок важен!) — первый символ с частотой 1."
+      ]
+    },
+    {
+      "id": "l1.2.e2",
+      "segments": [
+        "def first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = ",
+        " + 1\n    for ch in s:\n        if counts[ch] == ",
+        ":\n            return ch\n    return None"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "counts.get(ch, 0)"
+          ],
+          "wrongWhy": {
+            "1": "`counts[ch] = 1 + 1` — частота каждого символа всегда `2`: `\"z\"` → `None` вместо `\"z\"`",
+            "2": "`counts[ch] = 2 + 1` — частота каждого символа всегда `3`: `\"z\"` → `None` вместо `\"z\"`"
+          }
+        },
+        {
+          "ok": [
+            "1"
+          ],
+          "wrongWhy": {
+            "counts.get(ch, 0)": "частота сравнивается сама с собой, условие всегда истинно: `\"aabb\"` → `\"a\"` вместо `None`",
+            "counts[ch]": "частота сравнивается сама с собой, условие всегда истинно: `\"aabb\"` → `\"a\"` вместо `None`",
+            "counts.get(ch)": "частота сравнивается сама с собой, условие всегда истинно: `\"aabb\"` → `\"a\"` вместо `None`",
+            "counts.get(ch, 1)": "символ из строки всегда есть в словаре, это та же частота — условие всегда истинно: `\"aabb\"` → `\"a\"` вместо `None`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "counts.get(ch, 0)"
+        },
+        {
+          "text": "1"
+        },
+        {
+          "text": "counts[ch]",
+          "why": "нового символа в словаре ещё нет: `\"abacb\"` → `KeyError: 'a'` на первом же символе"
+        },
+        {
+          "text": "counts.get(ch)",
+          "why": "без второго аргумента `get` вернёт `None`: `\"abacb\"` → `TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'`"
+        },
+        {
+          "text": "counts.get(ch, 1)",
+          "why": "счёт начинается с `1`, у одиночки частота `2`: `\"z\"` → `None` вместо `\"z\"`"
+        },
+        {
+          "text": "2",
+          "why": "ищем символ, который встретился ровно дважды: `\"abacb\"` → `\"a\"` вместо `\"c\"`"
+        }
+      ],
+      "hints": [
+        "Нового символа в `counts` ещё нет — сколько раз мы его видели до этого? `get` с запасным значением.",
+        "Уникальный — тот, что встретился ровно один раз."
+      ]
+    },
+    {
+      "id": "l1.2.e3",
+      "segments": [
+        "def first_unique_char(s: str) -> str | None:\n    counts = ",
+        "\n    for ch in s:\n        counts[ch] = counts.get(ch, ",
+        ") + 1\n    for ch in ",
+        ":\n        if counts[ch] == 1:\n            return ch\n    return ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "{}"
+          ],
+          "wrongWhy": {
+            "0": "`counts = 0` — это число, у него нет `get`: `\"abacb\"` → `AttributeError: 'int' object has no attribute 'get'`",
+            "s": "`counts = s` — это строка, у неё нет `get`: `\"abacb\"` → `AttributeError: 'str' object has no attribute 'get'`",
+            "None": "у `None` нет `get`: `\"abacb\"` → `AttributeError: 'NoneType' object has no attribute 'get'`",
+            "counts": "`counts = counts` читает имя, которого ещё нет: `\"abacb\"` → `UnboundLocalError` на первой же строке",
+            "1": "`counts = 1` — это число, у него нет `get`: `\"abacb\"` → `AttributeError: 'int' object has no attribute 'get'`",
+            "\"\"": "`counts = \"\"` — это строка, у неё нет `get`: `\"abacb\"` → `AttributeError: 'str' object has no attribute 'get'`",
+            "-1": "`counts = -1` — это число, у него нет `get`: `\"abacb\"` → `AttributeError: 'int' object has no attribute 'get'`"
+          }
+        },
+        {
+          "ok": [
+            "0"
+          ],
+          "wrongWhy": {
+            "{}": "к словарю не прибавить `1`: `\"abacb\"` → `TypeError: unsupported operand type(s) for +: 'dict' and 'int'`",
+            "s": "для нового символа `get` вернёт строку, а к строке не прибавить число: `\"abacb\"` → `TypeError: can only concatenate str (not \"int\") to str`",
+            "None": "к `None` не прибавить `1`: `\"abacb\"` → `TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'`",
+            "counts": "для нового символа `get` вернёт сам словарь, а к словарю не прибавить `1`: `\"abacb\"` → `TypeError: unsupported operand type(s) for +: 'dict' and 'int'`",
+            "set()": "к множеству не прибавить `1`: `\"abacb\"` → `TypeError: unsupported operand type(s) for +: 'set' and 'int'`",
+            "\"\"": "к пустой строке не прибавить число: `\"abacb\"` → `TypeError: can only concatenate str (not \"int\") to str`",
+            "-1": "счёт начинается с `-1`, у одиночки частота `0`, у пары — `1`: `\"abacb\"` → `\"a\"` вместо `\"c\"`"
+          }
+        },
+        {
+          "ok": [
+            "s"
+          ],
+          "acceptable": [
+            {
+              "text": "counts",
+              "note": "работает: с Python 3.7 словарь помнит порядок вставки, а ключи вставлены в порядке первого появления; но приём — второй проход по строке, он не зависит от этой гарантии"
+            }
+          ],
+          "wrongWhy": {
+            "{}": "обходим пустой словарь, второй цикл не выполнится ни разу: `\"z\"` → `None` вместо `\"z\"`",
+            "0": "по числу не пройти циклом: `\"z\"` → `TypeError: 'int' object is not iterable`",
+            "None": "по `None` не пройти циклом: `\"z\"` → `TypeError: 'NoneType' object is not iterable`",
+            "set()": "обходим пустое множество, второй цикл не выполнится ни разу: `\"z\"` → `None` вместо `\"z\"`",
+            "1": "по числу не пройти циклом: `\"z\"` → `TypeError: 'int' object is not iterable`",
+            "\"\"": "обходим пустую строку, второй цикл не выполнится ни разу: `\"z\"` → `None` вместо `\"z\"`",
+            "-1": "по числу не пройти циклом: `\"z\"` → `TypeError: 'int' object is not iterable`"
+          }
+        },
+        {
+          "ok": [
+            "None"
+          ],
+          "wrongWhy": {
+            "{}": "«не нашли» — это `None`, а не пустой словарь: `\"aabb\"` → `{}` вместо `None`",
+            "0": "«не нашли» — это `None`, а не число: `\"aabb\"` → `0` вместо `None`",
+            "s": "вернём всю строку вместо «ничего»: `\"aabb\"` → `\"aabb\"` вместо `None`",
+            "counts": "вернём словарь частот вместо «ничего»: `\"aabb\"` → `{'a': 2, 'b': 2}` вместо `None`",
+            "set()": "«не нашли» — это `None`, а не пустое множество: `\"aabb\"` → `set()` вместо `None`",
+            "1": "«не нашли» — это `None`, а не число: `\"aabb\"` → `1` вместо `None`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "{}"
+        },
+        {
+          "text": "0"
+        },
+        {
+          "text": "s"
+        },
+        {
+          "text": "None"
+        },
+        {
+          "text": "counts"
+        },
+        {
+          "text": "set()",
+          "why": "множество не хранит частоты, у него нет `get`: `\"abacb\"` → `AttributeError: 'set' object has no attribute 'get'`"
+        },
+        {
+          "text": "1",
+          "why": "счёт начинается с `1`, у одиночки частота `2`: `\"z\"` → `None` вместо `\"z\"`"
+        },
+        {
+          "text": "\"\"",
+          "why": "«не нашли» — это `None`, а пустая строка — тоже строка: `\"aabb\"` → `\"\"` вместо `None`"
+        },
+        {
+          "text": "-1",
+          "why": "«не нашли» — это `None`, `-1` — привычка из поиска индекса: `\"aabb\"` → `-1` вместо `None`"
+        }
+      ],
+      "hints": [
+        "Частоты хранит словарь `{}`; нового символа в нём ещё нет — значит, видели его `0` раз.",
+        "Второй проход **по исходной строке** — первый символ с частотой 1.",
+        "Уникального нет — честно верни «ничего»: `None`."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "def first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in s:\n        if counts[ch] == 1:\n            return ch\n    return None",
+    "time": "O(n)",
+    "space": "O(k)",
+    "pitfalls": [
+      "Один проход не работает: пока строка не дочитана, неизвестно, повторится ли символ",
+      "`counts[ch] += 1` без начального значения падает с `KeyError`: нового символа в словаре ещё нет, поэтому `counts.get(ch, 0) + 1`",
+      "`{}` — пустой словарь, а `set()` — множество: частоты хранит только словарь",
+      "«Не нашли» — это `None`, а не `\"\"` или `-1`"
+    ],
+    "variations": [
+      "в проде: `collections.Counter(s)` вместо ручного подсчёта — на собесе покажи словарь",
+      "`s.count(ch) == 1` в цикле по строке тоже верно, но каждый `count` проходит всю строку — O(n²)",
+      "нужен индекс, а не символ: `for i, ch in enumerate(s)` и `return i`, «не нашли» — `-1`"
+    ]
+  }
+}
