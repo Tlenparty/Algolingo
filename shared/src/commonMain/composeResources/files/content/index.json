@@ -72,6 +72,30 @@
         "kotlin",
         "python"
       ]
+    },
+    {
+      "id": "l2.1",
+      "title": "Перемещение нулей",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
+      "id": "l2.2",
+      "title": "Удаление дубликатов",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
+      "id": "l2.3",
+      "title": "Слияние отсортированных массивов",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
     }
   ]
 }

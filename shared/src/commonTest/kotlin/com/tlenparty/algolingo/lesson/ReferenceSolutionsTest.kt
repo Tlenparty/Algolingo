@@ -861,6 +861,269 @@ private object L1_5_v0 { // reference
     }
 }
 
+private object L2_1_v0 { // reference
+    fun moveZeroes(nums: IntArray) {
+        // куда писать ненулевой
+        var slow = 0
+        // fast бежит по всем
+        for (fast in nums.indices) {
+            // нули пропускаем
+            if (nums[fast] != 0) {
+                // копируем в slow
+                nums[slow] = nums[fast]
+                slow++
+            }
+        }
+        // хвост добиваем нулями
+        while (slow < nums.size) { tick()
+            nums[slow] = 0
+            slow++
+        }
+    }
+
+    fun run() {
+        case { assertContentEquals(intArrayOf(1, 3, 12, 0, 0), intArrayOf(0, 1, 0, 3, 12).also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(0), intArrayOf(0).also { moveZeroes(it) }) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: ненулевые в прежнем порядке, потом нули; все массивы длины 0..5 из {-1, 0, 1, 2}
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 - 1 }
+                val expected = a.filter { it != 0 } + a.filter { it == 0 }
+                val got = a.copyOf()
+                moveZeroes(got)
+                assertEquals(expected, got.toList(), a.toList().toString())
+            }
+        }
+        case { assertContentEquals(intArrayOf(), intArrayOf().also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(0, 0, 0), intArrayOf(0, 0, 0).also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(4, -2, 7), intArrayOf(4, -2, 7).also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE, 0), intArrayOf(Int.MIN_VALUE, 0, Int.MAX_VALUE).also { moveZeroes(it) }) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 0), intArrayOf(0, 1).also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(-1, 0), intArrayOf(-1, 0).also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(5, 0), intArrayOf(0, 5).also { moveZeroes(it) }) }
+        case { assertContentEquals(intArrayOf(5), intArrayOf(5).also { moveZeroes(it) }) }
+    }
+}
+
+private object L2_2_v0 { // reference
+    fun removeDuplicates(nums: IntArray): Int {
+        // пустой — уникальных нет
+        if (nums.isEmpty()) return 0
+        // nums[0] всегда остаётся
+        var slow = 1
+        // fast ищет новые значения
+        for (fast in 1 until nums.size) {
+            // не равно последнему?
+            if (nums[fast] != nums[slow - 1]) {
+                // пишем на место slow
+                nums[slow] = nums[fast]
+                slow++
+            }
+        }
+        // длина без дубликатов
+        return slow
+    }
+
+    fun run() {
+        case { assertEquals(2, removeDuplicates(intArrayOf(1, 1, 2))) }
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 1, 2).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertContentEquals(intArrayOf(0, 1, 2, 3, 4), intArrayOf(0, 0, 1, 1, 1, 2, 2, 3, 3, 4).let { it.copyOf(removeDuplicates(it)) }) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: distinct() отсортированного массива; ответ k и первые k ячеек
+        // все отсортированные массивы длины 0..6 из {0..3}
+        for (n in 0..6) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 }.also { it.sort() }
+                val expected = a.distinct()
+                val got = a.copyOf()
+                val k = removeDuplicates(got)
+                assertEquals(expected.size, k, a.toList().toString())
+                assertEquals(expected, got.take(k), a.toList().toString())
+            }
+        }
+        case { assertEquals(0, removeDuplicates(intArrayOf())) }
+        case { assertContentEquals(intArrayOf(-3, 0, 7), intArrayOf(-3, -3, 0, 7, 7, 7).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertContentEquals(intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE), intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE, Int.MAX_VALUE).let { it.copyOf(removeDuplicates(it)) }) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 2).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 1, 2).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertEquals(1, removeDuplicates(intArrayOf(2, 2))) }
+        case { assertEquals(1, removeDuplicates(intArrayOf(5, 5))) }
+        case { assertEquals(1, removeDuplicates(intArrayOf(1))) }
+    }
+}
+
+private object L2_2_v1 { // l2.2.e1 hole 1 = nums[fast - 1] (acceptable)
+    fun removeDuplicates(nums: IntArray): Int {
+        // пустой — уникальных нет
+        if (nums.isEmpty()) return 0
+        // nums[0] всегда остаётся
+        var slow = 1
+        // fast ищет новые значения
+        for (fast in 1 until nums.size) {
+            // не равно последнему?
+            if (nums[fast] != nums[fast - 1]) {
+                // пишем на место slow
+                nums[slow] = nums[fast]
+                slow++
+            }
+        }
+        // длина без дубликатов
+        return slow
+    }
+
+    fun run() {
+        case { assertEquals(2, removeDuplicates(intArrayOf(1, 1, 2))) }
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 1, 2).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertContentEquals(intArrayOf(0, 1, 2, 3, 4), intArrayOf(0, 0, 1, 1, 1, 2, 2, 3, 3, 4).let { it.copyOf(removeDuplicates(it)) }) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: distinct() отсортированного массива; ответ k и первые k ячеек
+        // все отсортированные массивы длины 0..6 из {0..3}
+        for (n in 0..6) case {
+            for (m in 0 until pw(4, n)) {
+                val a = IntArray(n) { (m / pw(4, it)) % 4 }.also { it.sort() }
+                val expected = a.distinct()
+                val got = a.copyOf()
+                val k = removeDuplicates(got)
+                assertEquals(expected.size, k, a.toList().toString())
+                assertEquals(expected, got.take(k), a.toList().toString())
+            }
+        }
+        case { assertEquals(0, removeDuplicates(intArrayOf())) }
+        case { assertContentEquals(intArrayOf(-3, 0, 7), intArrayOf(-3, -3, 0, 7, 7, 7).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertContentEquals(intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE), intArrayOf(Int.MIN_VALUE, Int.MAX_VALUE, Int.MAX_VALUE).let { it.copyOf(removeDuplicates(it)) }) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 2).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 1, 2).let { it.copyOf(removeDuplicates(it)) }) }
+        case { assertEquals(1, removeDuplicates(intArrayOf(2, 2))) }
+        case { assertEquals(1, removeDuplicates(intArrayOf(5, 5))) }
+        case { assertEquals(1, removeDuplicates(intArrayOf(1))) }
+    }
+}
+
+private object L2_3_v0 { // reference
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        // последний живой в nums1
+        var index1 = m - 1
+        // последний в nums2
+        var index2 = n - 1
+        // куда ставить больший
+        var mergeIndex = m + n - 1
+        // пока nums2 не кончился
+        while (index2 >= 0) { tick()
+            // берём больший хвост
+            if (index1 >= 0 && nums1[index1] > nums2[index2]) {
+                nums1[mergeIndex] = nums1[index1]
+                index1--
+            } else {
+                nums1[mergeIndex] = nums2[index2]
+                index2--
+            }
+            // место записи — влево
+            mergeIndex--
+        }
+    }
+
+    fun run() {
+        case { assertContentEquals(intArrayOf(1, 2, 2, 3, 5, 6), intArrayOf(1, 2, 3, 0, 0, 0).also { merge(it, 3, intArrayOf(2, 5, 6), 3) }) }
+        case { assertContentEquals(intArrayOf(1), intArrayOf(1).also { merge(it, 1, intArrayOf(), 0) }) }
+        case { assertContentEquals(intArrayOf(1), intArrayOf(0).also { merge(it, 0, intArrayOf(1), 1) }) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: (a + b).sorted(); все отсортированные a и b длины 0..3 из {1..4}, хвост nums1 — нули-заглушки
+        for (m in 0..3) for (n in 0..3) case {
+            for (x in 0 until pw(4, m)) for (y in 0 until pw(4, n)) {
+                val a = IntArray(m) { (x / pw(4, it)) % 4 + 1 }.also { it.sort() }
+                val b = IntArray(n) { (y / pw(4, it)) % 4 + 1 }.also { it.sort() }
+                val nums1 = a.copyOf(m + n)
+                merge(nums1, m, b.copyOf(), n)
+                assertEquals((a + b).sorted(), nums1.toList(), "${a.toList()} ${b.toList()}")
+            }
+        }
+        case { assertContentEquals(intArrayOf(), intArrayOf().also { merge(it, 0, intArrayOf(), 0) }) }
+        case { assertContentEquals(intArrayOf(-5, -1, 0, 0, 3), intArrayOf(-1, 0, 3, 0, 0).also { merge(it, 3, intArrayOf(-5, 0), 2) }) }
+        case { assertContentEquals(intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(4, 5, 6, 0, 0, 0).also { merge(it, 3, intArrayOf(1, 2, 3), 3) }) }
+        case { assertContentEquals(intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(1, 2, 3, 0, 0, 0).also { merge(it, 3, intArrayOf(4, 5, 6), 3) }) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 4), intArrayOf(4, 0).also { merge(it, 1, intArrayOf(1), 1) }) }
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 0).also { merge(it, 1, intArrayOf(2), 1) }) }
+    }
+}
+
+private object L2_3_v1 { // l2.3.e3 hole 3 = >= (acceptable)
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        // последний живой в nums1
+        var index1 = m - 1
+        // последний в nums2
+        var index2 = n - 1
+        // куда ставить больший
+        var mergeIndex = m + n - 1
+        // пока nums2 не кончился
+        while (index2 >= 0) { tick()
+            // берём больший хвост
+            if (index1 >= 0 && nums1[index1] >= nums2[index2]) {
+                nums1[mergeIndex] = nums1[index1]
+                index1--
+            } else {
+                nums1[mergeIndex] = nums2[index2]
+                index2--
+            }
+            // место записи — влево
+            mergeIndex--
+        }
+    }
+
+    fun run() {
+        case { assertContentEquals(intArrayOf(1, 2, 2, 3, 5, 6), intArrayOf(1, 2, 3, 0, 0, 0).also { merge(it, 3, intArrayOf(2, 5, 6), 3) }) }
+        case { assertContentEquals(intArrayOf(1), intArrayOf(1).also { merge(it, 1, intArrayOf(), 0) }) }
+        case { assertContentEquals(intArrayOf(1), intArrayOf(0).also { merge(it, 0, intArrayOf(1), 1) }) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: (a + b).sorted(); все отсортированные a и b длины 0..3 из {1..4}, хвост nums1 — нули-заглушки
+        for (m in 0..3) for (n in 0..3) case {
+            for (x in 0 until pw(4, m)) for (y in 0 until pw(4, n)) {
+                val a = IntArray(m) { (x / pw(4, it)) % 4 + 1 }.also { it.sort() }
+                val b = IntArray(n) { (y / pw(4, it)) % 4 + 1 }.also { it.sort() }
+                val nums1 = a.copyOf(m + n)
+                merge(nums1, m, b.copyOf(), n)
+                assertEquals((a + b).sorted(), nums1.toList(), "${a.toList()} ${b.toList()}")
+            }
+        }
+        case { assertContentEquals(intArrayOf(), intArrayOf().also { merge(it, 0, intArrayOf(), 0) }) }
+        case { assertContentEquals(intArrayOf(-5, -1, 0, 0, 3), intArrayOf(-1, 0, 3, 0, 0).also { merge(it, 3, intArrayOf(-5, 0), 2) }) }
+        case { assertContentEquals(intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(4, 5, 6, 0, 0, 0).also { merge(it, 3, intArrayOf(1, 2, 3), 3) }) }
+        case { assertContentEquals(intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(1, 2, 3, 0, 0, 0).also { merge(it, 3, intArrayOf(4, 5, 6), 3) }) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 4), intArrayOf(4, 0).also { merge(it, 1, intArrayOf(1), 1) }) }
+        case { assertContentEquals(intArrayOf(1, 2), intArrayOf(1, 0).also { merge(it, 1, intArrayOf(2), 1) }) }
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -978,6 +1241,41 @@ class ReferenceSolutionsTest {
     fun l1_5_v0() {
         Probe.reset()
         L1_5_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_1_v0() {
+        Probe.reset()
+        L2_1_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_2_v0() {
+        Probe.reset()
+        L2_2_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_2_v1() {
+        Probe.reset()
+        L2_2_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_3_v0() {
+        Probe.reset()
+        L2_3_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_3_v1() {
+        Probe.reset()
+        L2_3_v1.run()
         assertEquals(emptySet<String>(), Probe.kinds)
     }
 }
