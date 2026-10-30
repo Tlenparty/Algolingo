@@ -439,10 +439,18 @@ Plans:
 **Requirements**: TBD
 **Depends on:** Phase 6 (формат уроков уровня 1), Phase 10 (Python-цепочка)
 **Success Criteria** (what must be TRUE):
+
   1. Разборы и Kotlin-эталоны всех 6 задач лежат в заметке «05 Тренажёр решений» (Obsidian) в разделе уровня 2 и синхронизированы в KB
   2. 6 Kotlin- и 6 Python-уроков валидны (gen_content.py, LessonContentTest, WrongChipsTest, Python-харнесс), у каждого неверного облачка есть объяснение с контрпримером
   3. Уроки открываются по порядку после l1.5 на Android и iOS, заказчик одобрил контент
+
 **Plans:** 0 plans
 
 Plans:
+
 - [ ] TBD (run /gsd-plan-phase 14 to break down)
+
+**Cross-cutting constraints:**
+
+- Эталоны и ok/acceptable проходят checks; каждое неверное облачко падает так, как заявлено тегом (WrongChipsTest на JVM, Python-харнесс G12-G14) и имеет why с конкретным контрпримером
+- Код в новом стиле: понятные имена, 5-7 комментариев на функцию (строка <= 36 символов), комментарии не раскрывают ответ дырки; Kotlin-эталон построчно равен коду заметки 05 после norm() (G5)
