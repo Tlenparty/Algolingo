@@ -4,7 +4,7 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.isSelected
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasScrollAction
@@ -12,7 +12,6 @@ import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onFirst
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.test.performClick
@@ -242,7 +241,20 @@ fun ComposeUiTest.scenarioKb() {
 
 /** Every code-catalog lesson from clean progress: grade «Чисто!», XP adds up, streak 1, next lesson unlocks. Returns total XP. */
 @OptIn(ExperimentalTestApi::class)
-fun ComposeUiTest.scenarioAllLessons(): Int = playCatalog(nodes(), 0)
+fun ComposeUiTest.scenarioAllLessons(): Int {
+    val all = nodes()
+    assertLevel2Order(all.map { it.id }, "kotlin")
+    return playCatalog(all, 0)
+}
+
+/** Level 2 opens right after l1.5, in this order; later lessons may follow l2.6. */
+private val LEVEL2_ORDER = listOf("l1.5", "l2.1", "l2.2", "l2.3", "l2.4", "l2.5", "l2.6")
+
+private fun assertLevel2Order(ids: List<String>, where: String) {
+    val from = ids.indexOf("l1.5")
+    assertTrue(from >= 0, "$where: l1.5 missing from catalog")
+    assertEquals(LEVEL2_ORDER, ids.drop(from).take(LEVEL2_ORDER.size), "$where: level 2 order after l1.5")
+}
 
 /** System Design tab: every SD lesson, same checks; XP continues from [startXp] (progress is shared with code lessons). */
 @OptIn(ExperimentalTestApi::class)
@@ -298,12 +310,12 @@ fun ComposeUiTest.scenarioPython() {
 
     recreateApp()
     waitFor(hasTestTag("lang-python"), "after recreate: segment")
-    onNodeWithTag("lang-python").assertIsSelected()
+    waitFor(hasTestTag("lang-python") and isSelected(), "lang-python selected") // selection follows the DataStore write, not compose idle
     soon?.let { onHome(hasContentDescription("Скоро на Python: ${it.caption}"), "after recreate: still python") }
     onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "after recreate: ${pilot.id} done")
 
     click(hasTestTag("lang-kotlin"), "lang kotlin")
-    onNodeWithTag("lang-kotlin").assertIsSelected()
+    waitFor(hasTestTag("lang-kotlin") and isSelected(), "lang-kotlin selected") // selection follows the DataStore write, not compose idle
     onHome(hasContentDescription("Пройден, повторить: ${pilot.caption}"), "kotlin: ${pilot.id} done")
     // Kotlin path continues after pilot (progress is shared): first Available with pilot Done, not fresh nodes() (pilot may be l0.1).
     val next = homeModel(catalog, Progress(lessons = mapOf(pilot.id to LessonProgress()), lang = CodeLang.Kotlin), LocalDate(2000, 1, 1)).nodes
@@ -322,10 +334,11 @@ fun ComposeUiTest.scenarioPythonChain(): Int {
     val py = homeModel(catalog, Progress(lang = CodeLang.Python), LocalDate(2000, 1, 1)).nodes
     val kotlinIds = nodes().map { it.id }
     assertEquals(kotlinIds, py.map { it.id }, "python: catalog nodes")
+    assertLevel2Order(py.map { it.id }, "python")
     assertEquals(emptyList(), py.filter { it.status == LessonStatus.Soon }.map { it.id }, "python: Soon nodes in the model")
     assertEquals(emptyList(), catalog.lessons.filterNot { it.has(CodeLang.Python) }.map { it.id }, "python: lessons without Python")
     click(hasTestTag("lang-python"), "lang python")
-    onNodeWithTag("lang-python").assertIsSelected()
+    waitFor(hasTestTag("lang-python") and isSelected(), "lang-python selected") // selection follows the DataStore write, not compose idle
     waitFor(hasScrollAction(), "python: Home list")
     assertEquals(0, onAllNodes(hasContentDescription("Скоро на Python", substring = true)).fetchSemanticsNodes().size, "python: Soon nodes on Home")
     val xp = playCatalog(py, 0, CodeLang.Python)

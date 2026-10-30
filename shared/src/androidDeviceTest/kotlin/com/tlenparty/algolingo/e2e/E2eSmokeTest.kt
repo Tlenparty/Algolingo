@@ -15,7 +15,7 @@ class E2eSmokeTest {
             .apply { mkdirs() }.absolutePath
 
     @Test
-    fun smoke() = runComposeUiTest(testTimeout = 10.minutes) { // default 1m is too short for every lesson
+    fun smoke() = runComposeUiTest(testTimeout = 30.minutes) { // every lesson + SD: ~20 min on the emulator since level 2
         launchApp(freshDir())
         scenarioLaunch()
         scenarioWrongChip() // exits without saving: progress stays clean for the full run
@@ -30,7 +30,7 @@ class E2eSmokeTest {
     }
 
     @Test
-    fun pythonChain() = runComposeUiTest(testTimeout = 10.minutes) { // every Python lesson, like smoke()
+    fun pythonChain() = runComposeUiTest(testTimeout = 30.minutes) { // every Python lesson, like smoke()
         launchApp(freshDir())
         scenarioPythonChain()
     }
