@@ -1,0 +1,203 @@
+{
+  "schema": 1,
+  "id": "l2.6",
+  "level": 2,
+  "title": "Максимальное среднее подмассива",
+  "statement": "Найди подряд идущий подмассив длины ровно `k` с максимальным средним и верни это среднее (LeetCode 643).",
+  "trains": "скользящее окно фиксированной длины: +вошедший, −ушедший",
+  "targetTimeSec": 240,
+  "theory": [
+    {
+      "title": "Когда окно фиксированной длины",
+      "signals": [
+        "Подряд идущий отрезок **ровно** из `k` элементов",
+        "Лучшая сумма или среднее по всем таким отрезкам",
+        "Нужно O(n), а не O(n·k)"
+      ],
+      "body": "Соседние окна отличаются двумя числами: справа вошло `nums[i]`, слева ушло `nums[i - k]`. Сумму не пересчитываем, а поправляем за O(1). Длина окна постоянна, поэтому максимальное среднее — это максимальная сумма, делённая на `k`."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "// сумма первого окна\nvar windowSum = 0\nfor (i in 0 until k) windowSum += nums[i]\n// сдвигаем окно на 1\nfor (i in k until nums.size) {\n    // вошёл новый, ушёл старый\n    windowSum += nums[i] - nums[i - k]\n    // обновляем ответ\n}",
+      "body": "Делим один раз, в самом конце: внутри цикла хватает целых сумм."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`maxSum / k`: `Int` на `Int` даёт `Int`, дробь теряется: `51 / 4 = 12`, а нужно `12.75`",
+        "`maxSum = 0`: у окна из отрицательных сумма меньше нуля: `[-1]`, `k = 1` → `0.0`",
+        "Вычитать `nums[i - 1]` вместо `nums[i - k]`: из окна уходит не тот элемент",
+        "Пересчитывать сумму каждого окна заново — O(n·k)"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.6.e1",
+      "segments": [
+        "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = windowSum\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "maxSum.toDouble() / k"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "maxSum.toDouble() / k"
+        },
+        {
+          "text": "(maxSum / k).toDouble()",
+          "why": "делим ещё в `Int`, дробь теряется до `toDouble()`: `[1, 12, -5, -6, 50, 3]`, `k = 4` → `12.0` вместо `12.75`"
+        },
+        {
+          "text": "maxSum / k",
+          "why": "`Int` на `Int` даёт `Int`, а функция возвращает `Double`: `return maxSum / k` не скомпилируется"
+        }
+      ],
+      "hints": [
+        "Средним может быть `12.75`. Что будет с дробью при делении целого на целое?"
+      ]
+    },
+    {
+      "id": "l2.6.e2",
+      "segments": [
+        "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = ",
+        "\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "windowSum"
+          ],
+          "wrongWhy": {
+            "maxSum.toDouble() / k": "`maxSum` объявляется в этой же строке, читать её ещё нельзя: `var maxSum = maxSum.toDouble() / k` не скомпилируется",
+            "(maxSum / k).toDouble()": "`maxSum` объявляется в этой же строке, читать её ещё нельзя: `var maxSum = (maxSum / k).toDouble()` не скомпилируется",
+            "maxSum / k": "`maxSum` объявляется в этой же строке, читать её ещё нельзя: `var maxSum = maxSum / k` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "maxSum.toDouble() / k"
+          ],
+          "wrongWhy": {
+            "windowSum": "функция возвращает `Double`, а `windowSum` — `Int`: `return windowSum` не скомпилируется",
+            "0": "функция возвращает `Double`, а `0` — `Int`: `return 0` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "windowSum"
+        },
+        {
+          "text": "maxSum.toDouble() / k"
+        },
+        {
+          "text": "0",
+          "why": "у окна из отрицательных сумма меньше нуля, и `0` её не пустит: `[-1]`, `k = 1` → `0.0` вместо `-1.0`"
+        },
+        {
+          "text": "(maxSum / k).toDouble()",
+          "why": "делим ещё в `Int`, дробь теряется до `toDouble()`: `[1, 12, -5, -6, 50, 3]`, `k = 4` → `12.0` вместо `12.75`"
+        },
+        {
+          "text": "maxSum / k",
+          "why": "`Int` на `Int` даёт `Int`, а функция возвращает `Double`: `return maxSum / k` не скомпилируется"
+        }
+      ],
+      "hints": [
+        "Первое окно уже посчитано. С чего честно начать лучшую сумму?",
+        "Средним может быть `12.75`. Что будет с дробью при делении целого на целое?"
+      ]
+    },
+    {
+      "id": "l2.6.e3",
+      "segments": [
+        "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = ",
+        "\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += ",
+        "\n        // запоминаем лучшее\n        maxSum = ",
+        "(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return maxSum.toDouble() / k\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "windowSum"
+          ],
+          "wrongWhy": {
+            "nums[i] - nums[i - k]": "`i` живёт только внутри цикла, здесь его нет: `var maxSum = nums[i] - nums[i - k]` не скомпилируется",
+            "nums[i] - nums[i - 1]": "`i` живёт только внутри цикла, здесь его нет: `var maxSum = nums[i] - nums[i - 1]` не скомпилируется",
+            "maxOf": "`maxOf` — функция, без скобок с аргументами это не число: `var maxSum = maxOf` не скомпилируется",
+            "minOf": "`minOf` — функция, без скобок с аргументами это не число: `var maxSum = minOf` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "nums[i] - nums[i - k]"
+          ],
+          "wrongWhy": {
+            "windowSum": "сумма удваивается вместо сдвига: `[2, 1]`, `k = 1` → `4.0` вместо `2.0`",
+            "0": "сумма окна не меняется, окно стоит на месте: `[1, 2]`, `k = 1` → `1.0` вместо `2.0`",
+            "maxOf": "прибавить можно число, а не функцию: `windowSum += maxOf` не скомпилируется",
+            "minOf": "прибавить можно число, а не функцию: `windowSum += minOf` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "maxOf"
+          ],
+          "wrongWhy": {
+            "windowSum": "число нельзя вызвать как функцию: `windowSum(maxSum, windowSum)` не скомпилируется",
+            "nums[i] - nums[i - k]": "число нельзя вызвать как функцию: `nums[i - k](maxSum, windowSum)` не скомпилируется",
+            "0": "число нельзя вызвать как функцию: `0(maxSum, windowSum)` не скомпилируется",
+            "nums[i] - nums[i - 1]": "число нельзя вызвать как функцию: `nums[i - 1](maxSum, windowSum)` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "windowSum"
+        },
+        {
+          "text": "nums[i] - nums[i - k]"
+        },
+        {
+          "text": "maxOf"
+        },
+        {
+          "text": "0",
+          "why": "у окна из отрицательных сумма меньше нуля, и `0` её не пустит: `[-1]`, `k = 1` → `0.0` вместо `-1.0`"
+        },
+        {
+          "text": "nums[i] - nums[i - 1]",
+          "why": "из окна уходит не тот элемент: `[1, 2, 3]`, `k = 2` → `2.0` вместо `2.5`"
+        },
+        {
+          "text": "minOf",
+          "why": "запоминаем худшее окно, а не лучшее: `[1, 2]`, `k = 1` → `1.0` вместо `2.0`"
+        }
+      ],
+      "hints": [
+        "Первое окно уже посчитано. С чего честно начать лучшую сумму?",
+        "Справа в окно вошёл `nums[i]`. Какой элемент вышел слева?",
+        "Ищем лучшее окно из всех."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = windowSum\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return maxSum.toDouble() / k\n}",
+    "time": "O(n)",
+    "space": "O(1)",
+    "pitfalls": [
+      "`maxSum / k` в `Int` теряет дробь (`51 / 4 = 12`, а нужно `12.75`)",
+      "`maxSum` начинать с `0` нельзя — у окна из отрицательных сумма меньше нуля"
+    ],
+    "variations": [
+      "пересчитывать сумму каждого окна заново — O(n·k), на больших `n` и `k` не успевает"
+    ]
+  }
+}

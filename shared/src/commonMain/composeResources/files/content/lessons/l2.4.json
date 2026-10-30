@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "id": "l2.4",
+  "level": 2,
+  "title": "Квадраты отсортированного массива",
+  "statement": "Массив отсортирован по неубыванию, числа бывают отрицательными. Верни квадраты всех чисел, тоже отсортированные по неубыванию (LeetCode 977).",
+  "trains": "два указателя навстречу, ответ заполняется с конца",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда навстречу с конца",
+      "signals": [
+        "Массив отсортирован, но преобразование ломает порядок (квадрат, модуль)",
+        "Самые большие результаты — **по краям** массива",
+        "Нужно O(n), без сортировки за O(n log n)"
+      ],
+      "body": "После возведения в квадрат отсортированный массив похож на долину: большие квадраты по краям, маленькие в середине. Указатели с двух концов каждый раз дают самый большой из оставшихся квадратов, поэтому ответ заполняется **с конца**."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "// концы массива\nvar left = 0\nvar right = nums.size - 1\n// пишем с конца\nfor (writeIndex in nums.size - 1 downTo 0) {\n    // больший квадрат — в ячейку\n    // сдвигаем его указатель\n}",
+      "body": "Каждый шаг забирает один конец, поэтому за `n` шагов указатели сходятся, а все ячейки ответа заполнены."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Просто возвести в квадрат: `[-4, -1, 0, 3]` → `[16, 1, 0, 9]`, порядок сломан",
+        "Заполнять с начала: у концов самые **большие** квадраты, ответ выйдет убывающим: `[-1, 2]` → `[4, 1]`",
+        "Сравнивать `nums[left]` и `nums[right]` без квадрата: `-3 < 1`, хотя `9 > 1`",
+        "`nums.size downTo 0`: ячейки `nums.size` нет, первая же запись падает"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.4.e1",
+      "segments": [
+        "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
+        ") {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare > rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "nums.size - 1 downTo 0"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "nums.size - 1 downTo 0"
+        },
+        {
+          "text": "0 until nums.size",
+          "why": "у концов самые большие квадраты, с начала ответ выйдет убывающим: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        },
+        {
+          "text": "nums.size downTo 0",
+          "why": "последняя ячейка — `nums.size - 1`: `[1]` → `result[1]` падает с `ArrayIndexOutOfBoundsException`"
+        }
+      ],
+      "hints": [
+        "Больший из двух концов — самый большой из оставшихся квадратов. Где ему место в ответе?"
+      ]
+    },
+    {
+      "id": "l2.4.e2",
+      "segments": [
+        "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
+        ") {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare ",
+        " rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "nums.size - 1 downTo 0"
+          ],
+          "wrongWhy": {
+            ">": "после `in` нужен диапазон, а не оператор: `for (writeIndex in >)` не скомпилируется",
+            ">=": "после `in` нужен диапазон, а не оператор: `for (writeIndex in >=)` не скомпилируется",
+            "<": "после `in` нужен диапазон, а не оператор: `for (writeIndex in <)` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            ">"
+          ],
+          "acceptable": [
+            {
+              "text": ">=",
+              "note": "тоже верно: при равных квадратах в ячейку попадёт то же число, какой конец ни возьми"
+            }
+          ],
+          "wrongWhy": {
+            "nums.size - 1 downTo 0": "между двумя числами нужен оператор сравнения: `leftSquare nums.size - 1 downTo 0 rightSquare` не скомпилируется",
+            "0 until nums.size": "между двумя числами нужен оператор сравнения: `leftSquare 0 until nums.size rightSquare` не скомпилируется",
+            "nums.size downTo 0": "между двумя числами нужен оператор сравнения: `leftSquare nums.size downTo 0 rightSquare` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "nums.size - 1 downTo 0"
+        },
+        {
+          "text": ">"
+        },
+        {
+          "text": ">="
+        },
+        {
+          "text": "0 until nums.size",
+          "why": "у концов самые большие квадраты, с начала ответ выйдет убывающим: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        },
+        {
+          "text": "nums.size downTo 0",
+          "why": "последняя ячейка — `nums.size - 1`: `[1]` → `result[1]` падает с `ArrayIndexOutOfBoundsException`"
+        },
+        {
+          "text": "<",
+          "why": "в конец уходит меньший квадрат: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        }
+      ],
+      "hints": [
+        "Больший из двух концов — самый большой из оставшихся квадратов. Где ему место в ответе?",
+        "В текущую ячейку идёт больший из двух квадратов."
+      ]
+    },
+    {
+      "id": "l2.4.e3",
+      "segments": [
+        "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
+        ") {\n        // квадраты обоих концов\n        val leftSquare = ",
+        "\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare ",
+        " rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "nums.size - 1 downTo 0"
+          ],
+          "wrongWhy": {
+            "nums[left] * nums[left]": "после `in` нужен диапазон, а не число: `for (writeIndex in nums[left] * nums[left])` не скомпилируется",
+            "nums[left]": "после `in` нужен диапазон, а не число: `for (writeIndex in nums[left])` не скомпилируется",
+            ">": "после `in` нужен диапазон, а не оператор: `for (writeIndex in >)` не скомпилируется",
+            ">=": "после `in` нужен диапазон, а не оператор: `for (writeIndex in >=)` не скомпилируется",
+            "<": "после `in` нужен диапазон, а не оператор: `for (writeIndex in <)` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "nums[left] * nums[left]"
+          ],
+          "wrongWhy": {
+            "nums.size - 1 downTo 0": "`leftSquare` станет диапазоном, а диапазоны не сравнивают с числом: `leftSquare > rightSquare` не скомпилируется",
+            "0 until nums.size": "`leftSquare` станет диапазоном, а диапазоны не сравнивают с числом: `leftSquare > rightSquare` не скомпилируется",
+            "nums.size downTo 0": "`leftSquare` станет диапазоном, а диапазоны не сравнивают с числом: `leftSquare > rightSquare` не скомпилируется",
+            ">": "после `=` нужно значение, а не оператор: `val leftSquare = >` не скомпилируется",
+            ">=": "после `=` нужно значение, а не оператор: `val leftSquare = >=` не скомпилируется",
+            "<": "после `=` нужно значение, а не оператор: `val leftSquare = <` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            ">"
+          ],
+          "acceptable": [
+            {
+              "text": ">=",
+              "note": "тоже верно: при равных квадратах в ячейку попадёт то же число, какой конец ни возьми"
+            }
+          ],
+          "wrongWhy": {
+            "nums.size - 1 downTo 0": "между двумя числами нужен оператор сравнения: `leftSquare nums.size - 1 downTo 0 rightSquare` не скомпилируется",
+            "0 until nums.size": "между двумя числами нужен оператор сравнения: `leftSquare 0 until nums.size rightSquare` не скомпилируется",
+            "nums.size downTo 0": "между двумя числами нужен оператор сравнения: `leftSquare nums.size downTo 0 rightSquare` не скомпилируется",
+            "nums[left] * nums[left]": "между двумя числами нужен оператор сравнения: `leftSquare nums[left] * nums[left] rightSquare` не скомпилируется",
+            "nums[left]": "между двумя числами нужен оператор сравнения: `leftSquare nums[left] rightSquare` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "nums.size - 1 downTo 0"
+        },
+        {
+          "text": "nums[left] * nums[left]"
+        },
+        {
+          "text": ">"
+        },
+        {
+          "text": ">="
+        },
+        {
+          "text": "0 until nums.size",
+          "why": "у концов самые большие квадраты, с начала ответ выйдет убывающим: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        },
+        {
+          "text": "nums.size downTo 0",
+          "why": "последняя ячейка — `nums.size - 1`: `[1]` → `result[1]` падает с `ArrayIndexOutOfBoundsException`"
+        },
+        {
+          "text": "nums[left]",
+          "why": "без квадрата `-3` проигрывает `1`, хотя `9 > 1`: `[-3, 1]` → `[9, 1]` вместо `[1, 9]`"
+        },
+        {
+          "text": "<",
+          "why": "в конец уходит меньший квадрат: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        }
+      ],
+      "hints": [
+        "Больший из двух концов — самый большой из оставшихся квадратов. Где ему место в ответе?",
+        "Отрицательное число может дать квадрат больше, чем положительное.",
+        "В текущую ячейку идёт больший из двух квадратов."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in nums.size - 1 downTo 0) {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare > rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "квадрат отрицательных ломает порядок: `[-4, -1, 0, 3]` → `[16, 1, 0, 9]`, поэтому просто возвести в квадрат нельзя",
+      "заполнять с начала тоже нельзя — у концов лежат самые **большие** квадраты, а не маленькие"
+    ],
+    "variations": [
+      "`nums.map { it * it }.sorted()` — O(n log n), проще, но приём не тренирует"
+    ]
+  }
+}

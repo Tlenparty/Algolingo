@@ -1,0 +1,234 @@
+{
+  "schema": 1,
+  "id": "l2.4",
+  "level": 2,
+  "title": "Квадраты отсортированного массива",
+  "statement": "Список `nums` отсортирован по неубыванию, числа бывают отрицательными. Верни новый список квадратов всех чисел, тоже отсортированный по неубыванию (LeetCode 977).",
+  "trains": "два указателя навстречу, ответ заполняется с конца",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда навстречу с конца",
+      "signals": [
+        "Список отсортирован, но преобразование ломает порядок (квадрат, модуль)",
+        "Самые большие результаты — **по краям** списка",
+        "Нужно O(n), без сортировки за O(n log n)"
+      ],
+      "body": "После возведения в квадрат отсортированный список похож на долину: большие квадраты по краям, маленькие в середине. Указатели с двух концов каждый раз дают самый большой из оставшихся квадратов, поэтому ответ заполняется **с конца**."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "# концы списка\nleft, right = 0, len(nums) - 1\n# пишем с конца\nfor write_index in range(len(nums) - 1, -1, -1):\n    # больший квадрат — в ячейку\n    # сдвигаем его указатель",
+      "body": "Каждый шаг забирает один конец, поэтому за `n` шагов указатели сходятся, а все ячейки ответа заполнены. `range(len(nums) - 1, -1, -1)` идёт от последнего индекса до `0` включительно: стоп `-1` в ответ не входит."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Просто возвести в квадрат: `[-4, -1, 0, 3]` → `[16, 1, 0, 9]`, порядок сломан",
+        "Заполнять с начала: у концов самые **большие** квадраты, ответ выйдет убывающим: `[-1, 2]` → `[4, 1]`",
+        "Сравнивать `nums[left]` и `nums[right]` без квадрата: `-3 < 1`, хотя `9 > 1`",
+        "`range(len(nums) - 1, 0, -1)`: стоп не включается, ячейка `0` останется нулём: `[-1, 2]` → `[0, 4]`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.4.e1",
+      "segments": [
+        "def sorted_squares(nums: list[int]) -> list[int]:\n    # ответ той же длины\n    result = [0] * len(nums)\n    # концы списка — кандидаты\n    left = 0\n    right = len(nums) - 1\n    # заполняем с конца\n    for write_index in ",
+        ":\n        # квадраты обоих концов\n        left_square = nums[left] * nums[left]\n        right_square = nums[right] * nums[right]\n        # больший — в ячейку\n        if left_square > right_square:\n            result[write_index] = left_square\n            left += 1\n        else:\n            result[write_index] = right_square\n            right -= 1\n    return result"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "range(len(nums) - 1, -1, -1)"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "range(len(nums) - 1, -1, -1)"
+        },
+        {
+          "text": "range(len(nums))",
+          "why": "у концов самые большие квадраты, с начала ответ выйдет убывающим: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        },
+        {
+          "text": "range(len(nums) - 1, 0, -1)",
+          "why": "стоп в `range` не включается, ячейка `0` не заполнится: `[-1, 2]` → `[0, 4]` вместо `[1, 4]`"
+        }
+      ],
+      "hints": [
+        "Больший из двух концов — самый большой из оставшихся квадратов. Где ему место в ответе?"
+      ]
+    },
+    {
+      "id": "l2.4.e2",
+      "segments": [
+        "def sorted_squares(nums: list[int]) -> list[int]:\n    # ответ той же длины\n    result = [0] * len(nums)\n    # концы списка — кандидаты\n    left = 0\n    right = len(nums) - 1\n    # заполняем с конца\n    for write_index in ",
+        ":\n        # квадраты обоих концов\n        left_square = nums[left] * nums[left]\n        right_square = nums[right] * nums[right]\n        # больший — в ячейку\n        if left_square ",
+        " right_square:\n            result[write_index] = left_square\n            left += 1\n        else:\n            result[write_index] = right_square\n            right -= 1\n    return result"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "range(len(nums) - 1, -1, -1)"
+          ],
+          "wrongWhy": {
+            ">": "после `in` нужен диапазон, а не оператор: `for write_index in >:` — `SyntaxError`",
+            ">=": "после `in` нужен диапазон, а не оператор: `for write_index in >=:` — `SyntaxError`",
+            "<": "после `in` нужен диапазон, а не оператор: `for write_index in <:` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            ">"
+          ],
+          "acceptable": [
+            {
+              "text": ">=",
+              "note": "тоже верно: при равных квадратах в ячейку попадёт то же число, какой конец ни возьми"
+            }
+          ],
+          "wrongWhy": {
+            "range(len(nums) - 1, -1, -1)": "между двумя числами нужен оператор сравнения: `left_square range(...) right_square` — `SyntaxError`",
+            "range(len(nums))": "между двумя числами нужен оператор сравнения: `left_square range(len(nums)) right_square` — `SyntaxError`",
+            "range(len(nums) - 1, 0, -1)": "между двумя числами нужен оператор сравнения: `left_square range(...) right_square` — `SyntaxError`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "range(len(nums) - 1, -1, -1)"
+        },
+        {
+          "text": ">"
+        },
+        {
+          "text": ">="
+        },
+        {
+          "text": "range(len(nums))",
+          "why": "у концов самые большие квадраты, с начала ответ выйдет убывающим: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        },
+        {
+          "text": "range(len(nums) - 1, 0, -1)",
+          "why": "стоп в `range` не включается, ячейка `0` не заполнится: `[-1, 2]` → `[0, 4]` вместо `[1, 4]`"
+        },
+        {
+          "text": "<",
+          "why": "в конец уходит меньший квадрат: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        }
+      ],
+      "hints": [
+        "Больший из двух концов — самый большой из оставшихся квадратов. Где ему место в ответе?",
+        "В текущую ячейку идёт больший из двух квадратов."
+      ]
+    },
+    {
+      "id": "l2.4.e3",
+      "segments": [
+        "def sorted_squares(nums: list[int]) -> list[int]:\n    # ответ той же длины\n    result = [0] * len(nums)\n    # концы списка — кандидаты\n    left = 0\n    right = len(nums) - 1\n    # заполняем с конца\n    for write_index in ",
+        ":\n        # квадраты обоих концов\n        left_square = ",
+        "\n        right_square = nums[right] * nums[right]\n        # больший — в ячейку\n        if left_square ",
+        " right_square:\n            result[write_index] = left_square\n            left += 1\n        else:\n            result[write_index] = right_square\n            right -= 1\n    return result"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "range(len(nums) - 1, -1, -1)"
+          ],
+          "wrongWhy": {
+            "nums[left] * nums[left]": "после `in` нужен диапазон, а не число: `[-1, 2]` → `for write_index in 1` падает с `TypeError`",
+            "nums[left]": "после `in` нужен диапазон, а не число: `[-1, 2]` → `for write_index in -1` падает с `TypeError`",
+            ">": "после `in` нужен диапазон, а не оператор: `for write_index in >:` — `SyntaxError`",
+            ">=": "после `in` нужен диапазон, а не оператор: `for write_index in >=:` — `SyntaxError`",
+            "<": "после `in` нужен диапазон, а не оператор: `for write_index in <:` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            "nums[left] * nums[left]"
+          ],
+          "wrongWhy": {
+            "range(len(nums) - 1, -1, -1)": "`left_square` станет `range`, а его не сравнить с числом: `[-1, 2]` → `left_square > right_square` падает с `TypeError`",
+            "range(len(nums))": "`left_square` станет `range`, а его не сравнить с числом: `[-1, 2]` → `left_square > right_square` падает с `TypeError`",
+            "range(len(nums) - 1, 0, -1)": "`left_square` станет `range`, а его не сравнить с числом: `[-1, 2]` → `left_square > right_square` падает с `TypeError`",
+            ">": "после `=` нужно значение, а не оператор: `left_square = >` — `SyntaxError`",
+            ">=": "после `=` нужно значение, а не оператор: `left_square = >=` — `SyntaxError`",
+            "<": "после `=` нужно значение, а не оператор: `left_square = <` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            ">"
+          ],
+          "acceptable": [
+            {
+              "text": ">=",
+              "note": "тоже верно: при равных квадратах в ячейку попадёт то же число, какой конец ни возьми"
+            }
+          ],
+          "wrongWhy": {
+            "range(len(nums) - 1, -1, -1)": "между двумя числами нужен оператор сравнения: `left_square range(...) right_square` — `SyntaxError`",
+            "range(len(nums))": "между двумя числами нужен оператор сравнения: `left_square range(len(nums)) right_square` — `SyntaxError`",
+            "range(len(nums) - 1, 0, -1)": "между двумя числами нужен оператор сравнения: `left_square range(...) right_square` — `SyntaxError`",
+            "nums[left] * nums[left]": "между двумя числами нужен оператор сравнения: `left_square nums[left] * nums[left] right_square` — `SyntaxError`",
+            "nums[left]": "между двумя числами нужен оператор сравнения: `left_square nums[left] right_square` — `SyntaxError`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "range(len(nums) - 1, -1, -1)"
+        },
+        {
+          "text": "nums[left] * nums[left]"
+        },
+        {
+          "text": ">"
+        },
+        {
+          "text": ">="
+        },
+        {
+          "text": "range(len(nums))",
+          "why": "у концов самые большие квадраты, с начала ответ выйдет убывающим: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        },
+        {
+          "text": "range(len(nums) - 1, 0, -1)",
+          "why": "стоп в `range` не включается, ячейка `0` не заполнится: `[-1, 2]` → `[0, 4]` вместо `[1, 4]`"
+        },
+        {
+          "text": "nums[left]",
+          "why": "без квадрата `-3` проигрывает `1`, хотя `9 > 1`: `[-3, 1]` → `[9, 1]` вместо `[1, 9]`"
+        },
+        {
+          "text": "<",
+          "why": "в конец уходит меньший квадрат: `[-1, 2]` → `[4, 1]` вместо `[1, 4]`"
+        }
+      ],
+      "hints": [
+        "Больший из двух концов — самый большой из оставшихся квадратов. Где ему место в ответе?",
+        "Отрицательное число может дать квадрат больше, чем положительное.",
+        "В текущую ячейку идёт больший из двух квадратов."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "def sorted_squares(nums: list[int]) -> list[int]:\n    # ответ той же длины\n    result = [0] * len(nums)\n    # концы списка — кандидаты\n    left = 0\n    right = len(nums) - 1\n    # заполняем с конца\n    for write_index in range(len(nums) - 1, -1, -1):\n        # квадраты обоих концов\n        left_square = nums[left] * nums[left]\n        right_square = nums[right] * nums[right]\n        # больший — в ячейку\n        if left_square > right_square:\n            result[write_index] = left_square\n            left += 1\n        else:\n            result[write_index] = right_square\n            right -= 1\n    return result",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "Просто возвести в квадрат: `[-4, -1, 0, 3]` → `[16, 1, 0, 9]`, порядок сломан",
+      "Заполнять с начала: у концов самые **большие** квадраты, ответ выйдет убывающим",
+      "`range(len(nums) - 1, 0, -1)` не доходит до `0`: стоп в `range` не включается, ячейка `0` останется нулём",
+      "`result = []` и запись по индексу — `IndexError`: список нужной длины — `[0] * len(nums)`"
+    ],
+    "variations": [
+      "в проде коротко: `sorted(x * x for x in nums)` — O(n log n), приём не тренирует",
+      "`reversed(range(len(nums)))` — тот же обход с конца, читается проще",
+      "`append` в порядке убывания, а в конце `result.reverse()` — тоже O(n)"
+    ]
+  }
+}

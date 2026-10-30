@@ -1124,6 +1124,211 @@ private object L2_3_v1 { // l2.3.e3 hole 3 = >= (acceptable)
     }
 }
 
+private object L2_4_v0 { // reference
+    fun sortedSquares(nums: IntArray): IntArray {
+        // ответ той же длины
+        val result = IntArray(nums.size)
+        // концы массива — кандидаты
+        var left = 0
+        var right = nums.size - 1
+        // заполняем с конца
+        for (writeIndex in nums.size - 1 downTo 0) {
+            // квадраты обоих концов
+            val leftSquare = nums[left] * nums[left]
+            val rightSquare = nums[right] * nums[right]
+            // больший — в ячейку
+            if (leftSquare > rightSquare) {
+                result[writeIndex] = leftSquare
+                left++
+            } else {
+                result[writeIndex] = rightSquare
+                right--
+            }
+        }
+        return result
+    }
+
+    fun run() {
+        case { assertContentEquals(intArrayOf(0, 1, 9, 16, 100), sortedSquares(intArrayOf(-4, -1, 0, 3, 10))) }
+        case { assertContentEquals(intArrayOf(4, 9, 9, 49, 121), sortedSquares(intArrayOf(-7, -3, 2, 3, 11))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: квадраты, потом sorted(); все отсортированные массивы длины 0..5 из {-3..3}
+        for (n in 0..5) case {
+            for (m in 0 until pw(7, n)) {
+                val a = IntArray(n) { (m / pw(7, it)) % 7 - 3 }.also { it.sort() }
+                val expected = a.map { it * it }.sorted()
+                assertEquals(expected, sortedSquares(a.copyOf()).toList(), a.toList().toString())
+            }
+        }
+        case { assertContentEquals(intArrayOf(), sortedSquares(intArrayOf())) }
+        case { assertContentEquals(intArrayOf(25), sortedSquares(intArrayOf(-5))) }
+        case { assertContentEquals(intArrayOf(1, 4, 9), sortedSquares(intArrayOf(-3, -2, -1))) }
+        case { assertContentEquals(intArrayOf(1, 4, 9), sortedSquares(intArrayOf(1, 2, 3))) }
+        case { assertContentEquals(intArrayOf(0, 0, 0), sortedSquares(intArrayOf(0, 0, 0))) }
+        case { assertContentEquals(intArrayOf(10000, 10000), sortedSquares(intArrayOf(-100, 100))) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 4), sortedSquares(intArrayOf(-1, 2))) }
+        case { assertContentEquals(intArrayOf(1, 9), sortedSquares(intArrayOf(-3, 1))) }
+        case { assertContentEquals(intArrayOf(1), sortedSquares(intArrayOf(1))) }
+    }
+}
+
+private object L2_4_v1 { // l2.4.e2 hole 2 = >= (acceptable)
+    fun sortedSquares(nums: IntArray): IntArray {
+        // ответ той же длины
+        val result = IntArray(nums.size)
+        // концы массива — кандидаты
+        var left = 0
+        var right = nums.size - 1
+        // заполняем с конца
+        for (writeIndex in nums.size - 1 downTo 0) {
+            // квадраты обоих концов
+            val leftSquare = nums[left] * nums[left]
+            val rightSquare = nums[right] * nums[right]
+            // больший — в ячейку
+            if (leftSquare >= rightSquare) {
+                result[writeIndex] = leftSquare
+                left++
+            } else {
+                result[writeIndex] = rightSquare
+                right--
+            }
+        }
+        return result
+    }
+
+    fun run() {
+        case { assertContentEquals(intArrayOf(0, 1, 9, 16, 100), sortedSquares(intArrayOf(-4, -1, 0, 3, 10))) }
+        case { assertContentEquals(intArrayOf(4, 9, 9, 49, 121), sortedSquares(intArrayOf(-7, -3, 2, 3, 11))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: квадраты, потом sorted(); все отсортированные массивы длины 0..5 из {-3..3}
+        for (n in 0..5) case {
+            for (m in 0 until pw(7, n)) {
+                val a = IntArray(n) { (m / pw(7, it)) % 7 - 3 }.also { it.sort() }
+                val expected = a.map { it * it }.sorted()
+                assertEquals(expected, sortedSquares(a.copyOf()).toList(), a.toList().toString())
+            }
+        }
+        case { assertContentEquals(intArrayOf(), sortedSquares(intArrayOf())) }
+        case { assertContentEquals(intArrayOf(25), sortedSquares(intArrayOf(-5))) }
+        case { assertContentEquals(intArrayOf(1, 4, 9), sortedSquares(intArrayOf(-3, -2, -1))) }
+        case { assertContentEquals(intArrayOf(1, 4, 9), sortedSquares(intArrayOf(1, 2, 3))) }
+        case { assertContentEquals(intArrayOf(0, 0, 0), sortedSquares(intArrayOf(0, 0, 0))) }
+        case { assertContentEquals(intArrayOf(10000, 10000), sortedSquares(intArrayOf(-100, 100))) }
+        // контрпримеры из причин
+        case { assertContentEquals(intArrayOf(1, 4), sortedSquares(intArrayOf(-1, 2))) }
+        case { assertContentEquals(intArrayOf(1, 9), sortedSquares(intArrayOf(-3, 1))) }
+        case { assertContentEquals(intArrayOf(1), sortedSquares(intArrayOf(1))) }
+    }
+}
+
+private object L2_5_v0 { // reference
+    fun isSubsequence(s: String, t: String): Boolean {
+        // указатель в s
+        var sIndex = 0
+        // указатель в t
+        var tIndex = 0
+        // пока обе не кончились
+        while (sIndex < s.length && tIndex < t.length) { tick()
+            // совпало — двигаем s
+            if (s[sIndex] == t[tIndex]) sIndex++
+            // t двигается всегда
+            tIndex++
+        }
+        // всю s нашли по порядку?
+        return sIndex == s.length
+    }
+
+    fun run() {
+        case { assertTrue(isSubsequence("abc", "ahbgdc")) }
+        case { assertFalse(isSubsequence("axc", "ahbgdc")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: перебор всех подпоследовательностей t по маске; все s и t из {a, b} длины 0..3 и 0..4
+        for (sLen in 0..3) for (tLen in 0..4) case {
+            for (x in 0 until pw(2, sLen)) for (y in 0 until pw(2, tLen)) {
+                val s = (0 until sLen).map { "ab"[(x / pw(2, it)) % 2] }.joinToString("")
+                val t = (0 until tLen).map { "ab"[(y / pw(2, it)) % 2] }.joinToString("")
+                val expected = (0 until pw(2, tLen)).any { mask -> t.filterIndexed { i, _ -> (mask / pw(2, i)) % 2 == 1 } == s }
+                assertEquals(expected, isSubsequence(s, t), "$s $t")
+            }
+        }
+        case { assertTrue(isSubsequence("", "")) }
+        case { assertTrue(isSubsequence("", "abc")) }
+        case { assertFalse(isSubsequence("a", "")) }
+        case { assertTrue(isSubsequence("abc", "abc")) }
+        case { assertFalse(isSubsequence("aaa", "aa")) }
+        case { assertFalse(isSubsequence("ab", "ba")) }
+        // контрпримеры из причин
+        case { assertTrue(isSubsequence("a", "a")) }
+        case { assertTrue(isSubsequence("b", "ab")) }
+        case { assertTrue(isSubsequence("ab", "abc")) }
+    }
+}
+
+private object L2_6_v0 { // reference
+    fun findMaxAverage(nums: IntArray, k: Int): Double {
+        // сумма первого окна
+        var windowSum = 0
+        for (i in 0 until k) windowSum += nums[i]
+        // лучшая сумма пока что
+        var maxSum = windowSum
+        // сдвигаем окно на 1
+        for (i in k until nums.size) {
+            // вошёл новый, ушёл старый
+            windowSum += nums[i] - nums[i - k]
+            // запоминаем лучшее
+            maxSum = maxOf(maxSum, windowSum)
+        }
+        // среднее с дробной частью
+        return maxSum.toDouble() / k
+    }
+
+    fun run() {
+        case { assertEquals(12.75, findMaxAverage(intArrayOf(1, 12, -5, -6, 50, 3), 4), 1e-9) }
+        case { assertEquals(5.0, findMaxAverage(intArrayOf(5), 1), 1e-9) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: сумма каждого окна заново, лучшая / k; все массивы длины 1..5 из {-2..2}, все k
+        for (n in 1..5) case {
+            for (m in 0 until pw(5, n)) {
+                val a = IntArray(n) { (m / pw(5, it)) % 5 - 2 }
+                for (k in 1..n) {
+                    val best = (0..n - k).maxOf { start -> (start until start + k).sumOf { a[it] } }
+                    assertEquals(best.toDouble() / k, findMaxAverage(a.copyOf(), k), 1e-9, "${a.toList()} $k")
+                }
+            }
+        }
+        case { assertEquals(-1.5, findMaxAverage(intArrayOf(-3, -1, -2), 2), 1e-9) }
+        case { assertEquals(0.0, findMaxAverage(intArrayOf(0, 0, 0), 3), 1e-9) }
+        case { assertEquals(10000.0, findMaxAverage(IntArray(5) { 10000 }, 5), 1e-9) }
+        case { assertEquals(5.0, findMaxAverage(intArrayOf(1, 2, 3, 4, 5, 6), 3), 1e-9) }
+        // контрпримеры из причин
+        case { assertEquals(-1.0, findMaxAverage(intArrayOf(-1), 1), 1e-9) }
+        case { assertEquals(2.5, findMaxAverage(intArrayOf(1, 2, 3), 2), 1e-9) }
+        case { assertEquals(2.0, findMaxAverage(intArrayOf(1, 2), 1), 1e-9) }
+        case { assertEquals(2.0, findMaxAverage(intArrayOf(2, 1), 1), 1e-9) }
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -1276,6 +1481,34 @@ class ReferenceSolutionsTest {
     fun l2_3_v1() {
         Probe.reset()
         L2_3_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_4_v0() {
+        Probe.reset()
+        L2_4_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_4_v1() {
+        Probe.reset()
+        L2_4_v1.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_5_v0() {
+        Probe.reset()
+        L2_5_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_6_v0() {
+        Probe.reset()
+        L2_6_v0.run()
         assertEquals(emptySet<String>(), Probe.kinds)
     }
 }
