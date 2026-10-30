@@ -1,6 +1,8 @@
 {
   "version": "1.0",
-  "timestamp": "2026-10-29T12:45:00.000Z",
+  "timestamp": "{
+  "timestamp": "2026-10-30T14:19:49.347Z"
+}",
   "phase": "10",
   "phase_name": "Python Content",
   "phase_dir": ".planning/phases/10-python-content",
@@ -9,22 +11,27 @@
   "total_tasks": 2,
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "10-03 batch B (customer approved)", "status": "done"},
-    {"id": 2, "name": "10-04 batch C l1.3, l1.5 (customer approved, NameError why fixed)", "status": "done"},
-    {"id": 3, "name": "10-05 task 1: scenarioPythonChain + pythonChain tests", "status": "done", "commit": "50a3394"},
-    {"id": 4, "name": "10-05 task 2 Android: E2eSmokeTest 3/3 green + live adb run on Galaxy S10e", "status": "done", "commit": "f09b4db"}
+    {"id": 1, "name": "quick 261029-pbe: readable names + // comments in Kotlin lessons l0.1–l1.5 and note 05", "status": "done", "commit": "3467495"},
+    {"id": 2, "name": "fix generator test fixtures after rename (82/82 OK)", "status": "done", "commit": "ef7014a"},
+    {"id": 3, "name": "Phase 14 Level 2 Easy Lessons (l2.1–l2.6 LeetCode 283/26/88/977/392/643, Kotlin+Python) — COMPLETE, customer approved both batches, Android+iOS verified", "status": "done", "commit": "70f6d29"},
+    {"id": 4, "name": "release build with phase 14 installed on customer's OnePlus 15 (3B15CV00B1X00000)", "status": "done"},
+    {"id": 5, "name": "10-05 task 1 + task 2 Android (from earlier session)", "status": "done", "commit": "f09b4db"}
   ],
   "remaining_tasks": [
-    {"id": 5, "name": "10-05 task 2 iOS: tools/smoke.sh (needs booted iPhone 17 Pro sim) + live idb run (Python mode, no «Скоро на Python», l0.1 to «Чисто!», restart keeps Python, Kotlin path)", "status": "not_started"},
-    {"id": 6, "name": "fill iOS section of 10-VERIFICATION-DEVICES.md, write 10-05-SUMMARY.md, mark 10-05 in ROADMAP", "status": "not_started"},
-    {"id": 7, "name": "phase 10 code review + verifier + phase.complete 10 + PROJECT.md", "status": "not_started"}
+    {"id": 6, "name": "Close phase 10: 10-05 task 2 iOS — tools/smoke.sh + live idb run in Python mode (no «Скоро на Python», l0.1 to «Чисто!», restart keeps Python, Kotlin path); fill iOS section of 10-VERIFICATION-DEVICES.md; write 10-05-SUMMARY.md; phase 10 verifier/code review; phase.complete 10", "status": "not_started"},
+    {"id": 7, "name": "Optional: gsd-verifier + code review for phase 14 (skipped at close)", "status": "not_started"},
+    {"id": 8, "name": "Next content (customer to choose): LeetCode Easy levels 0–1 (35, 169, 268, 383, 205, 349, 13) or stack/prefix (20, 1047, 724, 1480); or lessons for old level-2 note sections 2.7–2.13", "status": "not_started"}
   ],
   "blockers": [],
-  "human_actions_pending": [],
+  "human_actions_pending": [
+    {"action": "Customer picks next step: close phase 10 / next LeetCode Easy batch / old level 2", "context": "asked at end of session 2026-10-30", "blocking": true}
+  ],
   "decisions": [
-    {"decision": "Android device run done on Galaxy S10e instead of Pixel 7 (not on that machine); iOS deferred to the Xcode machine", "rationale": "user 2026-10-29", "phase": "10"}
+    {"decision": "Kotlin code style: readable names (left/right, slow/fast, num, counts), // comment above key lines, line incl. indent ≤ ~36 chars; same comment lines in sidecar and note 05 (G5 norm turns comment lines into empty lines)", "rationale": "customer request 2026-10-29", "phase": "quick"},
+    {"decision": "Note 05 level 2: easy tasks inserted as 2.1–2.6, old 2.2–2.8 renumbered to 2.7–2.13 (vault is source of truth, bundle byte-identical)", "rationale": "customer 2026-10-30", "phase": "14"},
+    {"decision": "Content review in batches of 3 with checkpoint:human-verify; orchestrator clicks lessons on emulator via adb before review", "rationale": "customer asked if executor clicked on device", "phase": "14"}
   ],
   "uncommitted_files": [],
-  "next_action": "On the Xcode machine: boot iPhone 17 Pro simulator, run tools/smoke.sh (Android part already green; a Pixel 7 can be attached too), do the live iOS run with idb, update 10-VERIFICATION-DEVICES.md iOS section, write 10-05-SUMMARY.md, then close phase 10",
-  "context_notes": "All commits authored by tlenparty, never add Co-Authored-By/Claude trailers. Warn before pm clear on com.tlenparty.algolingo.debug. Delete this file after resuming."
+  "next_action": "Ask customer which next step (see human_actions_pending). If phase 10: Xcode 26.2 is installed on this machine; boot iPhone 17 Pro sim, use idb (~/Library/Python/3.9/bin/idb, not in PATH; run 'idb kill' if taps fail with 'Mach port invalid'), finish 10-05 iOS part.",
+  "context_notes": "Reply in Russian. Commits authored by tlenparty, NEVER Co-Authored-By/Claude trailers; commit+push without asking. Verify UI on devices yourself (adb/idb). Do NOT touch OnePlus 3B15CV00B1X00000 except to install customer-requested release builds (release app id com.tlenparty.algolingo; debug is .debug). Emulator emulator-5554 debug app has seeded progress through l2.6. Helper scripts (non-repo): /tmp/algo/play.py, runlesson.py <id> kt|py, ui.sh, tapx.sh, iplay.py (iOS). Long commands: gen_content.py ~2.5 min, test_gen_content.py ~8 min, testAndroidHostTest ~7 min, Android e2e ~22 min. Check exit codes, not output tails. Delete this file after resuming."
 }
