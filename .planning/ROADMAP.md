@@ -25,7 +25,7 @@
 - [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
 - [x] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ» (completed 2026-10-28)
 - [x] **Phase 13: SD Classics and Reliability** - 8 SD-уроков: авторизация, уведомления, лента, чат, платежи, потеря связи, несколько БД, наблюдаемость (completed 2026-10-28)
-- [ ] **Phase 14: Level 2 Easy Lessons** - 6 уроков «Два указателя и окно» по LeetCode Easy (283, 26, 88, 977, 392, 643) на Kotlin и Python
+- [x] **Phase 14: Level 2 Easy Lessons** - 6 уроков «Два указателя и окно» по LeetCode Easy (283, 26, 88, 977, 392, 643) на Kotlin и Python (completed 2026-10-30)
 
 ## Phase Details
 
@@ -189,6 +189,7 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 3. Lesson & Exercise UI | 10/10 | Complete    | 2026-10-21 |
 | 4. Progress & Review | 4/4 | Complete    | 2026-10-22 |
 | 5. Level 0 Content & End-to-End | 4/4 | Complete    | 2026-10-22 |
+| 14. Level 2 Easy Lessons | 4/4 | Complete    | 2026-10-30 |
 
 ### Phase 6: Level 1 Content — Hash Map / Set
 
@@ -444,11 +445,14 @@ Plans:
   2. 6 Kotlin- и 6 Python-уроков валидны (gen_content.py, LessonContentTest, WrongChipsTest, Python-харнесс), у каждого неверного облачка есть объяснение с контрпримером
   3. Уроки открываются по порядку после l1.5 на Android и iOS, заказчик одобрил контент
 
-**Plans:** 3/4 plans executed
+**Plans:** 4 plans
 
 Plans:
 
-- [ ] TBD (run /gsd-plan-phase 14 to break down)
+- [x] 14-01-PLAN.md — заметка 05: уровень 2 перенумерован, разделы 2.2-2.6 с Kotlin-эталонами, ссылки в заметке 06, синхронизация KB
+- [x] 14-02-PLAN.md — пачка A: l2.1 (283), l2.2 (26), l2.3 (88) на Kotlin и Python, ревью заказчика
+- [x] 14-03-PLAN.md — пачка B: l2.4 (977), l2.5 (392), l2.6 (643) на Kotlin и Python, ревью заказчика
+- [x] 14-04-PLAN.md — e2e-проверка порядка l1.5 -> l2.1..l2.6, полный прогон тестов, прогон на Android-эмуляторе и iOS-симуляторе
 
 **Cross-cutting constraints:**
 
