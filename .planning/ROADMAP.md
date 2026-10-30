@@ -25,6 +25,7 @@
 - [x] **Phase 11: Client-Server Basics Notes** - 12 заметок «Основы» (Kafka, Redis, nginx, Docker, HTTPS/TLS…) в Obsidian → База знаний (completed 2026-10-28)
 - [x] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ» (completed 2026-10-28)
 - [x] **Phase 13: SD Classics and Reliability** - 8 SD-уроков: авторизация, уведомления, лента, чат, платежи, потеря связи, несколько БД, наблюдаемость (completed 2026-10-28)
+- [ ] **Phase 14: Level 2 Easy Lessons** - 6 уроков «Два указателя и окно» по LeetCode Easy (283, 26, 88, 977, 392, 643) на Kotlin и Python
 
 ## Phase Details
 
@@ -431,3 +432,17 @@ Plans:
 **Wave 3** *(blocked on Wave 2 completion)*
 
 - [x] 13-03-PLAN.md — E2E smoke на Android-эмуляторе и iOS-симуляторе, gen_content --check, host-тесты (SD-07)
+
+### Phase 14: Level 2 Easy Lessons — два указателя и окно: 6 уроков по LeetCode Easy (283, 26, 88, 977, 392, 643) на Kotlin и Python
+
+**Goal:** После l1.5 на вкладке алгоритмов идут 6 уроков уровня 2 «Два указателя и окно» по LeetCode Easy: l2.1 283 Move Zeroes, l2.2 26 Remove Duplicates from Sorted Array, l2.3 88 Merge Sorted Array, l2.4 977 Squares of a Sorted Array, l2.5 392 Is Subsequence, l2.6 643 Maximum Average Subarray I — на Kotlin и Python, с комментариями к ключевым строкам и понятными именами (left/right, slow/fast)
+**Requirements**: TBD
+**Depends on:** Phase 6 (формат уроков уровня 1), Phase 10 (Python-цепочка)
+**Success Criteria** (what must be TRUE):
+  1. Разборы и Kotlin-эталоны всех 6 задач лежат в заметке «05 Тренажёр решений» (Obsidian) в разделе уровня 2 и синхронизированы в KB
+  2. 6 Kotlin- и 6 Python-уроков валидны (gen_content.py, LessonContentTest, WrongChipsTest, Python-харнесс), у каждого неверного облачка есть объяснение с контрпримером
+  3. Уроки открываются по порядку после l1.5 на Android и iOS, заказчик одобрил контент
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 14 to break down)

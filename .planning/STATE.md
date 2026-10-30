@@ -133,6 +133,7 @@ Recent decisions affecting current work:
 
 - Phase 11 added: Client-Server Basics Notes (12 заметок «Основы» в Obsidian → KB)
 - Phase 12 added: Client-Server Basics Lessons (SD-уроки на закрепление)
+- Phase 14 added: Level 2 Easy Lessons — два указателя и окно (LeetCode Easy 283, 26, 88, 977, 392, 643; Kotlin + Python; эталоны сначала в заметке 05)
 
 ### Pending Todos
 
