@@ -18,6 +18,7 @@
     {"id": 5, "name": "10-05 task 1 + task 2 Android (from earlier session)", "status": "done", "commit": "f09b4db"}
   ],
   "remaining_tasks": [
+    {"id": 9, "name": "quick 261030-sdg: SD-уроки без сокращений (ветка ccr-c364f9d6-r3czdp, облачная сессия без SDK) — testAndroidHostTest, эмулятор sd0.3/sd0.4, merge; см. .planning/quick/261030-sdg-sd-glossary/261030-sdg-SUMMARY.md", "status": "needs_device_check"},
     {"id": 6, "name": "Close phase 10: 10-05 task 2 iOS — tools/smoke.sh + live idb run in Python mode (no «Скоро на Python», l0.1 to «Чисто!», restart keeps Python, Kotlin path); fill iOS section of 10-VERIFICATION-DEVICES.md; write 10-05-SUMMARY.md; phase 10 verifier/code review; phase.complete 10", "status": "not_started"},
     {"id": 7, "name": "Optional: gsd-verifier + code review for phase 14 (skipped at close)", "status": "not_started"},
     {"id": 8, "name": "Next content (customer to choose): LeetCode Easy levels 0–1 (35, 169, 268, 383, 205, 349, 13) or stack/prefix (20, 1047, 724, 1480); or lessons for old level-2 note sections 2.7–2.13", "status": "not_started"}
