@@ -444,7 +444,7 @@ Plans:
   2. 6 Kotlin- и 6 Python-уроков валидны (gen_content.py, LessonContentTest, WrongChipsTest, Python-харнесс), у каждого неверного облачка есть объяснение с контрпримером
   3. Уроки открываются по порядку после l1.5 на Android и iOS, заказчик одобрил контент
 
-**Plans:** 1/4 plans executed
+**Plans:** 2/4 plans executed
 
 Plans:
 
