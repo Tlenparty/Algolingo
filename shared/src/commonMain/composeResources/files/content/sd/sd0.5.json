@@ -336,7 +336,7 @@
       "id": "sd0.5.e4",
       "title": "Шаг 4 · Токен по TLS",
       "segments": [
-        " App ══TLS══→ LB → API\n Bearer ",
+        " App ══TLS══→ балансер → API\n Bearer ",
         "\n ← ",
         "\n ",
         ":\n  токен уже новый?\n    да → повтор\n    нет → POST /token(",
@@ -429,7 +429,7 @@
     }
   ],
   "solution": {
-    "code": " App ══TLS══→ LB → API\n Bearer access\n ← 401\n Mutex:\n  токен уже новый?\n    да → повтор\n    нет → POST /token(refresh)\n  ← новые access + refresh\n  → повтор запроса",
+    "code": " App ══TLS══→ балансер → API\n Bearer access\n ← 401\n Mutex:\n  токен уже новый?\n    да → повтор\n    нет → POST /token(refresh)\n  ← новые access + refresh\n  → повтор запроса",
     "pitfalls": [
       "Пин сертификата без запасного и без expiration: ротация убивает старые версии",
       "Refresh без замка: параллельные 401 сжигают refresh, при ротации — разлогин",

@@ -1,9 +1,12 @@
 package com.tlenparty.algolingo.lesson.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -53,9 +56,16 @@ fun TheoryScreen(card: TheoryCard, onNext: () -> Unit, modifier: Modifier = Modi
     }
 }
 
+/** Hanging indent: wrapped lines of a long signal align under its text, not under the dot. */
 @Composable
 private fun Bullets(items: List<String>) {
+    val style = AlgoTheme.typography.body
+    val color = MaterialTheme.colorScheme.onBackground
     for (s in items) {
-        Text(richText("• $s"), style = AlgoTheme.typography.body, color = MaterialTheme.colorScheme.onBackground)
+        Row(Modifier.fillMaxWidth()) {
+            Text("•", style = style, color = color)
+            Spacer(Modifier.width(AlgoTheme.spacing.sm))
+            Text(richText(s), style = style, color = color, modifier = Modifier.weight(1f))
+        }
     }
 }

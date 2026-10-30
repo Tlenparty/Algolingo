@@ -17,7 +17,7 @@
     },
     {
       "title": "Схема",
-      "skeleton": "Client → LB → App\nApp → Redis → NoSQL БД\nApp → Kafka → аналитика",
+      "skeleton": "Client → балансер → App\nApp → Redis → NoSQL БД\nApp → Kafka → аналитика",
       "body": "Код — `base62` от счётчика: 7 символов дают ≈ 3.5 трлн ссылок без коллизий. Хранилище — ключ-значение `code → longUrl`. Клики пишем в очередь, чтобы не тормозить редирект."
     },
     {
