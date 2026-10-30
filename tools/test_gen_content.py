@@ -24,8 +24,8 @@ NOTE_LINES = (ROOT / NOTE_REL).read_text(encoding="utf-8").splitlines()
 L04 = json.loads((ROOT / L04_REL).read_text(encoding="utf-8"))
 REF = L04["solution"]["code"]
 
-E1_CODE = REF.replace("while (lo <= hi)", "while (⟦lo <= hi⟧)")
-E2_CODE = E1_CODE.replace("val mid = lo + (hi - lo) / 2", "val mid = ⟦lo + (hi - lo) / 2 | ~(lo + hi) ushr 1⟧")
+E1_CODE = REF.replace("while (left <= right)", "while (⟦left <= right⟧)")
+E2_CODE = E1_CODE.replace("val mid = left + (right - left) / 2", "val mid = ⟦left + (right - left) / 2 | ~(left + right) ushr 1⟧")
 
 BASE = """# l0.4
 note: 0.4 Бинарный поиск
@@ -40,16 +40,16 @@ case { }
 ```kotlin
 %s
 ```
-- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт: `[5]` вернёт `-1`
+- `left < right` [wrong]: при `left == right` цикл не зайдёт: `[5]` вернёт `-1`
 ? hint one
 
 ## e2
 ```kotlin
 %s
 ```
-- ~`(lo + hi) ushr 1`: работает, но эталон читаемее
-- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт
-- @2 `lo < hi` [compile]: `mid` станет `Boolean`
+- ~`(left + right) ushr 1`: работает, но эталон читаемее
+- `left < right` [wrong]: при `left == right` цикл не зайдёт
+- @2 `left < right` [compile]: `mid` станет `Boolean`
 """ % (E1_CODE, E2_CODE)
 
 
@@ -151,7 +151,7 @@ class NoteParserGolden(unittest.TestCase):
         self.assertEqual(s["variations"], [])
         self.assertEqual(len(s["hints"]), 1)
         self.assertTrue(s["code"].startswith("fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n"))
-        self.assertIn("        if (x > max) max = x\n", s["code"])
+        self.assertIn("        if (num > max) max = num\n", s["code"])
 
     def test_0_2(self):
         s = self.sec("0.2 Разворот строки на месте")
@@ -161,7 +161,7 @@ class NoteParserGolden(unittest.TestCase):
         self.assertEqual((s["time"], s["space"]), ("O(n)", "O(1)"))
         self.assertEqual(s["pitfalls"], [])
         self.assertEqual(s["variations"], [
-            "проверка палиндрома — тот же скелет, но вместо swap сравниваем `s[l] != s[r] → return false`"])
+            "проверка палиндрома — тот же скелет, но вместо swap сравниваем `s[left] != s[right] → return false`"])
         self.assertEqual(len(s["hints"]), 1)
         self.assertTrue(s["code"].startswith("fun reverse(s: CharArray) {\n"))
 
@@ -194,7 +194,7 @@ class NoteParserGolden(unittest.TestCase):
     def test_unquote_keeps_arrows_and_comparisons(self):
         code = self.sec("0.4 Бинарный поиск")["code"]
         self.assertIn("nums[mid] == target -> return mid", code)
-        self.assertIn("while (lo <= hi)", code)
+        self.assertIn("while (left <= right)", code)
         self.assertEqual(gen_content.unquote(["> a -> b", ">", "> x >= y", "after"]), ["a -> b", "", "x >= y"])
 
 
@@ -210,21 +210,21 @@ class Validation(unittest.TestCase):
         self.assertEqual(lesson["solution"]["code"], REF)
 
     def test_g1_hole_without_correct_entry_fails(self):
-        self.assertRule("G1", build, BASE.replace("while (⟦lo <= hi⟧)", "while (⟦~lo <= hi⟧)", 1))
+        self.assertRule("G1", build, BASE.replace("while (⟦left <= right⟧)", "while (⟦~left <= right⟧)", 1))
 
     def test_g1_empty_entry_fails(self):
-        self.assertRule("G1", build, BASE.replace("⟦lo <= hi⟧", "⟦lo <= hi | ⟧", 1))
+        self.assertRule("G1", build, BASE.replace("⟦left <= right⟧", "⟦left <= right | ⟧", 1))
 
     def test_g2_distractor_without_why_fails(self):
-        self.assertRule("G2", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт: `[5]` вернёт `-1`",
-                                                  "- `lo < hi`"))
+        self.assertRule("G2", build, BASE.replace("- `left < right` [wrong]: при `left == right` цикл не зайдёт: `[5]` вернёт `-1`",
+                                                  "- `left < right`"))
 
     def test_g3_why_without_counterexample_fails(self):
-        self.assertRule("G3", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
-                                                  "- `lo < hi` [wrong]: просто неверно\n"))
+        self.assertRule("G3", build, BASE.replace("- `left < right` [wrong]: при `left == right` цикл не зайдёт\n",
+                                                  "- `left < right` [wrong]: просто неверно\n"))
 
     def test_g3_override_without_counterexample_fails(self):
-        self.assertRule("G3", build, BASE.replace("- @2 `lo < hi` [compile]: `mid` станет `Boolean`", "- @2 `lo < hi` [compile]: нет"))
+        self.assertRule("G3", build, BASE.replace("- @2 `left < right` [compile]: `mid` станет `Boolean`", "- @2 `left < right` [compile]: нет"))
 
     def test_g4_removed_lesson_id_fails_unless_allowed(self):
         tmp = Path(tempfile.mkdtemp())
@@ -245,25 +245,25 @@ class Validation(unittest.TestCase):
             shutil.rmtree(str(tmp))
 
     def test_g5_stripped_code_differs_from_note_fails(self):
-        self.assertRule("G5", build, BASE.replace("var lo = 0", "var lo = 1", 1))
+        self.assertRule("G5", build, BASE.replace("var left = 0", "var left = 1", 1))
 
     def test_g5_exercises_disagree_fails(self):
         # comments are ignored vs the note, but every exercise must yield the same code
-        self.assertRule("G5", build, BASE.replace("var lo = 0", "var lo = 0 // e1", 1))
+        self.assertRule("G5", build, BASE.replace("var left = 0", "var left = 0 // e1", 1))
 
     def test_g6_acceptable_without_note_fails(self):
-        self.assertRule("G6", build, BASE.replace("- ~`(lo + hi) ushr 1`: работает, но эталон читаемее\n", ""))
+        self.assertRule("G6", build, BASE.replace("- ~`(left + right) ushr 1`: работает, но эталон читаемее\n", ""))
 
     def test_g6_override_hole_out_of_range_fails(self):
-        self.assertRule("G6", build, BASE.replace("- @2 `lo < hi`", "- @3 `lo < hi`"))
+        self.assertRule("G6", build, BASE.replace("- @2 `left < right`", "- @3 `left < right`"))
 
     def test_g6_override_on_correct_text_fails(self):
-        self.assertRule("G6", build, BASE + "- @1 `lo <= hi`: `x`\n")
+        self.assertRule("G6", build, BASE + "- @1 `left <= right`: `x`\n")
 
     def test_duplicate_sections_and_bullets_fail(self):
         self.assertRule("G7", build, BASE.replace("## e2", "## e1"))
-        self.assertRule("G6", build, BASE + "- @2 `lo < hi`: `mid` снова `Boolean`\n")
-        self.assertRule("G6", build, BASE + "- ~`(lo + hi) ushr 1`: ещё раз `x`\n")
+        self.assertRule("G6", build, BASE + "- @2 `left < right`: `mid` снова `Boolean`\n")
+        self.assertRule("G6", build, BASE + "- ~`(left + right) ushr 1`: ещё раз `x`\n")
 
     def test_g7_bank_too_big_fails(self):
         extra = "".join("- `d%d` [wrong]: `x`\n" % i for i in range(9))
@@ -513,39 +513,39 @@ class Tags(unittest.TestCase):
         return gen_content.parse_sidecar(text, "l0.4")["exercises"][1]["bullets"]
 
     def test_tag_is_parsed_and_kept_out_of_why(self):
-        b = self.bullets(BASE.replace("- @2 `lo < hi` [compile]:", "- @2 `lo < hi` [hang]:"))
-        self.assertIn(("@", 2, "lo < hi", "`mid` станет `Boolean`", ("hang",)), b)
-        self.assertIn(("~", None, "(lo + hi) ushr 1", "работает, но эталон читаемее", ()), b)
+        b = self.bullets(BASE.replace("- @2 `left < right` [compile]:", "- @2 `left < right` [hang]:"))
+        self.assertIn(("@", 2, "left < right", "`mid` станет `Boolean`", ("hang",)), b)
+        self.assertIn(("~", None, "(left + right) ushr 1", "работает, но эталон читаемее", ()), b)
 
     def test_g9_override_without_tag_fails(self):
-        self.assertRule("G9", build, BASE.replace("- @2 `lo < hi` [compile]:", "- @2 `lo < hi`:"))
+        self.assertRule("G9", build, BASE.replace("- @2 `left < right` [compile]:", "- @2 `left < right`:"))
 
     def test_g9_override_with_two_kinds_fails(self):
         self.assertRule("G9", build, BASE.replace("[compile]", "[compile,wrong]"))
 
     def test_g9_unknown_kind_fails(self):
         self.assertRule("G9", build, BASE.replace("[compile]", "[boom]"))
-        self.assertRule("G9", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
-                                                  "- `lo < hi` [wrong,boom]: при `lo == hi` цикл не зайдёт\n"))
+        self.assertRule("G9", build, BASE.replace("- `left < right` [wrong]: при `left == right` цикл не зайдёт\n",
+                                                  "- `left < right` [wrong,boom]: при `left == right` цикл не зайдёт\n"))
 
     def test_g9_distractor_with_why_without_tag_fails(self):
-        self.assertRule("G9", build, BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
-                                                  "- `lo < hi`: при `lo == hi` цикл не зайдёт\n"))
+        self.assertRule("G9", build, BASE.replace("- `left < right` [wrong]: при `left == right` цикл не зайдёт\n",
+                                                  "- `left < right`: при `left == right` цикл не зайдёт\n"))
 
     def test_distractor_tag_set_is_accepted(self):
-        build(BASE.replace("- `lo < hi` [wrong]: при `lo == hi` цикл не зайдёт\n",
-                           "- `lo < hi` [compile,wrong]: при `lo == hi` цикл не зайдёт\n"))
+        build(BASE.replace("- `left < right` [wrong]: при `left == right` цикл не зайдёт\n",
+                           "- `left < right` [compile,wrong]: при `left == right` цикл не зайдёт\n"))
 
     def test_distractor_without_why_needs_no_tag(self):
-        lesson = build(BASE.replace("? hint one\n", "- `lo != hi`\n- @1 `lo != hi` [wrong]: `[5]` → `-1`\n? hint one\n"))
-        self.assertEqual(lesson["exercises"][0]["holes"][0]["wrongWhy"], {"lo != hi": "`[5]` → `-1`"})
+        lesson = build(BASE.replace("? hint one\n", "- `left != right`\n- @1 `left != right` [wrong]: `[5]` → `-1`\n? hint one\n"))
+        self.assertEqual(lesson["exercises"][0]["holes"][0]["wrongWhy"], {"left != right": "`[5]` → `-1`"})
 
     def test_g9_tag_on_distractor_without_why_fails(self):
         # the tag would never become a claim (claim_for needs a why), so it must not pass as proven
-        self.assertRule("G9", build, BASE.replace("? hint one\n", "- `lo != hi` [hang]\n- @1 `lo != hi` [wrong]: `[5]` → `-1`\n? hint one\n"))
+        self.assertRule("G9", build, BASE.replace("? hint one\n", "- `left != right` [hang]\n- @1 `left != right` [wrong]: `[5]` → `-1`\n? hint one\n"))
 
     def test_g9_tag_on_acceptable_fails(self):
-        self.assertRule("G9", build, BASE.replace("- ~`(lo + hi) ushr 1`:", "- ~`(lo + hi) ushr 1` [wrong]:"))
+        self.assertRule("G9", build, BASE.replace("- ~`(left + right) ushr 1`:", "- ~`(left + right) ushr 1` [wrong]:"))
 
     def test_tags_never_reach_lesson_json(self):
         other = BASE.replace("[wrong]", "[crash]").replace("[compile]", "[hang]")
@@ -632,8 +632,8 @@ class RenderKt(unittest.TestCase):
 
 class Tick(unittest.TestCase):
     def test_while_with_brace_gets_tick(self):
-        code = "fun f() {\n    while (lo <= hi) {\n        lo++\n    }\n}"
-        self.assertEqual(gen_content.instrument(code, "x").split("\n")[1], "    while (lo <= hi) { tick()")
+        code = "fun f() {\n    while (left <= right) {\n        left++\n    }\n}"
+        self.assertEqual(gen_content.instrument(code, "x").split("\n")[1], "    while (left <= right) { tick()")
 
     def test_code_without_while_is_unchanged(self):
         code = "fun f(xs: IntArray) {\n    for (x in xs) {\n    }\n}"
@@ -663,28 +663,28 @@ class WrongPrograms(unittest.TestCase):
 
     def test_one_program_per_unique_pair(self):
         e = self.entries()
-        self.assertEqual([x["id"] for x in e], ["l0.4.e1.h1:lo < hi", "l0.4.e2.h1:lo + (hi - lo) / 2",
-                                                "l0.4.e2.h1:(lo + hi) ushr 1", "l0.4.e2.h2:lo <= hi",
-                                                "l0.4.e2.h2:lo < hi"])
-        self.assertEqual(e[0]["ids"], ["l0.4.e1.h1:lo < hi", "l0.4.e2.h1:lo < hi"])  # identical program merged
+        self.assertEqual([x["id"] for x in e], ["l0.4.e1.h1:left < right", "l0.4.e2.h1:left + (right - left) / 2",
+                                                "l0.4.e2.h1:(left + right) ushr 1", "l0.4.e2.h2:left <= right",
+                                                "l0.4.e2.h2:left < right"])
+        self.assertEqual(e[0]["ids"], ["l0.4.e1.h1:left < right", "l0.4.e2.h1:left < right"])  # identical program merged
         self.assertEqual(len(set(x["source"] for x in e)), len(e))
         self.assertEqual(set(e[0]), {"id", "ids", "lesson", "label", "claims", "source"})
         self.assertEqual(e[0]["lesson"], "l0.4")
 
     def test_claims_come_from_override_or_distractor(self):
         e = {x["id"]: x for x in self.entries()}
-        self.assertEqual(e["l0.4.e1.h1:lo < hi"]["claims"], [
-            {"bullet": "l0.4.e1 `lo < hi`", "scope": "chip", "tags": ["wrong"]},
-            {"bullet": "l0.4.e2 `lo < hi`", "scope": "chip", "tags": ["wrong"]}])
-        self.assertEqual(e["l0.4.e2.h2:lo < hi"]["claims"],
-                         [{"bullet": "l0.4.e2 @2 `lo < hi`", "scope": "hole", "tags": ["compile"]}])
-        self.assertEqual(e["l0.4.e2.h2:lo <= hi"]["claims"], [])
+        self.assertEqual(e["l0.4.e1.h1:left < right"]["claims"], [
+            {"bullet": "l0.4.e1 `left < right`", "scope": "chip", "tags": ["wrong"]},
+            {"bullet": "l0.4.e2 `left < right`", "scope": "chip", "tags": ["wrong"]}])
+        self.assertEqual(e["l0.4.e2.h2:left < right"]["claims"],
+                         [{"bullet": "l0.4.e2 @2 `left < right`", "scope": "hole", "tags": ["compile"]}])
+        self.assertEqual(e["l0.4.e2.h2:left <= right"]["claims"], [])
 
     def test_source_is_a_complete_program(self):
         src = self.entries()[0]["source"]
         self.assertIn("import kotlin.test.*", src)
-        self.assertIn("\nobject V { // l0.4.e1 hole 1 = lo < hi\n", src)
-        self.assertIn("while (lo < hi) { tick()", src)
+        self.assertIn("\nobject V { // l0.4.e1 hole 1 = left < right\n", src)
+        self.assertIn("while (left < right) { tick()", src)
         self.assertIn("fun kinds(): String", src)
         self.assertIn("private class HangError", src)
         self.assertNotIn("package ", src)
@@ -730,7 +730,7 @@ class EndToEnd(unittest.TestCase):
             shutil.copy(str(ROOT / NOTE_REL), str(note))
             (tmp / "content/authoring").mkdir(parents=True)
             sidecar = tmp / "content/authoring/l0.4.md"
-            sidecar.write_text(BASE.replace("var lo = 0", "var lo = 1", 1), encoding="utf-8")
+            sidecar.write_text(BASE.replace("var left = 0", "var left = 1", 1), encoding="utf-8")
             self.assertEqual(gen_content.main(["--root", str(tmp)]), 1)
             self.assertFalse((tmp / "shared/src/commonTest").exists())  # nothing written on error
             sidecar.write_text(BASE, encoding="utf-8")
