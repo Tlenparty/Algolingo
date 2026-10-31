@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-10-21)
 Phase: 14 (Level 2 Easy Lessons) — COMPLETE
 Plan: 4 of 4
 Status: Phase 14 complete (4/4 plans, devices verified: 14-VERIFICATION-DEVICES.md)
-Last activity: 2026-10-31 - Completed quick task 261031-bul: висячий отступ в списках теории
+Last activity: 2026-10-31 - Completed quick task 261031-rm1: убран урок SD0.1
 
 Progress: [██████████] 99%
 
@@ -157,6 +157,7 @@ None yet.
 | 261029-pbe | Комментарии и понятные имена в Kotlin-коде уроков | 2026-10-29 | [261029-pbe](./quick/261029-pbe-kotlin/) |
 | 261031-sdw | SD-уроки на понятных словах: карточка «Что есть что», словарь | 2026-10-31 | [261031-sdw](./quick/261031-sdw-sd-plain-words/) |
 | 261031-bul | Висячий отступ в списках теории | 2026-10-31 | [261031-bul](./quick/261031-bul-theory-bullets-indent/) |
+| 261031-rm1 | Убран урок SD0.1 из System Design | 2026-10-31 | [261031-rm1](./quick/261031-rm1-remove-sd01/) |
 
 ## Deferred Items
 
