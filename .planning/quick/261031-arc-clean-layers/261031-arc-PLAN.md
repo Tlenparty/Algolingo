@@ -1,6 +1,6 @@
 ---
 quick_id: 261031-arc
-status: in-progress
+status: complete
 ---
 # Слои data/domain/presentation и MVI
 
