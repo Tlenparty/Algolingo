@@ -11,27 +11,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.tlenparty.algolingo.core.markdown.Block
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlinx.coroutines.launch
-import com.tlenparty.algolingo.core.markdown.parseBlocks
 import com.tlenparty.algolingo.kb.domain.Note
 import com.tlenparty.algolingo.kb.domain.findAnchorIndex
 
 @Composable
 fun NoteScreen(
     note: Note,
+    blocks: List<Block>,
     anchor: String?,
     resolvable: (String) -> Boolean,
     onLink: (String, String?) -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val blocks = remember(note.raw) { parseBlocks(note.raw) }
     val listState = rememberLazyListState()
     // Jump to the anchor once; on back-navigation/rotation the saved scroll position wins.
     var anchorDone by rememberSaveable(note.id, anchor) { mutableStateOf(false) }

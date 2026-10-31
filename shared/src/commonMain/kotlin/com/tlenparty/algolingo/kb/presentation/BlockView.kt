@@ -1,6 +1,5 @@
 package com.tlenparty.algolingo.kb.presentation
 
-import algolingo.shared.generated.resources.Res
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -21,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
@@ -39,7 +37,6 @@ import kotlin.coroutines.cancellation.CancellationException
 import com.tlenparty.algolingo.design.highlight
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.NO_LIGATURES
-import org.jetbrains.compose.resources.decodeToImageBitmap
 import com.tlenparty.algolingo.core.markdown.Block
 import com.tlenparty.algolingo.core.markdown.Bold
 import com.tlenparty.algolingo.core.markdown.Callout
@@ -123,14 +120,9 @@ fun BlockView(
         is ImageBlock -> {
             // ponytail: the item grows after the async load, so an anchor scroll into an image note may land slightly off;
             // store the aspect ratio in the index if it bites.
-            val bmp by produceState(imageCache[block.file], block.file) {
-                if (value != null) return@produceState
-                value = try {
-                    Res.readBytes("files/kb/img/${block.file}").decodeToImageBitmap().also { imageCache[block.file] = it }
-                } catch (e: Exception) {
-                    if (e is CancellationException) throw e
-                    null
-                }
+            val images = LocalKbImages.current
+            val bmp by produceState(images?.cached(block.file), block.file) {
+                if (value == null) value = images?.load(block.file)
             }
             bmp?.let {
                 Image(it, contentDescription = "Картинка из заметки", modifier = pad.fillMaxWidth(), contentScale = ContentScale.FillWidth)
@@ -138,10 +130,6 @@ fun BlockView(
         }
     }
 }
-
-// Survives LazyColumn item disposal so scrolling back does not re-decode and re-grow the row.
-// ponytail: unbounded, fine for the bundled few dozen images; switch to an LRU if the bundle grows large.
-private val imageCache = mutableMapOf<String, ImageBitmap>()
 
 @Composable
 private fun QuoteBox(

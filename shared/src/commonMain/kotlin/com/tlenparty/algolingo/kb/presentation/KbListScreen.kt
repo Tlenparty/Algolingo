@@ -11,52 +11,40 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.tlenparty.algolingo.design.AlgoTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import com.tlenparty.algolingo.kb.domain.Note
-import com.tlenparty.algolingo.kb.domain.SearchHit
 
 @Composable
 fun KbListScreen(
     notes: List<Note>,
+    search: KbSearch?,
     onOpen: (Note) -> Unit,
     modifier: Modifier = Modifier,
-    search: (String) -> List<SearchHit> = { emptyList() },
+    onQuery: (String) -> Unit = {},
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    // Full-text scan of every note is too slow for the UI thread (monkey ANR in 07.1-06): debounce, then
-    // search on Default; a new query cancels the pending one. Value = (query, hits) of the last finished
-    // search, kept while the next one runs so typing does not blank the list; null = nothing searched yet.
-    val result by produceState<Pair<String, List<SearchHit>>?>(null, query, notes) {
-        if (query.isBlank()) {
-            value = null
-            return@produceState
-        }
-        delay(150)
-        value = query to withContext(Dispatchers.Default) { search(query) }
-    }
+    // Restored after rotation or a tab switch: search again so the results match the text.
+    LaunchedEffect(Unit) { if (query.isNotBlank()) onQuery(query) }
     // Open section names; empty = all collapsed. List<String> is saveable on Android and iOS.
     var open by rememberSaveable { mutableStateOf(emptyList<String>()) }
     LazyColumn(modifier) {
         item(key = "search") {
             OutlinedTextField(
-                query, { query = it },
+                query, { query = it; onQuery(it) },
                 Modifier.fillMaxWidth().padding(AlgoTheme.spacing.md, AlgoTheme.spacing.sm),
                 label = { Text("Поиск по заметкам") },
                 singleLine = true,
             )
         }
         if (query.isNotBlank()) {
-            val found = result?.second.orEmpty()
+            val found = search?.hits.orEmpty()
             // only a finished search for exactly this query may say "nothing found"
-            if (result?.first == query && found.isEmpty()) item(key = "none") { Text("Ничего не найдено", Modifier.padding(AlgoTheme.spacing.md)) }
+            if (search?.query == query && found.isEmpty()) item(key = "none") { Text("Ничего не найдено", Modifier.padding(AlgoTheme.spacing.md)) }
             items(found, key = { "s-" + it.note.id }) { h ->
                 Column(Modifier.fillMaxWidth().clickable { onOpen(h.note) }.padding(AlgoTheme.spacing.md, AlgoTheme.spacing.smd)) {
                     Text(h.note.title)

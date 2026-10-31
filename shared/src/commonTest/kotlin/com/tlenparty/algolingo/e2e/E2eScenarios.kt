@@ -30,7 +30,7 @@ import kotlin.test.fail
 import com.tlenparty.algolingo.di.AppGraph
 import com.tlenparty.algolingo.home.domain.HomeNode
 import com.tlenparty.algolingo.home.domain.homeModel
-import com.tlenparty.algolingo.kb.data.KbRepository
+import com.tlenparty.algolingo.kb.data.KbRepositoryImpl
 import com.tlenparty.algolingo.kb.domain.Note
 import com.tlenparty.algolingo.lesson.data.loadLesson
 import com.tlenparty.algolingo.lesson.domain.Lesson
@@ -215,7 +215,7 @@ fun ComposeUiTest.scenarioWrongChip() {
 /** KB: section expands, a note opens, search shows a hit. */
 @OptIn(ExperimentalTestApi::class)
 fun ComposeUiTest.scenarioKb() {
-    val repo = KbRepository()
+    val repo = KbRepositoryImpl()
     val notes: List<Note> = runBlocking { repo.load() }.getOrElse { fail("kb failed to load: $it") }
     val (section, items) = notes.groupBy { it.section }.entries.first()
     click(hasText("База знаний"), "kb tab")

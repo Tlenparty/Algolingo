@@ -26,7 +26,9 @@ import com.tlenparty.algolingo.di.AppGraph
 import com.tlenparty.algolingo.lesson.domain.ExerciseResult
 import com.tlenparty.algolingo.lesson.domain.Grade
 import com.tlenparty.algolingo.lesson.domain.LessonResult
-import com.tlenparty.algolingo.progress.data.ProgressRepository
+import com.tlenparty.algolingo.progress.data.ProgressRepositoryImpl
+import com.tlenparty.algolingo.progress.domain.ProgressRepository
+import com.tlenparty.algolingo.progress.domain.RecordLessonResultUseCase
 import com.tlenparty.algolingo.progress.data.ProgressSerializer
 import com.tlenparty.algolingo.progress.data.decodeProgress
 import com.tlenparty.algolingo.progress.data.encodeProgress
@@ -51,8 +53,8 @@ class ProgressRepositoryTest {
     @Test
     fun recordWritesXpStreakAndSrs() = runTest {
         val store = FakeStore()
-        ProgressRepository(store, { d }, backgroundScope).record("l0.4", clean).join()
-        val p = ProgressRepository(store, { d }, backgroundScope).progress.filterNotNull().first()
+        RecordLessonResultUseCase(ProgressRepositoryImpl(store, { d }, backgroundScope))("l0.4", clean).join()
+        val p = ProgressRepositoryImpl(store, { d }, backgroundScope).progress.filterNotNull().first()
         assertEquals(20, p.xp)
         assertEquals(1, p.streak)
         assertEquals(LessonProgress(0, LocalDate(2026, 10, 23)), p.lessons["l0.4"])
@@ -62,18 +64,18 @@ class ProgressRepositoryTest {
     fun todayIsReadAtWriteTime() = runTest {
         var day = d
         val store = FakeStore()
-        val repo = ProgressRepository(store, { day }, backgroundScope)
+        val repo = ProgressRepositoryImpl(store, { day }, backgroundScope)
         day = LocalDate(2026, 10, 23)
-        repo.record("l0.4", clean).join()
+        RecordLessonResultUseCase(repo)("l0.4", clean).join()
         assertEquals(LocalDate(2026, 10, 23), store.state.value.lastActiveDay)
     }
 
     @Test
     fun twoRecordsSameDaySumXpKeepStreak() = runTest {
         val store = FakeStore()
-        val repo = ProgressRepository(store, { d }, backgroundScope)
-        repo.record("l0.4", clean).join()
-        repo.record("l0.4", clean).join()
+        val repo = ProgressRepositoryImpl(store, { d }, backgroundScope)
+        RecordLessonResultUseCase(repo)("l0.4", clean).join()
+        RecordLessonResultUseCase(repo)("l0.4", clean).join()
         assertEquals(40, store.state.value.xp)
         assertEquals(1, store.state.value.streak)
     }
@@ -88,8 +90,8 @@ class ProgressRepositoryTest {
                 throw okio.IOException("disk full")
             }
         }
-        val repo = ProgressRepository(failing, { d }, backgroundScope)
-        repo.record("l0.4", clean).join()
+        val repo = ProgressRepositoryImpl(failing, { d }, backgroundScope)
+        RecordLessonResultUseCase(repo)("l0.4", clean).join()
         assertEquals(2, calls)
         assertTrue(repo.saveFailed.value)
     }
@@ -97,8 +99,8 @@ class ProgressRepositoryTest {
     @Test
     fun setLangPersists() = runTest {
         val store = FakeStore()
-        ProgressRepository(store, { d }, backgroundScope).setLang(CodeLang.Python).join()
-        val p = ProgressRepository(store, { d }, backgroundScope).progress.filterNotNull().first()
+        ProgressRepositoryImpl(store, { d }, backgroundScope).setLang(CodeLang.Python).join()
+        val p = ProgressRepositoryImpl(store, { d }, backgroundScope).progress.filterNotNull().first()
         assertEquals(CodeLang.Python, p.lang)
     }
 
@@ -112,7 +114,7 @@ class ProgressRepositoryTest {
                 throw okio.IOException("disk full")
             }
         }
-        val repo = ProgressRepository(failing, { d }, backgroundScope)
+        val repo = ProgressRepositoryImpl(failing, { d }, backgroundScope)
         repo.setLang(CodeLang.Python).join()
         assertEquals(2, calls)
         assertTrue(repo.saveFailed.value)

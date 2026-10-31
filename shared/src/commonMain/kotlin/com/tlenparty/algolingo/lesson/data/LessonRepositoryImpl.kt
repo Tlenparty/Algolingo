@@ -6,6 +6,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.domain.LessonRepository
 import com.tlenparty.algolingo.lesson.domain.validate
 
 private val json = Json { ignoreUnknownKeys = true }
@@ -42,4 +43,8 @@ suspend fun loadLesson(id: String, lang: CodeLang): Result<Lesson> {
         return Result.failure(e)
     }
     return parseLesson(text)
+}
+
+class LessonRepositoryImpl : LessonRepository {
+    override suspend fun load(id: String, lang: CodeLang): Result<Lesson> = loadLesson(id, lang)
 }

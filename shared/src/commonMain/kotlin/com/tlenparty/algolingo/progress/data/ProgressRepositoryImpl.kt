@@ -28,9 +28,8 @@ import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 import kotlin.time.Clock
-import com.tlenparty.algolingo.lesson.domain.LessonResult
 import com.tlenparty.algolingo.progress.domain.Progress
-import com.tlenparty.algolingo.progress.domain.applyLessonResult
+import com.tlenparty.algolingo.progress.domain.ProgressRepository
 
 /** An unreadable file is copied to [backup] (if set) before the corruption handler resets it, so progress can still be recovered by hand. */
 class ProgressSerializer(private val backup: Path? = null) : OkioSerializer<Progress> {
@@ -61,28 +60,26 @@ fun progressStore(
 fun localToday(): LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
 /** Writes run in this app-lifetime scope, never a ViewModel scope: leaving the screen must not cancel them. */
-class ProgressRepository(
+class ProgressRepositoryImpl(
     private val store: DataStore<Progress>,
-    val today: () -> LocalDate = ::localToday,
+    private val clock: () -> LocalDate = ::localToday,
     private val scope: CoroutineScope = CoroutineScope(
         SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, e -> println("progress write failed: $e") },
     ),
-) {
-    /** Hot and app-scoped, so Home has the value on its first frame after the first load. null = not loaded yet. An IO error shows zeros instead of crashing Home. */
-    val progress: StateFlow<Progress?> = store.data.catch { emit(Progress()) }.stateIn(scope, SharingStarted.Eagerly, null)
+) : ProgressRepository {
+    /** Hot and app-scoped, so Home has the value on its first frame after the first load. */
+    override val progress: StateFlow<Progress?> = store.data.catch { emit(Progress()) }.stateIn(scope, SharingStarted.Eagerly, null)
 
     private val _saveFailed = MutableStateFlow(false)
 
-    /** True once a write failed even after a retry, so Home can say the lesson was not saved. The next good write clears it. */
-    val saveFailed: StateFlow<Boolean> = _saveFailed
+    override val saveFailed: StateFlow<Boolean> = _saveFailed
 
-    /** today() is read inside the transform: the day of the write, not of the lesson start. */
-    fun record(id: String, r: LessonResult): Job = write { applyLessonResult(it, id, r, today()) }
+    override fun today(): LocalDate = clock()
 
-    fun setLang(lang: CodeLang): Job = write { it.copy(lang = lang) }
+    override fun setLang(lang: CodeLang): Job = update { it.copy(lang = lang) }
 
     /** One retry, then [saveFailed]. */
-    private fun write(transform: (Progress) -> Progress): Job = scope.launch {
+    override fun update(transform: (Progress) -> Progress): Job = scope.launch {
         repeat(2) { attempt ->
             try {
                 store.updateData { transform(it) }

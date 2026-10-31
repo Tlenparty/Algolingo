@@ -4,7 +4,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import com.tlenparty.algolingo.kb.data.KbRepository
+import com.tlenparty.algolingo.kb.data.KbRepositoryImpl
 
 class KbRepositoryTest {
     private val index = """[
@@ -24,15 +24,15 @@ class KbRepositoryTest {
 
     @Test fun missingIndex() = runTest {
         val r = Reader(index, setOf("files/kb/index.json"))
-        assertTrue(KbRepository(r::read).load().isFailure)
+        assertTrue(KbRepositoryImpl(r::read).load().isFailure)
     }
 
     @Test fun garbageIndex() = runTest {
-        assertTrue(KbRepository(Reader("not json")::read).load().isFailure)
+        assertTrue(KbRepositoryImpl(Reader("not json")::read).load().isFailure)
     }
 
     @Test fun oneBrokenNoteKeepsOthers() = runTest {
-        val repo = KbRepository(Reader(index, setOf("files/kb/a.md"))::read)
+        val repo = KbRepositoryImpl(Reader(index, setOf("files/kb/a.md"))::read)
         val res = repo.load()
         assertTrue(res.isSuccess)
         assertEquals(listOf("b"), repo.notes.map { it.id })
@@ -40,12 +40,12 @@ class KbRepositoryTest {
 
     @Test fun allNotesBroken() = runTest {
         val r = Reader(index, setOf("files/kb/a.md", "files/kb/b.md"))
-        assertTrue(KbRepository(r::read).load().isFailure)
+        assertTrue(KbRepositoryImpl(r::read).load().isFailure)
     }
 
     @Test fun idempotent() = runTest {
         val r = Reader(index)
-        val repo = KbRepository(r::read)
+        val repo = KbRepositoryImpl(r::read)
         assertTrue(repo.load().isSuccess)
         val second = repo.load()
         assertTrue(second.isSuccess)
@@ -55,7 +55,7 @@ class KbRepositoryTest {
 
     @Test fun failureIsNotCached() = runTest {
         val r = Reader("not json")
-        val repo = KbRepository(r::read)
+        val repo = KbRepositoryImpl(r::read)
         assertTrue(repo.load().isFailure)
         r.indexText = index
         assertTrue(repo.load().isSuccess)

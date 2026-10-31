@@ -3,6 +3,8 @@ package com.tlenparty.algolingo.progress.data
 import algolingo.shared.generated.resources.Res
 import com.tlenparty.algolingo.progress.domain.Catalog
 import com.tlenparty.algolingo.progress.domain.CatalogEntry
+import com.tlenparty.algolingo.progress.domain.CatalogRepository
+import com.tlenparty.algolingo.progress.domain.Track
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
@@ -44,4 +46,12 @@ suspend fun loadCatalog(path: String = CATALOG_PATH): Catalog = try {
     throw e
 } catch (_: Exception) {
     Catalog()
+}
+
+/** Each catalog is read once per app run. */
+class CatalogRepositoryImpl(private val load: suspend (String) -> Catalog = ::loadCatalog) : CatalogRepository {
+    private val loaded = mutableMapOf<Track, Catalog>()
+
+    override suspend fun catalog(track: Track): Catalog =
+        loaded[track] ?: load(if (track == Track.Code) CATALOG_PATH else SD_CATALOG_PATH).also { loaded[track] = it }
 }

@@ -3,6 +3,15 @@ package com.tlenparty.algolingo.progress.domain
 import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlinx.datetime.LocalDate
 
+/** One tab of Home with its own lesson path. */
+enum class Track {
+    Code,
+    SystemDesign;
+
+    /** Code follows the selected language; [SystemDesign] has no language filter and always routes Kotlin. */
+    fun langFilter(lang: CodeLang): CodeLang? = if (this == Code) lang else null
+}
+
 /** Lessons of one track, in unlock order. */
 data class CatalogEntry(
     val id: String,
