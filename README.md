@@ -59,11 +59,7 @@ xcrun simctl launch <sim-udid> com.tlenparty.algolingo
 
 ### Обновление заметок базы знаний
 
-```bash
-ALGOLINGO_VAULT=<путь к папке Obsidian> python3 tools/sync_notes.py
-```
-
-После этого пересоберите приложение.
+Заметки лежат в репозитории: `shared/src/commonMain/composeResources/files/kb/`. Правьте `.md` прямо там. Новую заметку добавьте туда же и запишите в `kb/index.json`. После этого пересоберите приложение.
 
 ### Контент уроков
 
@@ -75,4 +71,4 @@ python3 tools/gen_content.py --check          # проверить, что за�
 python3 -m unittest tools/test_gen_content.py # тесты генератора
 ```
 
-Сгенерированные файлы коммитятся; Gradle Python не запускает. Если заметки в Obsidian менялись, сначала обновите их через `sync_notes.py`, затем перегенерируйте контент.
+Сгенерированные файлы коммитятся; Gradle Python не запускает. Если менялась заметка 05, перегенерируйте контент.

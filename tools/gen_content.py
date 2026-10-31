@@ -6,8 +6,7 @@ Usage:
   python3 tools/gen_content.py --check              exit 1 and list stale/orphan files, write nothing
   python3 tools/gen_content.py --allow-removed l0.9 allow a lesson id to leave index.json
 
-Inputs: the bundled note 05 (files/kb/n07ed966c.md, refreshed by sync_notes.py,
-never the vault) and content/authoring/<id>.md. Outputs: files/content/index.json,
+Inputs: the bundled note 05 (files/kb/n07ed966c.md) and content/authoring/<id>.md. Outputs: files/content/index.json,
 files/content/lessons/<id>.json, commonTest/.../lesson/ReferenceSolutionsTest.kt (reference/ok/
 acceptable variants, JVM + Native) and androidHostTest/resources/wrong_variants.json (one full
 program per wrong (hole, chip) pair plus one "control" reference per lesson, classified on JVM by
