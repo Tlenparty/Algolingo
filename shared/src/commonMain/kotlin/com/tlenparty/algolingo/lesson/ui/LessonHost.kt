@@ -21,8 +21,9 @@ import com.tlenparty.algolingo.lesson.LessonResult
 import com.tlenparty.algolingo.lesson.LessonViewModel
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.CodeLang
-import com.tlenparty.algolingo.design.LocalCodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
+import com.tlenparty.algolingo.core.presentation.syntax
+import com.tlenparty.algolingo.design.LocalSyntaxLang
 import kotlin.time.Clock
 
 @Composable
@@ -32,7 +33,7 @@ fun LessonHost(id: String, lang: CodeLang, review: Boolean, onFinish: (LessonRes
     }
     val r by vm.state.collectAsStateWithLifecycle()
     val state = r?.getOrNull()
-    CompositionLocalProvider(LocalCodeLang provides lang) {
+    CompositionLocalProvider(LocalSyntaxLang provides lang.syntax) {
         when {
             r == null -> Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
             state == null -> LessonErrorScreen(onHome)

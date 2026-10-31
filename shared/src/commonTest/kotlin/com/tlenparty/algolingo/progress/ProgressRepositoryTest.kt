@@ -2,7 +2,7 @@ package com.tlenparty.algolingo.progress
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import com.tlenparty.algolingo.lesson.ExerciseResult
 import com.tlenparty.algolingo.lesson.Grade
 import com.tlenparty.algolingo.lesson.LessonResult

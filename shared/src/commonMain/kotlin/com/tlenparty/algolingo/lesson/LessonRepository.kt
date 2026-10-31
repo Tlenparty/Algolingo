@@ -1,7 +1,7 @@
 package com.tlenparty.algolingo.lesson
 
 import algolingo.shared.generated.resources.Res
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json

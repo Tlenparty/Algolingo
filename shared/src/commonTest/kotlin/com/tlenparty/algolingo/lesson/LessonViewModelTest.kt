@@ -1,6 +1,6 @@
 package com.tlenparty.algolingo.lesson
 
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

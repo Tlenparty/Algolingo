@@ -25,7 +25,7 @@ import com.tlenparty.algolingo.lesson.PanelItem
 import com.tlenparty.algolingo.lesson.PanelKind
 import com.tlenparty.algolingo.lesson.PanelModel
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.LocalCodeLang
+import com.tlenparty.algolingo.design.LocalSyntaxLang
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.components.ChunkyStyle
 import com.tlenparty.algolingo.design.highlight
@@ -73,7 +73,7 @@ fun ResultPanel(model: PanelModel, maxBodyHeight: Dp, onNext: () -> Unit, modifi
 @Composable
 private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color, syntax: Boolean) {
     val c = AlgoTheme.colors
-    val lang = LocalCodeLang.current
+    val lang = LocalSyntaxLang.current
     fun code(s: String) = if (syntax) highlight(s, c, lang) else AnnotatedString(s)
     val t = AlgoTheme.typography
     Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xs)) {

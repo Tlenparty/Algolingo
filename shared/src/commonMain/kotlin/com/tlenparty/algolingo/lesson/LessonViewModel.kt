@@ -1,7 +1,7 @@
 package com.tlenparty.algolingo.lesson
 
 import androidx.lifecycle.ViewModel
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

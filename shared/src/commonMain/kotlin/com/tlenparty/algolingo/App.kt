@@ -39,7 +39,7 @@ import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlinx.serialization.Serializable
 
 @Serializable

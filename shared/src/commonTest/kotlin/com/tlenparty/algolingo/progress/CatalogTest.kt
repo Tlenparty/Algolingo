@@ -1,6 +1,6 @@
 package com.tlenparty.algolingo.progress
 
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import com.tlenparty.algolingo.progress.LessonStatus.Available
 import com.tlenparty.algolingo.progress.LessonStatus.Done
 import com.tlenparty.algolingo.progress.LessonStatus.Locked

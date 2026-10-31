@@ -1,6 +1,6 @@
 package com.tlenparty.algolingo.lesson
 
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import java.io.File
 import kotlinx.serialization.json.Json
 import com.tlenparty.algolingo.progress.Catalog

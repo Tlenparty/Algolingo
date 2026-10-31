@@ -30,7 +30,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import com.tlenparty.algolingo.design.components.LangSegment
 import com.tlenparty.algolingo.design.components.ChunkyBox
 import com.tlenparty.algolingo.design.components.ChunkyButton
@@ -72,7 +72,7 @@ fun HomeScreen(
                 )
             }
             if (onLang != null) {
-                LangSegment(lang, onLang, Modifier.fillMaxWidth().padding(horizontal = sp.md, vertical = sp.sm))
+                LangSegment(CodeLang.entries, lang, onLang, { it.name }, { it.id }, Modifier.fillMaxWidth().padding(horizontal = sp.md, vertical = sp.sm))
             }
             if (model.due.isNotEmpty()) {
                 ChunkyButton("Повтор сегодня (${model.due.size})", onReview, Modifier.padding(horizontal = sp.md), style = ChunkyStyle.Secondary)

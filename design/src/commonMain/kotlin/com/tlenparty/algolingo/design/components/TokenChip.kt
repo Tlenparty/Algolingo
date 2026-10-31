@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.AnnotatedString
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.LocalCodeLang
+import com.tlenparty.algolingo.design.LocalSyntaxLang
 import com.tlenparty.algolingo.design.highlight
 
 enum class ChipState { Normal, Ghost }
@@ -19,7 +19,7 @@ enum class ChipState { Normal, Ghost }
 fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: Modifier = Modifier, syntax: Boolean = true) {
     val s = MaterialTheme.colorScheme
     val ghost = state == ChipState.Ghost
-    val lang = LocalCodeLang.current
+    val lang = LocalSyntaxLang.current
     ChunkyBox(
         face = if (ghost) s.outline else s.background,
         ledge = if (ghost) null else s.outline,

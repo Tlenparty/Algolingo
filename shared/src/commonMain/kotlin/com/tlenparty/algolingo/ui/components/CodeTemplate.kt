@@ -34,7 +34,7 @@ import com.tlenparty.algolingo.lesson.HoleVisual
 import com.tlenparty.algolingo.lesson.Piece
 import com.tlenparty.algolingo.lesson.templateLines
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.LocalCodeLang
+import com.tlenparty.algolingo.design.LocalSyntaxLang
 import com.tlenparty.algolingo.design.highlight
 
 @Composable
@@ -49,7 +49,7 @@ fun CodeTemplate(
     syntax: Boolean = true,
 ) {
     val colors = AlgoTheme.colors
-    val lang = LocalCodeLang.current
+    val lang = LocalSyntaxLang.current
     val t = AlgoTheme.typography
     val lines = templateLines(segments)
     // Hole to keep on screen: the first Wrong after Check, else the selected one. With neither
@@ -84,7 +84,7 @@ fun CodeTemplate(
 @Composable
 private fun Hole(index: Int, text: String?, visual: HoleVisual, onTap: () -> Unit, enabled: Boolean, focused: Boolean, syntax: Boolean) {
     val c = AlgoTheme.colors
-    val lang = LocalCodeLang.current
+    val lang = LocalSyntaxLang.current
     val s = MaterialTheme.colorScheme
     // fill, border, text color
     val target = when (visual) {

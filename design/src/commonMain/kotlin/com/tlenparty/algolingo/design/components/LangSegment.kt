@@ -17,27 +17,33 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import com.tlenparty.algolingo.design.AlgoTheme
-import com.tlenparty.algolingo.design.CodeLang
 
-/** Two-way language switch (one segment per CodeLang); labels are the enum names. testTag "lang-<id>". */
+/** Segmented language switch, one segment per option. testTag "lang-<tag>". */
 @Composable
-fun LangSegment(selected: CodeLang, onSelect: (CodeLang) -> Unit, modifier: Modifier = Modifier) {
+fun <T> LangSegment(
+    options: List<T>,
+    selected: T,
+    onSelect: (T) -> Unit,
+    label: (T) -> String,
+    tag: (T) -> String,
+    modifier: Modifier = Modifier,
+) {
     val s = MaterialTheme.colorScheme
     val shape = AlgoTheme.shapes.medium
     Row(
         modifier.height(AlgoTheme.sizes.touchTarget).clip(shape)
             .border(AlgoTheme.sizes.border, s.outline, shape).selectableGroup(),
     ) {
-        CodeLang.entries.forEach { lang ->
+        options.forEach { lang ->
             val on = lang == selected
             Box(
                 Modifier.weight(1f).fillMaxHeight()
                     .background(if (on) s.primary else s.background)
                     .selectable(selected = on, role = Role.RadioButton) { onSelect(lang) }
-                    .testTag("lang-${lang.id}"),
+                    .testTag("lang-${tag(lang)}"),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(lang.name, style = AlgoTheme.typography.button, color = if (on) s.onPrimary else s.onBackground)
+                Text(label(lang), style = AlgoTheme.typography.button, color = if (on) s.onPrimary else s.onBackground)
             }
         }
     }

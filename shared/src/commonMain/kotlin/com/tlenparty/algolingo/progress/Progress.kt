@@ -1,6 +1,6 @@
 package com.tlenparty.algolingo.progress
 
-import com.tlenparty.algolingo.design.CodeLang
+import com.tlenparty.algolingo.core.domain.CodeLang
 import com.tlenparty.algolingo.lesson.Grade
 import com.tlenparty.algolingo.lesson.LessonResult
 import com.tlenparty.algolingo.lesson.xpFor

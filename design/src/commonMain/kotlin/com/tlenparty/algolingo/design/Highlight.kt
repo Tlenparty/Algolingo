@@ -22,10 +22,10 @@ private const val REST = """|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|\b\d+(?:\.\
 private val kotlinRe = Regex("""//[^\n]*$REST""")
 private val pythonRe = Regex("""#[^\n]*$REST""")
 
-fun highlight(code: String, colors: AlgoColors, lang: CodeLang = CodeLang.Kotlin): AnnotatedString = buildAnnotatedString {
+fun highlight(code: String, colors: AlgoColors, lang: SyntaxLang = SyntaxLang.Kotlin): AnnotatedString = buildAnnotatedString {
     val (tokenRe, keywords) = when (lang) {
-        CodeLang.Kotlin -> kotlinRe to kotlinKeywords
-        CodeLang.Python -> pythonRe to pythonKeywords
+        SyntaxLang.Kotlin -> kotlinRe to kotlinKeywords
+        SyntaxLang.Python -> pythonRe to pythonKeywords
     }
     append(code)
     for (m in tokenRe.findAll(code)) {
