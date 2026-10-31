@@ -8,6 +8,11 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.domain.LessonResult
+import com.tlenparty.algolingo.lesson.domain.Solution
+import com.tlenparty.algolingo.lesson.domain.TheoryCard
+import com.tlenparty.algolingo.lesson.presentation.LessonViewModel
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LessonViewModelTest {

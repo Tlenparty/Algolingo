@@ -1,15 +1,26 @@
 package com.tlenparty.algolingo.progress
 
 import com.tlenparty.algolingo.core.domain.CodeLang
-import com.tlenparty.algolingo.progress.LessonStatus.Available
-import com.tlenparty.algolingo.progress.LessonStatus.Done
-import com.tlenparty.algolingo.progress.LessonStatus.Locked
-import com.tlenparty.algolingo.progress.LessonStatus.Soon
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlin.test.*
+import com.tlenparty.algolingo.home.domain.HomeModel
+import com.tlenparty.algolingo.home.domain.HomeNode
+import com.tlenparty.algolingo.home.domain.homeModel
+import com.tlenparty.algolingo.progress.data.parseCatalog
+import com.tlenparty.algolingo.progress.domain.Catalog
+import com.tlenparty.algolingo.progress.domain.CatalogEntry
+import com.tlenparty.algolingo.progress.domain.LessonProgress
+import com.tlenparty.algolingo.progress.domain.Progress
+import com.tlenparty.algolingo.progress.domain.dueIds
+import com.tlenparty.algolingo.progress.domain.lessonStatuses
+import com.tlenparty.algolingo.progress.domain.routeLang
+import com.tlenparty.algolingo.progress.domain.LessonStatus.Available
+import com.tlenparty.algolingo.progress.domain.LessonStatus.Done
+import com.tlenparty.algolingo.progress.domain.LessonStatus.Locked
+import com.tlenparty.algolingo.progress.domain.LessonStatus.Soon
 
 class CatalogTest {
     private val d = LocalDate(2026, 10, 22)

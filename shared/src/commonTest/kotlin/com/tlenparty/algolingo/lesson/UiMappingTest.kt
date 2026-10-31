@@ -1,7 +1,32 @@
 package com.tlenparty.algolingo.lesson
 
-import com.tlenparty.algolingo.lesson.LessonAction.*
+import com.tlenparty.algolingo.lesson.presentation.LessonAction.*
 import kotlin.test.*
+import com.tlenparty.algolingo.lesson.domain.CheckResult
+import com.tlenparty.algolingo.lesson.domain.Chip
+import com.tlenparty.algolingo.lesson.domain.Exercise
+import com.tlenparty.algolingo.lesson.domain.ExerciseState
+import com.tlenparty.algolingo.lesson.domain.Hole
+import com.tlenparty.algolingo.lesson.domain.HoleResult
+import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.domain.Solution
+import com.tlenparty.algolingo.lesson.domain.TheoryCard
+import com.tlenparty.algolingo.lesson.presentation.HoleVisual
+import com.tlenparty.algolingo.lesson.presentation.LessonAction
+import com.tlenparty.algolingo.lesson.presentation.LessonReducer
+import com.tlenparty.algolingo.lesson.presentation.LessonState
+import com.tlenparty.algolingo.lesson.presentation.PanelItem
+import com.tlenparty.algolingo.lesson.presentation.PanelKind
+import com.tlenparty.algolingo.lesson.presentation.Phase
+import com.tlenparty.algolingo.lesson.presentation.Piece
+import com.tlenparty.algolingo.lesson.presentation.ScreenKey
+import com.tlenparty.algolingo.lesson.presentation.hintsRemaining
+import com.tlenparty.algolingo.lesson.presentation.holeVisual
+import com.tlenparty.algolingo.lesson.presentation.isLastExercise
+import com.tlenparty.algolingo.lesson.presentation.panelModel
+import com.tlenparty.algolingo.lesson.presentation.screenKey
+import com.tlenparty.algolingo.lesson.presentation.solutionSpans
+import com.tlenparty.algolingo.lesson.presentation.templateLines
 
 class UiMappingTest {
     private val e3 = Exercise(

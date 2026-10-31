@@ -1,14 +1,21 @@
 package com.tlenparty.algolingo.progress
 
-import com.tlenparty.algolingo.lesson.ExerciseResult
-import com.tlenparty.algolingo.lesson.Grade
-import com.tlenparty.algolingo.lesson.LessonResult
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlin.test.*
+import com.tlenparty.algolingo.lesson.domain.ExerciseResult
+import com.tlenparty.algolingo.lesson.domain.Grade
+import com.tlenparty.algolingo.lesson.domain.LessonResult
+import com.tlenparty.algolingo.progress.data.decodeProgress
+import com.tlenparty.algolingo.progress.data.encodeProgress
+import com.tlenparty.algolingo.progress.domain.LessonProgress
+import com.tlenparty.algolingo.progress.domain.Progress
+import com.tlenparty.algolingo.progress.domain.applyLessonResult
+import com.tlenparty.algolingo.progress.domain.schedule
+import com.tlenparty.algolingo.progress.domain.visibleStreak
 
 class ProgressTest {
     private val d = LocalDate(2026, 10, 21)

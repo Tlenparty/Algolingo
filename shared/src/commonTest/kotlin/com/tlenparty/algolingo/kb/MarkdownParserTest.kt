@@ -3,6 +3,23 @@ package com.tlenparty.algolingo.kb
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.core.markdown.Bold
+import com.tlenparty.algolingo.core.markdown.Callout
+import com.tlenparty.algolingo.core.markdown.Code
+import com.tlenparty.algolingo.core.markdown.Heading
+import com.tlenparty.algolingo.core.markdown.ImageBlock
+import com.tlenparty.algolingo.core.markdown.InlineCode
+import com.tlenparty.algolingo.core.markdown.Italic
+import com.tlenparty.algolingo.core.markdown.Link
+import com.tlenparty.algolingo.core.markdown.ListItem
+import com.tlenparty.algolingo.core.markdown.Mark
+import com.tlenparty.algolingo.core.markdown.Paragraph
+import com.tlenparty.algolingo.core.markdown.Quote
+import com.tlenparty.algolingo.core.markdown.Rule
+import com.tlenparty.algolingo.core.markdown.Table
+import com.tlenparty.algolingo.core.markdown.Text
+import com.tlenparty.algolingo.core.markdown.parseBlocks
+import com.tlenparty.algolingo.core.markdown.parseInline
 
 class MarkdownParserTest {
     @Test

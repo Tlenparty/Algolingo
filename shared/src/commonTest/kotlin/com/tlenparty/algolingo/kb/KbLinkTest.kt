@@ -3,6 +3,11 @@ package com.tlenparty.algolingo.kb
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import com.tlenparty.algolingo.core.markdown.Heading
+import com.tlenparty.algolingo.core.markdown.parseBlocks
+import com.tlenparty.algolingo.kb.domain.Note
+import com.tlenparty.algolingo.kb.domain.findAnchorIndex
+import com.tlenparty.algolingo.kb.domain.resolveNote
 
 class KbLinkTest {
     private val notes = listOf(

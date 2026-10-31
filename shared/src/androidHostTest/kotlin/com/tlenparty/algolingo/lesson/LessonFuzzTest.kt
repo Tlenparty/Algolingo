@@ -1,6 +1,5 @@
 package com.tlenparty.algolingo.lesson
 
-import com.tlenparty.algolingo.progress.Catalog
 import java.io.File
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
@@ -8,6 +7,18 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import com.tlenparty.algolingo.lesson.domain.Grade
+import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.presentation.LessonAction
+import com.tlenparty.algolingo.lesson.presentation.LessonReducer
+import com.tlenparty.algolingo.lesson.presentation.LessonState
+import com.tlenparty.algolingo.lesson.presentation.Phase
+import com.tlenparty.algolingo.lesson.presentation.ScreenKey
+import com.tlenparty.algolingo.lesson.presentation.holeVisual
+import com.tlenparty.algolingo.lesson.presentation.isLastExercise
+import com.tlenparty.algolingo.lesson.presentation.panelModel
+import com.tlenparty.algolingo.lesson.presentation.screenKey
+import com.tlenparty.algolingo.progress.domain.Catalog
 
 /** Seeded random action sequences over every catalog lesson: the reducer must never throw or break its invariants. */
 class LessonFuzzTest {

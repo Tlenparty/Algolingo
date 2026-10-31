@@ -6,6 +6,13 @@ import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.lesson.data.lessonPath
+import com.tlenparty.algolingo.lesson.data.parseLesson
+import com.tlenparty.algolingo.lesson.domain.Chip
+import com.tlenparty.algolingo.lesson.domain.Exercise
+import com.tlenparty.algolingo.lesson.domain.Hole
+import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.domain.Solution
 
 class LessonRepositoryTest {
     private fun ex(id: String, holes: Int) = Exercise(

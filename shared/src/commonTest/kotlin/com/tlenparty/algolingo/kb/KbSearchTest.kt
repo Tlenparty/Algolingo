@@ -3,6 +3,8 @@ package com.tlenparty.algolingo.kb
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.kb.domain.Note
+import com.tlenparty.algolingo.kb.domain.searchNotes
 
 class KbSearchTest {
     private val notes = listOf(

@@ -3,10 +3,15 @@ package com.tlenparty.algolingo.lesson
 import com.tlenparty.algolingo.core.domain.CodeLang
 import java.io.File
 import kotlinx.serialization.json.Json
-import com.tlenparty.algolingo.progress.Catalog
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.lesson.data.lessonPath
+import com.tlenparty.algolingo.lesson.data.parseLesson
+import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.domain.LessonKind
+import com.tlenparty.algolingo.lesson.domain.validate
+import com.tlenparty.algolingo.progress.domain.Catalog
 
 class LessonContentTest {
     private val file = File("src/commonMain/composeResources/files/content/lessons/l0.4.json")

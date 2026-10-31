@@ -1,6 +1,16 @@
 package com.tlenparty.algolingo.lesson
 
 import kotlin.test.*
+import com.tlenparty.algolingo.lesson.domain.Accepted
+import com.tlenparty.algolingo.lesson.domain.Chip
+import com.tlenparty.algolingo.lesson.domain.Exercise
+import com.tlenparty.algolingo.lesson.domain.Hole
+import com.tlenparty.algolingo.lesson.domain.HoleResult
+import com.tlenparty.algolingo.lesson.domain.Verdict
+import com.tlenparty.algolingo.lesson.domain.checkExercise
+import com.tlenparty.algolingo.lesson.domain.initialExerciseState
+import com.tlenparty.algolingo.lesson.domain.tapChip
+import com.tlenparty.algolingo.lesson.domain.tapHole
 
 internal fun synth(vararg chips: String, holes: List<Hole>) = Exercise(
     id = "t.e1",

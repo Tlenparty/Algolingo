@@ -1,0 +1,67 @@
+package com.tlenparty.algolingo.progress.domain
+
+import com.tlenparty.algolingo.core.domain.CodeLang
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.serialization.Serializable
+import com.tlenparty.algolingo.lesson.domain.Grade
+import com.tlenparty.algolingo.lesson.domain.LessonResult
+import com.tlenparty.algolingo.lesson.domain.xpFor
+import com.tlenparty.algolingo.progress.data.CodeLangSerializer
+
+// Pure progress engine: no IO, no clock reads. `today` is always injected.
+
+/** One versioned document. A key in [lessons] means the lesson was completed at least once. */
+@Serializable
+data class Progress(
+    val schemaVersion: Int = PROGRESS_SCHEMA,
+    val xp: Int = 0,
+    val streak: Int = 0,
+    val lastActiveDay: LocalDate? = null,
+    val lessons: Map<String, LessonProgress> = emptyMap(),
+    @Serializable(with = CodeLangSerializer::class) val lang: CodeLang = CodeLang.Kotlin,
+)
+
+/** Leitner position. due == null means mastered. */
+@Serializable
+data class LessonProgress(val step: Int = 0, val due: LocalDate? = null)
+
+const val PROGRESS_SCHEMA = 1
+
+val INTERVALS = listOf(1, 3, 7)
+
+private fun LocalDate.plusDays(n: Int) = plus(n, DateTimeUnit.DAY)
+
+/** First pass (any grade) starts the ladder at +1 day. Reviews only count when due (A2). */
+fun schedule(prev: LessonProgress?, grade: Grade, today: LocalDate): LessonProgress = when {
+    prev == null -> LessonProgress(0, today.plusDays(1))
+    prev.due == null || prev.due > today -> prev // mastered, replay before due, or clock moved back
+    grade == Grade.Clean ->
+        if (prev.step >= INTERVALS.lastIndex) LessonProgress(INTERVALS.size, null)
+        else LessonProgress(prev.step + 1, today.plusDays(INTERVALS[prev.step + 1]))
+    grade == Grade.Hinted -> prev.copy(due = today.plusDays(INTERVALS[prev.step.coerceIn(INTERVALS.indices)]))
+    else -> LessonProgress(0, today.plusDays(1))
+}
+
+// ponytail: a clock set ahead during a lesson stores a future lastActiveDay/due that freezes the streak and the review until that date; clamp stored dates > today+2 back to today on read if this ever bites.
+fun bumpStreak(p: Progress, today: LocalDate): Progress {
+    val last = p.lastActiveDay
+    val s = when {
+        last == null -> 1
+        last >= today -> maxOf(p.streak, 1) // same day, or clock moved back: no change
+        last.plusDays(1) == today -> p.streak + 1
+        else -> 1
+    }
+    return p.copy(streak = s, lastActiveDay = if (last != null && last > today) last else today)
+}
+
+/** What Home shows: a streak whose last day is before yesterday is already broken. */
+fun visibleStreak(p: Progress, today: LocalDate): Int =
+    p.lastActiveDay?.takeIf { it >= today.minus(1, DateTimeUnit.DAY) }?.let { p.streak } ?: 0
+
+fun applyLessonResult(p: Progress, id: String, r: LessonResult, today: LocalDate): Progress =
+    bumpStreak(p, today).let {
+        it.copy(xp = it.xp + xpFor(r), lessons = it.lessons + (id to schedule(it.lessons[id], r.grade, today)))
+    }

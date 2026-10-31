@@ -4,6 +4,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.kb.data.KbRepository
 
 class KbRepositoryTest {
     private val index = """[

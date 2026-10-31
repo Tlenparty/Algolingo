@@ -4,6 +4,15 @@ import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.lesson.domain.Accepted
+import com.tlenparty.algolingo.lesson.domain.Chip
+import com.tlenparty.algolingo.lesson.domain.Exercise
+import com.tlenparty.algolingo.lesson.domain.Hole
+import com.tlenparty.algolingo.lesson.domain.Lesson
+import com.tlenparty.algolingo.lesson.domain.LessonKind
+import com.tlenparty.algolingo.lesson.domain.MAX_DESIGN_LINE
+import com.tlenparty.algolingo.lesson.domain.Solution
+import com.tlenparty.algolingo.lesson.domain.validate
 
 class ModelTest {
     private fun ex(id: String, segs: List<String>, holes: List<Hole>, bank: List<Chip>) =

@@ -1,6 +1,12 @@
 package com.tlenparty.algolingo.lesson
 
 import kotlin.test.*
+import com.tlenparty.algolingo.lesson.domain.ExerciseResult
+import com.tlenparty.algolingo.lesson.domain.Grade
+import com.tlenparty.algolingo.lesson.domain.LessonResult
+import com.tlenparty.algolingo.lesson.domain.XP_ASSISTED
+import com.tlenparty.algolingo.lesson.domain.XP_CLEAN
+import com.tlenparty.algolingo.lesson.domain.xpFor
 
 class XpTest {
     private fun r(solved: Boolean, attempts: Int, hints: Int) = ExerciseResult("x", solved, attempts, hints)

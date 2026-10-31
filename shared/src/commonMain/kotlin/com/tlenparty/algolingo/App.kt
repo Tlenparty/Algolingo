@@ -23,24 +23,24 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.tlenparty.algolingo.home.HomeScreen
-import com.tlenparty.algolingo.kb.KbRepository
-import com.tlenparty.algolingo.kb.Note
-import com.tlenparty.algolingo.kb.ui.KbListScreen
-import com.tlenparty.algolingo.kb.ui.NoteScreen
-import com.tlenparty.algolingo.lesson.ui.LessonHost
-import com.tlenparty.algolingo.progress.AppGraph
-import com.tlenparty.algolingo.progress.Catalog
-import com.tlenparty.algolingo.progress.homeModel
-import com.tlenparty.algolingo.progress.loadCatalog
-import com.tlenparty.algolingo.progress.ProgressRepository
-import com.tlenparty.algolingo.progress.routeLang
-import com.tlenparty.algolingo.progress.SD_CATALOG_PATH
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlinx.serialization.Serializable
+import com.tlenparty.algolingo.di.AppGraph
+import com.tlenparty.algolingo.home.domain.homeModel
+import com.tlenparty.algolingo.home.presentation.HomeScreen
+import com.tlenparty.algolingo.kb.data.KbRepository
+import com.tlenparty.algolingo.kb.domain.Note
+import com.tlenparty.algolingo.kb.presentation.KbListScreen
+import com.tlenparty.algolingo.kb.presentation.NoteScreen
+import com.tlenparty.algolingo.lesson.presentation.LessonHost
+import com.tlenparty.algolingo.progress.data.ProgressRepository
+import com.tlenparty.algolingo.progress.data.SD_CATALOG_PATH
+import com.tlenparty.algolingo.progress.data.loadCatalog
+import com.tlenparty.algolingo.progress.domain.Catalog
+import com.tlenparty.algolingo.progress.domain.routeLang
 
 @Serializable
 object Home

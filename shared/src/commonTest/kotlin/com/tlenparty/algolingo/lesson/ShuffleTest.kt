@@ -3,6 +3,8 @@ package com.tlenparty.algolingo.lesson
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import com.tlenparty.algolingo.lesson.domain.seedOf
+import com.tlenparty.algolingo.lesson.domain.seededShuffle
 
 class ShuffleTest {
     // captured on JVM, asserted on iOS

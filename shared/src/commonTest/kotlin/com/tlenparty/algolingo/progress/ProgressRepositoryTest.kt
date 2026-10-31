@@ -3,9 +3,6 @@ package com.tlenparty.algolingo.progress
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
 import com.tlenparty.algolingo.core.domain.CodeLang
-import com.tlenparty.algolingo.lesson.ExerciseResult
-import com.tlenparty.algolingo.lesson.Grade
-import com.tlenparty.algolingo.lesson.LessonResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,6 +22,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
+import com.tlenparty.algolingo.di.AppGraph
+import com.tlenparty.algolingo.lesson.domain.ExerciseResult
+import com.tlenparty.algolingo.lesson.domain.Grade
+import com.tlenparty.algolingo.lesson.domain.LessonResult
+import com.tlenparty.algolingo.progress.data.ProgressRepository
+import com.tlenparty.algolingo.progress.data.ProgressSerializer
+import com.tlenparty.algolingo.progress.data.decodeProgress
+import com.tlenparty.algolingo.progress.data.encodeProgress
+import com.tlenparty.algolingo.progress.data.progressStore
+import com.tlenparty.algolingo.progress.domain.LessonProgress
+import com.tlenparty.algolingo.progress.domain.Progress
 
 private class FakeStore : DataStore<Progress> {
     val state = MutableStateFlow(Progress())

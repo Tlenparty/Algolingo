@@ -1,6 +1,12 @@
 package com.tlenparty.algolingo.lesson
 
 import kotlin.test.*
+import com.tlenparty.algolingo.lesson.domain.Hole
+import com.tlenparty.algolingo.lesson.domain.Verdict
+import com.tlenparty.algolingo.lesson.domain.checkExercise
+import com.tlenparty.algolingo.lesson.domain.initialExerciseState
+import com.tlenparty.algolingo.lesson.domain.tapChip
+import com.tlenparty.algolingo.lesson.domain.tapHole
 
 class DuplicateChipTest {
     // bank: 0 mid, 1 mid, 2 "1", 3 "1"
