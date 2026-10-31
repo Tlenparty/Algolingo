@@ -33,7 +33,7 @@ Duolingo для алгоритмов: мобильный тренажёр (Andro
 | Xcode | **26.4** | iOS simulator build | This is the Xcode version tested with Kotlin 2.4.20+. A simulator is enough and needs no signing. | HIGH |
 | JDK | 17 (JetBrains Runtime bundled with Android Studio) | Gradle daemon | Android target uses `JvmTarget.JVM_11` as in the official samples. | MEDIUM |
 ### Project Template / Module Layout
-- Modules: `shared` (app logic + screens: lesson, kb, home, navigation, content loading), `design` (AlgoTheme design tokens — colors, typography, spacing, sizes, shapes — plus fonts, syntax highlight, and reusable components with no lesson/kb domain types), `androidApp`, `iosApp`. `shared` depends on `design`; `design` depends on nothing in the project. Both `shared` and `design` use `com.android.kotlin.multiplatform.library`. UI code in `shared` reads sizes and colors from `AlgoTheme.*` and does not hard-code dp/sp/`Color(0x...)`.
+- Modules: `shared` (app logic + screens: lesson, kb, home, navigation, content loading), `design` (AlgoTheme design tokens — colors, typography, spacing, sizes, shapes — plus fonts, syntax highlight, and reusable components with no lesson/kb domain types; `SyntaxLang` is its own neutral enum), `androidApp`, `iosApp`. `shared` depends on `design`; `design` depends on nothing in the project. Both `shared` and `design` use `com.android.kotlin.multiplatform.library`. UI code in `shared` reads sizes and colors from `AlgoTheme.*` and does not hard-code dp/sp/`Color(0x...)`.
 - The Android config lives in a `kotlin { androidLibrary { namespace = ...; androidResources { enable = true } } }` block. The old `androidTarget()` and `com.android.library` do not work with AGP 9.
 - `debugImplementation(uiTooling)` becomes `androidRuntimeClasspath(...)`, because the new plugin has no build variants.
 ### Supporting Libraries (the complete list)
@@ -127,7 +127,13 @@ Conventions not yet established. Will populate as patterns emerge during develop
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
 ## Architecture
 
-Architecture not yet mapped. Follow existing patterns found in the codebase.
+MVI + Clean layers inside each feature of `shared` (`lesson`, `progress`, `kb`, `home`):
+
+- `domain`: models, repository interfaces, use cases, pure rules. No Compose, serialization, IO, `data` or `presentation`.
+- `data`: DTOs (the JSON formats), repository implementations, resource and file access.
+- `presentation`: ViewModels, `*UiState` / `*Action` / `*Effect`, `*Host` composables that connect a ViewModel to a stateless `*Screen`.
+
+Shared code lives in `core` (`CodeLang`, markdown parser, inline text). `di/AppGraph.kt` wires everything by hand, `App.kt` holds only navigation. A use case exists only where there is logic to hold (`LoadLessonUseCase`, `RecordLessonResultUseCase`, `BuildHomeModelUseCase`); trivial calls go straight to the repository. `LessonReducer` is the lesson's pure state machine. `ProgressFormatTest` pins `progress.json`: users' progress depends on that exact format.
 <!-- GSD:architecture-end -->
 
 <!-- GSD:skills-start source:skills/ -->
