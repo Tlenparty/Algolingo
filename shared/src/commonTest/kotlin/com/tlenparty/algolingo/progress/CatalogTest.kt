@@ -93,7 +93,7 @@ class CatalogTest {
 
     @Test
     fun parseValidWithUnknownKeys() = assertEquals(
-        Catalog(1, listOf(CatalogEntry("l0.4", "Б"))),
+        Catalog(listOf(CatalogEntry("l0.4", "Б"))),
         parseCatalog("""{"schema":1,"extra":true,"lessons":[{"id":"l0.4","title":"Б","x":1}]}"""),
     )
 

@@ -19,13 +19,17 @@ import com.tlenparty.algolingo.lesson.presentation.isLastExercise
 import com.tlenparty.algolingo.lesson.presentation.panelModel
 import com.tlenparty.algolingo.lesson.presentation.screenKey
 import com.tlenparty.algolingo.progress.domain.Catalog
+import com.tlenparty.algolingo.lesson.data.LessonDto
+import com.tlenparty.algolingo.lesson.data.toDomain
+import com.tlenparty.algolingo.progress.data.CatalogDto
+import com.tlenparty.algolingo.progress.data.toDomain
 
 /** Seeded random action sequences over every catalog lesson: the reducer must never throw or break its invariants. */
 class LessonFuzzTest {
     private val dir = File("src/commonMain/composeResources/files/content")
     private val lessons: List<Lesson> = run {
-        val ids = Json { ignoreUnknownKeys = true }.decodeFromString<Catalog>(File(dir, "index.json").readText()).lessons.map { it.id }
-        ids.map { Json { ignoreUnknownKeys = true }.decodeFromString<Lesson>(File(dir, "lessons/$it.json").readText()) }
+        val ids = Json { ignoreUnknownKeys = true }.decodeFromString<CatalogDto>(File(dir, "index.json").readText()).toDomain().lessons.map { it.id }
+        ids.map { Json { ignoreUnknownKeys = true }.decodeFromString<LessonDto>(File(dir, "lessons/$it.json").readText()).toDomain() }
     }
 
     private fun randomAction(s: LessonState, rnd: Random, stale: ScreenKey): LessonAction {

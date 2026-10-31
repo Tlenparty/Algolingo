@@ -13,6 +13,9 @@ import com.tlenparty.algolingo.lesson.domain.LessonKind
 import com.tlenparty.algolingo.lesson.domain.MAX_DESIGN_LINE
 import com.tlenparty.algolingo.lesson.domain.Solution
 import com.tlenparty.algolingo.lesson.domain.validate
+import com.tlenparty.algolingo.lesson.data.ExerciseDto
+import com.tlenparty.algolingo.lesson.data.LessonDto
+import com.tlenparty.algolingo.lesson.data.toDomain
 
 class ModelTest {
     private fun ex(id: String, segs: List<String>, holes: List<Hole>, bank: List<Chip>) =
@@ -118,7 +121,7 @@ class ModelTest {
 
     @Test fun inlineJsonDecodes() {
         val s = """{"id":"l.e1","segments":["a(",")"],"holes":[{"ok":["X"]}],"bank":[{"text":"X"},{"text":"Z","why":"w"}]}"""
-        val e = Json { ignoreUnknownKeys = true }.decodeFromString<Exercise>(s)
+        val e = Json { ignoreUnknownKeys = true }.decodeFromString<ExerciseDto>(s).toDomain()
         assertEquals(1, e.holes.size)
         assertEquals("w", e.bank[1].why)
     }
@@ -160,12 +163,12 @@ class ModelTest {
     @Test fun defaultsAndKindDecode() {
         val j = Json { ignoreUnknownKeys = true }
         val base = """"id":"x","title":"t","statement":"s","exercises":[],"solution":{"code":"c"}"""
-        val l = j.decodeFromString<Lesson>("{$base}")
+        val l = j.decodeFromString<LessonDto>("{$base}").toDomain()
         assertEquals(LessonKind.Code, l.kind)
         assertEquals("", l.solution.time)
         assertEquals("", l.solution.space)
-        assertEquals(LessonKind.Design, j.decodeFromString<Lesson>("{\"kind\":\"design\",$base}").kind)
-        val e = j.decodeFromString<Exercise>("""{"id":"e","segments":[""],"holes":[],"bank":[]}""")
+        assertEquals(LessonKind.Design, j.decodeFromString<LessonDto>("{\"kind\":\"design\",$base}").toDomain().kind)
+        val e = j.decodeFromString<ExerciseDto>("""{"id":"e","segments":[""],"holes":[],"bank":[]}""").toDomain()
         assertEquals(null, e.title)
     }
 }

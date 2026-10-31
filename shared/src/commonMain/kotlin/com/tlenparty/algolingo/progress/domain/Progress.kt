@@ -5,27 +5,23 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlinx.serialization.Serializable
 import com.tlenparty.algolingo.lesson.domain.Grade
 import com.tlenparty.algolingo.lesson.domain.LessonResult
 import com.tlenparty.algolingo.lesson.domain.xpFor
-import com.tlenparty.algolingo.progress.data.CodeLangSerializer
 
 // Pure progress engine: no IO, no clock reads. `today` is always injected.
 
 /** One versioned document. A key in [lessons] means the lesson was completed at least once. */
-@Serializable
 data class Progress(
     val schemaVersion: Int = PROGRESS_SCHEMA,
     val xp: Int = 0,
     val streak: Int = 0,
     val lastActiveDay: LocalDate? = null,
     val lessons: Map<String, LessonProgress> = emptyMap(),
-    @Serializable(with = CodeLangSerializer::class) val lang: CodeLang = CodeLang.Kotlin,
+    val lang: CodeLang = CodeLang.Kotlin,
 )
 
 /** Leitner position. due == null means mastered. */
-@Serializable
 data class LessonProgress(val step: Int = 0, val due: LocalDate? = null)
 
 const val PROGRESS_SCHEMA = 1

@@ -1,17 +1,33 @@
 package com.tlenparty.algolingo.progress.data
 
 import algolingo.shared.generated.resources.Res
-import kotlinx.coroutines.CancellationException
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
 import com.tlenparty.algolingo.progress.domain.Catalog
 import com.tlenparty.algolingo.progress.domain.CatalogEntry
+import kotlinx.coroutines.CancellationException
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+
+/** files/content/index.json. The generator writes the same format. */
+@Serializable
+data class CatalogEntryDto(
+    val id: String,
+    val title: String,
+    val caption: String? = null,
+    /** CodeLang ids this lesson ships in; the generator adds "python" when a py sidecar exists. */
+    val langs: List<String> = listOf("kotlin"),
+)
+
+@Serializable
+data class CatalogDto(val schema: Int = 1, val lessons: List<CatalogEntryDto> = emptyList())
+
+fun CatalogDto.toDomain() = Catalog(lessons.map { CatalogEntry(it.id, it.title, it.caption, it.langs) })
 
 private val json = Json { ignoreUnknownKeys = true }
 
 /** Null on any bad input; never throws. A repeated id keeps its first entry (Home's list keys must be unique). */
 fun parseCatalog(text: String): Catalog? = try {
-    json.decodeFromString(Catalog.serializer(), text).let { it.copy(lessons = it.lessons.distinctBy(CatalogEntry::id)) }
+    json.decodeFromString(CatalogDto.serializer(), text).toDomain().let { it.copy(lessons = it.lessons.distinctBy(CatalogEntry::id)) }
 } catch (_: SerializationException) {
     null
 } catch (_: IllegalArgumentException) {

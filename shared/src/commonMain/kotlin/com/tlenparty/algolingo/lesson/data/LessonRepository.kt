@@ -13,7 +13,7 @@ private val json = Json { ignoreUnknownKeys = true }
 /** Malformed-content boundary: decode + validate, never throws on bad input. */
 fun parseLesson(text: String): Result<Lesson> {
     val lesson = try {
-        json.decodeFromString<Lesson>(text)
+        json.decodeFromString<LessonDto>(text).toDomain()
     } catch (e: SerializationException) {
         return Result.failure(e)
     } catch (e: IllegalArgumentException) {

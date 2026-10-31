@@ -2,10 +2,8 @@ package com.tlenparty.algolingo.progress.domain
 
 import com.tlenparty.algolingo.core.domain.CodeLang
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.Serializable
 
-/** files/content/index.json: lessons in unlock order. Phase 5's generator writes the same format. */
-@Serializable
+/** Lessons of one track, in unlock order. */
 data class CatalogEntry(
     val id: String,
     val title: String,
@@ -17,8 +15,7 @@ data class CatalogEntry(
     fun has(lang: CodeLang?) = lang == null || lang.id in langs
 }
 
-@Serializable
-data class Catalog(val schema: Int = 1, val lessons: List<CatalogEntry> = emptyList())
+data class Catalog(val lessons: List<CatalogEntry> = emptyList())
 
 /** Soon = not shipped in the selected language yet. */
 enum class LessonStatus { Done, Available, Locked, Soon }

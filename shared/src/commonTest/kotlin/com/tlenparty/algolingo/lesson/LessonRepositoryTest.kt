@@ -34,14 +34,14 @@ class LessonRepositoryTest {
 
     @Test fun validateFailure() {
         val bad = lesson(ex("x.1", 1).copy(segments = listOf("only")))
-        val r = parseLesson(Json.encodeToString(bad))
+        val r = parseLesson(Json.encodeToString(bad.toDto()))
         assertTrue(r.isFailure)
         assertTrue(r.exceptionOrNull()!!.message!!.contains("need holes+1"))
     }
 
     @Test fun validRoundtripIgnoresUnknownKeys() {
         val l = lesson()
-        val text = Json.encodeToString(l).replaceFirst("{", "{\"extra\":1,")
+        val text = Json.encodeToString(l.toDto()).replaceFirst("{", "{\"extra\":1,")
         assertEquals(l, parseLesson(text).getOrThrow())
     }
 
