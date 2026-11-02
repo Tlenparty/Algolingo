@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "id": "l3.2",
+  "level": 3,
+  "title": "Корректность скобок",
+  "statement": "Строка из `()[]{}` — правильная ли вложенность?",
+  "trains": "стек открытых + карта «закрывающая → открывающая»",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда стек",
+      "signals": [
+        "Скобки, теги, любая вложенность",
+        "«Последний открытый закрывается первым»",
+        "Сверить пару с самым свежим открытым"
+      ],
+      "body": "Стек хранит открытые скобки, которые ждут пару. Закрывающая всегда сверяется с самой свежей открытой — это вершина стека. Каждый символ кладём и снимаем не больше раза: O(n) по времени, O(n) по памяти."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "// закрывающая -> открывающая\nval pairs = mapOf(')' to '(', ']' to '[', '}' to '{')\nval stack = ArrayDeque<Char>()\nfor (char in s) {\n    // открывающая: в стек\n    if (char in pairs.values) stack.addLast(char)\n    // закрывающая: снять и сверить\n    else if (char in pairs.keys) {\n        if (stack.isEmpty() || stack.removeLast() != pairs[char]) return false\n    }\n}\n// все открытые закрылись\nreturn stack.isEmpty()",
+      "body": "Карта `pairs` хранит «закрывающая → открывающая»: ключи — закрывающие, значения — открывающие, а `pairs[char]` сразу даёт, кого ждём на вершине. `ArrayDeque` как стек: `addLast` кладёт, `removeLast` снимает. Проверка `stack.isEmpty()` стоит первой: на пустом стеке `removeLast()` упадёт."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Забыть финальное `stack.isEmpty()`: `\"(\"` → `true`, хотя скобка не закрыта",
+        "Снять вершину, не проверив пустоту: `\")\"` → `NoSuchElementException`",
+        "`removeFirst()` вместо `removeLast()` — это очередь: `\"([)]\"` → `true`",
+        "`last()` вместо `removeLast()`: вершину посмотрели, но не сняли: `\"()\"` → `false`",
+        "`&&` вместо `||`: на непустом стеке условие сразу ложно, вершина не снимается"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l3.2.e1",
+      "segments": [
+        "// Случай 1: \"()[]{}\" → true\n// Случай 2: \"([)]\" → false\n// Случай 3: \"(\" → false\nfun isValidBrackets(s: String): Boolean {\n    // открытые, ждущие пары\n    val stack = ArrayDeque<Char>()\n    // закрывающая -> открывающая\n    val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')\n    for (char in s) {\n        // открывающая: в стек\n        if (char in pairs.values) stack.addLast(char)\n        // закрывающая: сверяем с вершиной\n        else if (char in pairs.keys) {\n            if (stack.isEmpty() || stack.removeLast() != pairs[char]) return false\n        }\n    }\n    // все открытые закрылись\n    return ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "stack.isEmpty()"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "stack.isEmpty()"
+        },
+        {
+          "text": "true",
+          "why": "незакрытые открывающие так и остались в стеке: `\"(\"` → `true` вместо `false`"
+        },
+        {
+          "text": "stack.isNotEmpty()",
+          "why": "условие наоборот, правильная строка оставляет стек пустым: `\"()\"` → `false` вместо `true`"
+        },
+        {
+          "text": "false",
+          "why": "ответ `false` для любого входа: `\"()\"` → `false` вместо `true`"
+        },
+        {
+          "text": "stack.size",
+          "why": "функция возвращает `Boolean`, а `stack.size` — `Int`: `return stack.size` не скомпилируется"
+        }
+      ],
+      "hints": [
+        "Цикл прошёл без ошибок. Но что, если какая-то открывающая так и не закрылась?"
+      ]
+    },
+    {
+      "id": "l3.2.e2",
+      "segments": [
+        "// Случай 1: \"()[]{}\" → true\n// Случай 2: \"([)]\" → false\n// Случай 3: \"(\" → false\nfun isValidBrackets(s: String): Boolean {\n    // открытые, ждущие пары\n    val stack = ArrayDeque<Char>()\n    // закрывающая -> открывающая\n    val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')\n    for (char in s) {\n        // открывающая: в стек\n        if (char in ",
+        ") stack.addLast(char)\n        // закрывающая: сверяем с вершиной\n        else if (char in pairs.keys) {\n            if (stack.isEmpty() || stack.removeLast() != ",
+        ") return false\n        }\n    }\n    // все открытые закрылись\n    return stack.isEmpty()\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "pairs.values"
+          ],
+          "wrongWhy": {
+            "pairs[char]": "`pairs[char]` — один `Char?`, а не набор, `in` к нему не применить: `char in pairs[char]` не скомпилируется",
+            "pairs.keys": "ключи карты — закрывающие: в стек пойдут они, а открывающие пропустим: `\"()\"` → `false` вместо `true`",
+            "char": "символ — не набор, искать в нём нельзя: `char in char` не скомпилируется",
+            "pairs.values()": "в Kotlin `values` — свойство, а не функция: `char in pairs.values()` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "pairs[char]"
+          ],
+          "wrongWhy": {
+            "pairs.values": "символ не сравнить с коллекцией: `stack.removeLast() != pairs.values` не скомпилируется",
+            "pairs.keys": "символ не сравнить с коллекцией: `stack.removeLast() != pairs.keys` не скомпилируется",
+            "char": "на вершине открывающая, а `char` — закрывающая, они никогда не равны: `\"()\"` → `false` вместо `true`",
+            "pairs.values()": "в Kotlin `values` — свойство, а не функция: `stack.removeLast() != pairs.values()` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "pairs.values"
+        },
+        {
+          "text": "pairs[char]"
+        },
+        {
+          "text": "pairs.keys"
+        },
+        {
+          "text": "char"
+        },
+        {
+          "text": "pairs.values()"
+        }
+      ],
+      "hints": [
+        "В `pairs` ключи — закрывающие, значения — открывающие. Где искать открывающую?",
+        "На вершине лежит открывающая. Какую открывающую ждёт закрывающая `char`?"
+      ]
+    },
+    {
+      "id": "l3.2.e3",
+      "segments": [
+        "// Случай 1: \"()[]{}\" → true\n// Случай 2: \"([)]\" → false\n// Случай 3: \"(\" → false\nfun isValidBrackets(s: String): Boolean {\n    // открытые, ждущие пары\n    val stack = ArrayDeque<Char>()\n    // закрывающая -> открывающая\n    val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')\n    for (char in s) {\n        // открывающая: в стек\n        if (char in pairs.values) stack.addLast(char)\n        // закрывающая: сверяем с вершиной\n        else if (char in pairs.keys) {\n            if (stack.isEmpty() ",
+        " ",
+        " != pairs[char]) return false\n        }\n    }\n    // все открытые закрылись\n    return ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "||"
+          ],
+          "wrongWhy": {
+            "&&": "на непустом стеке `&&` сразу даёт `false`, вершина не снимается: `\"()\"` → `false` вместо `true`",
+            "stack.removeLast()": "между двумя условиями нужен оператор: `stack.isEmpty() stack.removeLast()` не скомпилируется",
+            "stack.isEmpty()": "между двумя условиями нужен оператор: `stack.isEmpty() stack.isEmpty()` не скомпилируется",
+            "stack.removeFirst()": "между двумя условиями нужен оператор: `stack.isEmpty() stack.removeFirst()` не скомпилируется",
+            "stack.last()": "между двумя условиями нужен оператор: `stack.isEmpty() stack.last()` не скомпилируется",
+            "true": "между двумя условиями нужен оператор: `stack.isEmpty() true` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "stack.removeLast()"
+          ],
+          "wrongWhy": {
+            "||": "два оператора подряд: `stack.isEmpty() || || != pairs[char]` не скомпилируется",
+            "&&": "два оператора подряд: `stack.isEmpty() || && != pairs[char]` не скомпилируется",
+            "stack.isEmpty()": "`Boolean` не сравнить с `Char?`: `stack.isEmpty() != pairs[char]` не скомпилируется",
+            "true": "`Boolean` не сравнить с `Char?`: `true != pairs[char]` не скомпилируется",
+            "stack.removeFirst()": "снимаем самую старую открытую, а не самую свежую — это очередь: `\"([)]\"` → `true` вместо `false`",
+            "stack.last()": "`last()` смотрит на вершину, но не снимает её: `\"()\"` → `false` вместо `true`"
+          }
+        },
+        {
+          "ok": [
+            "stack.isEmpty()"
+          ],
+          "wrongWhy": {
+            "||": "оператор — не значение: `return ||` не скомпилируется",
+            "&&": "оператор — не значение: `return &&` не скомпилируется",
+            "stack.removeLast()": "функция возвращает `Boolean`, а это `Char`: `return stack.removeLast()` не скомпилируется",
+            "stack.removeFirst()": "функция возвращает `Boolean`, а это `Char`: `return stack.removeFirst()` не скомпилируется",
+            "stack.last()": "функция возвращает `Boolean`, а это `Char`: `return stack.last()` не скомпилируется",
+            "true": "незакрытые открывающие так и остались в стеке: `\"(\"` → `true` вместо `false`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "||"
+        },
+        {
+          "text": "stack.removeLast()"
+        },
+        {
+          "text": "stack.isEmpty()"
+        },
+        {
+          "text": "&&"
+        },
+        {
+          "text": "stack.removeFirst()"
+        },
+        {
+          "text": "stack.last()"
+        },
+        {
+          "text": "true"
+        }
+      ],
+      "hints": [
+        "Пустой стек — уже ошибка, вершину тогда не трогаем. Какой оператор не вычислит правую часть, если левая истинна?",
+        "Закрывающая закрывает самую свежую открытую. Её надо снять со стека, а не только посмотреть.",
+        "В конце в стеке не должно остаться открытых."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "// Случай 1: \"()[]{}\" → true\n// Случай 2: \"([)]\" → false\n// Случай 3: \"(\" → false\nfun isValidBrackets(s: String): Boolean {\n    // открытые, ждущие пары\n    val stack = ArrayDeque<Char>()\n    // закрывающая -> открывающая\n    val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')\n    for (char in s) {\n        // открывающая: в стек\n        if (char in pairs.values) stack.addLast(char)\n        // закрывающая: сверяем с вершиной\n        else if (char in pairs.keys) {\n            if (stack.isEmpty() || stack.removeLast() != pairs[char]) return false\n        }\n    }\n    // все открытые закрылись\n    return stack.isEmpty()\n}",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "Забыть финальную проверку `stack.isEmpty()`: `\"(\"` ошибочно пройдёт как валидная",
+      "Снимать вершину без проверки на пустоту: `\")\"` → падение на пустом стеке",
+      "`removeFirst()` вместо `removeLast()` — это уже очередь: `\"([)]\"` пройдёт как валидная"
+    ],
+    "variations": []
+  }
+}

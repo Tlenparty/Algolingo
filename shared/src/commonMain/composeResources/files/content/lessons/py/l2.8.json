@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "id": "l2.8",
+  "level": 2,
+  "title": "Подстрока без повторов",
+  "statement": "Верни длину самой длинной подстроки без повторяющихся символов (LeetCode 3).",
+  "trains": "скользящее окно переменной длины + словарь последних позиций",
+  "targetTimeSec": 480,
+  "theory": [
+    {
+      "title": "Когда окно переменной длины",
+      "signals": [
+        "Подряд идущий отрезок: подстрока или подсписок",
+        "«Самый длинный такой, что…» — условие на всё окно",
+        "Нарушение чинится сдвигом левой границы"
+      ],
+      "body": "Правая граница `right` идёт по строке и расширяет окно. Если новый символ уже есть внутри окна, левая граница `left` прыгает сразу за его прошлую позицию. Обе границы двигаются только вперёд, поэтому O(n)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "# символ -> последний индекс\nlast_index = {}\nleft = 0\nfor right, ch in enumerate(s):\n    # повтор внутри окна: ужимаем\n    if (ch in last_index\n            and last_index[ch] >= left):\n        left = last_index[ch] + 1\n    last_index[ch] = right\n    # окно left..right без повторов",
+      "body": "`enumerate(s)` даёт пары «индекс, символ». Длина окна `left..right` — это `right - left + 1`: обе границы входят в окно."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Без `last_index[ch] >= left` старая позиция за окном тянет `left` назад: `\"abba\"` → `3` вместо `2`",
+        "`left = last_index[ch]`: повтор остаётся в окне: `\"aa\"` → `2` вместо `1`",
+        "Длина `right - left` без `+ 1`: `\"a\"` → `0` вместо `1`",
+        "`for right, ch in s`: строка даёт символы, а не пары: `\"abc\"` → `ValueError`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.8.e1",
+      "segments": [
+        "# Случай 1: \"abcabcbb\" → 3 (\"abc\")\n# Случай 2: \"bbbbb\" → 1 (\"b\")\n# Случай 3: \"pwwkew\" → 3 (\"wke\")\ndef longest_unique(s: str) -> int:\n    # символ -> последний индекс\n    last_index = {}\n    # левая граница окна\n    left = 0\n    # лучшая длина пока что\n    best = 0\n    # правая граница идёт по строке\n    for right, ch in enumerate(s):\n        # повтор внутри окна: ужимаем\n        if ch in last_index and ",
+        ":\n            left = last_index[ch] + 1\n        last_index[ch] = right\n        # длина окна left..right\n        best = max(best, right - left + 1)\n    return best"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "last_index[ch] >= left"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "last_index[ch] >= left"
+        },
+        {
+          "text": "True",
+          "why": "старая позиция символа за окном тянет `left` назад: `\"abba\"` → `3` вместо `2`: на втором `a` окно снова захватывает `bba`"
+        },
+        {
+          "text": "last_index[ch] > left",
+          "why": "повтор на самой левой границе окна не ловится: `\"aa\"` → `2` вместо `1`"
+        }
+      ],
+      "hints": [
+        "Символ мог встречаться раньше, но уже **за** левой границей. Тогда окно трогать не надо."
+      ]
+    },
+    {
+      "id": "l2.8.e2",
+      "segments": [
+        "# Случай 1: \"abcabcbb\" → 3 (\"abc\")\n# Случай 2: \"bbbbb\" → 1 (\"b\")\n# Случай 3: \"pwwkew\" → 3 (\"wke\")\ndef longest_unique(s: str) -> int:\n    # символ -> последний индекс\n    last_index = {}\n    # левая граница окна\n    left = 0\n    # лучшая длина пока что\n    best = 0\n    # правая граница идёт по строке\n    for right, ch in enumerate(s):\n        # повтор внутри окна: ужимаем\n        if ch in last_index and last_index[ch] >= left:\n            left = ",
+        "\n        last_index[ch] = right\n        # длина окна left..right\n        best = max(best, ",
+        ")\n    return best"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "last_index[ch] + 1"
+          ],
+          "wrongWhy": {
+            "right - left + 1": "это длина окна, а не новая левая граница: `\"aab\"` → `1` вместо `2`",
+            "right - left": "это длина окна без `+ 1`, а не новая левая граница: `\"aaa\"` → `2` вместо `1`"
+          }
+        },
+        {
+          "ok": [
+            "right - left + 1"
+          ],
+          "wrongWhy": {
+            "last_index[ch] + 1": "строкой выше `last_index[ch]` стал `right`, выходит `right + 1` — весь префикс: `\"aa\"` → `2` вместо `1`",
+            "last_index[ch]": "строкой выше `last_index[ch]` стал `right`, выходит длина префикса без `+ 1`: `\"a\"` → `0` вместо `1`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "last_index[ch] + 1"
+        },
+        {
+          "text": "right - left + 1"
+        },
+        {
+          "text": "last_index[ch]",
+          "why": "`left` встаёт на старый повтор, и он остаётся в окне: `\"aa\"` → `2` вместо `1`"
+        },
+        {
+          "text": "right - left",
+          "why": "обе границы входят в окно, без `+ 1` длина меньше на один: `\"a\"` → `0` вместо `1`"
+        }
+      ],
+      "hints": [
+        "Повтор стоит на позиции `last_index[ch]`. Где должно начаться окно, чтобы его там уже не было?",
+        "В окне `left..right` обе границы считаются. Сколько это символов?"
+      ]
+    },
+    {
+      "id": "l2.8.e3",
+      "segments": [
+        "# Случай 1: \"abcabcbb\" → 3 (\"abc\")\n# Случай 2: \"bbbbb\" → 1 (\"b\")\n# Случай 3: \"pwwkew\" → 3 (\"wke\")\ndef longest_unique(s: str) -> int:\n    # символ -> последний индекс\n    last_index = {}\n    # левая граница окна\n    left = 0\n    # лучшая длина пока что\n    best = 0\n    # правая граница идёт по строке\n    for right, ch in ",
+        ":\n        # повтор внутри окна: ужимаем\n        if ch in last_index and ",
+        ":\n            left = last_index[ch] + 1\n        last_index[ch] = ",
+        "\n        # длина окна left..right\n        best = max(best, right - left + 1)\n    return best"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "enumerate(s)"
+          ],
+          "wrongWhy": {
+            "last_index[ch] >= left": "`ch` появится только в цикле, здесь его ещё нет: `\"a\"` → `UnboundLocalError`",
+            "last_index[ch] > left": "`ch` появится только в цикле, здесь его ещё нет: `\"a\"` → `UnboundLocalError`",
+            "right": "`right` появится только в цикле, здесь его ещё нет: `\"a\"` → `UnboundLocalError`",
+            "left": "по числу не пройти циклом: `\"a\"` → `TypeError: 'int' object is not iterable`"
+          }
+        },
+        {
+          "ok": [
+            "last_index[ch] >= left"
+          ],
+          "wrongWhy": {
+            "enumerate(s)": "объект `enumerate` всегда истинен, проверки окна нет: `\"abba\"` → `3` вместо `2`",
+            "s": "непустая строка всегда истинна, проверки окна нет: `\"abba\"` → `3` вместо `2`",
+            "range(len(s))": "непустой `range` всегда истинен, проверки окна нет: `\"abba\"` → `3` вместо `2`",
+            "right": "у повтора `right ≥ 1`, это всегда истина, проверки окна нет: `\"abba\"` → `3` вместо `2`",
+            "left": "пока `left == 0`, условие ложно и окно не ужимается: `\"aa\"` → `2` вместо `1`"
+          }
+        },
+        {
+          "ok": [
+            "right"
+          ],
+          "wrongWhy": {
+            "enumerate(s)": "в словаре окажется объект `enumerate`, а не число, и `>=` с ним падает: `\"aa\"` → `TypeError`",
+            "s": "в словаре окажется строка, а не число, и `>=` с ней падает: `\"aa\"` → `TypeError`",
+            "range(len(s))": "в словаре окажется `range`, а не число, и `>=` с ним падает: `\"aa\"` → `TypeError`",
+            "last_index[ch] >= left": "нового символа в словаре ещё нет, а его уже читают: `\"a\"` → `KeyError: 'a'`",
+            "last_index[ch] > left": "нового символа в словаре ещё нет, а его уже читают: `\"a\"` → `KeyError: 'a'`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "enumerate(s)"
+        },
+        {
+          "text": "last_index[ch] >= left"
+        },
+        {
+          "text": "right"
+        },
+        {
+          "text": "s",
+          "why": "строка даёт символы, а не пары «индекс, символ»: `\"abc\"` → `ValueError: not enough values to unpack`"
+        },
+        {
+          "text": "range(len(s))",
+          "why": "`range` даёт числа, их не разложить на два имени: `\"abc\"` → `TypeError: cannot unpack non-iterable int object`"
+        },
+        {
+          "text": "last_index[ch] > left",
+          "why": "повтор на самой левой границе окна не ловится: `\"aa\"` → `2` вместо `1`"
+        },
+        {
+          "text": "left",
+          "why": "запоминаем не позицию символа, а границу окна: `\"abab\"` → `3` вместо `2`"
+        }
+      ],
+      "hints": [
+        "`for right, ch in ...` ждёт пары «индекс, символ».",
+        "Символ мог встречаться раньше, но уже **за** левой границей. Тогда окно трогать не надо.",
+        "Для символа запоминаем, где он встретился последним."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "# Случай 1: \"abcabcbb\" → 3 (\"abc\")\n# Случай 2: \"bbbbb\" → 1 (\"b\")\n# Случай 3: \"pwwkew\" → 3 (\"wke\")\ndef longest_unique(s: str) -> int:\n    # символ -> последний индекс\n    last_index = {}\n    # левая граница окна\n    left = 0\n    # лучшая длина пока что\n    best = 0\n    # правая граница идёт по строке\n    for right, ch in enumerate(s):\n        # повтор внутри окна: ужимаем\n        if ch in last_index and last_index[ch] >= left:\n            left = last_index[ch] + 1\n        last_index[ch] = right\n        # длина окна left..right\n        best = max(best, right - left + 1)\n    return best",
+    "time": "O(n)",
+    "space": "O(k)",
+    "pitfalls": [
+      "Без `last_index[ch] >= left` старая позиция за окном тянет `left` назад: `\"abba\"` → `3` вместо `2`",
+      "`last_index[ch]` без проверки `ch in last_index` падает с `KeyError` на новом символе",
+      "`left = last_index[ch]` без `+ 1`: повтор остаётся в окне",
+      "Длина окна `left..right` — `right - left + 1`, обе границы входят"
+    ],
+    "variations": [
+      "`last_index.get(ch, -1) >= left` — то же условие без отдельной проверки `in`",
+      "множество `seen` + `while s[right] in seen`: убираем символы слева по одному — тоже O(n), но левая граница шагает, а не прыгает",
+      "в лоб: перебор всех подстрок и `len(set(sub)) == len(sub)` — O(n³)"
+    ]
+  }
+}

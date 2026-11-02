@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "id": "l3.2",
+  "level": 3,
+  "title": "Корректность скобок",
+  "statement": "Строка из `()[]{}` — правильная ли вложенность? Каждая открывающая закрыта своей и в правильном порядке; верни `True`/`False` (LeetCode 20).",
+  "trains": "стек на `list` + словарь «закрывающая → открывающая»",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда стек",
+      "signals": [
+        "Скобки, теги, любая вложенность",
+        "«Последний открытый закрывается первым»",
+        "Сверить пару с самым свежим открытым"
+      ],
+      "body": "Стек хранит открытые скобки, которые ждут пару. Закрывающая всегда сверяется с самой свежей открытой — это вершина стека. В Python стек — обычный `list`: `append` кладёт на вершину, `pop()` снимает с неё, оба за O(1). Итого O(n) по времени, O(n) по памяти."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "stack = []\nfor ch in s:\n    # открывающая: в стек\n    if ch in opens:\n        stack.append(ch)\n    # закрывающая: снять и сверить\n    elif ch in pairs:\n        if not stack or stack.pop() != pairs[ch]:\n            return False\n# все открытые закрылись\nreturn not stack",
+      "body": "Словарь `pairs` хранит «закрывающая → открывающая»: `ch in pairs` ищет среди ключей — закрывающих, `opens` — это `pairs.values()`, а `pairs[ch]` сразу даёт, кого ждём на вершине. `not stack` — пустой список ложен, так что это «стек пуст»."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Вернуть `True` в конце: `\"(\"` → `True`, хотя скобка не закрыта",
+        "`stack.pop()` на пустом стеке: `\")\"` → `IndexError: pop from empty list`, поэтому сначала `not stack or`",
+        "`stack.pop(0)` — это очередь: `\"([)]\"` → `True`",
+        "`stack[-1]` только смотрит на вершину и не снимает её: `\"()\"` → `False`",
+        "`pairs.values` без скобок — сам метод: `ch in pairs.values` падает с `TypeError`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l3.2.e1",
+      "segments": [
+        "# Случай 1: \"()[]{}\" → True\n# Случай 2: \"([)]\" → False\n# Случай 3: \"(\" → False\ndef is_valid_brackets(s: str) -> bool:\n    # открытые, ждущие пары\n    stack = []\n    # закрывающая -> открывающая\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    for ch in s:\n        # открывающая: в стек\n        if ch in pairs.values():\n            stack.append(ch)\n        # закрывающая: сверяем с вершиной\n        elif ch in pairs:\n            if not stack or stack.pop() != pairs[ch]:\n                return False\n    # все открытые закрылись\n    return ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "not stack"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "not stack"
+        },
+        {
+          "text": "True",
+          "why": "незакрытые открывающие так и остались в стеке: `\"(\"` → `True` вместо `False`"
+        },
+        {
+          "text": "bool(stack)",
+          "why": "условие наоборот, правильная строка оставляет стек пустым: `\"()\"` → `False` вместо `True`"
+        },
+        {
+          "text": "stack",
+          "why": "вернём сам список, а не `bool`: `\"()\"` → `[]` вместо `True`"
+        },
+        {
+          "text": "len(stack)",
+          "why": "вернём число, а не `bool`, да ещё с обратным смыслом: `\"()\"` → `0` вместо `True`"
+        }
+      ],
+      "hints": [
+        "Цикл прошёл без ошибок. Но что, если какая-то открывающая так и не закрылась?"
+      ]
+    },
+    {
+      "id": "l3.2.e2",
+      "segments": [
+        "# Случай 1: \"()[]{}\" → True\n# Случай 2: \"([)]\" → False\n# Случай 3: \"(\" → False\ndef is_valid_brackets(s: str) -> bool:\n    # открытые, ждущие пары\n    stack = []\n    # закрывающая -> открывающая\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    for ch in s:\n        # открывающая: в стек\n        if ch in ",
+        ":\n            stack.append(ch)\n        # закрывающая: сверяем с вершиной\n        elif ch in pairs:\n            if not stack or stack.pop() != ",
+        ":\n                return False\n    # все открытые закрылись\n    return not stack"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "pairs.values()"
+          ],
+          "wrongWhy": {
+            "pairs[ch]": "у открывающей нет ключа в `pairs`: `\"()\"` → `KeyError: '('`",
+            "pairs": "`in pairs` ищет среди ключей — закрывающих: в стек пойдут они, а открывающие пропустим: `\"()\"` → `False` вместо `True`",
+            "ch": "`ch in ch` всегда истинно, в стек идёт каждый символ: `\"()\"` → `False` вместо `True`",
+            "pairs.values": "без скобок это сам метод, по нему не пройти `in`: `\"()\"` → `TypeError: argument of type 'builtin_function_or_method' is not iterable`"
+          }
+        },
+        {
+          "ok": [
+            "pairs[ch]"
+          ],
+          "wrongWhy": {
+            "pairs.values()": "символ никогда не равен набору значений словаря: `\"()\"` → `False` вместо `True`",
+            "pairs": "символ никогда не равен словарю: `\"()\"` → `False` вместо `True`",
+            "ch": "на вершине открывающая, а `ch` — закрывающая, они никогда не равны: `\"()\"` → `False` вместо `True`",
+            "pairs.values": "символ никогда не равен методу: `\"()\"` → `False` вместо `True`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "pairs.values()"
+        },
+        {
+          "text": "pairs[ch]"
+        },
+        {
+          "text": "pairs"
+        },
+        {
+          "text": "ch"
+        },
+        {
+          "text": "pairs.values"
+        }
+      ],
+      "hints": [
+        "В `pairs` ключи — закрывающие, значения — открывающие. Где искать открывающую?",
+        "На вершине лежит открывающая. Какую открывающую ждёт закрывающая `ch`?"
+      ]
+    },
+    {
+      "id": "l3.2.e3",
+      "segments": [
+        "# Случай 1: \"()[]{}\" → True\n# Случай 2: \"([)]\" → False\n# Случай 3: \"(\" → False\ndef is_valid_brackets(s: str) -> bool:\n    # открытые, ждущие пары\n    stack = []\n    # закрывающая -> открывающая\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    for ch in s:\n        # открывающая: в стек\n        if ch in pairs.values():\n            stack.append(ch)\n        # закрывающая: сверяем с вершиной\n        elif ch in pairs:\n            if not stack ",
+        " ",
+        " != pairs[ch]:\n                return False\n    # все открытые закрылись\n    return ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "or"
+          ],
+          "wrongWhy": {
+            "and": "на непустом стеке `and` сразу даёт `False`, вершина не снимается: `\"()\"` → `False` вместо `True`",
+            "stack.pop()": "между двумя условиями нужен оператор: `not stack stack.pop()` — `SyntaxError`",
+            "not stack": "между двумя условиями нужен оператор: `not stack not stack` — `SyntaxError`",
+            "stack.pop(0)": "между двумя условиями нужен оператор: `not stack stack.pop(0)` — `SyntaxError`",
+            "stack[-1]": "между двумя условиями нужен оператор: `not stack stack[-1]` — `SyntaxError`",
+            "True": "между двумя условиями нужен оператор: `not stack True` — `SyntaxError`"
+          }
+        },
+        {
+          "ok": [
+            "stack.pop()"
+          ],
+          "wrongWhy": {
+            "or": "два оператора подряд: `not stack or or != pairs[ch]` — `SyntaxError`",
+            "and": "два оператора подряд: `not stack or and != pairs[ch]` — `SyntaxError`",
+            "not stack": "`not stack != pairs[ch]` читается как `not (stack != pairs[ch])`, это всегда `False`, и вершина не снимается: `\"()\"` → `False` вместо `True`",
+            "True": "`True != pairs[ch]` всегда истинно, любая закрывающая — ошибка: `\"()\"` → `False` вместо `True`",
+            "stack.pop(0)": "снимаем самую старую открытую, а не самую свежую — это очередь: `\"([)]\"` → `True` вместо `False`",
+            "stack[-1]": "`stack[-1]` смотрит на вершину, но не снимает её: `\"()\"` → `False` вместо `True`"
+          }
+        },
+        {
+          "ok": [
+            "not stack"
+          ],
+          "wrongWhy": {
+            "or": "оператор — не значение: `return or` — `SyntaxError`",
+            "and": "оператор — не значение: `return and` — `SyntaxError`",
+            "stack.pop()": "на пустом стеке снимать нечего: `\"\"` → `IndexError: pop from empty list`",
+            "stack.pop(0)": "на пустом стеке снимать нечего: `\"\"` → `IndexError: pop from empty list`",
+            "stack[-1]": "у пустого списка нет вершины: `\"\"` → `IndexError: list index out of range`",
+            "True": "незакрытые открывающие так и остались в стеке: `\"(\"` → `True` вместо `False`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "or"
+        },
+        {
+          "text": "stack.pop()"
+        },
+        {
+          "text": "not stack"
+        },
+        {
+          "text": "and"
+        },
+        {
+          "text": "stack.pop(0)"
+        },
+        {
+          "text": "stack[-1]"
+        },
+        {
+          "text": "True"
+        }
+      ],
+      "hints": [
+        "Пустой стек — уже ошибка, вершину тогда не трогаем. Какой оператор не вычислит правую часть, если левая истинна?",
+        "Закрывающая закрывает самую свежую открытую. Её надо снять со стека, а не только посмотреть.",
+        "В конце в стеке не должно остаться открытых."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "# Случай 1: \"()[]{}\" → True\n# Случай 2: \"([)]\" → False\n# Случай 3: \"(\" → False\ndef is_valid_brackets(s: str) -> bool:\n    # открытые, ждущие пары\n    stack = []\n    # закрывающая -> открывающая\n    pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    for ch in s:\n        # открывающая: в стек\n        if ch in pairs.values():\n            stack.append(ch)\n        # закрывающая: сверяем с вершиной\n        elif ch in pairs:\n            if not stack or stack.pop() != pairs[ch]:\n                return False\n    # все открытые закрылись\n    return not stack",
+    "time": "O(n)",
+    "space": "O(n)",
+    "pitfalls": [
+      "Забыть финальную проверку `not stack`: `\"(\"` ошибочно пройдёт как валидная",
+      "`stack.pop()` без проверки на пустоту: `\")\"` → `IndexError: pop from empty list`",
+      "`stack.pop(0)` снимает первый элемент — это уже очередь, да ещё O(n): `\"([)]\"` пройдёт как валидная",
+      "`ch in pairs` проверяет ключи, то есть закрывающие; открывающие — это `pairs.values()`"
+    ],
+    "variations": [
+      "`if ch in \"([{\"` вместо `ch in pairs.values()` — короче, но второй источник правды о скобках",
+      "`collections.deque` вместо `list` — тоже стек (`append`/`pop`), но `list` здесь хватает",
+      "в лоб: вычёркивать `\"()\"`, `\"[]\"`, `\"{}\"` через `replace`, пока строка меняется, — верно, но O(n²)"
+    ]
+  }
+}

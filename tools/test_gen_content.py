@@ -150,7 +150,8 @@ class NoteParserGolden(unittest.TestCase):
         ])
         self.assertEqual(s["variations"], [])
         self.assertEqual(len(s["hints"]), 1)
-        self.assertTrue(s["code"].startswith("fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n"))
+        self.assertTrue(s["code"].startswith("// Случай 1: [1, 2, 3] → (6, 3)\n"))
+        self.assertIn("\nfun sumAndMax(nums: IntArray): Pair<Int, Int> {\n", s["code"])
         self.assertIn("        if (num > max) max = num\n", s["code"])
 
     def test_0_2(self):
@@ -163,7 +164,8 @@ class NoteParserGolden(unittest.TestCase):
         self.assertEqual(s["variations"], [
             "проверка палиндрома — тот же скелет, но вместо swap сравниваем `s[left] != s[right] → return false`"])
         self.assertEqual(len(s["hints"]), 1)
-        self.assertTrue(s["code"].startswith("fun reverse(s: CharArray) {\n"))
+        self.assertTrue(s["code"].startswith("// Случай 1: [a, b, c, d] → [d, c, b, a]\n"))
+        self.assertIn("\nfun reverse(s: CharArray) {\n", s["code"])
 
     def test_0_3(self):
         s = self.sec("0.3 Палиндром ли строка")

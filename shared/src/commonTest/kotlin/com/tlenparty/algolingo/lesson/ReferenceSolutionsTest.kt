@@ -1406,6 +1406,253 @@ private object L2_6_v0 { // reference
     }
 }
 
+private object L2_8_v0 { // reference
+    // Случай 1: "abcabcbb" → 3 ("abc")
+    // Случай 2: "bbbbb" → 1 ("b")
+    // Случай 3: "pwwkew" → 3 ("wke")
+    fun longestUnique(s: String): Int {
+        // символ -> последний индекс
+        val lastIndex = HashMap<Char, Int>()
+        // левая граница окна
+        var left = 0
+        // лучшая длина пока что
+        var best = 0
+        // правая граница идёт по строке
+        for (right in s.indices) {
+            val prev = lastIndex[s[right]]
+            // повтор внутри окна: ужимаем
+            if (prev != null && prev >= left) left = prev + 1
+            lastIndex[s[right]] = right
+            // длина окна left..right
+            best = maxOf(best, right - left + 1)
+        }
+        return best
+    }
+
+    fun run() {
+        case { assertEquals(3, longestUnique("abcabcbb")) }
+        case { assertEquals(1, longestUnique("bbbbb")) }
+        case { assertEquals(3, longestUnique("pwwkew")) }
+        case { assertEquals(0, longestUnique("")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: перебор всех подстрок, длиннейшая без повторов (toSet); все строки длины 0..6 из {a, b, c, d}
+        for (n in 0..6) case {
+            for (m in 0 until pw(4, n)) {
+                val s = CharArray(n) { 'a' + (m / pw(4, it)) % 4 }.concatToString()
+                var best = 0
+                for (i in 0..n) for (j in i..n) if (s.substring(i, j).toSet().size == j - i) best = maxOf(best, j - i)
+                assertEquals(best, longestUnique(s), s)
+            }
+        }
+        case { assertEquals(1, longestUnique(" ")) }
+        case { assertEquals(3, longestUnique("dvdf")) }
+        case { assertEquals(5, longestUnique("tmmzuxt")) }
+        case { assertEquals(3, longestUnique("шалаш")) }
+        case { assertEquals(26, longestUnique("abcdefghijklmnopqrstuvwxyz")) }
+        // контрпримеры из причин
+        case { assertEquals(1, longestUnique("aa")) }
+        case { assertEquals(2, longestUnique("abba")) }
+        case { assertEquals(2, longestUnique("abab")) }
+        case { assertEquals(2, longestUnique("aab")) }
+        case { assertEquals(1, longestUnique("aaa")) }
+        case { assertEquals(1, longestUnique("a")) }
+    }
+}
+
+private object L3_2_v0 { // reference
+    // Случай 1: "()[]{}" → true
+    // Случай 2: "([)]" → false
+    // Случай 3: "(" → false
+    fun isValidBrackets(s: String): Boolean {
+        // открытые, ждущие пары
+        val stack = ArrayDeque<Char>()
+        // закрывающая -> открывающая
+        val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')
+        for (char in s) {
+            // открывающая: в стек
+            if (char in pairs.values) stack.addLast(char)
+            // закрывающая: сверяем с вершиной
+            else if (char in pairs.keys) {
+                if (stack.isEmpty() || stack.removeLast() != pairs[char]) return false
+            }
+        }
+        // все открытые закрылись
+        return stack.isEmpty()
+    }
+
+    fun run() {
+        case { assertTrue(isValidBrackets("()[]{}")) }
+        case { assertFalse(isValidBrackets("([)]")) }
+        case { assertFalse(isValidBrackets("(")) }
+        case { assertTrue(isValidBrackets("{[()]}")) }
+        case { assertTrue(isValidBrackets("")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: прочие символы выкидываем, пары (), [], {} вычёркиваем, пока есть; пусто → true
+        fun oracle(t: String): Boolean {
+            var r = t.filter { it in "()[]{}" }
+            repeat(t.length) { r = r.replace("()", "").replace("[]", "").replace("{}", "") }
+            return r.isEmpty()
+        }
+        // все строки длины 0..6 из ()[]{}
+        for (n in 0..6) case {
+            for (m in 0 until pw(6, n)) {
+                val s = CharArray(n) { "()[]{}"[(m / pw(6, it)) % 6] }.concatToString()
+                assertEquals(oracle(s), isValidBrackets(s), s)
+            }
+        }
+        // посторонние символы пропускаются: все строки длины 0..5 из ( ] x )
+        for (n in 0..5) case {
+            for (m in 0 until pw(4, n)) {
+                val s = CharArray(n) { "(]x)"[(m / pw(4, it)) % 4] }.concatToString()
+                assertEquals(oracle(s), isValidBrackets(s), s)
+            }
+        }
+        case { assertTrue(isValidBrackets("a(b)c")) }
+        case { assertTrue(isValidBrackets("([]{()})")) }
+        case { assertFalse(isValidBrackets("((")) }
+        case { assertFalse(isValidBrackets("))")) }
+        case { assertFalse(isValidBrackets("(]")) }
+        case { assertFalse(isValidBrackets("()(")) }
+        // контрпримеры из причин
+        case { assertFalse(isValidBrackets("(")) }
+        case { assertTrue(isValidBrackets("()")) }
+        case { assertFalse(isValidBrackets("([)]")) }
+        case { assertFalse(isValidBrackets(")")) }
+    }
+}
+
+private object L4_2_v0 { // reference
+    // Случай 1: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+    //   → 6 (подмассив [4, -1, 2, 1])
+    // Случай 2: [1] → 1
+    // Случай 3: [-3, -1, -2] → -1
+    fun maxSubArray(nums: IntArray): Int {
+        // лучшая сумма, кончающаяся на i
+        var current = nums[0]
+        // лучшая сумма вообще
+        var best = nums[0]
+        for (i in 1 until nums.size) {
+            // продолжить серию или начать заново
+            current = maxOf(nums[i], current + nums[i])
+            best = maxOf(best, current)
+        }
+        return best
+    }
+
+    fun run() {
+        case { assertEquals(6, maxSubArray(intArrayOf(-2, 1, -3, 4, -1, 2, 1, -5, 4))) }
+        case { assertEquals(1, maxSubArray(intArrayOf(1))) }
+        case { assertEquals(-1, maxSubArray(intArrayOf(-3, -1, -2))) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: перебор всех подмассивов; все массивы длины 1..5 из {-2..2}
+        for (n in 1..5) case {
+            for (m in 0 until pw(5, n)) {
+                val a = IntArray(n) { (m / pw(5, it)) % 5 - 2 }
+                var best = a[0]
+                for (l in 0 until n) for (r in l until n) best = maxOf(best, (l..r).sumOf { a[it] })
+                assertEquals(best, maxSubArray(a.copyOf()), "${a.toList()}")
+            }
+        }
+        // оракул на длинных случайных массивах из {-100..100}
+        case {
+            repeat(50) {
+                val a = IntArray(1 + rnd.nextInt(40)) { rnd.nextInt(201) - 100 }
+                var best = a[0]
+                for (l in a.indices) {
+                    var sum = 0
+                    for (r in l until a.size) {
+                        sum += a[r]
+                        best = maxOf(best, sum)
+                    }
+                }
+                assertEquals(best, maxSubArray(a.copyOf()), "${a.toList()}")
+            }
+        }
+        case { assertEquals(15, maxSubArray(intArrayOf(1, 2, 3, 4, 5))) } // весь массив
+        case { assertEquals(-10000, maxSubArray(intArrayOf(-10000))) }
+        case { assertEquals(0, maxSubArray(intArrayOf(-1, 0, -2))) }
+        case { assertEquals(7, maxSubArray(intArrayOf(5, -1, 3))) } // через минус
+        case { assertEquals(9, maxSubArray(intArrayOf(5, -9, 9))) } // начать заново
+        // контрпримеры из причин
+        case { assertEquals(3, maxSubArray(intArrayOf(1, 2))) }
+        case { assertEquals(2, maxSubArray(intArrayOf(1, -1, 2))) }
+        case { assertEquals(6, maxSubArray(intArrayOf(1, 2, 3))) }
+        case { assertEquals(1, maxSubArray(intArrayOf(1, -1))) }
+        case { assertEquals(5, maxSubArray(intArrayOf(5))) }
+        case { assertEquals(-1, maxSubArray(intArrayOf(-1))) }
+        case { assertEquals(-1, maxSubArray(intArrayOf(-1, -2))) }
+        case { assertEquals(2, maxSubArray(intArrayOf(-1, 2))) }
+    }
+}
+
+private object L5_1_v0 { // reference
+    // Случай 1: n = 2 → 2 (1+1, 2)
+    // Случай 2: n = 3 → 3 (1+1+1, 1+2, 2+1)
+    // Случай 3: n = 5 → 8
+    fun climbStairs(n: Int): Int {
+        // 1 ступень — 1 способ, 2 — два
+        if (n <= 2) return n
+        // способов дойти до i-2 и до i-1
+        var prev = 1
+        var current = 2
+        repeat(n - 2) {
+            // на ступень i — с i-1 или с i-2
+            val next = prev + current
+            prev = current
+            current = next
+        }
+        return current
+    }
+
+    fun run() {
+        case { assertEquals(2, climbStairs(2)) }
+        case { assertEquals(3, climbStairs(3)) }
+        case { assertEquals(8, climbStairs(5)) }
+        case { assertEquals(1, climbStairs(1)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: список ways[i] = ways[i - 1] + ways[i - 2]; все n от 1 до 45
+        case {
+            val ways = IntArray(46)
+            ways[0] = 1
+            ways[1] = 1
+            for (i in 2..45) ways[i] = ways[i - 1] + ways[i - 2]
+            for (n in 1..45) assertEquals(ways[n], climbStairs(n), "n = $n")
+        }
+        // оракул 2: перебор шагов рекурсией в лоб; n от 1 до 20
+        case {
+            fun naive(k: Int): Int = if (k < 0) 0 else if (k == 0) 1 else naive(k - 1) + naive(k - 2)
+            for (n in 1..20) assertEquals(naive(n), climbStairs(n), "n = $n")
+        }
+        case { assertEquals(1836311903, climbStairs(45)) } // максимум LeetCode, ещё влезает в Int
+        // контрпримеры из причин
+        case { assertEquals(1, climbStairs(1)) }
+        case { assertEquals(2, climbStairs(2)) }
+        case { assertEquals(3, climbStairs(3)) }
+        case { assertEquals(5, climbStairs(4)) }
+        case { assertEquals(8, climbStairs(5)) }
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -1586,6 +1833,34 @@ class ReferenceSolutionsTest {
     fun l2_6_v0() {
         Probe.reset()
         L2_6_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_8_v0() {
+        Probe.reset()
+        L2_8_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l3_2_v0() {
+        Probe.reset()
+        L3_2_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l4_2_v0() {
+        Probe.reset()
+        L4_2_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l5_1_v0() {
+        Probe.reset()
+        L5_1_v0.run()
         assertEquals(emptySet<String>(), Probe.kinds)
     }
 }

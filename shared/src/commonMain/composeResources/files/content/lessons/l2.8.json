@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "id": "l2.8",
+  "level": 2,
+  "title": "Подстрока без повторов",
+  "statement": "Длина наибольшей подстроки без повторяющихся символов.",
+  "trains": "скользящее окно переменной длины + `Map` последних позиций",
+  "targetTimeSec": 480,
+  "theory": [
+    {
+      "title": "Когда окно переменной длины",
+      "signals": [
+        "Подряд идущий отрезок: подстрока или подмассив",
+        "«Самый длинный такой, что…» — условие на всё окно",
+        "Нарушение чинится сдвигом левой границы"
+      ],
+      "body": "Правая граница `right` идёт по строке и расширяет окно. Если новый символ уже есть внутри окна, левая граница `left` прыгает сразу за его прошлую позицию. Обе границы двигаются только вперёд, поэтому O(n)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "// символ -> последний индекс\nval lastIndex = HashMap<Char, Int>()\nvar left = 0\nfor (right in s.indices) {\n    val prev = lastIndex[s[right]]\n    // повтор внутри окна: ужимаем\n    if (prev != null && prev >= left)\n        left = prev + 1\n    lastIndex[s[right]] = right\n    // окно left..right без повторов\n}",
+      "body": "Длина окна `left..right` — это `right - left + 1`: обе границы входят в окно."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "Без `prev >= left` старая позиция за окном тянет `left` назад: `\"abba\"` → `3` вместо `2`",
+        "`left = prev`: повтор остаётся в окне: `\"aa\"` → `2` вместо `1`",
+        "Длина `right - left` без `+ 1`: `\"a\"` → `0` вместо `1`",
+        "`prev > left` вместо `>=`: повтор на самой левой границе не ловится: `\"aa\"` → `2`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.8.e1",
+      "segments": [
+        "// Случай 1: \"abcabcbb\" → 3 (\"abc\")\n// Случай 2: \"bbbbb\" → 1 (\"b\")\n// Случай 3: \"pwwkew\" → 3 (\"wke\")\nfun longestUnique(s: String): Int {\n    // символ -> последний индекс\n    val lastIndex = HashMap<Char, Int>()\n    // левая граница окна\n    var left = 0\n    // лучшая длина пока что\n    var best = 0\n    // правая граница идёт по строке\n    for (right in s.indices) {\n        val prev = lastIndex[s[right]]\n        // повтор внутри окна: ужимаем\n        if (prev != null && ",
+        ") left = prev + 1\n        lastIndex[s[right]] = right\n        // длина окна left..right\n        best = maxOf(best, right - left + 1)\n    }\n    return best\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "prev >= left"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "prev >= left"
+        },
+        {
+          "text": "true",
+          "why": "старая позиция символа за окном тянет `left` назад: `\"abba\"` → `3` вместо `2`: на втором `a` окно снова захватывает `bba`"
+        },
+        {
+          "text": "prev > left",
+          "why": "повтор на самой левой границе окна не ловится: `\"aa\"` → `2` вместо `1`"
+        }
+      ],
+      "hints": [
+        "Символ мог встречаться раньше, но уже **за** левой границей. Тогда окно трогать не надо."
+      ]
+    },
+    {
+      "id": "l2.8.e2",
+      "segments": [
+        "// Случай 1: \"abcabcbb\" → 3 (\"abc\")\n// Случай 2: \"bbbbb\" → 1 (\"b\")\n// Случай 3: \"pwwkew\" → 3 (\"wke\")\nfun longestUnique(s: String): Int {\n    // символ -> последний индекс\n    val lastIndex = HashMap<Char, Int>()\n    // левая граница окна\n    var left = 0\n    // лучшая длина пока что\n    var best = 0\n    // правая граница идёт по строке\n    for (right in s.indices) {\n        val prev = lastIndex[s[right]]\n        // повтор внутри окна: ужимаем\n        if (prev != null && prev >= left) left = ",
+        "\n        lastIndex[s[right]] = right\n        // длина окна left..right\n        best = maxOf(best, ",
+        ")\n    }\n    return best\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "prev + 1"
+          ],
+          "wrongWhy": {
+            "right - left + 1": "это длина окна, а не новая левая граница: `\"aab\"` → `1` вместо `2`",
+            "right - left": "это длина окна без `+ 1`, а не новая левая граница: `\"aaa\"` → `2` вместо `1`"
+          }
+        },
+        {
+          "ok": [
+            "right - left + 1"
+          ],
+          "wrongWhy": {
+            "prev + 1": "здесь `prev` — `Int?`, проверка на `null` осталась в `if`: `maxOf(best, prev + 1)` не скомпилируется",
+            "prev": "здесь `prev` — `Int?`, а `maxOf` ждёт `Int`: `maxOf(best, prev)` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "prev + 1"
+        },
+        {
+          "text": "right - left + 1"
+        },
+        {
+          "text": "prev",
+          "why": "`left` встаёт на старый повтор, и он остаётся в окне: `\"aa\"` → `2` вместо `1`"
+        },
+        {
+          "text": "right - left",
+          "why": "обе границы входят в окно, без `+ 1` длина меньше на один: `\"a\"` → `0` вместо `1`"
+        }
+      ],
+      "hints": [
+        "Повтор стоит на позиции `prev`. Где должно начаться окно, чтобы его там уже не было?",
+        "В окне `left..right` обе границы считаются. Сколько это символов?"
+      ]
+    },
+    {
+      "id": "l2.8.e3",
+      "segments": [
+        "// Случай 1: \"abcabcbb\" → 3 (\"abc\")\n// Случай 2: \"bbbbb\" → 1 (\"b\")\n// Случай 3: \"pwwkew\" → 3 (\"wke\")\nfun longestUnique(s: String): Int {\n    // символ -> последний индекс\n    val lastIndex = HashMap<Char, Int>()\n    // левая граница окна\n    var left = 0\n    // лучшая длина пока что\n    var best = 0\n    // правая граница идёт по строке\n    for (right in ",
+        ") {\n        val prev = lastIndex[s[right]]\n        // повтор внутри окна: ужимаем\n        if (prev != null && ",
+        ") left = prev + 1\n        lastIndex[s[right]] = ",
+        "\n        // длина окна left..right\n        best = maxOf(best, right - left + 1)\n    }\n    return best\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "s.indices"
+          ],
+          "wrongWhy": {
+            "prev >= left": "`prev` объявляется только внутри цикла: `for (right in prev >= left)` не скомпилируется",
+            "prev > left": "`prev` объявляется только внутри цикла: `for (right in prev > left)` не скомпилируется",
+            "right": "`right` появится только в теле цикла: `for (right in right)` не скомпилируется",
+            "left": "по числу не пройти циклом: `for (right in left)` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "prev >= left"
+          ],
+          "wrongWhy": {
+            "s.indices": "после `&&` нужен `Boolean`, а не диапазон: `prev != null && s.indices` не скомпилируется",
+            "s": "после `&&` нужен `Boolean`, а не строка: `prev != null && s` не скомпилируется",
+            "1 until s.length": "после `&&` нужен `Boolean`, а не диапазон: `prev != null && 1 until s.length` не скомпилируется",
+            "right": "после `&&` нужен `Boolean`, а не число: `prev != null && right` не скомпилируется",
+            "left": "после `&&` нужен `Boolean`, а не число: `prev != null && left` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "right"
+          ],
+          "wrongWhy": {
+            "s.indices": "в `Map` лежат `Int`, а не диапазон: `lastIndex[s[right]] = s.indices` не скомпилируется",
+            "s": "в `Map` лежат `Int`, а не строка: `lastIndex[s[right]] = s` не скомпилируется",
+            "1 until s.length": "в `Map` лежат `Int`, а не диапазон: `lastIndex[s[right]] = 1 until s.length` не скомпилируется",
+            "prev >= left": "в `Map` лежат `Int`, а не `Boolean`: `lastIndex[s[right]] = prev >= left` не скомпилируется",
+            "prev > left": "в `Map` лежат `Int`, а не `Boolean`: `lastIndex[s[right]] = prev > left` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "s.indices"
+        },
+        {
+          "text": "prev >= left"
+        },
+        {
+          "text": "right"
+        },
+        {
+          "text": "s",
+          "why": "по строке `right` станет символом, а индекс строки — число: `s[right]` не скомпилируется"
+        },
+        {
+          "text": "1 until s.length",
+          "why": "первый символ пропущен: `\"a\"` → `0` вместо `1`"
+        },
+        {
+          "text": "prev > left",
+          "why": "повтор на самой левой границе окна не ловится: `\"aa\"` → `2` вместо `1`"
+        },
+        {
+          "text": "left",
+          "why": "запоминаем не позицию символа, а границу окна: `\"abab\"` → `3` вместо `2`"
+        }
+      ],
+      "hints": [
+        "Правая граница проходит по всем индексам строки.",
+        "Символ мог встречаться раньше, но уже **за** левой границей. Тогда окно трогать не надо.",
+        "Для символа запоминаем, где он встретился последним."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "// Случай 1: \"abcabcbb\" → 3 (\"abc\")\n// Случай 2: \"bbbbb\" → 1 (\"b\")\n// Случай 3: \"pwwkew\" → 3 (\"wke\")\nfun longestUnique(s: String): Int {\n    // символ -> последний индекс\n    val lastIndex = HashMap<Char, Int>()\n    // левая граница окна\n    var left = 0\n    // лучшая длина пока что\n    var best = 0\n    // правая граница идёт по строке\n    for (right in s.indices) {\n        val prev = lastIndex[s[right]]\n        // повтор внутри окна: ужимаем\n        if (prev != null && prev >= left) left = prev + 1\n        lastIndex[s[right]] = right\n        // длина окна left..right\n        best = maxOf(best, right - left + 1)\n    }\n    return best\n}",
+    "time": "O(n)",
+    "space": "O(k)",
+    "pitfalls": [
+      "проверка `prev >= left` обязательна — иначе старая позиция символа вне окна ошибочно сдвинет `left` назад"
+    ],
+    "variations": []
+  }
+}

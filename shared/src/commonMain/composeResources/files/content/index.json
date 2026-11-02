@@ -120,6 +120,38 @@
         "kotlin",
         "python"
       ]
+    },
+    {
+      "id": "l2.8",
+      "title": "Подстрока без повторов",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
+      "id": "l3.2",
+      "title": "Корректность скобок",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
+      "id": "l4.2",
+      "title": "Максимальная сумма подмассива",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
+      "id": "l5.1",
+      "title": "Подъём по лестнице",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
     }
   ]
 }
