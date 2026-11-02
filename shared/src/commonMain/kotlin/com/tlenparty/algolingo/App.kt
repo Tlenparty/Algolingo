@@ -46,9 +46,9 @@ data class NoteRoute(val id: String, val anchor: String? = null)
 data class LessonRoute(val id: String, val review: Boolean = false, val lang: String = CodeLang.Kotlin.id)
 
 @Composable
-fun App(dataDir: String) {
+fun App(dataDir: String, unlockAll: Boolean = false) {
     AlgoTheme {
-        val graph = remember { AppGraph.container(dataDir) }
+        val graph = remember { AppGraph.container(dataDir, unlockAll) }
         val nav = rememberNavController()
         val current by nav.currentBackStackEntryAsState()
         val dest = current?.destination

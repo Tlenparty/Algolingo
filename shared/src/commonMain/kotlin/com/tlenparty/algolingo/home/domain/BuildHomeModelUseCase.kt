@@ -5,8 +5,9 @@ import com.tlenparty.algolingo.progress.domain.Progress
 import com.tlenparty.algolingo.progress.domain.Track
 import kotlinx.datetime.LocalDate
 
-class BuildHomeModelUseCase {
+/** [unlockAll]: debug builds open every lesson so new content can be checked without passing the path. */
+class BuildHomeModelUseCase(private val unlockAll: Boolean = false) {
     /** The path and due reviews come from the track's catalog; progress is shared between tracks. */
     operator fun invoke(track: Track, catalog: Catalog, progress: Progress, today: LocalDate): HomeModel =
-        homeModel(catalog, progress, today, lang = track.langFilter(progress.lang))
+        homeModel(catalog, progress, today, lang = track.langFilter(progress.lang), unlockAll = unlockAll)
 }

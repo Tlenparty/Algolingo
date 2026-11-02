@@ -21,13 +21,13 @@ import com.tlenparty.algolingo.progress.domain.Track
 import kotlin.time.Clock
 
 /** The whole object graph, wired by hand: repositories live here, ViewModels are built per screen. */
-class AppContainer(dataDir: String) {
+class AppContainer(dataDir: String, unlockAll: Boolean = false) {
     val progress: ProgressRepository = ProgressRepositoryImpl(progressStore("$dataDir/progress.json"))
     private val catalogs: CatalogRepository = CatalogRepositoryImpl()
     private val kb: KbRepository = KbRepositoryImpl()
     private val loadLesson = LoadLessonUseCase(LessonRepositoryImpl())
     private val recordResult = RecordLessonResultUseCase(progress)
-    private val buildHome = BuildHomeModelUseCase()
+    private val buildHome = BuildHomeModelUseCase(unlockAll)
     val kbImages = KbImages(kb)
 
     fun homeViewModel(track: Track) = HomeViewModel(track, progress, catalogs, buildHome)
@@ -52,7 +52,8 @@ object AppGraph {
     private val containers = mutableMapOf<String, AppContainer>()
 
     /** Keyed by dir, so A -> B -> A reuses A's store instead of opening a second DataStore on A's file. */
-    fun container(dataDir: String): AppContainer = containers.getOrPut(dataDir) { AppContainer(dataDir) }
+    fun container(dataDir: String, unlockAll: Boolean = false): AppContainer =
+        containers.getOrPut(dataDir) { AppContainer(dataDir, unlockAll) }
 
     fun progress(dataDir: String): ProgressRepository = container(dataDir).progress
 }

@@ -1,6 +1,7 @@
 package com.tlenparty.algolingo
 
 import android.Manifest
+import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,7 +17,8 @@ class MainActivity : ComponentActivity() {
         PracticeReminder.schedule(this)
 
         setContent {
-            App(filesDir.absolutePath)
+            // debug build: every lesson open, to check new content without passing the path
+            App(filesDir.absolutePath, unlockAll = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
         }
     }
 }

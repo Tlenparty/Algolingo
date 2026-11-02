@@ -29,6 +29,13 @@ class CatalogTest {
     private fun p(vararg l: Pair<String, LessonProgress>) = Progress(lessons = l.toMap())
 
     @Test
+    fun unlockAllOpensLockedKeepsDoneAndSoon() {
+        val catalog = Catalog(ids.map { CatalogEntry(it, it, langs = if (it == "d") listOf("kotlin") else listOf("kotlin", "python")) })
+        val home = homeModel(catalog, p("a" to LessonProgress(1, day(3))), d, lang = CodeLang.Python, unlockAll = true)
+        assertEquals(listOf(Done, Available, Available, Soon), home.nodes.map { it.status })
+    }
+
+    @Test
     fun noProgressOnlyFirstAvailable() =
         assertEquals(listOf(Available, Locked, Locked, Locked), lessonStatuses(ids, Progress()))
 
