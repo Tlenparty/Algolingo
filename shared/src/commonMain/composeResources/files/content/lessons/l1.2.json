@@ -34,7 +34,7 @@
     {
       "id": "l1.2.e1",
       "segments": [
-        "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n    // 2-й проход: первый уникальный\n    for (char in ",
+        "// Случай 1: \"abacb\" → 'c' (a и b повторяются)\n// Случай 2: \"aabb\" → null\n// Случай 3: \"z\" → 'z'\nfun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n    // 2-й проход: первый уникальный\n    for (char in ",
         ") if (counts[char] == 1) return char\n    // уникального символа нет\n    return null\n}"
       ],
       "holes": [
@@ -64,7 +64,7 @@
     {
       "id": "l1.2.e2",
       "segments": [
-        "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, ",
+        "// Случай 1: \"abacb\" → 'c' (a и b повторяются)\n// Случай 2: \"aabb\" → null\n// Случай 3: \"z\" → 'z'\nfun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, ",
         ") + 1\n    // 2-й проход: первый уникальный\n    for (char in s) if (counts[char] == ",
         ") return char\n    // уникального символа нет\n    return null\n}"
       ],
@@ -107,7 +107,7 @@
     {
       "id": "l1.2.e3",
       "segments": [
-        "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, ",
+        "// Случай 1: \"abacb\" → 'c' (a и b повторяются)\n// Случай 2: \"aabb\" → null\n// Случай 3: \"z\" → 'z'\nfun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, ",
         ") + 1\n    // 2-й проход: первый уникальный\n    for (char in ",
         ") if (counts[char] == ",
         ") return char\n    // уникального символа нет\n    return ",
@@ -190,7 +190,7 @@
     }
   ],
   "solution": {
-    "code": "fun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n    // 2-й проход: первый уникальный\n    for (char in s) if (counts[char] == 1) return char\n    // уникального символа нет\n    return null\n}",
+    "code": "// Случай 1: \"abacb\" → 'c' (a и b повторяются)\n// Случай 2: \"aabb\" → null\n// Случай 3: \"z\" → 'z'\nfun firstUniqueChar(s: String): Char? {\n    // символ -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // 1-й проход: считаем частоты\n    for (char in s) counts[char] = counts.getOrDefault(char, 0) + 1\n    // 2-й проход: первый уникальный\n    for (char in s) if (counts[char] == 1) return char\n    // уникального символа нет\n    return null\n}",
     "time": "O(n)",
     "space": "O(k)",
     "pitfalls": [

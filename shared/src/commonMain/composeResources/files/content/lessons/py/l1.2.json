@@ -36,7 +36,7 @@
     {
       "id": "l1.2.e1",
       "segments": [
-        "def first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in ",
+        "# Случай 1: \"abacb\" → 'c' (a и b повторяются)\n# Случай 2: \"aabb\" → None\n# Случай 3: \"z\" → 'z'\ndef first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in ",
         ":\n        if counts[ch] == 1:\n            return ch\n    return None"
       ],
       "holes": [
@@ -75,7 +75,7 @@
     {
       "id": "l1.2.e2",
       "segments": [
-        "def first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = ",
+        "# Случай 1: \"abacb\" → 'c' (a и b повторяются)\n# Случай 2: \"aabb\" → None\n# Случай 3: \"z\" → 'z'\ndef first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = ",
         " + 1\n    for ch in s:\n        if counts[ch] == ",
         ":\n            return ch\n    return None"
       ],
@@ -133,7 +133,7 @@
     {
       "id": "l1.2.e3",
       "segments": [
-        "def first_unique_char(s: str) -> str | None:\n    counts = ",
+        "# Случай 1: \"abacb\" → 'c' (a и b повторяются)\n# Случай 2: \"aabb\" → None\n# Случай 3: \"z\" → 'z'\ndef first_unique_char(s: str) -> str | None:\n    counts = ",
         "\n    for ch in s:\n        counts[ch] = counts.get(ch, ",
         ") + 1\n    for ch in ",
         ":\n        if counts[ch] == 1:\n            return ch\n    return ",
@@ -243,7 +243,7 @@
     }
   ],
   "solution": {
-    "code": "def first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in s:\n        if counts[ch] == 1:\n            return ch\n    return None",
+    "code": "# Случай 1: \"abacb\" → 'c' (a и b повторяются)\n# Случай 2: \"aabb\" → None\n# Случай 3: \"z\" → 'z'\ndef first_unique_char(s: str) -> str | None:\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in s:\n        if counts[ch] == 1:\n            return ch\n    return None",
     "time": "O(n)",
     "space": "O(k)",
     "pitfalls": [

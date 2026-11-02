@@ -35,7 +35,7 @@
     {
       "id": "l2.3.e1",
       "segments": [
-        "fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = m + n - 1\n    // пока nums2 не кончился\n    while (",
+        "// Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n//   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n// Случай 2: [1], m = 1, [], n = 0 → [1]\n// Случай 3: [0], m = 0, [1], n = 1 → [1]\nfun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = m + n - 1\n    // пока nums2 не кончился\n    while (",
         ") {\n        // берём больший хвост\n        if (index1 >= 0 && nums1[index1] > nums2[index2]) {\n            nums1[mergeIndex] = nums1[index1]\n            index1--\n        } else {\n            nums1[mergeIndex] = nums2[index2]\n            index2--\n        }\n        // место записи — влево\n        mergeIndex--\n    }\n}"
       ],
       "holes": [
@@ -65,7 +65,7 @@
     {
       "id": "l2.3.e2",
       "segments": [
-        "fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = ",
+        "// Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n//   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n// Случай 2: [1], m = 1, [], n = 0 → [1]\n// Случай 3: [0], m = 0, [1], n = 1 → [1]\nfun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = ",
         "\n    // пока nums2 не кончился\n    while (",
         ") {\n        // берём больший хвост\n        if (index1 >= 0 && nums1[index1] > nums2[index2]) {\n            nums1[mergeIndex] = nums1[index1]\n            index1--\n        } else {\n            nums1[mergeIndex] = nums2[index2]\n            index2--\n        }\n        // место записи — влево\n        mergeIndex--\n    }\n}"
       ],
@@ -113,7 +113,7 @@
     {
       "id": "l2.3.e3",
       "segments": [
-        "fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = ",
+        "// Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n//   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n// Случай 2: [1], m = 1, [], n = 0 → [1]\n// Случай 3: [0], m = 0, [1], n = 1 → [1]\nfun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = ",
         "\n    // пока nums2 не кончился\n    while (",
         ") {\n        // берём больший хвост\n        if (index1 >= 0 && nums1[index1] ",
         " nums2[index2]) {\n            nums1[mergeIndex] = nums1[index1]\n            index1--\n        } else {\n            nums1[mergeIndex] = nums2[index2]\n            index2--\n        }\n        // место записи — влево\n        mergeIndex--\n    }\n}"
@@ -195,7 +195,7 @@
     }
   ],
   "solution": {
-    "code": "fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = m + n - 1\n    // пока nums2 не кончился\n    while (index2 >= 0) {\n        // берём больший хвост\n        if (index1 >= 0 && nums1[index1] > nums2[index2]) {\n            nums1[mergeIndex] = nums1[index1]\n            index1--\n        } else {\n            nums1[mergeIndex] = nums2[index2]\n            index2--\n        }\n        // место записи — влево\n        mergeIndex--\n    }\n}",
+    "code": "// Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n//   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n// Случай 2: [1], m = 1, [], n = 0 → [1]\n// Случай 3: [0], m = 0, [1], n = 1 → [1]\nfun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {\n    // последний живой в nums1\n    var index1 = m - 1\n    // последний в nums2\n    var index2 = n - 1\n    // куда ставить больший\n    var mergeIndex = m + n - 1\n    // пока nums2 не кончился\n    while (index2 >= 0) {\n        // берём больший хвост\n        if (index1 >= 0 && nums1[index1] > nums2[index2]) {\n            nums1[mergeIndex] = nums1[index1]\n            index1--\n        } else {\n            nums1[mergeIndex] = nums2[index2]\n            index2--\n        }\n        // место записи — влево\n        mergeIndex--\n    }\n}",
     "time": "O(m+n)",
     "space": "O(1)",
     "pitfalls": [

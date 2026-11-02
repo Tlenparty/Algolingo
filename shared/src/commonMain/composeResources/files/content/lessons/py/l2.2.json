@@ -35,7 +35,7 @@
     {
       "id": "l2.2.e1",
       "segments": [
-        "def remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = 1\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != ",
+        "# Случай 1: [1, 1, 2] → 2, начало [1, 2]\n# Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n#   → 5, начало [0, 1, 2, 3, 4]\ndef remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = 1\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != ",
         ":\n            # пишем на место slow\n            nums[slow] = nums[fast]\n            slow += 1\n    # длина без дубликатов\n    return slow"
       ],
       "holes": [
@@ -74,7 +74,7 @@
     {
       "id": "l2.2.e2",
       "segments": [
-        "def remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = 1\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != ",
+        "# Случай 1: [1, 1, 2] → 2, начало [1, 2]\n# Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n#   → 5, начало [0, 1, 2, 3, 4]\ndef remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = 1\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != ",
         ":\n            # пишем на место slow\n            nums[slow] = nums[fast]\n            slow += 1\n    # длина без дубликатов\n    return ",
         ""
       ],
@@ -137,7 +137,7 @@
     {
       "id": "l2.2.e3",
       "segments": [
-        "def remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = ",
+        "# Случай 1: [1, 1, 2] → 2, начало [1, 2]\n# Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n#   → 5, начало [0, 1, 2, 3, 4]\ndef remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = ",
         "\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != ",
         ":\n            # пишем на место slow\n            nums[slow] = ",
         "\n            slow += 1\n    # длина без дубликатов\n    return ",
@@ -234,7 +234,7 @@
     }
   ],
   "solution": {
-    "code": "def remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = 1\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != nums[slow - 1]:\n            # пишем на место slow\n            nums[slow] = nums[fast]\n            slow += 1\n    # длина без дубликатов\n    return slow",
+    "code": "# Случай 1: [1, 1, 2] → 2, начало [1, 2]\n# Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n#   → 5, начало [0, 1, 2, 3, 4]\ndef remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    if not nums:\n        return 0\n    # nums[0] всегда остаётся\n    slow = 1\n    # fast ищет новые значения\n    for fast in range(1, len(nums)):\n        # не равно последнему?\n        if nums[fast] != nums[slow - 1]:\n            # пишем на место slow\n            nums[slow] = nums[fast]\n            slow += 1\n    # длина без дубликатов\n    return slow",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

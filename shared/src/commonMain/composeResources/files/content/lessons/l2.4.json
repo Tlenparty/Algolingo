@@ -35,7 +35,7 @@
     {
       "id": "l2.4.e1",
       "segments": [
-        "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
+        "// Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]\n// Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]\nfun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
         ") {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare > rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}"
       ],
       "holes": [
@@ -65,7 +65,7 @@
     {
       "id": "l2.4.e2",
       "segments": [
-        "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
+        "// Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]\n// Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]\nfun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
         ") {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare ",
         " rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}"
       ],
@@ -128,7 +128,7 @@
     {
       "id": "l2.4.e3",
       "segments": [
-        "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
+        "// Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]\n// Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]\nfun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in ",
         ") {\n        // квадраты обоих концов\n        val leftSquare = ",
         "\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare ",
         " rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}"
@@ -216,7 +216,7 @@
     }
   ],
   "solution": {
-    "code": "fun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in nums.size - 1 downTo 0) {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare > rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}",
+    "code": "// Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]\n// Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]\nfun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    val result = IntArray(nums.size)\n    // концы массива — кандидаты\n    var left = 0\n    var right = nums.size - 1\n    // заполняем с конца\n    for (writeIndex in nums.size - 1 downTo 0) {\n        // квадраты обоих концов\n        val leftSquare = nums[left] * nums[left]\n        val rightSquare = nums[right] * nums[right]\n        // больший — в ячейку\n        if (leftSquare > rightSquare) {\n            result[writeIndex] = leftSquare\n            left++\n        } else {\n            result[writeIndex] = rightSquare\n            right--\n        }\n    }\n    return result\n}",
     "time": "O(n)",
     "space": "O(n)",
     "pitfalls": [

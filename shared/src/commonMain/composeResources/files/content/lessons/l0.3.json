@@ -33,7 +33,7 @@
     {
       "id": "l0.3.e1",
       "segments": [
-        "fun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (",
+        "// Случай 1: \"aba\" → true\n// Случай 2: \"abba\" → true\n// Случай 3: \"ab\" → false\nfun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (",
         ") {\n        // края разные — нет\n        if (s[left] != s[right]) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}"
       ],
       "holes": [
@@ -72,7 +72,7 @@
     {
       "id": "l0.3.e2",
       "segments": [
-        "fun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // края разные — нет\n        if (s[left] ",
+        "// Случай 1: \"aba\" → true\n// Случай 2: \"abba\" → true\n// Случай 3: \"ab\" → false\nfun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // края разные — нет\n        if (s[left] ",
         " s[right]) return ",
         "\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}"
       ],
@@ -117,7 +117,7 @@
     {
       "id": "l0.3.e3",
       "segments": [
-        "fun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = ",
+        "// Случай 1: \"aba\" → true\n// Случай 2: \"abba\" → true\n// Случай 3: \"ab\" → false\nfun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = ",
         "\n    // идём навстречу\n    while (",
         ") {\n        // края разные — нет\n        if (s[left] ",
         " s[right]) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return ",
@@ -198,7 +198,7 @@
     }
   ],
   "solution": {
-    "code": "fun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // края разные — нет\n        if (s[left] != s[right]) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}",
+    "code": "// Случай 1: \"aba\" → true\n// Случай 2: \"abba\" → true\n// Случай 3: \"ab\" → false\nfun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // края разные — нет\n        if (s[left] != s[right]) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

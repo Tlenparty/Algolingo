@@ -32,7 +32,7 @@
     {
       "id": "l0.1.e1",
       "segments": [
-        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = 0\n    // текущий максимум\n    var max = ",
+        "// Случай 1: [1, 2, 3] → (6, 3)\n// Случай 2: [-5, -2] → (-7, -2)\n// Случай 3: [7] → (7, 7)\nfun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = 0\n    // текущий максимум\n    var max = ",
         "\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}"
       ],
       "holes": [
@@ -75,7 +75,7 @@
     {
       "id": "l0.1.e2",
       "segments": [
-        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = ",
+        "// Случай 1: [1, 2, 3] → (6, 3)\n// Случай 2: [-5, -2] → (-7, -2)\n// Случай 3: [7] → (7, 7)\nfun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = ",
         "\n    // текущий максимум\n    var max = ",
         "\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}"
       ],
@@ -133,7 +133,7 @@
     {
       "id": "l0.1.e3",
       "segments": [
-        "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = ",
+        "// Случай 1: [1, 2, 3] → (6, 3)\n// Случай 2: [-5, -2] → (-7, -2)\n// Случай 3: [7] → (7, 7)\nfun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = ",
         "\n    // текущий максимум\n    var max = ",
         "\n    // один проход по массиву\n    for (num in nums) {\n        sum ",
         " num\n        // новый максимум\n        if (num ",
@@ -216,7 +216,7 @@
     }
   ],
   "solution": {
-    "code": "fun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = 0\n    // текущий максимум\n    var max = nums[0]\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}",
+    "code": "// Случай 1: [1, 2, 3] → (6, 3)\n// Случай 2: [-5, -2] → (-7, -2)\n// Случай 3: [7] → (7, 7)\nfun sumAndMax(nums: IntArray): Pair<Int, Int> {\n    // сумма всех чисел\n    var sum = 0\n    // текущий максимум\n    var max = nums[0]\n    // один проход по массиву\n    for (num in nums) {\n        sum += num\n        // новый максимум\n        if (num > max) max = num\n    }\n    // пара (сумма, максимум)\n    return sum to max\n}",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

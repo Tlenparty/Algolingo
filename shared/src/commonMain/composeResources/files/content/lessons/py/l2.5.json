@@ -35,7 +35,7 @@
     {
       "id": "l2.5.e1",
       "segments": [
-        "def is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) and t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            s_index += 1\n        # t двигается всегда\n        t_index += 1\n    # всю s нашли по порядку?\n    return ",
+        "# Случай 1: \"abc\", \"ahbgdc\" → True\n# Случай 2: \"axc\", \"ahbgdc\" → False\ndef is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) and t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            s_index += 1\n        # t двигается всегда\n        t_index += 1\n    # всю s нашли по порядку?\n    return ",
         ""
       ],
       "holes": [
@@ -65,7 +65,7 @@
     {
       "id": "l2.5.e2",
       "segments": [
-        "def is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) and t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            ",
+        "# Случай 1: \"abc\", \"ahbgdc\" → True\n# Случай 2: \"axc\", \"ahbgdc\" → False\ndef is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) and t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            ",
         "\n        # t двигается всегда\n        t_index += 1\n    # всю s нашли по порядку?\n    return ",
         ""
       ],
@@ -113,7 +113,7 @@
     {
       "id": "l2.5.e3",
       "segments": [
-        "def is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) ",
+        "# Случай 1: \"abc\", \"ahbgdc\" → True\n# Случай 2: \"axc\", \"ahbgdc\" → False\ndef is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) ",
         " t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            ",
         "\n        # t двигается всегда\n        ",
         "\n    # всю s нашли по порядку?\n    return ",
@@ -198,7 +198,7 @@
     }
   ],
   "solution": {
-    "code": "def is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) and t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            s_index += 1\n        # t двигается всегда\n        t_index += 1\n    # всю s нашли по порядку?\n    return s_index == len(s)",
+    "code": "# Случай 1: \"abc\", \"ahbgdc\" → True\n# Случай 2: \"axc\", \"ahbgdc\" → False\ndef is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    s_index = 0\n    # указатель в t\n    t_index = 0\n    # пока обе не кончились\n    while s_index < len(s) and t_index < len(t):\n        # совпало — двигаем s\n        if s[s_index] == t[t_index]:\n            s_index += 1\n        # t двигается всегда\n        t_index += 1\n    # всю s нашли по порядку?\n    return s_index == len(s)",
     "time": "O(|t|)",
     "space": "O(1)",
     "pitfalls": [

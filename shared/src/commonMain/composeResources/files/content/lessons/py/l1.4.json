@@ -36,7 +36,7 @@
     {
       "id": "l1.4.e1",
       "segments": [
-        "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in enumerate(nums):\n        if target ",
+        "# Случай 1: [2, 7, 11, 15], target = 9 → (0, 1)\n# Случай 2: [3, 2, 4], target = 6 → (1, 2)\n# Случай 3: [1, 2], target = 7 → None\ndef two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in enumerate(nums):\n        if target ",
         " x ",
         " seen:\n            return (seen[target - x], i)\n        seen[x] = i\n    return None"
       ],
@@ -84,7 +84,7 @@
     {
       "id": "l1.4.e2",
       "segments": [
-        "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in ",
+        "# Случай 1: [2, 7, 11, 15], target = 9 → (0, 1)\n# Случай 2: [3, 2, 4], target = 6 → (1, 2)\n# Случай 3: [1, 2], target = 7 → None\ndef two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in ",
         ":\n        if target - x ",
         " seen:\n            return (seen[target - x], i)\n        seen[",
         "] = i\n    return None"
@@ -156,7 +156,7 @@
     {
       "id": "l1.4.e3",
       "segments": [
-        "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = ",
+        "# Случай 1: [2, 7, 11, 15], target = 9 → (0, 1)\n# Случай 2: [3, 2, 4], target = 6 → (1, 2)\n# Случай 3: [1, 2], target = 7 → None\ndef two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = ",
         "\n    for i, x in ",
         ":\n        if target ",
         " x in seen:\n            return ",
@@ -278,7 +278,7 @@
     }
   ],
   "solution": {
-    "code": "def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return (seen[target - x], i)\n        seen[x] = i\n    return None",
+    "code": "# Случай 1: [2, 7, 11, 15], target = 9 → (0, 1)\n# Случай 2: [3, 2, 4], target = 6 → (1, 2)\n# Случай 3: [1, 2], target = 7 → None\ndef two_sum(nums: list[int], target: int) -> tuple[int, int] | None:\n    seen = {}\n    for i, x in enumerate(nums):\n        if target - x in seen:\n            return (seen[target - x], i)\n        seen[x] = i\n    return None",
     "time": "O(n)",
     "space": "O(n)",
     "pitfalls": [

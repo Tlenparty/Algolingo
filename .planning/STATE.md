@@ -158,6 +158,7 @@ None yet.
 | 261031-sdw | SD-уроки на понятных словах: карточка «Что есть что», словарь | 2026-10-31 | [261031-sdw](./quick/261031-sdw-sd-plain-words/) |
 | 261031-bul | Висячий отступ в списках теории | 2026-10-31 | [261031-bul](./quick/261031-bul-theory-bullets-indent/) |
 | 261031-rm1 | Убран урок SD0.1 из System Design | 2026-10-31 | [261031-rm1](./quick/261031-rm1-remove-sd01/) |
+| 261102-cas | Примеры «Случай N» (вход → ответ) в каждой задаче | 2026-11-02 | [261102-cas](./quick/261102-cas-case-examples/) |
 | 261031-arc | Слои data/domain/presentation и MVI на всех экранах | 2026-10-31 | [261031-arc](./quick/261031-arc-clean-layers/) |
 
 ## Deferred Items

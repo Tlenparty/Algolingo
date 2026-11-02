@@ -36,7 +36,7 @@
     {
       "id": "l1.1.e1",
       "segments": [
-        "def has_duplicate(nums: list[int]) -> bool:\n    seen = set()\n    for x in nums:\n        if ",
+        "# Случай 1: [1, 2, 3] → False\n# Случай 2: [1, 2, 1] → True\n# Случай 3: [] → False\ndef has_duplicate(nums: list[int]) -> bool:\n    seen = set()\n    for x in nums:\n        if ",
         ":\n            return True\n        seen.add(x)\n    return False"
       ],
       "holes": [
@@ -70,7 +70,7 @@
     {
       "id": "l1.1.e2",
       "segments": [
-        "def has_duplicate(nums: list[int]) -> bool:\n    seen = ",
+        "# Случай 1: [1, 2, 3] → False\n# Случай 2: [1, 2, 1] → True\n# Случай 3: [] → False\ndef has_duplicate(nums: list[int]) -> bool:\n    seen = ",
         "\n    for x in nums:\n        if ",
         ":\n            return True\n        seen.add(x)\n    return False"
       ],
@@ -128,7 +128,7 @@
     {
       "id": "l1.1.e3",
       "segments": [
-        "def has_duplicate(nums: list[int]) -> bool:\n    seen = ",
+        "# Случай 1: [1, 2, 3] → False\n# Случай 2: [1, 2, 1] → True\n# Случай 3: [] → False\ndef has_duplicate(nums: list[int]) -> bool:\n    seen = ",
         "\n    for x in nums:\n        if ",
         ":\n            return ",
         "\n        seen.add(x)\n    return ",
@@ -231,7 +231,7 @@
     }
   ],
   "solution": {
-    "code": "def has_duplicate(nums: list[int]) -> bool:\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False",
+    "code": "# Случай 1: [1, 2, 3] → False\n# Случай 2: [1, 2, 1] → True\n# Случай 3: [] → False\ndef has_duplicate(nums: list[int]) -> bool:\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False",
     "time": "O(n)",
     "space": "O(n)",
     "pitfalls": [

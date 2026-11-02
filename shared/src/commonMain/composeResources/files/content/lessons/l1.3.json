@@ -34,7 +34,7 @@
     {
       "id": "l1.3.e1",
       "segments": [
-        "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length != b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining ",
+        "// Случай 1: \"йцукен\", \"некуцй\" → true\n// Случай 2: \"ффффа\", \"фффа\" → false\n// Случай 3: \"ab\", \"ac\" → false\nfun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length != b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining ",
         " 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}"
       ],
       "holes": [
@@ -68,7 +68,7 @@
     {
       "id": "l1.3.e2",
       "segments": [
-        "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length ",
+        "// Случай 1: \"йцукен\", \"некуцй\" → true\n// Случай 2: \"ффффа\", \"фффа\" → false\n// Случай 3: \"ab\", \"ac\" → false\nfun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length ",
         " b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining ",
         " 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}"
       ],
@@ -116,7 +116,7 @@
     {
       "id": "l1.3.e3",
       "segments": [
-        "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length ",
+        "// Случай 1: \"йцукен\", \"некуцй\" → true\n// Случай 2: \"ффффа\", \"фффа\" → false\n// Случай 3: \"ab\", \"ac\" → false\nfun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length ",
         " b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: ",
         ") - 1\n        // в b лишняя буква\n        if (remaining ",
         " 0) return false\n        counts[char] = ",
@@ -214,7 +214,7 @@
     }
   ],
   "solution": {
-    "code": "fun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length != b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining < 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}",
+    "code": "// Случай 1: \"йцукен\", \"некуцй\" → true\n// Случай 2: \"ффффа\", \"фффа\" → false\n// Случай 3: \"ab\", \"ac\" → false\nfun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    if (a.length != b.length) return false\n    // буква -> сколько раз\n    val counts = HashMap<Char, Int>()\n    // считаем буквы первого слова\n    for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1\n    // вычитаем буквы второго слова\n    for (char in b) {\n        // остаток этой буквы\n        val remaining = (counts[char] ?: 0) - 1\n        // в b лишняя буква\n        if (remaining < 0) return false\n        counts[char] = remaining\n    }\n    // длины равны, минуса не было\n    return true\n}",
     "time": "O(n)",
     "space": "O(k)",
     "pitfalls": [

@@ -34,7 +34,7 @@
     {
       "id": "l0.1.e1",
       "segments": [
-        "def sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = 0\n    best = ",
+        "# Случай 1: [1, 2, 3] → (6, 3)\n# Случай 2: [-5, -2] → (-7, -2)\n# Случай 3: [7] → (7, 7)\ndef sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = 0\n    best = ",
         "\n    for x in nums:\n        total += x\n        if x > best:\n            best = x\n    return (total, best)"
       ],
       "holes": [
@@ -81,7 +81,7 @@
     {
       "id": "l0.1.e2",
       "segments": [
-        "def sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = ",
+        "# Случай 1: [1, 2, 3] → (6, 3)\n# Случай 2: [-5, -2] → (-7, -2)\n# Случай 3: [7] → (7, 7)\ndef sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = ",
         "\n    best = ",
         "\n    for x in nums:\n        total += x\n        if x > best:\n            best = x\n    return (total, best)"
       ],
@@ -144,7 +144,7 @@
     {
       "id": "l0.1.e3",
       "segments": [
-        "def sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = ",
+        "# Случай 1: [1, 2, 3] → (6, 3)\n# Случай 2: [-5, -2] → (-7, -2)\n# Случай 3: [7] → (7, 7)\ndef sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = ",
         "\n    best = ",
         "\n    for x in nums:\n        total ",
         " x\n        if x ",
@@ -239,7 +239,7 @@
     }
   ],
   "solution": {
-    "code": "def sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = 0\n    best = nums[0]\n    for x in nums:\n        total += x\n        if x > best:\n            best = x\n    return (total, best)",
+    "code": "# Случай 1: [1, 2, 3] → (6, 3)\n# Случай 2: [-5, -2] → (-7, -2)\n# Случай 3: [7] → (7, 7)\ndef sum_and_max(nums: list[int]) -> tuple[int, int]:\n    total = 0\n    best = nums[0]\n    for x in nums:\n        total += x\n        if x > best:\n            best = x\n    return (total, best)",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

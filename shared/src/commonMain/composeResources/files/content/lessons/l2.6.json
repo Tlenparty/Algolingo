@@ -35,7 +35,7 @@
     {
       "id": "l2.6.e1",
       "segments": [
-        "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = windowSum\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return ",
+        "// Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75\n// Случай 2: [5], k = 1 → 5.0\nfun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = windowSum\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return ",
         "\n}"
       ],
       "holes": [
@@ -65,7 +65,7 @@
     {
       "id": "l2.6.e2",
       "segments": [
-        "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = ",
+        "// Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75\n// Случай 2: [5], k = 1 → 5.0\nfun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = ",
         "\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return ",
         "\n}"
       ],
@@ -118,7 +118,7 @@
     {
       "id": "l2.6.e3",
       "segments": [
-        "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = ",
+        "// Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75\n// Случай 2: [5], k = 1 → 5.0\nfun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = ",
         "\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += ",
         "\n        // запоминаем лучшее\n        maxSum = ",
         "(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return maxSum.toDouble() / k\n}"
@@ -189,7 +189,7 @@
     }
   ],
   "solution": {
-    "code": "fun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = windowSum\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return maxSum.toDouble() / k\n}",
+    "code": "// Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75\n// Случай 2: [5], k = 1 → 5.0\nfun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    var windowSum = 0\n    for (i in 0 until k) windowSum += nums[i]\n    // лучшая сумма пока что\n    var maxSum = windowSum\n    // сдвигаем окно на 1\n    for (i in k until nums.size) {\n        // вошёл новый, ушёл старый\n        windowSum += nums[i] - nums[i - k]\n        // запоминаем лучшее\n        maxSum = maxOf(maxSum, windowSum)\n    }\n    // среднее с дробной частью\n    return maxSum.toDouble() / k\n}",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

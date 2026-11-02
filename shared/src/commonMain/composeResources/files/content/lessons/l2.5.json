@@ -35,7 +35,7 @@
     {
       "id": "l2.5.e1",
       "segments": [
-        "fun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length && tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) sIndex++\n        // t двигается всегда\n        tIndex++\n    }\n    // всю s нашли по порядку?\n    return ",
+        "// Случай 1: \"abc\", \"ahbgdc\" → true\n// Случай 2: \"axc\", \"ahbgdc\" → false\nfun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length && tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) sIndex++\n        // t двигается всегда\n        tIndex++\n    }\n    // всю s нашли по порядку?\n    return ",
         "\n}"
       ],
       "holes": [
@@ -65,7 +65,7 @@
     {
       "id": "l2.5.e2",
       "segments": [
-        "fun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length && tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) ",
+        "// Случай 1: \"abc\", \"ahbgdc\" → true\n// Случай 2: \"axc\", \"ahbgdc\" → false\nfun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length && tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) ",
         "\n        // t двигается всегда\n        tIndex++\n    }\n    // всю s нашли по порядку?\n    return ",
         "\n}"
       ],
@@ -113,7 +113,7 @@
     {
       "id": "l2.5.e3",
       "segments": [
-        "fun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length ",
+        "// Случай 1: \"abc\", \"ahbgdc\" → true\n// Случай 2: \"axc\", \"ahbgdc\" → false\nfun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length ",
         " tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) ",
         "\n        // t двигается всегда\n        ",
         "\n    }\n    // всю s нашли по порядку?\n    return ",
@@ -198,7 +198,7 @@
     }
   ],
   "solution": {
-    "code": "fun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length && tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) sIndex++\n        // t двигается всегда\n        tIndex++\n    }\n    // всю s нашли по порядку?\n    return sIndex == s.length\n}",
+    "code": "// Случай 1: \"abc\", \"ahbgdc\" → true\n// Случай 2: \"axc\", \"ahbgdc\" → false\nfun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    var sIndex = 0\n    // указатель в t\n    var tIndex = 0\n    // пока обе не кончились\n    while (sIndex < s.length && tIndex < t.length) {\n        // совпало — двигаем s\n        if (s[sIndex] == t[tIndex]) sIndex++\n        // t двигается всегда\n        tIndex++\n    }\n    // всю s нашли по порядку?\n    return sIndex == s.length\n}",
     "time": "O(|t|)",
     "space": "O(1)",
     "pitfalls": [

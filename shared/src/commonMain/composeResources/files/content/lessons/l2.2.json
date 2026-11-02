@@ -35,7 +35,7 @@
     {
       "id": "l2.2.e1",
       "segments": [
-        "fun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = 1\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != ",
+        "// Случай 1: [1, 1, 2] → 2, начало [1, 2]\n// Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n//   → 5, начало [0, 1, 2, 3, 4]\nfun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = 1\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != ",
         ") {\n            // пишем на место slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // длина без дубликатов\n    return slow\n}"
       ],
       "holes": [
@@ -74,7 +74,7 @@
     {
       "id": "l2.2.e2",
       "segments": [
-        "fun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = 1\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != ",
+        "// Случай 1: [1, 1, 2] → 2, начало [1, 2]\n// Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n//   → 5, начало [0, 1, 2, 3, 4]\nfun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = 1\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != ",
         ") {\n            // пишем на место slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // длина без дубликатов\n    return ",
         "\n}"
       ],
@@ -137,7 +137,7 @@
     {
       "id": "l2.2.e3",
       "segments": [
-        "fun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = ",
+        "// Случай 1: [1, 1, 2] → 2, начало [1, 2]\n// Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n//   → 5, начало [0, 1, 2, 3, 4]\nfun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = ",
         "\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != ",
         ") {\n            // пишем на место slow\n            nums[slow] = ",
         "\n            slow++\n        }\n    }\n    // длина без дубликатов\n    return ",
@@ -234,7 +234,7 @@
     }
   ],
   "solution": {
-    "code": "fun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = 1\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != nums[slow - 1]) {\n            // пишем на место slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // длина без дубликатов\n    return slow\n}",
+    "code": "// Случай 1: [1, 1, 2] → 2, начало [1, 2]\n// Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n//   → 5, начало [0, 1, 2, 3, 4]\nfun removeDuplicates(nums: IntArray): Int {\n    // пустой — уникальных нет\n    if (nums.isEmpty()) return 0\n    // nums[0] всегда остаётся\n    var slow = 1\n    // fast ищет новые значения\n    for (fast in 1 until nums.size) {\n        // не равно последнему?\n        if (nums[fast] != nums[slow - 1]) {\n            // пишем на место slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // длина без дубликатов\n    return slow\n}",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

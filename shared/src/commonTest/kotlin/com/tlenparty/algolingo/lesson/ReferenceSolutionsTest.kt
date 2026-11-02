@@ -45,6 +45,9 @@ private fun pw(b: Int, e: Int): Int {
 }
 
 private object L0_1_v0 { // reference
+    // Случай 1: [1, 2, 3] → (6, 3)
+    // Случай 2: [-5, -2] → (-7, -2)
+    // Случай 3: [7] → (7, 7)
     fun sumAndMax(nums: IntArray): Pair<Int, Int> {
         // сумма всех чисел
         var sum = 0
@@ -92,6 +95,9 @@ private object L0_1_v0 { // reference
 }
 
 private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
+    // Случай 1: [1, 2, 3] → (6, 3)
+    // Случай 2: [-5, -2] → (-7, -2)
+    // Случай 3: [7] → (7, 7)
     fun sumAndMax(nums: IntArray): Pair<Int, Int> {
         // сумма всех чисел
         var sum = 0
@@ -139,6 +145,9 @@ private object L0_1_v1 { // l0.1.e1 hole 1 = Int.MIN_VALUE (acceptable)
 }
 
 private object L0_2_v0 { // reference
+    // Случай 1: [a, b, c, d] → [d, c, b, a]
+    // Случай 2: [a] → [a]
+    // Случай 3: [] → []
     fun reverse(s: CharArray) {
         // левый указатель — с начала
         var left = 0
@@ -179,6 +188,9 @@ private object L0_2_v0 { // reference
 }
 
 private object L0_2_v1 { // l0.2.e1 hole 1 = left <= right (acceptable)
+    // Случай 1: [a, b, c, d] → [d, c, b, a]
+    // Случай 2: [a] → [a]
+    // Случай 3: [] → []
     fun reverse(s: CharArray) {
         // левый указатель — с начала
         var left = 0
@@ -219,6 +231,9 @@ private object L0_2_v1 { // l0.2.e1 hole 1 = left <= right (acceptable)
 }
 
 private object L0_3_v0 { // reference
+    // Случай 1: "aba" → true
+    // Случай 2: "abba" → true
+    // Случай 3: "ab" → false
     fun isPalindrome(s: String): Boolean {
         // левый указатель — с начала
         var left = 0
@@ -261,6 +276,9 @@ private object L0_3_v0 { // reference
 }
 
 private object L0_3_v1 { // l0.3.e1 hole 1 = left <= right (acceptable)
+    // Случай 1: "aba" → true
+    // Случай 2: "abba" → true
+    // Случай 3: "ab" → false
     fun isPalindrome(s: String): Boolean {
         // левый указатель — с начала
         var left = 0
@@ -303,6 +321,9 @@ private object L0_3_v1 { // l0.3.e1 hole 1 = left <= right (acceptable)
 }
 
 private object L0_4_v0 { // reference
+    // Случай 1: [1, 3, 5, 7], target = 5 → 2
+    // Случай 2: [1, 3], target = 0 → -1
+    // Случай 3: [5], target = 5 → 0
     fun binarySearch(nums: IntArray, target: Int): Int {
         // ответ внутри [left, right]
         var left = 0
@@ -361,6 +382,9 @@ private object L0_4_v0 { // reference
 }
 
 private object L0_4_v1 { // l0.4.e2 hole 2 = (left + right) ushr 1 (acceptable)
+    // Случай 1: [1, 3, 5, 7], target = 5 → 2
+    // Случай 2: [1, 3], target = 0 → -1
+    // Случай 3: [5], target = 5 → 0
     fun binarySearch(nums: IntArray, target: Int): Int {
         // ответ внутри [left, right]
         var left = 0
@@ -419,6 +443,9 @@ private object L0_4_v1 { // l0.4.e2 hole 2 = (left + right) ushr 1 (acceptable)
 }
 
 private object L0_4_v2 { // l0.4.e2 hole 2 = (left + right) / 2 (acceptable)
+    // Случай 1: [1, 3, 5, 7], target = 5 → 2
+    // Случай 2: [1, 3], target = 0 → -1
+    // Случай 3: [5], target = 5 → 0
     fun binarySearch(nums: IntArray, target: Int): Int {
         // ответ внутри [left, right]
         var left = 0
@@ -477,6 +504,9 @@ private object L0_4_v2 { // l0.4.e2 hole 2 = (left + right) / 2 (acceptable)
 }
 
 private object L0_4_v3 { // l0.4.e2 hole 2 = right - left / 2 (acceptable)
+    // Случай 1: [1, 3, 5, 7], target = 5 → 2
+    // Случай 2: [1, 3], target = 0 → -1
+    // Случай 3: [5], target = 5 → 0
     fun binarySearch(nums: IntArray, target: Int): Int {
         // ответ внутри [left, right]
         var left = 0
@@ -535,6 +565,9 @@ private object L0_4_v3 { // l0.4.e2 hole 2 = right - left / 2 (acceptable)
 }
 
 private object L1_1_v0 { // reference
+    // Случай 1: [1, 2, 3] → false
+    // Случай 2: [1, 2, 1] → true
+    // Случай 3: [] → false
     fun hasDuplicate(nums: IntArray): Boolean {
         // уже встреченные числа
         val seen = HashSet<Int>()
@@ -575,6 +608,9 @@ private object L1_1_v0 { // reference
 }
 
 private object L1_1_v1 { // l1.1.e3 hole 3 = !seen.add(num) (acceptable)
+    // Случай 1: [1, 2, 3] → false
+    // Случай 2: [1, 2, 1] → true
+    // Случай 3: [] → false
     fun hasDuplicate(nums: IntArray): Boolean {
         // уже встреченные числа
         val seen = HashSet<Int>()
@@ -615,6 +651,9 @@ private object L1_1_v1 { // l1.1.e3 hole 3 = !seen.add(num) (acceptable)
 }
 
 private object L1_1_v2 { // l1.1.e3 hole 3 = seen.contains(num) (acceptable)
+    // Случай 1: [1, 2, 3] → false
+    // Случай 2: [1, 2, 1] → true
+    // Случай 3: [] → false
     fun hasDuplicate(nums: IntArray): Boolean {
         // уже встреченные числа
         val seen = HashSet<Int>()
@@ -655,6 +694,9 @@ private object L1_1_v2 { // l1.1.e3 hole 3 = seen.contains(num) (acceptable)
 }
 
 private object L1_2_v0 { // reference
+    // Случай 1: "abacb" → 'c' (a и b повторяются)
+    // Случай 2: "aabb" → null
+    // Случай 3: "z" → 'z'
     fun firstUniqueChar(s: String): Char? {
         // символ -> сколько раз
         val counts = HashMap<Char, Int>()
@@ -695,6 +737,9 @@ private object L1_2_v0 { // reference
 }
 
 private object L1_3_v0 { // reference
+    // Случай 1: "йцукен", "некуцй" → true
+    // Случай 2: "ффффа", "фффа" → false
+    // Случай 3: "ab", "ac" → false
     fun sameLetters(a: String, b: String): Boolean {
         // быстрая проверка длин
         if (a.length != b.length) return false
@@ -744,6 +789,9 @@ private object L1_3_v0 { // reference
 }
 
 private object L1_4_v0 { // reference
+    // Случай 1: [2, 7, 11, 15], target = 9 → (0, 1)
+    // Случай 2: [3, 2, 4], target = 6 → (1, 2)
+    // Случай 3: [1, 2], target = 7 → null
     fun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {
         // значение -> индекс
         val seen = HashMap<Int, Int>()
@@ -797,6 +845,11 @@ private object L1_5_v0 { // reference
     data class StepEntry(val userId: Int, val steps: Int)
     data class ChampionResult(val userIds: List<Int>, val steps: Int)
 
+    // Случай 1: [[(1, 100), (2, 50)], [(1, 100), (2, 50)]]
+    //   → [1], 200
+    // Случай 2: [[(1, 100), (2, 500)], [(1, 100)]]
+    //   → [1], 200 (2-й пропустил день)
+    // Случай 3: [] → [], 0
     fun findChampions(statistics: List<List<StepEntry>>): ChampionResult {
         // сколько всего дней
         val totalDays = statistics.size
@@ -862,6 +915,8 @@ private object L1_5_v0 { // reference
 }
 
 private object L2_1_v0 { // reference
+    // Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]
+    // Случай 2: [0] → [0]
     fun moveZeroes(nums: IntArray) {
         // куда писать ненулевой
         var slow = 0
@@ -913,6 +968,9 @@ private object L2_1_v0 { // reference
 }
 
 private object L2_2_v0 { // reference
+    // Случай 1: [1, 1, 2] → 2, начало [1, 2]
+    // Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+    //   → 5, начало [0, 1, 2, 3, 4]
     fun removeDuplicates(nums: IntArray): Int {
         // пустой — уникальных нет
         if (nums.isEmpty()) return 0
@@ -966,6 +1024,9 @@ private object L2_2_v0 { // reference
 }
 
 private object L2_2_v1 { // l2.2.e1 hole 1 = nums[fast - 1] (acceptable)
+    // Случай 1: [1, 1, 2] → 2, начало [1, 2]
+    // Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+    //   → 5, начало [0, 1, 2, 3, 4]
     fun removeDuplicates(nums: IntArray): Int {
         // пустой — уникальных нет
         if (nums.isEmpty()) return 0
@@ -1019,6 +1080,10 @@ private object L2_2_v1 { // l2.2.e1 hole 1 = nums[fast - 1] (acceptable)
 }
 
 private object L2_3_v0 { // reference
+    // Случай 1: [1, 2, 3, 0, 0, 0], m = 3,
+    //   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]
+    // Случай 2: [1], m = 1, [], n = 0 → [1]
+    // Случай 3: [0], m = 0, [1], n = 1 → [1]
     fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
         // последний живой в nums1
         var index1 = m - 1
@@ -1072,6 +1137,10 @@ private object L2_3_v0 { // reference
 }
 
 private object L2_3_v1 { // l2.3.e3 hole 3 = >= (acceptable)
+    // Случай 1: [1, 2, 3, 0, 0, 0], m = 3,
+    //   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]
+    // Случай 2: [1], m = 1, [], n = 0 → [1]
+    // Случай 3: [0], m = 0, [1], n = 1 → [1]
     fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
         // последний живой в nums1
         var index1 = m - 1
@@ -1125,6 +1194,8 @@ private object L2_3_v1 { // l2.3.e3 hole 3 = >= (acceptable)
 }
 
 private object L2_4_v0 { // reference
+    // Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]
+    // Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]
     fun sortedSquares(nums: IntArray): IntArray {
         // ответ той же длины
         val result = IntArray(nums.size)
@@ -1179,6 +1250,8 @@ private object L2_4_v0 { // reference
 }
 
 private object L2_4_v1 { // l2.4.e2 hole 2 = >= (acceptable)
+    // Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]
+    // Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]
     fun sortedSquares(nums: IntArray): IntArray {
         // ответ той же длины
         val result = IntArray(nums.size)
@@ -1233,6 +1306,8 @@ private object L2_4_v1 { // l2.4.e2 hole 2 = >= (acceptable)
 }
 
 private object L2_5_v0 { // reference
+    // Случай 1: "abc", "ahbgdc" → true
+    // Случай 2: "axc", "ahbgdc" → false
     fun isSubsequence(s: String, t: String): Boolean {
         // указатель в s
         var sIndex = 0
@@ -1281,6 +1356,8 @@ private object L2_5_v0 { // reference
 }
 
 private object L2_6_v0 { // reference
+    // Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75
+    // Случай 2: [5], k = 1 → 5.0
     fun findMaxAverage(nums: IntArray, k: Int): Double {
         // сумма первого окна
         var windowSum = 0

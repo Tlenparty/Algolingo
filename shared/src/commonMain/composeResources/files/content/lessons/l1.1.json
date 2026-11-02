@@ -34,7 +34,7 @@
     {
       "id": "l1.1.e1",
       "segments": [
-        "fun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = HashSet<Int>()\n    // num уже был — повтор\n    for (num in nums) if (",
+        "// Случай 1: [1, 2, 3] → false\n// Случай 2: [1, 2, 1] → true\n// Случай 3: [] → false\nfun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = HashSet<Int>()\n    // num уже был — повтор\n    for (num in nums) if (",
         ") return true\n    // повторов не было\n    return false\n}"
       ],
       "holes": [
@@ -68,7 +68,7 @@
     {
       "id": "l1.1.e2",
       "segments": [
-        "fun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = ",
+        "// Случай 1: [1, 2, 3] → false\n// Случай 2: [1, 2, 1] → true\n// Случай 3: [] → false\nfun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = ",
         "\n    // num уже был — повтор\n    for (num in nums) if (",
         ") return true\n    // повторов не было\n    return false\n}"
       ],
@@ -121,7 +121,7 @@
     {
       "id": "l1.1.e3",
       "segments": [
-        "fun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = ",
+        "// Случай 1: [1, 2, 3] → false\n// Случай 2: [1, 2, 1] → true\n// Случай 3: [] → false\nfun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = ",
         "\n    // num уже был — повтор\n    for (num in nums) if (",
         ") return ",
         "\n    // повторов не было\n    return ",
@@ -219,7 +219,7 @@
     }
   ],
   "solution": {
-    "code": "fun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = HashSet<Int>()\n    // num уже был — повтор\n    for (num in nums) if (!seen.add(num)) return true\n    // повторов не было\n    return false\n}",
+    "code": "// Случай 1: [1, 2, 3] → false\n// Случай 2: [1, 2, 1] → true\n// Случай 3: [] → false\nfun hasDuplicate(nums: IntArray): Boolean {\n    // уже встреченные числа\n    val seen = HashSet<Int>()\n    // num уже был — повтор\n    for (num in nums) if (!seen.add(num)) return true\n    // повторов не было\n    return false\n}",
     "time": "O(n)",
     "space": "O(n)",
     "pitfalls": [

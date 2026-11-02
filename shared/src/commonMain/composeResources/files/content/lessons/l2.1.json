@@ -34,7 +34,7 @@
     {
       "id": "l2.1.e1",
       "segments": [
-        "fun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = 0\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] ",
+        "// Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]\n// Случай 2: [0] → [0]\nfun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = 0\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] ",
         " 0) {\n            // копируем в slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // хвост добиваем нулями\n    while (slow < nums.size) {\n        nums[slow] = 0\n        slow++\n    }\n}"
       ],
       "holes": [
@@ -64,7 +64,7 @@
     {
       "id": "l2.1.e2",
       "segments": [
-        "fun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = 0\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] ",
+        "// Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]\n// Случай 2: [0] → [0]\nfun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = 0\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] ",
         " 0) {\n            // копируем в slow\n            nums[slow] = ",
         "\n            slow++\n        }\n    }\n    // хвост добиваем нулями\n    while (slow < nums.size) {\n        nums[slow] = 0\n        slow++\n    }\n}"
       ],
@@ -117,7 +117,7 @@
     {
       "id": "l2.1.e3",
       "segments": [
-        "fun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = ",
+        "// Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]\n// Случай 2: [0] → [0]\nfun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = ",
         "\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] ",
         " 0) {\n            // копируем в slow\n            nums[slow] = ",
         "\n            slow++\n        }\n    }\n    // хвост добиваем нулями\n    while (",
@@ -209,7 +209,7 @@
     }
   ],
   "solution": {
-    "code": "fun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = 0\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] != 0) {\n            // копируем в slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // хвост добиваем нулями\n    while (slow < nums.size) {\n        nums[slow] = 0\n        slow++\n    }\n}",
+    "code": "// Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]\n// Случай 2: [0] → [0]\nfun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    var slow = 0\n    // fast бежит по всем\n    for (fast in nums.indices) {\n        // нули пропускаем\n        if (nums[fast] != 0) {\n            // копируем в slow\n            nums[slow] = nums[fast]\n            slow++\n        }\n    }\n    // хвост добиваем нулями\n    while (slow < nums.size) {\n        nums[slow] = 0\n        slow++\n    }\n}",
     "time": "O(n)",
     "space": "O(1)",
     "pitfalls": [

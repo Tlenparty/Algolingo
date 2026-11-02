@@ -35,7 +35,7 @@
     {
       "id": "l2.3.e1",
       "segments": [
-        "def merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = m + n - 1\n    # пока nums2 не кончился\n    while ",
+        "# Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n#   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n# Случай 2: [1], m = 1, [], n = 0 → [1]\n# Случай 3: [0], m = 0, [1], n = 1 → [1]\ndef merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = m + n - 1\n    # пока nums2 не кончился\n    while ",
         ":\n        # берём больший хвост\n        if index1 >= 0 and nums1[index1] > nums2[index2]:\n            nums1[merge_index] = nums1[index1]\n            index1 -= 1\n        else:\n            nums1[merge_index] = nums2[index2]\n            index2 -= 1\n        # место записи — влево\n        merge_index -= 1"
       ],
       "holes": [
@@ -65,7 +65,7 @@
     {
       "id": "l2.3.e2",
       "segments": [
-        "def merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = ",
+        "# Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n#   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n# Случай 2: [1], m = 1, [], n = 0 → [1]\n# Случай 3: [0], m = 0, [1], n = 1 → [1]\ndef merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = ",
         "\n    # пока nums2 не кончился\n    while ",
         ":\n        # берём больший хвост\n        if index1 >= 0 and nums1[index1] > nums2[index2]:\n            nums1[merge_index] = nums1[index1]\n            index1 -= 1\n        else:\n            nums1[merge_index] = nums2[index2]\n            index2 -= 1\n        # место записи — влево\n        merge_index -= 1"
       ],
@@ -113,7 +113,7 @@
     {
       "id": "l2.3.e3",
       "segments": [
-        "def merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = ",
+        "# Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n#   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n# Случай 2: [1], m = 1, [], n = 0 → [1]\n# Случай 3: [0], m = 0, [1], n = 1 → [1]\ndef merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = ",
         "\n    # пока nums2 не кончился\n    while ",
         ":\n        # берём больший хвост\n        if index1 >= 0 and nums1[index1] ",
         " nums2[index2]:\n            nums1[merge_index] = nums1[index1]\n            index1 -= 1\n        else:\n            nums1[merge_index] = nums2[index2]\n            index2 -= 1\n        # место записи — влево\n        merge_index -= 1"
@@ -195,7 +195,7 @@
     }
   ],
   "solution": {
-    "code": "def merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = m + n - 1\n    # пока nums2 не кончился\n    while index2 >= 0:\n        # берём больший хвост\n        if index1 >= 0 and nums1[index1] > nums2[index2]:\n            nums1[merge_index] = nums1[index1]\n            index1 -= 1\n        else:\n            nums1[merge_index] = nums2[index2]\n            index2 -= 1\n        # место записи — влево\n        merge_index -= 1",
+    "code": "# Случай 1: [1, 2, 3, 0, 0, 0], m = 3,\n#   [2, 5, 6], n = 3 → [1, 2, 2, 3, 5, 6]\n# Случай 2: [1], m = 1, [], n = 0 → [1]\n# Случай 3: [0], m = 0, [1], n = 1 → [1]\ndef merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:\n    # последний живой в nums1\n    index1 = m - 1\n    # последний в nums2\n    index2 = n - 1\n    # куда ставить больший\n    merge_index = m + n - 1\n    # пока nums2 не кончился\n    while index2 >= 0:\n        # берём больший хвост\n        if index1 >= 0 and nums1[index1] > nums2[index2]:\n            nums1[merge_index] = nums1[index1]\n            index1 -= 1\n        else:\n            nums1[merge_index] = nums2[index2]\n            index2 -= 1\n        # место записи — влево\n        merge_index -= 1",
     "time": "O(m+n)",
     "space": "O(1)",
     "pitfalls": [
