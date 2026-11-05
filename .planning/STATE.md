@@ -163,6 +163,7 @@ None yet.
 | 261105-lc2 | Уроки с LeetCode: 167, 125 (из algorithms-go-practice) | 2026-11-05 | [261105-lc2](./quick/261105-lc2-two-sum-ii-valid-palindrome/) |
 | 261105-lns | Финальный шаг урока «Собери решение из строк» | 2026-11-05 | [261105-lns](./quick/261105-lns-lines-exercise/) |
 | 261105-n6o | База знаний System Design по методичкам курса (12 заметок + словарь), уроки sd3.1/sd3.2 «Платформа постов» | 2026-11-05 | [261105-n6o](./quick/261105-n6o-system-design-sd3-1-sd3-2/) |
+| 261105-tkl | Clean layers: LessonReducer и ScreenKey в domain, markdown в core/domain | 2026-11-05 | [261105-tkl](./quick/261105-tkl-clean-layers-lessonreducer-domain-job-pr/) |
 | 261031-arc | Слои data/domain/presentation и MVI на всех экранах | 2026-10-31 | [261031-arc](./quick/261031-arc-clean-layers/) |
 
 ## Deferred Items
