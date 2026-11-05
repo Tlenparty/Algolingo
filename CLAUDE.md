@@ -133,7 +133,7 @@ MVI + Clean layers inside each feature of `shared` (`lesson`, `progress`, `kb`, 
 - `data`: DTOs (the JSON formats), repository implementations, resource and file access.
 - `presentation`: ViewModels, `*UiState` / `*Action` / `*Effect`, `*Host` composables that connect a ViewModel to a stateless `*Screen`.
 
-Shared code lives in `core` (`CodeLang`, markdown parser, inline text). `di/AppGraph.kt` wires everything by hand, `App.kt` holds only navigation. A use case exists only where there is logic to hold (`LoadLessonUseCase`, `RecordLessonResultUseCase`, `BuildHomeModelUseCase`); trivial calls go straight to the repository. `LessonReducer` is the lesson's pure state machine. `ProgressFormatTest` pins `progress.json`: users' progress depends on that exact format.
+Shared code lives in `core` (`core/domain`: `CodeLang`, markdown parser; `core/presentation`: inline text). `di/AppGraph.kt` wires everything by hand, `App.kt` holds only navigation. A use case exists only where there is logic to hold (`LoadLessonUseCase`, `RecordLessonResultUseCase`, `BuildHomeModelUseCase`); trivial calls go straight to the repository. `LessonReducer` (`lesson/domain`, with `Phase`, `LessonAction`, `LessonState`, `ScreenKey`) is the lesson's pure state machine. `ProgressFormatTest` pins `progress.json`: users' progress depends on that exact format.
 <!-- GSD:architecture-end -->
 
 <!-- GSD:skills-start source:skills/ -->

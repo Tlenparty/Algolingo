@@ -1,6 +1,6 @@
 package com.tlenparty.algolingo.lesson
 
-import com.tlenparty.algolingo.lesson.presentation.LessonAction.*
+import com.tlenparty.algolingo.lesson.domain.LessonAction.*
 import kotlin.test.*
 import com.tlenparty.algolingo.lesson.domain.Accepted
 import com.tlenparty.algolingo.lesson.domain.Chip
@@ -10,11 +10,11 @@ import com.tlenparty.algolingo.lesson.domain.Hole
 import com.tlenparty.algolingo.lesson.domain.Lesson
 import com.tlenparty.algolingo.lesson.domain.Solution
 import com.tlenparty.algolingo.lesson.domain.TheoryCard
-import com.tlenparty.algolingo.lesson.presentation.LessonAction
-import com.tlenparty.algolingo.lesson.presentation.LessonReducer
-import com.tlenparty.algolingo.lesson.presentation.LessonState
-import com.tlenparty.algolingo.lesson.presentation.Phase
-import com.tlenparty.algolingo.lesson.presentation.screenKey
+import com.tlenparty.algolingo.lesson.domain.LessonAction
+import com.tlenparty.algolingo.lesson.domain.LessonReducer
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.Phase
+import com.tlenparty.algolingo.lesson.domain.screenKey
 
 class ReducerTest {
     // Each exercise: one hole, ok "r", acceptable "ra", bank 0 "r", 1 "x", 2 "ra", 3 "y", 4 "z".

@@ -8,6 +8,10 @@ import com.tlenparty.algolingo.progress.domain.RecordLessonResultUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.tlenparty.algolingo.lesson.domain.LessonReducer
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.LessonAction
+import com.tlenparty.algolingo.lesson.domain.Phase
 
 /** Loading and failure of the lesson screen; the lesson itself is the [LessonReducer] state machine. */
 sealed interface LessonUiState {

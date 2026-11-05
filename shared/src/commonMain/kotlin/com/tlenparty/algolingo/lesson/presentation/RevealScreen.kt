@@ -21,6 +21,9 @@ import com.tlenparty.algolingo.lesson.domain.LessonKind
 import com.tlenparty.algolingo.lesson.domain.assembled
 import com.tlenparty.algolingo.lesson.domain.xpFor
 import com.tlenparty.algolingo.lesson.presentation.components.richText
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.LessonAction
+import com.tlenparty.algolingo.lesson.domain.screenKey
 
 @Composable
 fun RevealScreen(state: LessonState, solved: Boolean, on: (LessonAction) -> Unit, modifier: Modifier = Modifier) {

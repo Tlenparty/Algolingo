@@ -24,7 +24,7 @@ import com.tlenparty.algolingo.design.LocalSyntaxLang
 import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.components.ChunkyStyle
 import com.tlenparty.algolingo.design.highlight
-import com.tlenparty.algolingo.core.markdown.parseInline
+import com.tlenparty.algolingo.core.domain.markdown.parseInline
 import com.tlenparty.algolingo.core.presentation.inlineText
 import com.tlenparty.algolingo.lesson.presentation.PanelItem
 import com.tlenparty.algolingo.lesson.presentation.PanelKind

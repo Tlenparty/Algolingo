@@ -36,12 +36,12 @@ import com.tlenparty.algolingo.lesson.data.loadLesson
 import com.tlenparty.algolingo.lesson.domain.Lesson
 import com.tlenparty.algolingo.lesson.domain.Verdict
 import com.tlenparty.algolingo.lesson.domain.xpFor
-import com.tlenparty.algolingo.lesson.presentation.LessonAction
-import com.tlenparty.algolingo.lesson.presentation.LessonReducer
-import com.tlenparty.algolingo.lesson.presentation.LessonState
-import com.tlenparty.algolingo.lesson.presentation.Phase
+import com.tlenparty.algolingo.lesson.domain.LessonAction
+import com.tlenparty.algolingo.lesson.domain.LessonReducer
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.Phase
 import com.tlenparty.algolingo.lesson.presentation.panelModel
-import com.tlenparty.algolingo.lesson.presentation.screenKey
+import com.tlenparty.algolingo.lesson.domain.screenKey
 import com.tlenparty.algolingo.progress.data.CATALOG_PATH
 import com.tlenparty.algolingo.progress.data.SD_CATALOG_PATH
 import com.tlenparty.algolingo.progress.data.loadCatalog

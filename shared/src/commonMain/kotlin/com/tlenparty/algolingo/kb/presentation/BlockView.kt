@@ -37,19 +37,19 @@ import kotlin.coroutines.cancellation.CancellationException
 import com.tlenparty.algolingo.design.highlight
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.NO_LIGATURES
-import com.tlenparty.algolingo.core.markdown.Block
-import com.tlenparty.algolingo.core.markdown.Bold
-import com.tlenparty.algolingo.core.markdown.Callout
-import com.tlenparty.algolingo.core.markdown.Code
-import com.tlenparty.algolingo.core.markdown.Heading
-import com.tlenparty.algolingo.core.markdown.ImageBlock
-import com.tlenparty.algolingo.core.markdown.ListItem
-import com.tlenparty.algolingo.core.markdown.Paragraph
-import com.tlenparty.algolingo.core.markdown.Quote
-import com.tlenparty.algolingo.core.markdown.Rule
-import com.tlenparty.algolingo.core.markdown.Table
-import com.tlenparty.algolingo.core.markdown.Text as PlainText
-import com.tlenparty.algolingo.core.markdown.parseInline
+import com.tlenparty.algolingo.core.domain.markdown.Block
+import com.tlenparty.algolingo.core.domain.markdown.Bold
+import com.tlenparty.algolingo.core.domain.markdown.Callout
+import com.tlenparty.algolingo.core.domain.markdown.Code
+import com.tlenparty.algolingo.core.domain.markdown.Heading
+import com.tlenparty.algolingo.core.domain.markdown.ImageBlock
+import com.tlenparty.algolingo.core.domain.markdown.ListItem
+import com.tlenparty.algolingo.core.domain.markdown.Paragraph
+import com.tlenparty.algolingo.core.domain.markdown.Quote
+import com.tlenparty.algolingo.core.domain.markdown.Rule
+import com.tlenparty.algolingo.core.domain.markdown.Table
+import com.tlenparty.algolingo.core.domain.markdown.Text as PlainText
+import com.tlenparty.algolingo.core.domain.markdown.parseInline
 import com.tlenparty.algolingo.core.presentation.inlineText
 
 @Composable

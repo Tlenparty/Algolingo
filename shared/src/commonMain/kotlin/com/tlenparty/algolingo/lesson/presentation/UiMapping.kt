@@ -5,6 +5,8 @@ import com.tlenparty.algolingo.lesson.domain.Exercise
 import com.tlenparty.algolingo.lesson.domain.ExerciseState
 import com.tlenparty.algolingo.lesson.domain.HoleResult
 import com.tlenparty.algolingo.lesson.domain.Verdict
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.Phase
 
 // Pure UI-state mapping; screens only render these. Never throws on malformed exercises.
 
@@ -79,23 +81,3 @@ fun hintsRemaining(ex: Exercise, shown: Int): Int = (ex.hints.size - shown).coer
 
 // D-A2: Reveal gating lives here (last queue item).
 fun isLastExercise(state: LessonState): Boolean = state.queue.size == 1
-
-sealed interface ScreenKey {
-    data class Theory(val index: Int) : ScreenKey
-    data class Exercise(val id: String, val play: Int) : ScreenKey
-    data class Reveal(val id: String) : ScreenKey
-    data object Done : ScreenKey
-}
-
-/** Stable across Solving -> Feedback of one play (Check bumps attempts), changes on requeue. */
-fun screenKey(state: LessonState): ScreenKey {
-    val id = state.queue.firstOrNull() ?: ""
-    val n = state.attempts[id] ?: 0
-    return when (val p = state.phase) {
-        is Phase.Theory -> ScreenKey.Theory(p.index)
-        Phase.Solving -> ScreenKey.Exercise(id, n)
-        is Phase.Feedback -> ScreenKey.Exercise(id, (n - 1).coerceAtLeast(0))
-        is Phase.Reveal -> ScreenKey.Reveal(id)
-        Phase.Done -> ScreenKey.Done
-    }
-}

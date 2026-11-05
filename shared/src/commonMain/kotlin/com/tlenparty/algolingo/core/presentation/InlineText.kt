@@ -12,16 +12,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
-import com.tlenparty.algolingo.core.markdown.Bold
-import com.tlenparty.algolingo.core.markdown.Inline
-import com.tlenparty.algolingo.core.markdown.InlineCode
-import com.tlenparty.algolingo.core.markdown.Italic
-import com.tlenparty.algolingo.core.markdown.Link
-import com.tlenparty.algolingo.core.markdown.Mark
-import com.tlenparty.algolingo.core.markdown.parseInline
+import com.tlenparty.algolingo.core.domain.markdown.Bold
+import com.tlenparty.algolingo.core.domain.markdown.Inline
+import com.tlenparty.algolingo.core.domain.markdown.InlineCode
+import com.tlenparty.algolingo.core.domain.markdown.Italic
+import com.tlenparty.algolingo.core.domain.markdown.Link
+import com.tlenparty.algolingo.core.domain.markdown.Mark
+import com.tlenparty.algolingo.core.domain.markdown.parseInline
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.NO_LIGATURES
-import com.tlenparty.algolingo.core.markdown.Text as PlainText
+import com.tlenparty.algolingo.core.domain.markdown.Text as PlainText
 
 @Composable
 fun inlineText(

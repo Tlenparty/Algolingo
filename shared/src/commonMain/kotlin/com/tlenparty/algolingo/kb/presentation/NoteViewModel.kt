@@ -2,8 +2,8 @@ package com.tlenparty.algolingo.kb.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tlenparty.algolingo.core.markdown.Block
-import com.tlenparty.algolingo.core.markdown.parseBlocks
+import com.tlenparty.algolingo.core.domain.markdown.Block
+import com.tlenparty.algolingo.core.domain.markdown.parseBlocks
 import com.tlenparty.algolingo.kb.domain.KbRepository
 import com.tlenparty.algolingo.kb.domain.Note
 import kotlinx.coroutines.channels.Channel

@@ -1,4 +1,4 @@
-package com.tlenparty.algolingo.core.markdown
+package com.tlenparty.algolingo.core.domain.markdown
 
 sealed interface Block
 data class Heading(val level: Int, val text: String) : Block

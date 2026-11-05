@@ -1,7 +1,7 @@
 package com.tlenparty.algolingo.kb.domain
 
-import com.tlenparty.algolingo.core.markdown.Block
-import com.tlenparty.algolingo.core.markdown.Heading
+import com.tlenparty.algolingo.core.domain.markdown.Block
+import com.tlenparty.algolingo.core.domain.markdown.Heading
 
 data class SearchHit(val note: Note, val snippet: String)
 

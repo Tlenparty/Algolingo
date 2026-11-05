@@ -43,6 +43,10 @@ import com.tlenparty.algolingo.lesson.domain.Verdict
 import com.tlenparty.algolingo.lesson.presentation.components.CodeTemplate
 import com.tlenparty.algolingo.lesson.presentation.components.ResultPanel
 import com.tlenparty.algolingo.lesson.presentation.components.richText
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.LessonAction
+import com.tlenparty.algolingo.lesson.domain.Phase
+import com.tlenparty.algolingo.lesson.domain.screenKey
 
 @Composable
 fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Modifier = Modifier) {

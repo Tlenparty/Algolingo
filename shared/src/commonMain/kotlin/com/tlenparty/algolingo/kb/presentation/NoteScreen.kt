@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.tlenparty.algolingo.core.markdown.Block
+import com.tlenparty.algolingo.core.domain.markdown.Block
 import com.tlenparty.algolingo.design.AlgoTheme
 import kotlinx.coroutines.launch
 import com.tlenparty.algolingo.kb.domain.Note

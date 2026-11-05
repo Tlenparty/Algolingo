@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.design.components.AlgoCard
-import com.tlenparty.algolingo.core.markdown.Block
-import com.tlenparty.algolingo.core.markdown.Callout
+import com.tlenparty.algolingo.core.domain.markdown.Block
+import com.tlenparty.algolingo.core.domain.markdown.Callout
 
 private fun typeWord(type: String) = when (type.lowercase()) {
     "question" -> "Вопрос"

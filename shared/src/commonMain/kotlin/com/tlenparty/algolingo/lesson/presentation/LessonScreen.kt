@@ -23,6 +23,11 @@ import androidx.compose.ui.Modifier
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.lesson.domain.LessonKind
 import com.tlenparty.algolingo.lesson.presentation.components.LessonTopBar
+import com.tlenparty.algolingo.lesson.domain.LessonReducer
+import com.tlenparty.algolingo.lesson.domain.LessonState
+import com.tlenparty.algolingo.lesson.domain.LessonAction
+import com.tlenparty.algolingo.lesson.domain.Phase
+import com.tlenparty.algolingo.lesson.domain.screenKey
 
 @Composable
 fun LessonScreen(state: LessonState, on: (LessonAction) -> Unit, onExit: () -> Unit) {

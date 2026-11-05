@@ -1,18 +1,5 @@
-package com.tlenparty.algolingo.lesson.presentation
+package com.tlenparty.algolingo.lesson.domain
 
-import com.tlenparty.algolingo.lesson.domain.CheckResult
-import com.tlenparty.algolingo.lesson.domain.Exercise
-import com.tlenparty.algolingo.lesson.domain.ExerciseResult
-import com.tlenparty.algolingo.lesson.domain.ExerciseState
-import com.tlenparty.algolingo.lesson.domain.Grade
-import com.tlenparty.algolingo.lesson.domain.Lesson
-import com.tlenparty.algolingo.lesson.domain.LessonResult
-import com.tlenparty.algolingo.lesson.domain.Verdict
-import com.tlenparty.algolingo.lesson.domain.checkExercise
-import com.tlenparty.algolingo.lesson.domain.initialExerciseState
-import com.tlenparty.algolingo.lesson.domain.seedOf
-import com.tlenparty.algolingo.lesson.domain.tapChip
-import com.tlenparty.algolingo.lesson.domain.tapHole
 
 // Pure lesson state machine. No Random.Default, never throws; stray actions return the state unchanged.
 // NextTheory/Continue carry the screen they were issued from, so a double tap (or a tap on the outgoing
@@ -139,5 +126,25 @@ object LessonReducer {
             else -> Grade.Clean
         }
         return LessonResult(grade, per)
+    }
+}
+
+sealed interface ScreenKey {
+    data class Theory(val index: Int) : ScreenKey
+    data class Exercise(val id: String, val play: Int) : ScreenKey
+    data class Reveal(val id: String) : ScreenKey
+    data object Done : ScreenKey
+}
+
+/** Stable across Solving -> Feedback of one play (Check bumps attempts), changes on requeue. */
+fun screenKey(state: LessonState): ScreenKey {
+    val id = state.queue.firstOrNull() ?: ""
+    val n = state.attempts[id] ?: 0
+    return when (val p = state.phase) {
+        is Phase.Theory -> ScreenKey.Theory(p.index)
+        Phase.Solving -> ScreenKey.Exercise(id, n)
+        is Phase.Feedback -> ScreenKey.Exercise(id, (n - 1).coerceAtLeast(0))
+        is Phase.Reveal -> ScreenKey.Reveal(id)
+        Phase.Done -> ScreenKey.Done
     }
 }
