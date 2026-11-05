@@ -186,6 +186,75 @@
         "Справа в окно вошёл `nums[i]`. Какой элемент вышел слева?",
         "Ищем лучшее окно из всех."
       ]
+    },
+    {
+      "id": "l2.6.e4",
+      "segments": [
+        "# Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75\n# Случай 2: [5], k = 1 → 5.0\ndef find_max_average(nums: list[int], k: int) -> float:\n    # сумма первого окна\n    ",
+        "\n    # лучшая сумма пока что\n    ",
+        "\n    # сдвигаем окно на 1\n    ",
+        "\n        # вошёл новый, ушёл старый\n        ",
+        "\n        # запоминаем лучшее\n        ",
+        "\n    # среднее с дробной частью\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "window_sum = sum(nums[:k])"
+          ]
+        },
+        {
+          "ok": [
+            "max_sum = window_sum"
+          ]
+        },
+        {
+          "ok": [
+            "for i in range(k, len(nums)):"
+          ]
+        },
+        {
+          "ok": [
+            "window_sum += nums[i] - nums[i - k]"
+          ]
+        },
+        {
+          "ok": [
+            "max_sum = max(max_sum, window_sum)"
+          ]
+        },
+        {
+          "ok": [
+            "return max_sum / k"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "window_sum = sum(nums[:k])"
+        },
+        {
+          "text": "max_sum = window_sum"
+        },
+        {
+          "text": "for i in range(k, len(nums)):"
+        },
+        {
+          "text": "window_sum += nums[i] - nums[i - k]"
+        },
+        {
+          "text": "max_sum = max(max_sum, window_sum)"
+        },
+        {
+          "text": "return max_sum / k"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

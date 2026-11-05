@@ -1,6 +1,7 @@
 package com.tlenparty.algolingo.lesson.domain
 
-const val MAX_BANK = 10
+/** A lines exercise («собери из строк») banks every body line, so up to 14 chips. */
+const val MAX_BANK = 14
 
 /** Widest design line that fits the phone screen without horizontal scroll. */
 const val MAX_DESIGN_LINE = 34
@@ -18,7 +19,7 @@ fun validate(lesson: Lesson): List<String> {
     val errors = mutableListOf<String>()
     if (lesson.schema != 1) errors += "lesson: schema ${lesson.schema} != 1"
     val design = lesson.kind == LessonKind.Design
-    val steps = if (design) 2..4 else 2..3
+    val steps = 2..4
     if (lesson.exercises.size !in steps) errors += "lesson: ${lesson.exercises.size} exercises, expected ${steps.first}..${steps.last}"
     val ids = lesson.exercises.map { it.id }
     if (ids.size != ids.toSet().size) errors += "lesson: duplicate exercise ids"

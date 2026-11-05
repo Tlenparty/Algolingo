@@ -37,6 +37,10 @@ Sidecar grammar (content/authoring/l0.N.md):
   - ~`T`: note                   note for the acceptable text T (no tag)
   ? hint                         hint, in order
 
+  ## eK lines                    optional last exercise, no fence: every line of the reference's last
+                                 function body becomes a hole (comments, braces, indent stay); the bank
+                                 is those lines, no distractors, at most MAX_LINES_BANK; only ? hints
+
 Kind tags (G9, test-only, never in lesson JSON) say how the variant breaks: compile | wrong |
 crash | hang. @H bullets carry exactly one; a distractor with a why carries a set ([compile,wrong]),
 the kinds seen across its holes; a distractor without a why takes none (tag its @H overrides).
@@ -71,6 +75,11 @@ AUTHORING_PY = AUTHORING + "/py"
 TEST_KT = "shared/src/commonTest/kotlin/com/tlenparty/algolingo/lesson/ReferenceSolutionsTest.kt"
 WRONG_JSON = "shared/src/androidHostTest/resources/wrong_variants.json"
 MAX_BANK = 10
+MAX_LINES_BANK = 14  # `## eK lines`: the bank is the body lines themselves, no distractors
+LINES_TITLE = "Собери решение из строк"
+LINES_HINT = "Комментарий над дыркой подсказывает, какая строка под ним."
+# fixed in a lines exercise: blank, comment-only and brace-only lines
+FIXED_LINE = re.compile(r"^\s*(?:(?://|#).*|[})\]]*)$")
 
 HOLE = re.compile(r"⟦(.*?)⟧")
 # ponytail: " | " separates alternatives; level 0 has no chip containing " | ", revisit if one appears
@@ -296,6 +305,14 @@ def parse_sidecar(text, stem, lang="kotlin"):
             sc["theory"].append(card)
         elif re.match(r"^e\d+$", head):
             sc["exercises"].append(parse_exercise(head, body, file, lang))
+        elif re.match(r"^e\d+ lines$", head):
+            ex = {"name": head.split()[0], "lines": True, "code": None, "bullets": [], "hints": []}
+            for ln in body:
+                if ln.startswith("? "):
+                    ex["hints"].append(ln[2:].strip())
+                elif ln.strip():
+                    raise GenError(file, "syntax", "## %s: only ? hints allowed, got: %s" % (head, ln))
+            sc["exercises"].append(ex)
         else:
             raise GenError(file, "syntax", "unknown section: ## " + head)
     names = [e["name"] for e in sc["exercises"]]
@@ -328,6 +345,17 @@ def norm(code):
     return [re.sub(r"\s*//.*$", "", ln).rstrip() for ln in code.split("\n")]
 
 
+def line_holes(code):
+    """Every line of the last top-level function body becomes a hole; comments, braces, indent stay fixed."""
+    lines = code.split("\n")
+    start = max(i for i, ln in enumerate(lines) if re.match(r"(fun|def) ", ln)) + 1
+    for i in range(start, len(lines)):
+        if not FIXED_LINE.match(lines[i]):
+            body = lines[i].lstrip()
+            lines[i] = lines[i][:len(lines[i]) - len(body)] + "⟦" + body + "⟧"
+    return "\n".join(lines)
+
+
 def build_lesson(sc, note_lines):
     file, lid, top = sc["file"], sc["id"], sc["top"]
     if "## " + top["note"] not in note_lines:
@@ -341,6 +369,11 @@ def build_lesson(sc, note_lines):
 
     parsed = []
     for ex in sc["exercises"]:
+        if ex.get("lines"):
+            if not parsed:
+                raise GenError(file, "G7", "a lines exercise needs a hole exercise before it")
+            _, segs, holes = parsed[0]
+            ex["code"] = line_holes(assemble(segs, [h[0][0] for h in holes]))
         segs, holes = split_holes(ex["code"])
         if not holes:
             raise GenError(file, "G1", ex["name"] + ": no ⟦⟧ holes")
@@ -350,8 +383,10 @@ def build_lesson(sc, note_lines):
         parsed.append((ex, segs, holes))
 
     counts = [len(p[2]) for p in parsed]
-    if not 2 <= len(parsed) <= 3:
-        raise GenError(file, "G7", "need 2..3 exercises, got %d" % len(parsed))
+    if not 2 <= len(parsed) <= 4:
+        raise GenError(file, "G7", "need 2..4 exercises, got %d" % len(parsed))
+    if any(ex.get("lines") for ex in sc["exercises"][:-1]):
+        raise GenError(file, "G7", "a lines exercise must be the last one")
     if any(b <= a for a, b in zip(counts, counts[1:])):
         raise GenError(file, "G7", "hole counts must strictly increase: %s" % counts)
 
@@ -364,6 +399,11 @@ def build_lesson(sc, note_lines):
         raise GenError(file, "G5", "exercises do not produce the same code")
 
     exercises = [build_exercise(lid, file, ex, segs, holes) for ex, segs, holes in parsed]
+    for ex, out in zip(sc["exercises"], exercises):
+        if ex.get("lines"):
+            out["title"] = LINES_TITLE
+            out["lines"] = True
+            out["hints"] = [LINES_HINT] + out["hints"]
 
     lesson = {"schema": 1, "id": lid, "level": int(re.match(r"l(\d+)", lid).group(1)),
               "title": top.get("title", note["title"]),
@@ -461,8 +501,9 @@ def build_exercise(lid, file, ex, segs, holes):
         for text, why in ww.items():
             if "`" not in why:
                 raise GenError(file, "G3", "%s: @%d why for `%s` has no `counterexample`" % (where, h, text))
-    if len(bank) > MAX_BANK:
-        raise GenError(file, "G7", "%s: bank has %d chips > %d" % (where, len(bank), MAX_BANK))
+    limit = MAX_LINES_BANK if ex.get("lines") else MAX_BANK
+    if len(bank) > limit:
+        raise GenError(file, "G7", "%s: bank has %d chips > %d" % (where, len(bank), limit))
 
     out_holes = []
     for (ok, acc, _), ww in zip(holes, wrong):
@@ -507,6 +548,8 @@ def wrong_programs(lesson, sc):
     """One entry per unique program: ok[0] everywhere except hole i = a chip not correct for it."""
     by_code = {}
     for ex, sx in zip(lesson["exercises"], sc["exercises"]):
+        if ex.get("lines"):
+            continue  # verdict is "not the reference order"; a swapped line may well still run (`return None`)
         base = [h["ok"][0] for h in ex["holes"]]
         for i, h in enumerate(ex["holes"]):
             correct = set(h["ok"]) | set(a["text"] for a in h.get("acceptable", []))

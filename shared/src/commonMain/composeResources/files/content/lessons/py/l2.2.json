@@ -231,6 +231,93 @@
         "В свободную ячейку пишем то, что сейчас читает `fast`.",
         "`slow` указывает на первую свободную ячейку."
       ]
+    },
+    {
+      "id": "l2.2.e4",
+      "segments": [
+        "# Случай 1: [1, 1, 2] → 2, начало [1, 2]\n# Случай 2: [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]\n#   → 5, начало [0, 1, 2, 3, 4]\ndef remove_duplicates(nums: list[int]) -> int:\n    # пустой — уникальных нет\n    ",
+        "\n        ",
+        "\n    # nums[0] всегда остаётся\n    ",
+        "\n    # fast ищет новые значения\n    ",
+        "\n        # не равно последнему?\n        ",
+        "\n            # пишем на место slow\n            ",
+        "\n            ",
+        "\n    # длина без дубликатов\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "if not nums:"
+          ]
+        },
+        {
+          "ok": [
+            "return 0"
+          ]
+        },
+        {
+          "ok": [
+            "slow = 1"
+          ]
+        },
+        {
+          "ok": [
+            "for fast in range(1, len(nums)):"
+          ]
+        },
+        {
+          "ok": [
+            "if nums[fast] != nums[slow - 1]:"
+          ]
+        },
+        {
+          "ok": [
+            "nums[slow] = nums[fast]"
+          ]
+        },
+        {
+          "ok": [
+            "slow += 1"
+          ]
+        },
+        {
+          "ok": [
+            "return slow"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "if not nums:"
+        },
+        {
+          "text": "return 0"
+        },
+        {
+          "text": "slow = 1"
+        },
+        {
+          "text": "for fast in range(1, len(nums)):"
+        },
+        {
+          "text": "if nums[fast] != nums[slow - 1]:"
+        },
+        {
+          "text": "nums[slow] = nums[fast]"
+        },
+        {
+          "text": "slow += 1"
+        },
+        {
+          "text": "return slow"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

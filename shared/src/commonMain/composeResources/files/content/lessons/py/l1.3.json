@@ -221,6 +221,120 @@
         "Буквы из `b` может не быть в `counts` — значит, её было `0`: `counts.get(ch, 0)`. После вычитания она уйдёт в минус.",
         "Буква лишняя, если её счётчик ушёл в минус."
       ]
+    },
+    {
+      "id": "l1.3.e4",
+      "segments": [
+        "# Случай 1: \"йцукен\", \"некуцй\" → True\n# Случай 2: \"ффффа\", \"фффа\" → False\n# Случай 3: \"ab\", \"ac\" → False\ndef same_letters(a: str, b: str) -> bool:\n    ",
+        "\n        ",
+        "\n    ",
+        "\n    ",
+        "\n        ",
+        "\n    ",
+        "\n        ",
+        "\n        ",
+        "\n            ",
+        "\n        ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "if len(a) != len(b):"
+          ]
+        },
+        {
+          "ok": [
+            "return False"
+          ]
+        },
+        {
+          "ok": [
+            "counts = {}"
+          ]
+        },
+        {
+          "ok": [
+            "for ch in a:"
+          ]
+        },
+        {
+          "ok": [
+            "counts[ch] = counts.get(ch, 0) + 1"
+          ]
+        },
+        {
+          "ok": [
+            "for ch in b:"
+          ]
+        },
+        {
+          "ok": [
+            "left = counts.get(ch, 0) - 1"
+          ]
+        },
+        {
+          "ok": [
+            "if left < 0:"
+          ]
+        },
+        {
+          "ok": [
+            "return False"
+          ]
+        },
+        {
+          "ok": [
+            "counts[ch] = left"
+          ]
+        },
+        {
+          "ok": [
+            "return True"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "if len(a) != len(b):"
+        },
+        {
+          "text": "return False"
+        },
+        {
+          "text": "counts = {}"
+        },
+        {
+          "text": "for ch in a:"
+        },
+        {
+          "text": "counts[ch] = counts.get(ch, 0) + 1"
+        },
+        {
+          "text": "for ch in b:"
+        },
+        {
+          "text": "left = counts.get(ch, 0) - 1"
+        },
+        {
+          "text": "if left < 0:"
+        },
+        {
+          "text": "return False"
+        },
+        {
+          "text": "counts[ch] = left"
+        },
+        {
+          "text": "return True"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

@@ -186,6 +186,84 @@
         "Справа в окно вошёл `nums[i]`. Какой элемент вышел слева?",
         "Ищем лучшее окно из всех."
       ]
+    },
+    {
+      "id": "l2.6.e4",
+      "segments": [
+        "// Случай 1: [1, 12, -5, -6, 50, 3], k = 4 → 12.75\n// Случай 2: [5], k = 1 → 5.0\nfun findMaxAverage(nums: IntArray, k: Int): Double {\n    // сумма первого окна\n    ",
+        "\n    ",
+        "\n    // лучшая сумма пока что\n    ",
+        "\n    // сдвигаем окно на 1\n    ",
+        "\n        // вошёл новый, ушёл старый\n        ",
+        "\n        // запоминаем лучшее\n        ",
+        "\n    }\n    // среднее с дробной частью\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "var windowSum = 0"
+          ]
+        },
+        {
+          "ok": [
+            "for (i in 0 until k) windowSum += nums[i]"
+          ]
+        },
+        {
+          "ok": [
+            "var maxSum = windowSum"
+          ]
+        },
+        {
+          "ok": [
+            "for (i in k until nums.size) {"
+          ]
+        },
+        {
+          "ok": [
+            "windowSum += nums[i] - nums[i - k]"
+          ]
+        },
+        {
+          "ok": [
+            "maxSum = maxOf(maxSum, windowSum)"
+          ]
+        },
+        {
+          "ok": [
+            "return maxSum.toDouble() / k"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "var windowSum = 0"
+        },
+        {
+          "text": "for (i in 0 until k) windowSum += nums[i]"
+        },
+        {
+          "text": "var maxSum = windowSum"
+        },
+        {
+          "text": "for (i in k until nums.size) {"
+        },
+        {
+          "text": "windowSum += nums[i] - nums[i - k]"
+        },
+        {
+          "text": "maxSum = maxOf(maxSum, windowSum)"
+        },
+        {
+          "text": "return maxSum.toDouble() / k"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

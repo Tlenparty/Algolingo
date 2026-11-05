@@ -93,15 +93,15 @@ class ModelTest {
     }
 
     @Test fun bankTooBig() {
-        val bad = x2().copy(bank = x2().bank + List(8) { Chip("D$it", "w") })
-        assertErr(lessonOf(x1(), bad, code = same), "max 10")
+        val bad = x2().copy(bank = x2().bank + List(12) { Chip("D$it", "w") })
+        assertErr(lessonOf(x1(), bad, code = same), "max 14")
     }
 
     @Test fun referenceDrift() = assertErr(lessonOf(x1(), x2(), code = "other"), "differ from solution.code")
 
     @Test fun ladderAndIds() {
         assertErr(lessonOf(x2(), x2().copy(id = "l.e3"), code = same), "strictly increasing")
-        assertErr(lessonOf(x1(), code = same), "expected 2..3")
+        assertErr(lessonOf(x1(), code = same), "expected 2..4")
         assertErr(lessonOf(x1(), x2().copy(id = "zzz"), code = same), "not prefixed")
         assertErr(lessonOf(x1(), x1(), code = same), "duplicate")
         assertErr(lessonOf(x1(), x2(), code = same, schema = 2), "schema")
@@ -135,8 +135,8 @@ class ModelTest {
         assertEquals(emptyList(), validate(design(d(1, "a"), d(2, "b"), d(3, "c"), d(4, "d"), code = "d")))
         assertErr(design(d(1, "a"), d(2, "b"), d(3, "c"), d(4, "d"), d(5, "e"), code = "e"), "expected 2..4")
         assertErr(design(d(1, "a"), code = "a"), "expected 2..4")
-        val code4 = lessonOf(d(1, "a"), d(2, "a"), d(3, "a"), d(4, "a"), code = "a")
-        assertErr(code4, "expected 2..3")
+        val code5 = lessonOf(d(1, "a"), d(2, "a"), d(3, "a"), d(4, "a"), d(5, "a"), code = "a")
+        assertErr(code5, "expected 2..4")
     }
 
     @Test fun designSkipsHoleGrowth() {

@@ -51,6 +51,7 @@ data class ExerciseDto(
     val bank: List<ChipDto>,
     val hints: List<String> = emptyList(),
     val title: String? = null,
+    val lines: Boolean = false,
 )
 
 @Serializable
@@ -87,7 +88,7 @@ private fun LessonKindDto.toDomain() = when (this) {
 
 private fun TheoryCardDto.toDomain() = TheoryCard(title, body, signals, skeleton, pitfalls)
 
-fun ExerciseDto.toDomain() = Exercise(id, segments, holes.map { it.toDomain() }, bank.map { Chip(it.text, it.why) }, hints, title)
+fun ExerciseDto.toDomain() = Exercise(id, segments, holes.map { it.toDomain() }, bank.map { Chip(it.text, it.why) }, hints, title, lines)
 
 private fun HoleDto.toDomain() = Hole(ok, acceptable.map { Accepted(it.text, it.note) }, wrongWhy)
 

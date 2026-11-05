@@ -201,6 +201,84 @@
         "Закрывающая закрывает самую свежую открытую. Её надо снять со стека, а не только посмотреть.",
         "В конце в стеке не должно остаться открытых."
       ]
+    },
+    {
+      "id": "l3.2.e4",
+      "segments": [
+        "// Случай 1: \"()[]{}\" → true\n// Случай 2: \"([)]\" → false\n// Случай 3: \"(\" → false\nfun isValidBrackets(s: String): Boolean {\n    // открытые, ждущие пары\n    ",
+        "\n    // закрывающая -> открывающая\n    ",
+        "\n    ",
+        "\n        // открывающая: в стек\n        ",
+        "\n        // закрывающая: сверяем с вершиной\n        ",
+        "\n            ",
+        "\n        }\n    }\n    // все открытые закрылись\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "val stack = ArrayDeque<Char>()"
+          ]
+        },
+        {
+          "ok": [
+            "val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')"
+          ]
+        },
+        {
+          "ok": [
+            "for (char in s) {"
+          ]
+        },
+        {
+          "ok": [
+            "if (char in pairs.values) stack.addLast(char)"
+          ]
+        },
+        {
+          "ok": [
+            "else if (char in pairs.keys) {"
+          ]
+        },
+        {
+          "ok": [
+            "if (stack.isEmpty() || stack.removeLast() != pairs[char]) return false"
+          ]
+        },
+        {
+          "ok": [
+            "return stack.isEmpty()"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "val stack = ArrayDeque<Char>()"
+        },
+        {
+          "text": "val pairs = mapOf(')' to '(', ']' to '[', '}' to '{')"
+        },
+        {
+          "text": "for (char in s) {"
+        },
+        {
+          "text": "if (char in pairs.values) stack.addLast(char)"
+        },
+        {
+          "text": "else if (char in pairs.keys) {"
+        },
+        {
+          "text": "if (stack.isEmpty() || stack.removeLast() != pairs[char]) return false"
+        },
+        {
+          "text": "return stack.isEmpty()"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

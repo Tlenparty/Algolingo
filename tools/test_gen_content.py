@@ -211,6 +211,17 @@ class Validation(unittest.TestCase):
         self.assertEqual([len(e["holes"]) for e in lesson["exercises"]], [1, 2])
         self.assertEqual(lesson["solution"]["code"], REF)
 
+    def test_lines_exercise_holes_every_body_line(self):
+        lesson = build(BASE + "\n## e3 lines\n")
+        e3 = lesson["exercises"][2]
+        self.assertTrue(e3["lines"])
+        self.assertEqual(gen_content.assemble(e3["segments"], [h["ok"][0] for h in e3["holes"]]), REF)
+        self.assertIn("var left = 0", [h["ok"][0] for h in e3["holes"]])
+        # signature, comments and closing braces stay fixed
+        self.assertTrue(all(not t.startswith(("fun ", "//", "}")) for t in (h["ok"][0] for h in e3["holes"])))
+        sc = gen_content.parse_sidecar(BASE + "\n## e3 lines\n", "l0.4")
+        self.assertFalse([e for _, e in gen_content.wrong_programs(lesson, sc) if ".e3." in e["id"]])
+
     def test_g1_hole_without_correct_entry_fails(self):
         self.assertRule("G1", build, BASE.replace("while (⟦left <= right⟧)", "while (⟦~left <= right⟧)", 1))
 

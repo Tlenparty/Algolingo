@@ -195,6 +195,75 @@
         "Указатель в `t` двигается на каждом шаге — иначе цикл может встать.",
         "`t` может кончиться и тогда, когда `s` не нашлась. Какой указатель знает, сколько символов `s` уже найдено?"
       ]
+    },
+    {
+      "id": "l2.5.e4",
+      "segments": [
+        "// Случай 1: \"abc\", \"ahbgdc\" → true\n// Случай 2: \"axc\", \"ahbgdc\" → false\nfun isSubsequence(s: String, t: String): Boolean {\n    // указатель в s\n    ",
+        "\n    // указатель в t\n    ",
+        "\n    // пока обе не кончились\n    ",
+        "\n        // совпало — двигаем s\n        ",
+        "\n        // t двигается всегда\n        ",
+        "\n    }\n    // всю s нашли по порядку?\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "var sIndex = 0"
+          ]
+        },
+        {
+          "ok": [
+            "var tIndex = 0"
+          ]
+        },
+        {
+          "ok": [
+            "while (sIndex < s.length && tIndex < t.length) {"
+          ]
+        },
+        {
+          "ok": [
+            "if (s[sIndex] == t[tIndex]) sIndex++"
+          ]
+        },
+        {
+          "ok": [
+            "tIndex++"
+          ]
+        },
+        {
+          "ok": [
+            "return sIndex == s.length"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "var sIndex = 0"
+        },
+        {
+          "text": "var tIndex = 0"
+        },
+        {
+          "text": "while (sIndex < s.length && tIndex < t.length) {"
+        },
+        {
+          "text": "if (s[sIndex] == t[tIndex]) sIndex++"
+        },
+        {
+          "text": "tIndex++"
+        },
+        {
+          "text": "return sIndex == s.length"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

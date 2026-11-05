@@ -213,6 +213,138 @@
         "Отрицательное число может дать квадрат больше, чем положительное.",
         "В текущую ячейку идёт больший из двух квадратов."
       ]
+    },
+    {
+      "id": "l2.4.e4",
+      "segments": [
+        "# Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]\n# Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]\ndef sorted_squares(nums: list[int]) -> list[int]:\n    # ответ той же длины\n    ",
+        "\n    # концы списка — кандидаты\n    ",
+        "\n    ",
+        "\n    # заполняем с конца\n    ",
+        "\n        # квадраты обоих концов\n        ",
+        "\n        ",
+        "\n        # больший — в ячейку\n        ",
+        "\n            ",
+        "\n            ",
+        "\n        ",
+        "\n            ",
+        "\n            ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "result = [0] * len(nums)"
+          ]
+        },
+        {
+          "ok": [
+            "left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "right = len(nums) - 1"
+          ]
+        },
+        {
+          "ok": [
+            "for write_index in range(len(nums) - 1, -1, -1):"
+          ]
+        },
+        {
+          "ok": [
+            "left_square = nums[left] * nums[left]"
+          ]
+        },
+        {
+          "ok": [
+            "right_square = nums[right] * nums[right]"
+          ]
+        },
+        {
+          "ok": [
+            "if left_square > right_square:"
+          ]
+        },
+        {
+          "ok": [
+            "result[write_index] = left_square"
+          ]
+        },
+        {
+          "ok": [
+            "left += 1"
+          ]
+        },
+        {
+          "ok": [
+            "else:"
+          ]
+        },
+        {
+          "ok": [
+            "result[write_index] = right_square"
+          ]
+        },
+        {
+          "ok": [
+            "right -= 1"
+          ]
+        },
+        {
+          "ok": [
+            "return result"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "result = [0] * len(nums)"
+        },
+        {
+          "text": "left = 0"
+        },
+        {
+          "text": "right = len(nums) - 1"
+        },
+        {
+          "text": "for write_index in range(len(nums) - 1, -1, -1):"
+        },
+        {
+          "text": "left_square = nums[left] * nums[left]"
+        },
+        {
+          "text": "right_square = nums[right] * nums[right]"
+        },
+        {
+          "text": "if left_square > right_square:"
+        },
+        {
+          "text": "result[write_index] = left_square"
+        },
+        {
+          "text": "left += 1"
+        },
+        {
+          "text": "else:"
+        },
+        {
+          "text": "result[write_index] = right_square"
+        },
+        {
+          "text": "right -= 1"
+        },
+        {
+          "text": "return result"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

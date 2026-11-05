@@ -211,6 +211,93 @@
         "Буква из `b`, которой нет в `counts`, «была 0 раз» — после вычитания уходит в минус.",
         "Записываем уменьшенный счётчик обратно."
       ]
+    },
+    {
+      "id": "l1.3.e4",
+      "segments": [
+        "// Случай 1: \"йцукен\", \"некуцй\" → true\n// Случай 2: \"ффффа\", \"фффа\" → false\n// Случай 3: \"ab\", \"ac\" → false\nfun sameLetters(a: String, b: String): Boolean {\n    // быстрая проверка длин\n    ",
+        "\n    // буква -> сколько раз\n    ",
+        "\n    // считаем буквы первого слова\n    ",
+        "\n    // вычитаем буквы второго слова\n    ",
+        "\n        // остаток этой буквы\n        ",
+        "\n        // в b лишняя буква\n        ",
+        "\n        ",
+        "\n    }\n    // длины равны, минуса не было\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "if (a.length != b.length) return false"
+          ]
+        },
+        {
+          "ok": [
+            "val counts = HashMap<Char, Int>()"
+          ]
+        },
+        {
+          "ok": [
+            "for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1"
+          ]
+        },
+        {
+          "ok": [
+            "for (char in b) {"
+          ]
+        },
+        {
+          "ok": [
+            "val remaining = (counts[char] ?: 0) - 1"
+          ]
+        },
+        {
+          "ok": [
+            "if (remaining < 0) return false"
+          ]
+        },
+        {
+          "ok": [
+            "counts[char] = remaining"
+          ]
+        },
+        {
+          "ok": [
+            "return true"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "if (a.length != b.length) return false"
+        },
+        {
+          "text": "val counts = HashMap<Char, Int>()"
+        },
+        {
+          "text": "for (char in a) counts[char] = counts.getOrDefault(char, 0) + 1"
+        },
+        {
+          "text": "for (char in b) {"
+        },
+        {
+          "text": "val remaining = (counts[char] ?: 0) - 1"
+        },
+        {
+          "text": "if (remaining < 0) return false"
+        },
+        {
+          "text": "counts[char] = remaining"
+        },
+        {
+          "text": "return true"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

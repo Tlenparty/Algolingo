@@ -100,7 +100,7 @@ class WrongChipsTest {
         // control per lesson; an empty or truncated wrong_variants.json cannot pass as "0 findings"
         if (lessons.isEmpty()) findings += "no lessons in the catalog"
         val expected = lessons.flatMap { l ->
-            l.exercises.flatMap { ex ->
+            l.exercises.filter { !it.lines }.flatMap { ex ->
                 ex.holes.flatMapIndexed { i, h ->
                     val correct = h.ok.toSet() + h.acceptable.map { it.text }
                     ex.bank.map { it.text }.filter { it !in correct }.map { "${ex.id}.h${i + 1}:$it" }

@@ -206,6 +206,93 @@
         "В ячейку `slow` пишем то, что сейчас читает `fast`.",
         "Хвост добиваем, пока `slow` не дошёл до конца массива."
       ]
+    },
+    {
+      "id": "l2.1.e4",
+      "segments": [
+        "// Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]\n// Случай 2: [0] → [0]\nfun moveZeroes(nums: IntArray) {\n    // куда писать ненулевой\n    ",
+        "\n    // fast бежит по всем\n    ",
+        "\n        // нули пропускаем\n        ",
+        "\n            // копируем в slow\n            ",
+        "\n            ",
+        "\n        }\n    }\n    // хвост добиваем нулями\n    ",
+        "\n        ",
+        "\n        ",
+        "\n    }\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "var slow = 0"
+          ]
+        },
+        {
+          "ok": [
+            "for (fast in nums.indices) {"
+          ]
+        },
+        {
+          "ok": [
+            "if (nums[fast] != 0) {"
+          ]
+        },
+        {
+          "ok": [
+            "nums[slow] = nums[fast]"
+          ]
+        },
+        {
+          "ok": [
+            "slow++"
+          ]
+        },
+        {
+          "ok": [
+            "while (slow < nums.size) {"
+          ]
+        },
+        {
+          "ok": [
+            "nums[slow] = 0"
+          ]
+        },
+        {
+          "ok": [
+            "slow++"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "var slow = 0"
+        },
+        {
+          "text": "for (fast in nums.indices) {"
+        },
+        {
+          "text": "if (nums[fast] != 0) {"
+        },
+        {
+          "text": "nums[slow] = nums[fast]"
+        },
+        {
+          "text": "slow++"
+        },
+        {
+          "text": "while (slow < nums.size) {"
+        },
+        {
+          "text": "nums[slow] = 0"
+        },
+        {
+          "text": "slow++"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

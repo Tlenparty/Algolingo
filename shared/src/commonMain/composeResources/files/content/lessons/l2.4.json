@@ -213,6 +213,138 @@
         "Отрицательное число может дать квадрат больше, чем положительное.",
         "В текущую ячейку идёт больший из двух квадратов."
       ]
+    },
+    {
+      "id": "l2.4.e4",
+      "segments": [
+        "// Случай 1: [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]\n// Случай 2: [-7, -3, 2, 3, 11] → [4, 9, 9, 49, 121]\nfun sortedSquares(nums: IntArray): IntArray {\n    // ответ той же длины\n    ",
+        "\n    // концы массива — кандидаты\n    ",
+        "\n    ",
+        "\n    // заполняем с конца\n    ",
+        "\n        // квадраты обоих концов\n        ",
+        "\n        ",
+        "\n        // больший — в ячейку\n        ",
+        "\n            ",
+        "\n            ",
+        "\n        ",
+        "\n            ",
+        "\n            ",
+        "\n        }\n    }\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "val result = IntArray(nums.size)"
+          ]
+        },
+        {
+          "ok": [
+            "var left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "var right = nums.size - 1"
+          ]
+        },
+        {
+          "ok": [
+            "for (writeIndex in nums.size - 1 downTo 0) {"
+          ]
+        },
+        {
+          "ok": [
+            "val leftSquare = nums[left] * nums[left]"
+          ]
+        },
+        {
+          "ok": [
+            "val rightSquare = nums[right] * nums[right]"
+          ]
+        },
+        {
+          "ok": [
+            "if (leftSquare > rightSquare) {"
+          ]
+        },
+        {
+          "ok": [
+            "result[writeIndex] = leftSquare"
+          ]
+        },
+        {
+          "ok": [
+            "left++"
+          ]
+        },
+        {
+          "ok": [
+            "} else {"
+          ]
+        },
+        {
+          "ok": [
+            "result[writeIndex] = rightSquare"
+          ]
+        },
+        {
+          "ok": [
+            "right--"
+          ]
+        },
+        {
+          "ok": [
+            "return result"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "val result = IntArray(nums.size)"
+        },
+        {
+          "text": "var left = 0"
+        },
+        {
+          "text": "var right = nums.size - 1"
+        },
+        {
+          "text": "for (writeIndex in nums.size - 1 downTo 0) {"
+        },
+        {
+          "text": "val leftSquare = nums[left] * nums[left]"
+        },
+        {
+          "text": "val rightSquare = nums[right] * nums[right]"
+        },
+        {
+          "text": "if (leftSquare > rightSquare) {"
+        },
+        {
+          "text": "result[writeIndex] = leftSquare"
+        },
+        {
+          "text": "left++"
+        },
+        {
+          "text": "} else {"
+        },
+        {
+          "text": "result[writeIndex] = rightSquare"
+        },
+        {
+          "text": "right--"
+        },
+        {
+          "text": "return result"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

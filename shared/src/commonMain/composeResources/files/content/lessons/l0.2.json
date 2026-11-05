@@ -204,6 +204,66 @@
         "Обмен через временную `temp`: `s[left]` к этому моменту уже перезаписан.",
         "Левый указатель идёт вправо (`left++`), правый — влево (`right--`)."
       ]
+    },
+    {
+      "id": "l0.2.e4",
+      "segments": [
+        "// Случай 1: [a, b, c, d] → [d, c, b, a]\n// Случай 2: [a] → [a]\n// Случай 3: [] → []\nfun reverse(s: CharArray) {\n    // левый указатель — с начала\n    ",
+        "\n    // правый указатель — с конца\n    ",
+        "\n    // идём навстречу\n    ",
+        "\n        // обмен через temp\n        ",
+        "\n        // оба указателя — к центру\n        ",
+        "\n    }\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "var left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "var right = s.size - 1"
+          ]
+        },
+        {
+          "ok": [
+            "while (left < right) {"
+          ]
+        },
+        {
+          "ok": [
+            "val temp = s[left]; s[left] = s[right]; s[right] = temp"
+          ]
+        },
+        {
+          "ok": [
+            "left++; right--"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "var left = 0"
+        },
+        {
+          "text": "var right = s.size - 1"
+        },
+        {
+          "text": "while (left < right) {"
+        },
+        {
+          "text": "val temp = s[left]; s[left] = s[right]; s[right] = temp"
+        },
+        {
+          "text": "left++; right--"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

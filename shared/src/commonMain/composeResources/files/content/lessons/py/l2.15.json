@@ -174,6 +174,147 @@
         "Лишний символ справа — сдвигаем правый указатель внутрь.",
         "Регистр не важен: сравниваем обе стороны в нижнем регистре."
       ]
+    },
+    {
+      "id": "l2.15.e4",
+      "segments": [
+        "# Случай 1: \"A man, a plan, a canal: Panama\" → True\n# Случай 2: \"race a car\" → False\n# Случай 3: \" \" → True\ndef is_valid_palindrome(s: str) -> bool:\n    # левый указатель — с начала\n    ",
+        "\n    # правый указатель — с конца\n    ",
+        "\n    # идём навстречу\n    ",
+        "\n        # слева не буква и не цифра — пропускаем\n        ",
+        "\n            ",
+        "\n            ",
+        "\n        # справа так же\n        ",
+        "\n            ",
+        "\n            ",
+        "\n        # сравниваем без учёта регистра\n        ",
+        "\n            ",
+        "\n        # оба указателя — к центру\n        ",
+        "\n        ",
+        "\n    # все пары совпали\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "right = len(s) - 1"
+          ]
+        },
+        {
+          "ok": [
+            "while left < right:"
+          ]
+        },
+        {
+          "ok": [
+            "if not s[left].isalnum():"
+          ]
+        },
+        {
+          "ok": [
+            "left += 1"
+          ]
+        },
+        {
+          "ok": [
+            "continue"
+          ]
+        },
+        {
+          "ok": [
+            "if not s[right].isalnum():"
+          ]
+        },
+        {
+          "ok": [
+            "right -= 1"
+          ]
+        },
+        {
+          "ok": [
+            "continue"
+          ]
+        },
+        {
+          "ok": [
+            "if s[left].lower() != s[right].lower():"
+          ]
+        },
+        {
+          "ok": [
+            "return False"
+          ]
+        },
+        {
+          "ok": [
+            "left += 1"
+          ]
+        },
+        {
+          "ok": [
+            "right -= 1"
+          ]
+        },
+        {
+          "ok": [
+            "return True"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "left = 0"
+        },
+        {
+          "text": "right = len(s) - 1"
+        },
+        {
+          "text": "while left < right:"
+        },
+        {
+          "text": "if not s[left].isalnum():"
+        },
+        {
+          "text": "left += 1"
+        },
+        {
+          "text": "continue"
+        },
+        {
+          "text": "if not s[right].isalnum():"
+        },
+        {
+          "text": "right -= 1"
+        },
+        {
+          "text": "continue"
+        },
+        {
+          "text": "if s[left].lower() != s[right].lower():"
+        },
+        {
+          "text": "return False"
+        },
+        {
+          "text": "left += 1"
+        },
+        {
+          "text": "right -= 1"
+        },
+        {
+          "text": "return True"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

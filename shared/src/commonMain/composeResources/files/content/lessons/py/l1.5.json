@@ -212,6 +212,120 @@
         "«Без пропусков» = число дней участия равно `len(statistics)`.",
         "Сначала отфильтруй таких, потом среди них ищи максимум, потом собери всех с этим максимумом (их может быть несколько!)."
       ]
+    },
+    {
+      "id": "l1.5.e4",
+      "segments": [
+        "# Случай 1: [[(1, 100), (2, 50)], [(1, 100), (2, 50)]]\n#   → [1], 200\n# Случай 2: [[(1, 100), (2, 500)], [(1, 100)]]\n#   → [1], 200 (2-й пропустил день)\n# Случай 3: [] → [], 0\ndef find_champions(statistics: list[list[tuple[int, int]]]) -> tuple[list[int], int]:\n    ",
+        "\n    ",
+        "\n    ",
+        "\n    ",
+        "\n        ",
+        "\n            ",
+        "\n            ",
+        "\n    ",
+        "\n    ",
+        "\n    ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "total_days = len(statistics)"
+          ]
+        },
+        {
+          "ok": [
+            "total_steps = {}"
+          ]
+        },
+        {
+          "ok": [
+            "days_active = {}"
+          ]
+        },
+        {
+          "ok": [
+            "for day in statistics:"
+          ]
+        },
+        {
+          "ok": [
+            "for user, steps in day:"
+          ]
+        },
+        {
+          "ok": [
+            "total_steps[user] = total_steps.get(user, 0) + steps"
+          ]
+        },
+        {
+          "ok": [
+            "days_active[user] = days_active.get(user, 0) + 1"
+          ]
+        },
+        {
+          "ok": [
+            "full = [u for u in days_active if days_active[u] == total_days]"
+          ]
+        },
+        {
+          "ok": [
+            "max_steps = max((total_steps[u] for u in full), default=0)"
+          ]
+        },
+        {
+          "ok": [
+            "champions = [u for u in full if total_steps[u] == max_steps]"
+          ]
+        },
+        {
+          "ok": [
+            "return (champions, max_steps)"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "total_days = len(statistics)"
+        },
+        {
+          "text": "total_steps = {}"
+        },
+        {
+          "text": "days_active = {}"
+        },
+        {
+          "text": "for day in statistics:"
+        },
+        {
+          "text": "for user, steps in day:"
+        },
+        {
+          "text": "total_steps[user] = total_steps.get(user, 0) + steps"
+        },
+        {
+          "text": "days_active[user] = days_active.get(user, 0) + 1"
+        },
+        {
+          "text": "full = [u for u in days_active if days_active[u] == total_days]"
+        },
+        {
+          "text": "max_steps = max((total_steps[u] for u in full), default=0)"
+        },
+        {
+          "text": "champions = [u for u in full if total_steps[u] == max_steps]"
+        },
+        {
+          "text": "return (champions, max_steps)"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

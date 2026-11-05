@@ -228,6 +228,75 @@
         "Повтор — это `x`, который уже лежит в `seen`.",
         "Нашли повтор — сразу `True`; цикл закончился без повторов — `False`."
       ]
+    },
+    {
+      "id": "l1.1.e4",
+      "segments": [
+        "# Случай 1: [1, 2, 3] → False\n# Случай 2: [1, 2, 1] → True\n# Случай 3: [] → False\ndef has_duplicate(nums: list[int]) -> bool:\n    ",
+        "\n    ",
+        "\n        ",
+        "\n            ",
+        "\n        ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "seen = set()"
+          ]
+        },
+        {
+          "ok": [
+            "for x in nums:"
+          ]
+        },
+        {
+          "ok": [
+            "if x in seen:"
+          ]
+        },
+        {
+          "ok": [
+            "return True"
+          ]
+        },
+        {
+          "ok": [
+            "seen.add(x)"
+          ]
+        },
+        {
+          "ok": [
+            "return False"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "seen = set()"
+        },
+        {
+          "text": "for x in nums:"
+        },
+        {
+          "text": "if x in seen:"
+        },
+        {
+          "text": "return True"
+        },
+        {
+          "text": "seen.add(x)"
+        },
+        {
+          "text": "return False"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

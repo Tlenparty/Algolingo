@@ -220,6 +220,84 @@
         "Нашли несовпадающую пару — сразу `return False`.",
         "Цикл дошёл до середины без расхождений — строка палиндром: `return True`."
       ]
+    },
+    {
+      "id": "l0.3.e4",
+      "segments": [
+        "# Случай 1: \"aba\" → True\n# Случай 2: \"abba\" → True\n# Случай 3: \"ab\" → False\ndef is_palindrome(s: str) -> bool:\n    ",
+        "\n    ",
+        "\n        ",
+        "\n            ",
+        "\n        ",
+        "\n        ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "lo, hi = 0, len(s) - 1"
+          ]
+        },
+        {
+          "ok": [
+            "while lo < hi:"
+          ]
+        },
+        {
+          "ok": [
+            "if s[lo] != s[hi]:"
+          ]
+        },
+        {
+          "ok": [
+            "return False"
+          ]
+        },
+        {
+          "ok": [
+            "lo += 1"
+          ]
+        },
+        {
+          "ok": [
+            "hi -= 1"
+          ]
+        },
+        {
+          "ok": [
+            "return True"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "lo, hi = 0, len(s) - 1"
+        },
+        {
+          "text": "while lo < hi:"
+        },
+        {
+          "text": "if s[lo] != s[hi]:"
+        },
+        {
+          "text": "return False"
+        },
+        {
+          "text": "lo += 1"
+        },
+        {
+          "text": "hi -= 1"
+        },
+        {
+          "text": "return True"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

@@ -35,6 +35,8 @@ data class Exercise(
     val hints: List<String> = emptyList(),
     /** Design step caption («Шаг 2 · API»), shown above the template. */
     val title: String? = null,
+    /** «Собери из строк»: every body line is a hole, the bank is those lines; no wrong-chip programs. */
+    val lines: Boolean = false,
 )
 
 data class Hole(

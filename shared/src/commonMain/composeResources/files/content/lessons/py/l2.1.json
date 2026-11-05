@@ -207,6 +207,93 @@
         "В ячейку `slow` пишем то, что сейчас читает `fast`.",
         "Хвост добиваем, пока `slow` не дошёл до конца списка."
       ]
+    },
+    {
+      "id": "l2.1.e4",
+      "segments": [
+        "# Случай 1: [0, 1, 0, 3, 12] → [1, 3, 12, 0, 0]\n# Случай 2: [0] → [0]\ndef move_zeroes(nums: list[int]) -> None:\n    # куда писать ненулевой\n    ",
+        "\n    # fast бежит по всем\n    ",
+        "\n        # нули пропускаем\n        ",
+        "\n            # копируем в slow\n            ",
+        "\n            ",
+        "\n    # хвост добиваем нулями\n    ",
+        "\n        ",
+        "\n        ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "slow = 0"
+          ]
+        },
+        {
+          "ok": [
+            "for fast in range(len(nums)):"
+          ]
+        },
+        {
+          "ok": [
+            "if nums[fast] != 0:"
+          ]
+        },
+        {
+          "ok": [
+            "nums[slow] = nums[fast]"
+          ]
+        },
+        {
+          "ok": [
+            "slow += 1"
+          ]
+        },
+        {
+          "ok": [
+            "while slow < len(nums):"
+          ]
+        },
+        {
+          "ok": [
+            "nums[slow] = 0"
+          ]
+        },
+        {
+          "ok": [
+            "slow += 1"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "slow = 0"
+        },
+        {
+          "text": "for fast in range(len(nums)):"
+        },
+        {
+          "text": "if nums[fast] != 0:"
+        },
+        {
+          "text": "nums[slow] = nums[fast]"
+        },
+        {
+          "text": "slow += 1"
+        },
+        {
+          "text": "while slow < len(nums):"
+        },
+        {
+          "text": "nums[slow] = 0"
+        },
+        {
+          "text": "slow += 1"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

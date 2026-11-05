@@ -161,6 +161,7 @@ None yet.
 | 261102-cas | Примеры «Случай N» (вход → ответ) в каждой задаче | 2026-11-02 | [261102-cas](./quick/261102-cas-case-examples/) |
 | 261102-lc4 | Уроки с LeetCode: 3, 20, 53, 70 | 2026-11-02 | [261102-lc4](./quick/261102-lc4-leetcode-lessons/) |
 | 261105-lc2 | Уроки с LeetCode: 167, 125 (из algorithms-go-practice) | 2026-11-05 | [261105-lc2](./quick/261105-lc2-two-sum-ii-valid-palindrome/) |
+| 261105-lns | Финальный шаг урока «Собери решение из строк» | 2026-11-05 | [261105-lns](./quick/261105-lns-lines-exercise/) |
 | 261031-arc | Слои data/domain/presentation и MVI на всех экранах | 2026-10-31 | [261031-arc](./quick/261031-arc-clean-layers/) |
 
 ## Deferred Items

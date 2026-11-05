@@ -195,6 +195,84 @@
         "Указатель в `t` двигается на каждом шаге — иначе цикл может встать.",
         "`t` может кончиться и тогда, когда `s` не нашлась. Какой указатель знает, сколько символов `s` уже найдено?"
       ]
+    },
+    {
+      "id": "l2.5.e4",
+      "segments": [
+        "# Случай 1: \"abc\", \"ahbgdc\" → True\n# Случай 2: \"axc\", \"ahbgdc\" → False\ndef is_subsequence(s: str, t: str) -> bool:\n    # указатель в s\n    ",
+        "\n    # указатель в t\n    ",
+        "\n    # пока обе не кончились\n    ",
+        "\n        # совпало — двигаем s\n        ",
+        "\n            ",
+        "\n        # t двигается всегда\n        ",
+        "\n    # всю s нашли по порядку?\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "s_index = 0"
+          ]
+        },
+        {
+          "ok": [
+            "t_index = 0"
+          ]
+        },
+        {
+          "ok": [
+            "while s_index < len(s) and t_index < len(t):"
+          ]
+        },
+        {
+          "ok": [
+            "if s[s_index] == t[t_index]:"
+          ]
+        },
+        {
+          "ok": [
+            "s_index += 1"
+          ]
+        },
+        {
+          "ok": [
+            "t_index += 1"
+          ]
+        },
+        {
+          "ok": [
+            "return s_index == len(s)"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "s_index = 0"
+        },
+        {
+          "text": "t_index = 0"
+        },
+        {
+          "text": "while s_index < len(s) and t_index < len(t):"
+        },
+        {
+          "text": "if s[s_index] == t[t_index]:"
+        },
+        {
+          "text": "s_index += 1"
+        },
+        {
+          "text": "t_index += 1"
+        },
+        {
+          "text": "return s_index == len(s)"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

@@ -236,6 +236,84 @@
         "Одна переменная-аккумулятор, один `for`: `total += x` копит сумму.",
         "Максимум обновляем, когда встретили больший элемент: `x > best`."
       ]
+    },
+    {
+      "id": "l0.1.e4",
+      "segments": [
+        "# Случай 1: [1, 2, 3] → (6, 3)\n# Случай 2: [-5, -2] → (-7, -2)\n# Случай 3: [7] → (7, 7)\ndef sum_and_max(nums: list[int]) -> tuple[int, int]:\n    ",
+        "\n    ",
+        "\n    ",
+        "\n        ",
+        "\n        ",
+        "\n            ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "total = 0"
+          ]
+        },
+        {
+          "ok": [
+            "best = nums[0]"
+          ]
+        },
+        {
+          "ok": [
+            "for x in nums:"
+          ]
+        },
+        {
+          "ok": [
+            "total += x"
+          ]
+        },
+        {
+          "ok": [
+            "if x > best:"
+          ]
+        },
+        {
+          "ok": [
+            "best = x"
+          ]
+        },
+        {
+          "ok": [
+            "return (total, best)"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "total = 0"
+        },
+        {
+          "text": "best = nums[0]"
+        },
+        {
+          "text": "for x in nums:"
+        },
+        {
+          "text": "total += x"
+        },
+        {
+          "text": "if x > best:"
+        },
+        {
+          "text": "best = x"
+        },
+        {
+          "text": "return (total, best)"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

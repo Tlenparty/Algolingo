@@ -195,6 +195,75 @@
         "Нашли несовпадающую пару — сразу `return false`.",
         "Цикл дошёл до середины без расхождений — строка палиндром: `return true`."
       ]
+    },
+    {
+      "id": "l0.3.e4",
+      "segments": [
+        "// Случай 1: \"aba\" → true\n// Случай 2: \"abba\" → true\n// Случай 3: \"ab\" → false\nfun isPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    ",
+        "\n    // правый указатель — с конца\n    ",
+        "\n    // идём навстречу\n    ",
+        "\n        // края разные — нет\n        ",
+        "\n        // оба указателя — к центру\n        ",
+        "\n    }\n    // все пары совпали\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "var left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "var right = s.length - 1"
+          ]
+        },
+        {
+          "ok": [
+            "while (left < right) {"
+          ]
+        },
+        {
+          "ok": [
+            "if (s[left] != s[right]) return false"
+          ]
+        },
+        {
+          "ok": [
+            "left++; right--"
+          ]
+        },
+        {
+          "ok": [
+            "return true"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "var left = 0"
+        },
+        {
+          "text": "var right = s.length - 1"
+        },
+        {
+          "text": "while (left < right) {"
+        },
+        {
+          "text": "if (s[left] != s[right]) return false"
+        },
+        {
+          "text": "left++; right--"
+        },
+        {
+          "text": "return true"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

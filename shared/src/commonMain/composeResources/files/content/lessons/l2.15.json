@@ -174,6 +174,93 @@
         "Лишний символ справа — сдвигаем правый указатель внутрь.",
         "Регистр не важен: сравниваем обе стороны в нижнем регистре."
       ]
+    },
+    {
+      "id": "l2.15.e4",
+      "segments": [
+        "// Случай 1: \"A man, a plan, a canal: Panama\" → true\n// Случай 2: \"race a car\" → false\n// Случай 3: \" \" → true\nfun isValidPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    ",
+        "\n    // правый указатель — с конца\n    ",
+        "\n    // идём навстречу\n    ",
+        "\n        // слева не буква и не цифра — пропускаем\n        ",
+        "\n        // справа так же\n        ",
+        "\n        // сравниваем без учёта регистра\n        ",
+        "\n        // оба указателя — к центру\n        ",
+        "\n    }\n    // все пары совпали\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "var left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "var right = s.length - 1"
+          ]
+        },
+        {
+          "ok": [
+            "while (left < right) {"
+          ]
+        },
+        {
+          "ok": [
+            "if (!s[left].isLetterOrDigit()) { left++; continue }"
+          ]
+        },
+        {
+          "ok": [
+            "if (!s[right].isLetterOrDigit()) { right--; continue }"
+          ]
+        },
+        {
+          "ok": [
+            "if (s[left].lowercaseChar() != s[right].lowercaseChar()) return false"
+          ]
+        },
+        {
+          "ok": [
+            "left++; right--"
+          ]
+        },
+        {
+          "ok": [
+            "return true"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "var left = 0"
+        },
+        {
+          "text": "var right = s.length - 1"
+        },
+        {
+          "text": "while (left < right) {"
+        },
+        {
+          "text": "if (!s[left].isLetterOrDigit()) { left++; continue }"
+        },
+        {
+          "text": "if (!s[right].isLetterOrDigit()) { right--; continue }"
+        },
+        {
+          "text": "if (s[left].lowercaseChar() != s[right].lowercaseChar()) return false"
+        },
+        {
+          "text": "left++; right--"
+        },
+        {
+          "text": "return true"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

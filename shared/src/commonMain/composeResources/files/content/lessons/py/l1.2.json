@@ -240,6 +240,84 @@
         "Второй проход **по исходной строке** — первый символ с частотой 1.",
         "Уникального нет — честно верни «ничего»: `None`."
       ]
+    },
+    {
+      "id": "l1.2.e4",
+      "segments": [
+        "# Случай 1: \"abacb\" → 'c' (a и b повторяются)\n# Случай 2: \"aabb\" → None\n# Случай 3: \"z\" → 'z'\ndef first_unique_char(s: str) -> str | None:\n    ",
+        "\n    ",
+        "\n        ",
+        "\n    ",
+        "\n        ",
+        "\n            ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "counts = {}"
+          ]
+        },
+        {
+          "ok": [
+            "for ch in s:"
+          ]
+        },
+        {
+          "ok": [
+            "counts[ch] = counts.get(ch, 0) + 1"
+          ]
+        },
+        {
+          "ok": [
+            "for ch in s:"
+          ]
+        },
+        {
+          "ok": [
+            "if counts[ch] == 1:"
+          ]
+        },
+        {
+          "ok": [
+            "return ch"
+          ]
+        },
+        {
+          "ok": [
+            "return None"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "counts = {}"
+        },
+        {
+          "text": "for ch in s:"
+        },
+        {
+          "text": "counts[ch] = counts.get(ch, 0) + 1"
+        },
+        {
+          "text": "for ch in s:"
+        },
+        {
+          "text": "if counts[ch] == 1:"
+        },
+        {
+          "text": "return ch"
+        },
+        {
+          "text": "return None"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

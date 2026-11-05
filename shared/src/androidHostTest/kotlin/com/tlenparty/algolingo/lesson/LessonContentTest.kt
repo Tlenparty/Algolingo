@@ -26,13 +26,13 @@ class LessonContentTest {
     @Test
     fun l04IsValid() {
         assertEquals(emptyList(), validate(lesson))
-        assertTrue(lesson.exercises.size in 2..3)
-        assertEquals(listOf(1, 2, 4), lesson.exercises.map { it.holes.size })
+        assertEquals(listOf(1, 2, 4, 9), lesson.exercises.map { it.holes.size })
+        assertEquals("Собери решение из строк", lesson.exercises.last().title)
     }
 
     @Test
     fun e3HasTwoSeparateOneChips() {
-        assertEquals(2, lesson.exercises.last().bank.count { it.text == "1" })
+        assertEquals(2, lesson.exercises[2].bank.count { it.text == "1" })
     }
 
     @Test
@@ -73,7 +73,7 @@ class LessonContentTest {
         fun load(lang: CodeLang) = parseLesson(File("src/commonMain/composeResources/" + lessonPath("l1.4", lang)).readText()).getOrThrow()
         val py = load(CodeLang.Python)
         assertTrue("def two_sum" in py.solution.code)
-        assertTrue(py.exercises.size in 2..3)
+        assertTrue(py.exercises.size in 2..4)
         assertTrue("fun twoSum" in load(CodeLang.Kotlin).solution.code)
     }
 

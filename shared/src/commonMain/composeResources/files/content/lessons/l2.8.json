@@ -187,6 +187,102 @@
         "Символ мог встречаться раньше, но уже **за** левой границей. Тогда окно трогать не надо.",
         "Для символа запоминаем, где он встретился последним."
       ]
+    },
+    {
+      "id": "l2.8.e4",
+      "segments": [
+        "// Случай 1: \"abcabcbb\" → 3 (\"abc\")\n// Случай 2: \"bbbbb\" → 1 (\"b\")\n// Случай 3: \"pwwkew\" → 3 (\"wke\")\nfun longestUnique(s: String): Int {\n    // символ -> последний индекс\n    ",
+        "\n    // левая граница окна\n    ",
+        "\n    // лучшая длина пока что\n    ",
+        "\n    // правая граница идёт по строке\n    ",
+        "\n        ",
+        "\n        // повтор внутри окна: ужимаем\n        ",
+        "\n        ",
+        "\n        // длина окна left..right\n        ",
+        "\n    }\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "val lastIndex = HashMap<Char, Int>()"
+          ]
+        },
+        {
+          "ok": [
+            "var left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "var best = 0"
+          ]
+        },
+        {
+          "ok": [
+            "for (right in s.indices) {"
+          ]
+        },
+        {
+          "ok": [
+            "val prev = lastIndex[s[right]]"
+          ]
+        },
+        {
+          "ok": [
+            "if (prev != null && prev >= left) left = prev + 1"
+          ]
+        },
+        {
+          "ok": [
+            "lastIndex[s[right]] = right"
+          ]
+        },
+        {
+          "ok": [
+            "best = maxOf(best, right - left + 1)"
+          ]
+        },
+        {
+          "ok": [
+            "return best"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "val lastIndex = HashMap<Char, Int>()"
+        },
+        {
+          "text": "var left = 0"
+        },
+        {
+          "text": "var best = 0"
+        },
+        {
+          "text": "for (right in s.indices) {"
+        },
+        {
+          "text": "val prev = lastIndex[s[right]]"
+        },
+        {
+          "text": "if (prev != null && prev >= left) left = prev + 1"
+        },
+        {
+          "text": "lastIndex[s[right]] = right"
+        },
+        {
+          "text": "best = maxOf(best, right - left + 1)"
+        },
+        {
+          "text": "return best"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

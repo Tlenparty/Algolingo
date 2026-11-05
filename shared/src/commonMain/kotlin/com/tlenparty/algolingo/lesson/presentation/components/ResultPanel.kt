@@ -77,11 +77,11 @@ private fun Item(item: PanelItem, ink: androidx.compose.ui.graphics.Color, synta
     fun code(s: String) = if (syntax) highlight(s, c, lang) else AnnotatedString(s)
     val t = AlgoTheme.typography
     Column(verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.xs)) {
-        Text(code(item.chip), style = t.codeBold, color = ink, softWrap = false)
+        Text(code(item.chip), style = t.codeBold, color = ink)
         Text(richText(item.text), style = t.body, color = MaterialTheme.colorScheme.onBackground)
         if (item.correct != null) {
             Text("Верно:", style = t.label, color = c.secondaryText)
-            Text(code(item.correct), style = t.codeBold, color = MaterialTheme.colorScheme.onBackground, softWrap = false)
+            Text(code(item.correct), style = t.codeBold, color = MaterialTheme.colorScheme.onBackground)
         }
     }
 }

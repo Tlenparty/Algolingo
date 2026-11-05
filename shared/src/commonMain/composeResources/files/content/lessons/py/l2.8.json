@@ -187,6 +187,102 @@
         "Символ мог встречаться раньше, но уже **за** левой границей. Тогда окно трогать не надо.",
         "Для символа запоминаем, где он встретился последним."
       ]
+    },
+    {
+      "id": "l2.8.e4",
+      "segments": [
+        "# Случай 1: \"abcabcbb\" → 3 (\"abc\")\n# Случай 2: \"bbbbb\" → 1 (\"b\")\n# Случай 3: \"pwwkew\" → 3 (\"wke\")\ndef longest_unique(s: str) -> int:\n    # символ -> последний индекс\n    ",
+        "\n    # левая граница окна\n    ",
+        "\n    # лучшая длина пока что\n    ",
+        "\n    # правая граница идёт по строке\n    ",
+        "\n        # повтор внутри окна: ужимаем\n        ",
+        "\n            ",
+        "\n        ",
+        "\n        # длина окна left..right\n        ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "last_index = {}"
+          ]
+        },
+        {
+          "ok": [
+            "left = 0"
+          ]
+        },
+        {
+          "ok": [
+            "best = 0"
+          ]
+        },
+        {
+          "ok": [
+            "for right, ch in enumerate(s):"
+          ]
+        },
+        {
+          "ok": [
+            "if ch in last_index and last_index[ch] >= left:"
+          ]
+        },
+        {
+          "ok": [
+            "left = last_index[ch] + 1"
+          ]
+        },
+        {
+          "ok": [
+            "last_index[ch] = right"
+          ]
+        },
+        {
+          "ok": [
+            "best = max(best, right - left + 1)"
+          ]
+        },
+        {
+          "ok": [
+            "return best"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "last_index = {}"
+        },
+        {
+          "text": "left = 0"
+        },
+        {
+          "text": "best = 0"
+        },
+        {
+          "text": "for right, ch in enumerate(s):"
+        },
+        {
+          "text": "if ch in last_index and last_index[ch] >= left:"
+        },
+        {
+          "text": "left = last_index[ch] + 1"
+        },
+        {
+          "text": "last_index[ch] = right"
+        },
+        {
+          "text": "best = max(best, right - left + 1)"
+        },
+        {
+          "text": "return best"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

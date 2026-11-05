@@ -35,8 +35,7 @@ fun TokenChip(text: String, state: ChipState, onClick: (() -> Unit)?, modifier: 
             if (ghost || !syntax) AnnotatedString(text) else highlight(text, AlgoTheme.colors, lang),
             style = AlgoTheme.typography.codeChip,
             color = if (ghost) Color.Transparent else s.onBackground,
-            softWrap = false,
-            maxLines = 1,
+            // a whole-line chip («собери из строк») can be wider than the screen: wrap instead of clipping
             modifier = Modifier.padding(horizontal = AlgoTheme.spacing.md),
         )
     }

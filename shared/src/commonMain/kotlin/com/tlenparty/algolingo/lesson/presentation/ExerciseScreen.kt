@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -73,6 +74,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
 
     BoxWithConstraints(modifier.fillMaxSize()) {
         val maxBody = maxHeight / 2
+        val maxBank = maxHeight * 0.4f
         Column(Modifier.fillMaxSize()) {
             Column(Modifier.weight(1f).verticalScroll(scroll).padding(horizontal = AlgoTheme.spacing.md)) {
                 Text(state.lesson.title, style = t.heading, color = MaterialTheme.colorScheme.onBackground)
@@ -116,8 +118,10 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
                     ResultPanelHost(check, maxBody, code) { on(LessonAction.Continue(screenKey(state))) }
                 } else {
                     Column(Modifier.padding(AlgoTheme.spacing.md)) {
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm), verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
-                            for (id in cur.order) key(id) {
+                        // a lines exercise banks up to 14 whole lines: scroll the bank, keep the code above visible
+                        FlowRow(Modifier.heightIn(max = maxBank).verticalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm), verticalArrangement = Arrangement.spacedBy(AlgoTheme.spacing.sm)) {
+                            // lines: drop placed chips so the remaining lines float up instead of hiding below the fold
+                            for (id in cur.order.filterNot { ex.lines && cur.isPlaced(it) }) key(id) {
                                 val placed = cur.isPlaced(id)
                                 TokenChip(
                                     ex.bank.getOrNull(id)?.text ?: "",

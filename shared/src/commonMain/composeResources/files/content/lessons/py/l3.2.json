@@ -201,6 +201,102 @@
         "Закрывающая закрывает самую свежую открытую. Её надо снять со стека, а не только посмотреть.",
         "В конце в стеке не должно остаться открытых."
       ]
+    },
+    {
+      "id": "l3.2.e4",
+      "segments": [
+        "# Случай 1: \"()[]{}\" → True\n# Случай 2: \"([)]\" → False\n# Случай 3: \"(\" → False\ndef is_valid_brackets(s: str) -> bool:\n    # открытые, ждущие пары\n    ",
+        "\n    # закрывающая -> открывающая\n    ",
+        "\n    ",
+        "\n        # открывающая: в стек\n        ",
+        "\n            ",
+        "\n        # закрывающая: сверяем с вершиной\n        ",
+        "\n            ",
+        "\n                ",
+        "\n    # все открытые закрылись\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "stack = []"
+          ]
+        },
+        {
+          "ok": [
+            "pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}"
+          ]
+        },
+        {
+          "ok": [
+            "for ch in s:"
+          ]
+        },
+        {
+          "ok": [
+            "if ch in pairs.values():"
+          ]
+        },
+        {
+          "ok": [
+            "stack.append(ch)"
+          ]
+        },
+        {
+          "ok": [
+            "elif ch in pairs:"
+          ]
+        },
+        {
+          "ok": [
+            "if not stack or stack.pop() != pairs[ch]:"
+          ]
+        },
+        {
+          "ok": [
+            "return False"
+          ]
+        },
+        {
+          "ok": [
+            "return not stack"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "stack = []"
+        },
+        {
+          "text": "pairs = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}"
+        },
+        {
+          "text": "for ch in s:"
+        },
+        {
+          "text": "if ch in pairs.values():"
+        },
+        {
+          "text": "stack.append(ch)"
+        },
+        {
+          "text": "elif ch in pairs:"
+        },
+        {
+          "text": "if not stack or stack.pop() != pairs[ch]:"
+        },
+        {
+          "text": "return False"
+        },
+        {
+          "text": "return not stack"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

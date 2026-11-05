@@ -199,6 +199,75 @@
         "Для текущего `x` нужно `target - x`. Если оно уже в Map — ответ.",
         "Иначе кладём `x → i`: Map хранит «значение → индекс»."
       ]
+    },
+    {
+      "id": "l1.4.e4",
+      "segments": [
+        "// Случай 1: [2, 7, 11, 15], target = 9 → (0, 1)\n// Случай 2: [3, 2, 4], target = 6 → (1, 2)\n// Случай 3: [1, 2], target = 7 → null\nfun twoSum(nums: IntArray, target: Int): Pair<Int, Int>? {\n    // значение -> индекс\n    ",
+        "\n    ",
+        "\n        // кого не хватает до target\n        ",
+        "\n        // пара найдена\n        ",
+        "\n        // потом запоминаем текущее\n        ",
+        "\n    }\n    // пары нет\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "val seen = HashMap<Int, Int>()"
+          ]
+        },
+        {
+          "ok": [
+            "for (i in nums.indices) {"
+          ]
+        },
+        {
+          "ok": [
+            "val need = target - nums[i]"
+          ]
+        },
+        {
+          "ok": [
+            "seen[need]?.let { return it to i }"
+          ]
+        },
+        {
+          "ok": [
+            "seen[nums[i]] = i"
+          ]
+        },
+        {
+          "ok": [
+            "return null"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "val seen = HashMap<Int, Int>()"
+        },
+        {
+          "text": "for (i in nums.indices) {"
+        },
+        {
+          "text": "val need = target - nums[i]"
+        },
+        {
+          "text": "seen[need]?.let { return it to i }"
+        },
+        {
+          "text": "seen[nums[i]] = i"
+        },
+        {
+          "text": "return null"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

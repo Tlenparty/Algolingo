@@ -226,6 +226,93 @@
         "На ступень `i` приходят с `i - 1` или с `i - 2`.",
         "Окно сдвигается на ступень вверх: `prev` ← старая `current`, `current` ← `next`."
       ]
+    },
+    {
+      "id": "l5.1.e4",
+      "segments": [
+        "// Случай 1: n = 2 → 2 (1+1, 2)\n// Случай 2: n = 3 → 3 (1+1+1, 1+2, 2+1)\n// Случай 3: n = 5 → 8\nfun climbStairs(n: Int): Int {\n    // 1 ступень — 1 способ, 2 — два\n    ",
+        "\n    // способов дойти до i-2 и до i-1\n    ",
+        "\n    ",
+        "\n    ",
+        "\n        // на ступень i — с i-1 или с i-2\n        ",
+        "\n        ",
+        "\n        ",
+        "\n    }\n    ",
+        "\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "if (n <= 2) return n"
+          ]
+        },
+        {
+          "ok": [
+            "var prev = 1"
+          ]
+        },
+        {
+          "ok": [
+            "var current = 2"
+          ]
+        },
+        {
+          "ok": [
+            "repeat(n - 2) {"
+          ]
+        },
+        {
+          "ok": [
+            "val next = prev + current"
+          ]
+        },
+        {
+          "ok": [
+            "prev = current"
+          ]
+        },
+        {
+          "ok": [
+            "current = next"
+          ]
+        },
+        {
+          "ok": [
+            "return current"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "if (n <= 2) return n"
+        },
+        {
+          "text": "var prev = 1"
+        },
+        {
+          "text": "var current = 2"
+        },
+        {
+          "text": "repeat(n - 2) {"
+        },
+        {
+          "text": "val next = prev + current"
+        },
+        {
+          "text": "prev = current"
+        },
+        {
+          "text": "current = next"
+        },
+        {
+          "text": "return current"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {

@@ -224,6 +224,75 @@
         "Окно сдвигается на ступень вверх: `prev` ← старая `current`, `current` ← сумма двух.",
         "После цикла `current` — ответ для ступени `n`."
       ]
+    },
+    {
+      "id": "l5.1.e4",
+      "segments": [
+        "# Случай 1: n = 2 → 2 (1+1, 2)\n# Случай 2: n = 3 → 3 (1+1+1, 1+2, 2+1)\n# Случай 3: n = 5 → 8\ndef climb_stairs(n: int) -> int:\n    # 1 ступень — 1 способ, 2 — два\n    ",
+        "\n        ",
+        "\n    # способов дойти до i-2 и до i-1\n    ",
+        "\n    ",
+        "\n        # на ступень i — с i-1 или с i-2\n        ",
+        "\n    ",
+        ""
+      ],
+      "holes": [
+        {
+          "ok": [
+            "if n <= 2:"
+          ]
+        },
+        {
+          "ok": [
+            "return n"
+          ]
+        },
+        {
+          "ok": [
+            "prev, current = 1, 2"
+          ]
+        },
+        {
+          "ok": [
+            "for _ in range(n - 2):"
+          ]
+        },
+        {
+          "ok": [
+            "prev, current = current, prev + current"
+          ]
+        },
+        {
+          "ok": [
+            "return current"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "if n <= 2:"
+        },
+        {
+          "text": "return n"
+        },
+        {
+          "text": "prev, current = 1, 2"
+        },
+        {
+          "text": "for _ in range(n - 2):"
+        },
+        {
+          "text": "prev, current = current, prev + current"
+        },
+        {
+          "text": "return current"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
     }
   ],
   "solution": {
