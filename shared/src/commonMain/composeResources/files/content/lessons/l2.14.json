@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "id": "l2.14",
+  "level": 2,
+  "title": "Two Sum II",
+  "statement": "Массив `numbers` отсортирован по неубыванию. Найди два числа с суммой `target` и верни их номера **с единицы**. Решение ровно одно, дополнительная память O(1) (LeetCode 167).",
+  "trains": "два указателя навстречу по отсортированному массиву",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда навстречу по сумме",
+      "signals": [
+        "Массив уже отсортирован",
+        "Пара с заданной суммой",
+        "Память O(1): Map нельзя"
+      ],
+      "body": "Сумма крайних мала — левое число не подходит даже к самому большому справа: `left++`. Велика — правое не подходит даже к самому маленькому слева: `right--`. Каждый шаг выкидывает одно число, поэтому O(n)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "var left = 0\nvar right = numbers.size - 1\nwhile (left < right) {\n    val sum = numbers[left] + numbers[right]\n    // нашли -> номера с единицы\n    // мало -> left++, много -> right--\n}",
+      "body": "Ответ просит номера с единицы, а индексы в Kotlin с нуля: `left + 1`, `right + 1`."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`intArrayOf(left, right)`: номера с нуля, `[2, 7, 11, 15]`, `9` → `[0, 1]` вместо `[1, 2]`",
+        "Перепутать сдвиги: на малой сумме `right--` уводит от ответа",
+        "`right = numbers.size`: первый же `numbers[right]` вне массива",
+        "Без сортировки приём не работает: выкинутое число могло пригодиться"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.14.e1",
+      "segments": [
+        "// Случай 1: [2, 7, 11, 15], target = 9 → [1, 2]\n// Случай 2: [2, 3, 4], target = 6 → [1, 3]\n// Случай 3: [-1, 0], target = -1 → [1, 2]\nfun twoSumSorted(numbers: IntArray, target: Int): IntArray {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = numbers.size - 1\n    // идём навстречу\n    while (left < right) {\n        val sum = numbers[left] + numbers[right]\n        // нашли пару: номера с единицы\n        if (sum == target) return intArrayOf(left + 1, right + 1)\n        // мало — левый вправо, много — правый влево\n        if (sum ",
+        " target) left++ else right--\n    }\n    // по условию пара всегда есть\n    return intArrayOf()\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "<"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "<"
+        },
+        {
+          "text": ">",
+          "why": "сдвиги перепутаны: `[2, 7, 11, 15]`, `9` → сумма `17` велика, а `left++` делает её ещё больше: `[]` вместо `[1, 2]`"
+        },
+        {
+          "text": "==",
+          "why": "условие всегда ложно, двигается только `right`: `[2, 7, 11, 15]`, `22` → `[]` вместо `[2, 4]`"
+        }
+      ],
+      "hints": [
+        "Сумма меньше нужной — левое число слишком маленькое: двигаем `left`."
+      ]
+    },
+    {
+      "id": "l2.14.e2",
+      "segments": [
+        "// Случай 1: [2, 7, 11, 15], target = 9 → [1, 2]\n// Случай 2: [2, 3, 4], target = 6 → [1, 3]\n// Случай 3: [-1, 0], target = -1 → [1, 2]\nfun twoSumSorted(numbers: IntArray, target: Int): IntArray {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = numbers.size - 1\n    // идём навстречу\n    while (left < right) {\n        val sum = numbers[left] + numbers[right]\n        // нашли пару: номера с единицы\n        if (sum == target) return intArrayOf(",
+        ", ",
+        ")\n        // мало — левый вправо, много — правый влево\n        if (sum < target) left++ else right--\n    }\n    // по условию пара всегда есть\n    return intArrayOf()\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "left + 1"
+          ],
+          "wrongWhy": {
+            "left": "номер с нуля, а нужен с единицы: `[2, 7, 11, 15]`, `9` → `[0, 2]` вместо `[1, 2]`",
+            "right": "это правый индекс, а не левый номер: `[2, 3, 4]`, `6` → `[2, 3]` вместо `[1, 3]`",
+            "right + 1": "оба номера правые: `[2, 7, 11, 15]`, `9` → `[2, 2]` вместо `[1, 2]`"
+          }
+        },
+        {
+          "ok": [
+            "right + 1"
+          ],
+          "wrongWhy": {
+            "left": "это левый индекс, а не правый номер: `[2, 7, 11, 15]`, `9` → `[1, 0]` вместо `[1, 2]`",
+            "right": "номер с нуля, а нужен с единицы: `[2, 7, 11, 15]`, `9` → `[1, 1]` вместо `[1, 2]`",
+            "left + 1": "оба номера левые: `[2, 7, 11, 15]`, `9` → `[1, 1]` вместо `[1, 2]`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "left + 1"
+        },
+        {
+          "text": "right + 1"
+        },
+        {
+          "text": "left"
+        },
+        {
+          "text": "right"
+        }
+      ],
+      "hints": [
+        "Индексы в Kotlin с нуля, а ответ просит номера с единицы."
+      ]
+    },
+    {
+      "id": "l2.14.e3",
+      "segments": [
+        "// Случай 1: [2, 7, 11, 15], target = 9 → [1, 2]\n// Случай 2: [2, 3, 4], target = 6 → [1, 3]\n// Случай 3: [-1, 0], target = -1 → [1, 2]\nfun twoSumSorted(numbers: IntArray, target: Int): IntArray {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = ",
+        "\n    // идём навстречу\n    while (",
+        ") {\n        val sum = numbers[left] + numbers[right]\n        // нашли пару: номера с единицы\n        if (sum == target) return intArrayOf(left + 1, right + 1)\n        // мало — левый вправо, много — правый влево\n        if (sum < target) ",
+        " else right--\n    }\n    // по условию пара всегда есть\n    return intArrayOf()\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "numbers.size - 1"
+          ],
+          "wrongWhy": {
+            "numbers.size": "первый же `numbers[right]` вне массива: `[2, 7, 11, 15]` → `numbers[4]`",
+            "left < right": "`right` используется в собственном объявлении: `var right = left < right` не скомпилируется",
+            "left++": "`right` станет `0`, а `left` — `1`: цикл не начнётся, `[2, 7, 11, 15]`, `9` → `[]` вместо `[1, 2]`",
+            "right--": "`right` используется в собственном объявлении: `var right = right--` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "left < right"
+          ],
+          "wrongWhy": {
+            "numbers.size - 1": "`while` ждёт `Boolean`, а это `Int`: `while (numbers.size - 1)` не скомпилируется",
+            "numbers.size": "`while` ждёт `Boolean`, а это `Int`: `while (numbers.size)` не скомпилируется",
+            "left++": "`while` ждёт `Boolean`, а `left++` — `Int`: не скомпилируется",
+            "right--": "`while` ждёт `Boolean`, а `right--` — `Int`: не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "left++"
+          ],
+          "wrongWhy": {
+            "numbers.size - 1": "на малой сумме никто не двигается: `[2, 7, 11, 15]`, `22` → вечный цикл",
+            "numbers.size": "на малой сумме никто не двигается: `[2, 7, 11, 15]`, `22` → вечный цикл",
+            "left < right": "на малой сумме никто не двигается: `[2, 7, 11, 15]`, `22` → вечный цикл",
+            "right--": "двигается только `right`, левое число не меняется: `[2, 7, 11, 15]`, `22` → `[]` вместо `[2, 4]`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "numbers.size - 1"
+        },
+        {
+          "text": "left < right"
+        },
+        {
+          "text": "left++"
+        },
+        {
+          "text": "numbers.size"
+        },
+        {
+          "text": "right--"
+        }
+      ],
+      "hints": [
+        "`right` — индекс последнего числа: `numbers.size - 1`.",
+        "Указатели идут навстречу, пока не встретятся.",
+        "Сумма мала — левое число слишком маленькое: `left++`."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "// Случай 1: [2, 7, 11, 15], target = 9 → [1, 2]\n// Случай 2: [2, 3, 4], target = 6 → [1, 3]\n// Случай 3: [-1, 0], target = -1 → [1, 2]\nfun twoSumSorted(numbers: IntArray, target: Int): IntArray {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = numbers.size - 1\n    // идём навстречу\n    while (left < right) {\n        val sum = numbers[left] + numbers[right]\n        // нашли пару: номера с единицы\n        if (sum == target) return intArrayOf(left + 1, right + 1)\n        // мало — левый вправо, много — правый влево\n        if (sum < target) left++ else right--\n    }\n    // по условию пара всегда есть\n    return intArrayOf()\n}",
+    "time": "O(n)",
+    "space": "O(1)",
+    "pitfalls": [
+      "номера с единицы — `left + 1`, а не `left`",
+      "без сортировки приём не работает: выкинутое число могло пригодиться"
+    ],
+    "variations": [
+      "Map из 1.4 тоже решит за O(n), но памяти O(n) и сортировку не использует"
+    ]
+  }
+}

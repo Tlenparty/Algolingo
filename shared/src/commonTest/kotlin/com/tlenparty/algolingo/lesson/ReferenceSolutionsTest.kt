@@ -1464,6 +1464,112 @@ private object L2_8_v0 { // reference
     }
 }
 
+private object L2_14_v0 { // reference
+    // Случай 1: [2, 7, 11, 15], target = 9 → [1, 2]
+    // Случай 2: [2, 3, 4], target = 6 → [1, 3]
+    // Случай 3: [-1, 0], target = -1 → [1, 2]
+    fun twoSumSorted(numbers: IntArray, target: Int): IntArray {
+        // левый указатель — с начала
+        var left = 0
+        // правый указатель — с конца
+        var right = numbers.size - 1
+        // идём навстречу
+        while (left < right) { tick()
+            val sum = numbers[left] + numbers[right]
+            // нашли пару: номера с единицы
+            if (sum == target) return intArrayOf(left + 1, right + 1)
+            // мало — левый вправо, много — правый влево
+            if (sum < target) left++ else right--
+        }
+        // по условию пара всегда есть
+        return intArrayOf()
+    }
+
+    fun run() {
+        case { assertContentEquals(intArrayOf(1, 2), twoSumSorted(intArrayOf(2, 7, 11, 15), 9)) }
+        case { assertContentEquals(intArrayOf(1, 3), twoSumSorted(intArrayOf(2, 3, 4), 6)) }
+        case { assertContentEquals(intArrayOf(1, 2), twoSumSorted(intArrayOf(-1, 0), -1)) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: перебор пар; все неубывающие массивы длины 2..5 из чисел -2..2 и цели, у которых пара ровно одна
+        for (n in 2..5) case {
+            for (m in 0 until pw(5, n)) {
+                val a = IntArray(n) { (m / pw(5, it)) % 5 - 2 }
+                if ((1 until n).any { a[it] < a[it - 1] }) continue
+                for (t in -4..4) {
+                    val pairs = (0 until n).flatMap { i -> (i + 1 until n).filter { j -> a[i] + a[j] == t }.map { j -> intArrayOf(i + 1, j + 1) } }
+                    if (pairs.size != 1) continue
+                    assertContentEquals(pairs[0], twoSumSorted(a, t), a.joinToString() + " / " + t)
+                }
+            }
+        }
+        case { assertContentEquals(intArrayOf(2, 4), twoSumSorted(intArrayOf(2, 7, 11, 15), 22)) }
+        case { assertContentEquals(intArrayOf(1, 2), twoSumSorted(intArrayOf(3, 3), 6)) }
+        case { assertContentEquals(intArrayOf(3, 4), twoSumSorted(intArrayOf(1, 2, 5, 9), 14)) }
+        case { assertContentEquals(intArrayOf(2, 3), twoSumSorted(intArrayOf(1, 2, 3, 9), 5)) }
+    }
+}
+
+private object L2_15_v0 { // reference
+    // Случай 1: "A man, a plan, a canal: Panama" → true
+    // Случай 2: "race a car" → false
+    // Случай 3: " " → true
+    fun isValidPalindrome(s: String): Boolean {
+        // левый указатель — с начала
+        var left = 0
+        // правый указатель — с конца
+        var right = s.length - 1
+        // идём навстречу
+        while (left < right) { tick()
+            // слева не буква и не цифра — пропускаем
+            if (!s[left].isLetterOrDigit()) { left++; continue }
+            // справа так же
+            if (!s[right].isLetterOrDigit()) { right--; continue }
+            // сравниваем без учёта регистра
+            if (s[left].lowercaseChar() != s[right].lowercaseChar()) return false
+            // оба указателя — к центру
+            left++; right--
+        }
+        // все пары совпали
+        return true
+    }
+
+    fun run() {
+        case { assertTrue(isValidPalindrome("A man, a plan, a canal: Panama")) }
+        case { assertFalse(isValidPalindrome("race a car")) }
+        case { assertTrue(isValidPalindrome(" ")) }
+        case { assertFalse(isValidPalindrome("0P")) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: оставить буквы и цифры, в нижний регистр, сравнить с разворотом; все строки длины 0..5 из {a, A, b, 0, пробел, запятая}
+        val abc = "aAb0 ,"
+        for (n in 0..5) case {
+            for (m in 0 until pw(6, n)) {
+                val s = CharArray(n) { abc[(m / pw(6, it)) % 6] }.concatToString()
+                val t = s.filter { it.isLetterOrDigit() }.lowercase()
+                assertEquals(t == t.reversed(), isValidPalindrome(s), s)
+            }
+        }
+        case { assertTrue(isValidPalindrome("")) }
+        case { assertTrue(isValidPalindrome(".,")) }
+        case { assertTrue(isValidPalindrome("Шалаш!")) }
+        // контрпримеры из причин
+        case { assertFalse(isValidPalindrome(".ab")) }
+        case { assertFalse(isValidPalindrome("ab.")) }
+        case { assertTrue(isValidPalindrome(".a")) }
+        case { assertFalse(isValidPalindrome("ab")) }
+        case { assertTrue(isValidPalindrome("Aa")) }
+    }
+}
+
 private object L3_2_v0 { // reference
     // Случай 1: "()[]{}" → true
     // Случай 2: "([)]" → false
@@ -1840,6 +1946,20 @@ class ReferenceSolutionsTest {
     fun l2_8_v0() {
         Probe.reset()
         L2_8_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_14_v0() {
+        Probe.reset()
+        L2_14_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun l2_15_v0() {
+        Probe.reset()
+        L2_15_v0.run()
         assertEquals(emptySet<String>(), Probe.kinds)
     }
 

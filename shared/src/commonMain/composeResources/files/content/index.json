@@ -130,6 +130,22 @@
       ]
     },
     {
+      "id": "l2.14",
+      "title": "Two Sum II",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
+      "id": "l2.15",
+      "title": "Валидный палиндром",
+      "langs": [
+        "kotlin",
+        "python"
+      ]
+    },
+    {
       "id": "l3.2",
       "title": "Корректность скобок",
       "langs": [

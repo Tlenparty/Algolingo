@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "id": "l2.15",
+  "level": 2,
+  "title": "Валидный палиндром",
+  "statement": "Строка — палиндром, если читать только буквы и цифры и не различать регистр? Верни `true`/`false` (LeetCode 125).",
+  "trains": "два указателя навстречу с пропуском лишних символов",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда пропускать по пути",
+      "signals": [
+        "Палиндром, но «только буквы и цифры»",
+        "«Регистр не важен»",
+        "Память O(1): копию строки не строим"
+      ],
+      "body": "Скелет 0.3. Перед сравнением каждый указатель сам пропускает лишний символ: шаг и `continue`, на следующем круге проверка заново. Сравниваем `lowercaseChar()` обеих сторон. Время O(n), память O(1)."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "while (left < right) {\n    // слева лишний -> left++, continue\n    // справа лишний -> right--, continue\n    // сравнить без регистра\n    left++; right--\n}",
+      "body": "`continue` нужен, чтобы после шага снова проверить `left < right` и новый символ."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`isLetter()` вместо `isLetterOrDigit()`: цифры выпадут, `\"0P\"` → `true`",
+        "Без `lowercaseChar()`: `\"Aa\"` → `false`",
+        "Пропуск справа двигает не тот указатель: `\"ab.\"` → `true`",
+        "На несовпадении `false`, после цикла `true`"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l2.15.e1",
+      "segments": [
+        "// Случай 1: \"A man, a plan, a canal: Panama\" → true\n// Случай 2: \"race a car\" → false\n// Случай 3: \" \" → true\nfun isValidPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // слева не буква и не цифра — пропускаем\n        if (!s[left].isLetterOrDigit()) { ",
+        "; continue }\n        // справа так же\n        if (!s[right].isLetterOrDigit()) { right--; continue }\n        // сравниваем без учёта регистра\n        if (s[left].lowercaseChar() != s[right].lowercaseChar()) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "left++"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "left++"
+        },
+        {
+          "text": "right--",
+          "why": "лишний символ слева так и остаётся, а правый указатель съедает буквы: `\".ab\"` вернёт `true`"
+        },
+        {
+          "text": "left--",
+          "why": "левый указатель уходит за начало: `\".a\"` → `s[-1]`"
+        }
+      ],
+      "hints": [
+        "Лишний символ слева — сдвигаем левый указатель внутрь."
+      ]
+    },
+    {
+      "id": "l2.15.e2",
+      "segments": [
+        "// Случай 1: \"A man, a plan, a canal: Panama\" → true\n// Случай 2: \"race a car\" → false\n// Случай 3: \" \" → true\nfun isValidPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // слева не буква и не цифра — пропускаем\n        if (!s[left].isLetterOrDigit()) { left++; continue }\n        // справа так же\n        if (!s[right].isLetterOrDigit()) { right--; continue }\n        // сравниваем без учёта регистра\n        if (s[left].lowercaseChar() ",
+        " s[right].lowercaseChar()) return ",
+        "\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "!="
+          ],
+          "wrongWhy": {
+            "false": "`s[left].lowercaseChar() false s[right]...` не скомпилируется: здесь нужен оператор сравнения",
+            "true": "`s[left].lowercaseChar() true s[right]...` не скомпилируется: здесь нужен оператор сравнения"
+          }
+        },
+        {
+          "ok": [
+            "false"
+          ],
+          "wrongWhy": {
+            "!=": "`return !=` не скомпилируется: здесь нужен ответ `Boolean`",
+            "==": "`return ==` не скомпилируется: здесь нужен ответ `Boolean`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "!="
+        },
+        {
+          "text": "false"
+        },
+        {
+          "text": "==",
+          "why": "условие перевёрнуто: `\"ab\"` вернёт `true`, а `\"Aa\"` — `false`"
+        },
+        {
+          "text": "true",
+          "why": "на несовпадении скажет «да»: `\"ab\"` вернёт `true`"
+        }
+      ],
+      "hints": [
+        "Нашли несовпадающую пару — сразу `return false`."
+      ]
+    },
+    {
+      "id": "l2.15.e3",
+      "segments": [
+        "// Случай 1: \"A man, a plan, a canal: Panama\" → true\n// Случай 2: \"race a car\" → false\n// Случай 3: \" \" → true\nfun isValidPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // слева не буква и не цифра — пропускаем\n        if (!s[left].",
+        ") { left++; continue }\n        // справа так же\n        if (!s[right].isLetterOrDigit()) { ",
+        "; continue }\n        // сравниваем без учёта регистра\n        if (s[left].",
+        " != s[right].lowercaseChar()) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "isLetterOrDigit()"
+          ],
+          "wrongWhy": {
+            "isLetter()": "цифры тоже пропускаются: `\"0P\"` вернёт `true`",
+            "right--": "у символа нет поля `right`: `s[left].right--` не скомпилируется",
+            "lowercaseChar()": "`!` применяется к `Boolean`, а `lowercaseChar()` даёт `Char`: не скомпилируется",
+            "left++": "у символа нет поля `left`: `s[left].left++` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "right--"
+          ],
+          "wrongWhy": {
+            "isLetterOrDigit()": "без символа перед точкой вызывать не у кого: `isLetterOrDigit()` не скомпилируется",
+            "isLetter()": "без символа перед точкой вызывать не у кого: `isLetter()` не скомпилируется",
+            "lowercaseChar()": "без символа перед точкой вызывать не у кого: `lowercaseChar()` не скомпилируется",
+            "left++": "лишний символ справа так и остаётся, а левый указатель съедает буквы: `\"ab.\"` вернёт `true`"
+          }
+        },
+        {
+          "ok": [
+            "lowercaseChar()"
+          ],
+          "wrongWhy": {
+            "isLetterOrDigit()": "слева `Boolean`, справа `Char`: `!=` между ними не скомпилируется",
+            "isLetter()": "слева `Boolean`, справа `Char`: `!=` между ними не скомпилируется",
+            "right--": "у символа нет поля `right`: `s[left].right--` не скомпилируется",
+            "left++": "у символа нет поля `left`: `s[left].left++` не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "isLetterOrDigit()"
+        },
+        {
+          "text": "right--"
+        },
+        {
+          "text": "lowercaseChar()"
+        },
+        {
+          "text": "isLetter()"
+        },
+        {
+          "text": "left++"
+        }
+      ],
+      "hints": [
+        "Пропускаем всё, что не буква и не цифра: цифры в ответе тоже считаются.",
+        "Лишний символ справа — сдвигаем правый указатель внутрь.",
+        "Регистр не важен: сравниваем обе стороны в нижнем регистре."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "// Случай 1: \"A man, a plan, a canal: Panama\" → true\n// Случай 2: \"race a car\" → false\n// Случай 3: \" \" → true\nfun isValidPalindrome(s: String): Boolean {\n    // левый указатель — с начала\n    var left = 0\n    // правый указатель — с конца\n    var right = s.length - 1\n    // идём навстречу\n    while (left < right) {\n        // слева не буква и не цифра — пропускаем\n        if (!s[left].isLetterOrDigit()) { left++; continue }\n        // справа так же\n        if (!s[right].isLetterOrDigit()) { right--; continue }\n        // сравниваем без учёта регистра\n        if (s[left].lowercaseChar() != s[right].lowercaseChar()) return false\n        // оба указателя — к центру\n        left++; right--\n    }\n    // все пары совпали\n    return true\n}",
+    "time": "O(n)",
+    "space": "O(1)",
+    "pitfalls": [
+      "цифры тоже считаются: `isLetter()` пропустит `0` и `\"0P\"` станет палиндромом",
+      "без `lowercaseChar()` `\"Aa\"` → `false`"
+    ],
+    "variations": [
+      "отфильтровать строку и сравнить с разворотом — короче, но O(n) памяти"
+    ]
+  }
+}
