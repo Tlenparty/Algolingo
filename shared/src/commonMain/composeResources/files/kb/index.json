@@ -996,6 +996,78 @@
   "file": "nd7a10f21.md"
  },
  {
+  "id": "nee8494aa",
+  "title": "13 Постановка задачи: ФТ и НФТ",
+  "section": "System Design",
+  "file": "nee8494aa.md"
+ },
+ {
+  "id": "nd592a079",
+  "title": "14 Схема C4: C2 и DD",
+  "section": "System Design",
+  "file": "nd592a079.md"
+ },
+ {
+  "id": "na73967ca",
+  "title": "15 Распределённые системы: CAP и компромиссы",
+  "section": "System Design",
+  "file": "na73967ca.md"
+ },
+ {
+  "id": "nfe60b7d6",
+  "title": "16 Событийная архитектура (EDA)",
+  "section": "System Design",
+  "file": "nfe60b7d6.md"
+ },
+ {
+  "id": "n96d19f47",
+  "title": "17 CQRS: разделение чтения и записи",
+  "section": "System Design",
+  "file": "n96d19f47.md"
+ },
+ {
+  "id": "na692405a",
+  "title": "18 Декомпозиция: монолит, микросервисы, Цитадель",
+  "section": "System Design",
+  "file": "na692405a.md"
+ },
+ {
+  "id": "n0c8c7f3b",
+  "title": "19 Кэширование: уровни и паттерны",
+  "section": "System Design",
+  "file": "n0c8c7f3b.md"
+ },
+ {
+  "id": "n96769702",
+  "title": "20 Масштабирование БД: где узкое место",
+  "section": "System Design",
+  "file": "n96769702.md"
+ },
+ {
+  "id": "n6efc12a6",
+  "title": "21 Репликация БД",
+  "section": "System Design",
+  "file": "n6efc12a6.md"
+ },
+ {
+  "id": "n7c4c853d",
+  "title": "22 Партиционирование и шардирование",
+  "section": "System Design",
+  "file": "n7c4c853d.md"
+ },
+ {
+  "id": "n5ba0e5e6",
+  "title": "23 OLTP и OLAP",
+  "section": "System Design",
+  "file": "n5ba0e5e6.md"
+ },
+ {
+  "id": "n97eae2a5",
+  "title": "24 Кейс: платформа постов поставщиков",
+  "section": "System Design",
+  "file": "n97eae2a5.md"
+ },
+ {
   "id": "nde394dd4",
   "title": "System Design с учетом Kotlin Multiplatform (KMP)",
   "section": "System Design",
