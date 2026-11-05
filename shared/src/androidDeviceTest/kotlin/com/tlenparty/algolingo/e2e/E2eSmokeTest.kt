@@ -23,6 +23,13 @@ class E2eSmokeTest {
         scenarioSystemDesign(startXp = scenarioAllLessons())
     }
 
+    /** System Design tab alone: every SD lesson from clean progress, without the code catalog first. */
+    @Test
+    fun systemDesign() = runComposeUiTest(testTimeout = 10.minutes) {
+        launchApp(freshDir())
+        scenarioSystemDesign(startXp = 0)
+    }
+
     @Test
     fun python() = runComposeUiTest(testTimeout = 3.minutes) {
         launchApp(freshDir())
