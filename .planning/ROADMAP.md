@@ -26,6 +26,10 @@
 - [x] **Phase 12: Client-Server Basics Lessons** - SD-уроки с облачками на закрепление «Основ» (completed 2026-10-28)
 - [x] **Phase 13: SD Classics and Reliability** - 8 SD-уроков: авторизация, уведомления, лента, чат, платежи, потеря связи, несколько БД, наблюдаемость (completed 2026-10-28)
 - [x] **Phase 14: Level 2 Easy Lessons** - 6 уроков «Два указателя и окно» по LeetCode Easy (283, 26, 88, 977, 392, 643) на Kotlin и Python (completed 2026-10-30)
+- [x] **Phase 15: Backend Track Skeleton** - Трек «Backend» (четвёртая вкладка, `Track.Backend`, каталог `bk/`), поле `syntax` урока и подсветка Kotlin-аннотаций, SQL, YAML, HTTP (completed 2026-11-07)
+- [x] **Phase 16: Backend Slice** - Раздел «Backend» в базе знаний (5 заметок) и три урока среза: bk3.1 контроллер Spring, bk5.1 SQL, bk6.1 token bucket через генератор (completed 2026-11-07)
+- [ ] **Phase 17: Backend Notes BK1–BK3** - Заметки HTTP/API, Spring Boot основы, web-слой в Obsidian → база знаний (спека docs/superpowers/specs/2026-11-07-backend-kotlin-track-design.md)
+- [ ] **Phase 18: Backend Lessons BK1–BK3** - 16 уроков по заметкам фазы 17, ревью заказчика по уровню
 
 ## Phase Details
 
@@ -190,6 +194,8 @@ Phases execute in numeric order: 1 → 01.1 → 2 → 3 → 4 → 5 (Phase 5 con
 | 4. Progress & Review | 4/4 | Complete    | 2026-10-22 |
 | 5. Level 0 Content & End-to-End | 4/4 | Complete    | 2026-10-22 |
 | 14. Level 2 Easy Lessons | 4/4 | Complete    | 2026-10-30 |
+| 15. Backend Track Skeleton | 1/1 | Complete    | 2026-11-07 |
+| 16. Backend Slice | 1/1 | Complete (ревью и устройства открыты) | 2026-11-07 |
 
 ### Phase 6: Level 1 Content — Hash Map / Set
 
@@ -458,3 +464,39 @@ Plans:
 
 - Эталоны и ok/acceptable проходят checks; каждое неверное облачко падает так, как заявлено тегом (WrongChipsTest на JVM, Python-харнесс G12-G14) и имеет why с конкретным контрпримером
 - Код в новом стиле: понятные имена, 5-7 комментариев на функцию (строка <= 36 символов), комментарии не раскрывают ответ дырки; Kotlin-эталон построчно равен коду заметки 05 после norm() (G5)
+
+### Phase 15: Backend Track Skeleton
+
+**Goal:** В приложении есть третий учебный трек «Backend»: четвёртая вкладка, `Track.Backend`, каталог `files/content/bk/`, путь `bk*` в `lessonPath`; урок может задать поле `syntax` (kotlin | python | sql | yaml | http | plain), по которому красятся шаблон, облачка и эталон; design-урок с кодовым синтаксисом не ограничен 34 символами в строке (скроллится, как код)
+**Requirements**: BK-01, BK-02
+**Depends on:** Phase 8 (design-уроки), Phase 9 (переключатель языка)
+**Success Criteria** (what must be TRUE):
+
+  1. `Track.Backend` строит Home из `bk/index.json`, без сегмента Kotlin | Python; `lessonPath("bk…")` ведёт в `files/content/bk/`
+  2. `Lesson.syntax` читается из JSON, `LocalSyntaxLang` в уроке берётся из него, иначе из языка маршрута; `SyntaxLang` умеет Sql, Yaml, Http; Kotlin-аннотации `@Xxx` красятся как ключевые слова
+  3. Тесты: HighlightTest (sql/yaml/http/аннотации), LessonRepositoryTest (пути bk), HomeViewModelTest (Backend игнорирует язык), e2e-сценарий `scenarioBackend` и тесты `backend()` на Android и iOS
+
+**Plans:** 1/1 plans complete
+
+Plans:
+
+- [x] 15-01-PLAN.md — Track.Backend + вкладка + каталог bk/ + LessonSyntax + подсветка sql/yaml/http (BK-01, BK-02)
+
+### Phase 16: Backend Slice
+
+**Goal:** Первый срез трека: раздел «Backend» в базе знаний (программа трека, словарь Spring, контроллер и роутинг, SQL, тренажёр Backend) и три урока разных механик — bk3.1 «Контроллер и роутинг» (design-шаги, Spring Kotlin), bk5.1 «SQL: выборка, JOIN, группировка» (design-шаги, подсветка sql), bk6.1 «Token bucket» (code, генератор с компиляцией и доказанными неверными облачками)
+**Requirements**: BK-03, BK-04
+**Depends on:** Phase 15
+**Success Criteria** (what must be TRUE):
+
+  1. 5 заметок раздела «Backend» в `files/kb`, ссылки резолвятся, порядок разделов в KbContentTest учтён
+  2. bk3.1 и bk5.1 собираются `tools/build_bk_reviewed.py`: все правила `validate()` плюс объяснение у каждого неверного облачка в каждой дырке
+  3. bk6.1 собирается `tools/gen_content.py` из sidecar `content/authoring/bk/bk6.1.md` и заметки «04 Тренажёр Backend»; эталон проходит examples + checks, каждое неверное облачко ломается так, как заявлено тегом (проверено компиляцией на JVM)
+  4. Каталог `bk/index.json` ручной: bk3.1 → bk5.1 → bk6.1; LessonContentTest.everyBkLessonIsStrictAndValid
+  5. Ревью заказчика контента среза и прогон smoke.sh (`backend()`) на Android-эмуляторе и iOS-симуляторе — ОТКРЫТО: в облачной сессии нет Gradle (dl.google.com закрыт) и устройств
+
+**Plans:** 1/1 plans complete (чекпоинт заказчика и прогон на устройствах — следующая сессия)
+
+Plans:
+
+- [x] 16-01-PLAN.md — заметки Backend + bk3.1, bk5.1 (builder) + bk6.1 (генератор) + каталог (BK-03, BK-04)

@@ -52,6 +52,10 @@ Python sidecar (content/authoring/py/<id>.md): same grammar plus `lang: python`;
 (no G5 against the Kotlin note code). Needs a Kotlin sidecar with the same id. Output goes to
 files/content/lessons/py/<id>.json and adds langs ["kotlin","python"] to the index entry.
 
+Backend sidecar (content/authoring/bk/<id>.md): id bk<level>.<n>, same Kotlin grammar; `note:` selects a heading in
+the «Тренажёр Backend» note (files/kb/nd0d126e5.md). Output goes to files/content/bk/<id>.json with "syntax": "kotlin";
+the bk/index.json catalog is hand-maintained (it also lists reviewed Spring/SQL lessons) and must already contain the id.
+
 Bank order: ok[0] of each hole (with multiplicity), other ok/acceptable texts, distractors.
 """
 import argparse
@@ -72,6 +76,12 @@ INDEX = RES + "/content/index.json"
 LESSONS = RES + "/content/lessons"
 LESSONS_PY = RES + "/content/lessons/py"
 AUTHORING_PY = AUTHORING + "/py"
+# Backend track (bk<level>.<n>): verified Kotlin lessons come from the «Тренажёр Backend» note; the bk/ catalog is
+# hand-maintained (it also lists the reviewed Spring/SQL lessons), so the generator only checks that each id is in it.
+NOTE_BK = RES + "/kb/nd0d126e5.md"
+AUTHORING_BK = AUTHORING + "/bk"
+LESSONS_BK = RES + "/content/bk"
+INDEX_BK = LESSONS_BK + "/index.json"
 TEST_KT = "shared/src/commonTest/kotlin/com/tlenparty/algolingo/lesson/ReferenceSolutionsTest.kt"
 WRONG_JSON = "shared/src/androidHostTest/resources/wrong_variants.json"
 MAX_BANK = 10
@@ -260,17 +270,23 @@ def parse_exercise(name, lines, file, fence="kotlin"):
     return ex
 
 
-def parse_sidecar(text, stem, lang="kotlin"):
-    """lang comes from the folder: content/authoring/<id>.md is kotlin, content/authoring/py/<id>.md python."""
-    file = "%s/%s.md" % (AUTHORING_PY if lang == "python" else AUTHORING, stem)
+def authoring_dir(lang="kotlin", track="code"):
+    return AUTHORING_BK if track == "backend" else AUTHORING_PY if lang == "python" else AUTHORING
+
+
+def parse_sidecar(text, stem, lang="kotlin", track="code"):
+    """lang comes from the folder: content/authoring/<id>.md is kotlin, content/authoring/py/<id>.md python,
+    content/authoring/bk/<id>.md the Kotlin-only backend track."""
+    file = "%s/%s.md" % (authoring_dir(lang, track), stem)
     lines = text.splitlines()
     if not lines or not lines[0].startswith("# "):
         raise GenError(file, "G7", "first line must be '# <lesson id>'")
     lid = lines[0][2:].strip()
     if lid != stem:
         raise GenError(file, "G7", "id %r != file stem %r" % (lid, stem))
-    if not re.match(r"^l\d+\.\d+$", lid):
-        raise GenError(file, "G7", "id %r is not l<level>.<n>" % lid)
+    prefix = "bk" if track == "backend" else "l"
+    if not re.match(r"^%s\d+\.\d+$" % prefix, lid):
+        raise GenError(file, "G7", "id %r is not %s<level>.<n>" % (lid, prefix))
     starts = [i for i, ln in enumerate(lines) if ln.startswith("## ")] + [len(lines)]
     # the lang: line must be read before the fences it selects
     declared = next((ln[5:].strip() for ln in lines[1:starts[0]] if ln.startswith("lang:")), None)
@@ -290,7 +306,7 @@ def parse_sidecar(text, stem, lang="kotlin"):
     bad = lang == "kotlin" and CHECKS_BANNED.search(top["checks"])
     if bad:
         raise GenError(file, "G10", "checks: uses %r (JVM-only or Native-deprecated API)" % bad.group(1))
-    sc = {"id": lid, "file": file, "lang": lang, "top": top, "theory": [], "exercises": []}
+    sc = {"id": lid, "file": file, "lang": lang, "track": track, "top": top, "theory": [], "exercises": []}
     for a, b in zip(starts, starts[1:]):
         head = lines[a][3:].strip()
         body = lines[a + 1:b]
@@ -348,7 +364,7 @@ def norm(code):
 def line_holes(code):
     """Every line of the last top-level function body becomes a hole; comments, braces, indent stay fixed."""
     lines = code.split("\n")
-    start = max(i for i, ln in enumerate(lines) if re.match(r"(fun|def) ", ln)) + 1
+    start = max(i for i, ln in enumerate(lines) if re.match(r"\s*(?:private )?(fun|def) ", ln)) + 1
     for i in range(start, len(lines)):
         if not FIXED_LINE.match(lines[i]):
             body = lines[i].lstrip()
@@ -405,7 +421,7 @@ def build_lesson(sc, note_lines):
             out["lines"] = True
             out["hints"] = [LINES_HINT] + out["hints"]
 
-    lesson = {"schema": 1, "id": lid, "level": int(re.match(r"l(\d+)", lid).group(1)),
+    lesson = {"schema": 1, "id": lid, "level": int(re.match(r"[a-z]+(\d+)", lid).group(1)),
               "title": top.get("title", note["title"]),
               "statement": top.get("statement", note["statement"])}
     trains = top.get("trains", note["trains"])
@@ -422,6 +438,8 @@ def build_lesson(sc, note_lines):
     for k in ("pitfalls", "variations"):
         if lesson["solution"][k] is None:
             raise GenError(file, "G7", "note %s is a multi-line list; set %s: in the sidecar" % (k, k))
+    if sc.get("track") == "backend":
+        lesson["syntax"] = "kotlin"  # the app colors backend lessons by this field, not by the route language
     return lesson
 
 
@@ -664,7 +682,7 @@ HEADER = "// GENERATED by tools/gen_content.py from content/authoring/*.md. Do n
 def render_kt(items):
     objs, tests = [], []
     for lesson, sc in items:
-        prefix = "L" + lesson["id"][1:].replace(".", "_")
+        prefix = re.sub(r"^[a-z]+", lambda m: m.group(0).upper(), lesson["id"]).replace(".", "_")
         for n, (code, label, _) in enumerate(variants(lesson)):
             name = "%s_v%d" % (prefix, n)
             objs.append(render_object(name, label, code, sc["top"]["examples"], sc["top"].get("checks"), False))
@@ -832,6 +850,19 @@ def render_all(repo_root, allow_removed=()):
         python_gates(lesson, sc)
         py_items.append((lesson, sc))
     py_ids = set(lesson["id"] for lesson, _ in py_items)
+    bk_items = []
+    bk_dir = root / AUTHORING_BK
+    if bk_dir.is_dir() and any(bk_dir.glob("*.md")):
+        bk_note = (root / NOTE_BK).read_text(encoding="utf-8").splitlines()
+        try:
+            bk_index = [e["id"] for e in json.loads((root / INDEX_BK).read_text(encoding="utf-8"))["lessons"]]
+        except (OSError, ValueError, KeyError, TypeError) as e:
+            raise GenError(INDEX_BK, "syntax", "cannot read lesson ids: %r" % e)
+        for p in sorted(bk_dir.glob("*.md"), key=lambda p: id_key(p.stem)):
+            sc = parse_sidecar(p.read_text(encoding="utf-8"), p.stem, "kotlin", "backend")
+            if sc["id"] not in bk_index:
+                raise GenError(sc["file"], "G4", "lesson id %s is not in %s (the bk catalog is hand-maintained)" % (sc["id"], INDEX_BK))
+            bk_items.append((build_lesson(sc, bk_note), sc))
     old = root / INDEX
     if old.is_file():
         try:
@@ -850,9 +881,11 @@ def render_all(repo_root, allow_removed=()):
         out["%s/%s.json" % (LESSONS, lesson["id"])] = dump(lesson)
     for lesson, _ in py_items:
         out["%s/%s.json" % (LESSONS_PY, lesson["id"])] = dump(lesson)
-    out[TEST_KT] = render_kt(items)
+    for lesson, _ in bk_items:
+        out["%s/%s.json" % (LESSONS_BK, lesson["id"])] = dump(lesson)
+    out[TEST_KT] = render_kt(items + bk_items)
     # WRONG_JSON sits in `out`, so --check compares it like every other output
-    out[WRONG_JSON] = render_wrong_json(items)
+    out[WRONG_JSON] = render_wrong_json(items + bk_items)
     return out
 
 

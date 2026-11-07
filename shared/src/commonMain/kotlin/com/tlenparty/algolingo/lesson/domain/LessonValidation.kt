@@ -3,7 +3,7 @@ package com.tlenparty.algolingo.lesson.domain
 /** A lines exercise («собери из строк») banks every body line, so up to 14 chips. */
 const val MAX_BANK = 14
 
-/** Widest design line that fits the phone screen without horizontal scroll. */
+/** Widest scheme line that fits the phone screen without horizontal scroll (design lessons without a code syntax; code scrolls). */
 const val MAX_DESIGN_LINE = 34
 
 /** segments interleaved with each hole's reference answer (ok[0]). */
@@ -68,7 +68,7 @@ fun validate(lesson: Lesson): List<String> {
             // design: only the final step is the reference scheme; earlier steps are requirements/API/decisions
             if ((!design || i == lesson.exercises.lastIndex) && rebuilt != lesson.solution.code)
                 errors += "$e: segments + ok[0] differ from solution.code"
-            if (design) rebuilt.split('\n').forEachIndexed { n, line ->
+            if (lesson.isScheme) rebuilt.split('\n').forEachIndexed { n, line ->
                 if (line.length > MAX_DESIGN_LINE) errors += "$e: line ${n + 1} has ${line.length} chars (max $MAX_DESIGN_LINE)"
             }
         }

@@ -6,6 +6,7 @@ import com.tlenparty.algolingo.lesson.data.ExerciseDto
 import com.tlenparty.algolingo.lesson.data.HoleDto
 import com.tlenparty.algolingo.lesson.data.LessonDto
 import com.tlenparty.algolingo.lesson.data.LessonKindDto
+import com.tlenparty.algolingo.lesson.data.LessonSyntaxDto
 import com.tlenparty.algolingo.lesson.data.SolutionDto
 import com.tlenparty.algolingo.lesson.data.TheoryCardDto
 import com.tlenparty.algolingo.lesson.domain.Lesson
@@ -25,4 +26,5 @@ fun Lesson.toDto() = LessonDto(
         )
     },
     SolutionDto(solution.code, solution.time, solution.space, solution.pitfalls, solution.variations),
+    syntax?.let { LessonSyntaxDto.valueOf(it.name) },
 )

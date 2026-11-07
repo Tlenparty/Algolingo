@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 14 complete
-last_updated: "2026-10-30T13:28:26.545Z"
-last_activity: 2026-10-30
+stopped_at: Phase 16 complete (review + devices pending)
+last_updated: "2026-11-07T12:00:00.000Z"
+last_activity: 2026-11-07
 progress:
-  total_phases: 16
-  completed_phases: 15
-  total_plans: 67
-  completed_plans: 66
+  total_phases: 18
+  completed_phases: 17
+  total_plans: 69
+  completed_plans: 68
   percent: 94
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-21)
 
 **Core value:** Быстро, с телефона, без клавиатуры прорешать алгоритмическую задачу: собрать решение из облачков, нажать «Проверить» и сразу понять, где грабли.
-**Current focus:** Phase 14 — Level 2 Easy Lessons
+**Current focus:** Backend track — срез готов, дальше Phase 17 (заметки BK1–BK3)
 
 ## Current Position
 
-Phase: 14 (Level 2 Easy Lessons) — COMPLETE
-Plan: 4 of 4
-Status: Phase 14 complete (4/4 plans, devices verified: 14-VERIFICATION-DEVICES.md)
-Last activity: 2026-10-31 - Completed quick task 261031-arc: слои и MVI, e2e на устройстве ещё не гонялся
+Phase: 16 (Backend Slice) — COMPLETE, review + devices pending
+Plan: 1 of 1
+Status: Phases 15–16 done in a cloud session without Gradle: code checked by kotlinc on the JVM (highlight regexes, token bucket reference, wrong-chip programs), lessons by the python builders; Gradle test suite, customer review and smoke.sh on devices are the next session's first step
+Last activity: 2026-11-07 - Phases 15–16: Backend track skeleton + slice (spec docs/superpowers/specs/2026-11-07-backend-kotlin-track-design.md)
 
 Progress: [██████████] 99%
 
@@ -126,6 +126,11 @@ Recent decisions affecting current work:
 - [Phase 12]: 12-01: полная матрица wrongWhy; WebSocket (sd0.6 котировки) и PostgreSQL (sd0.3 чат) — acceptable
 - [Phase 14]: 14-02: ~acceptable nums[fast - 1] (l2.2) and >= (l2.3); python level-2 code carries Kotlin comments
 - [Phase 14]: l2.5: hang distractor as a comparison chip in the tIndex++ hole; l2.6 Double checked with tolerance 1e-9
+- [Phase 15]: `Lesson.syntax` отдельно от `kind`: design-шаги с кодовым синтаксисом (Spring, SQL) не режутся по 34 символам, схемы без синтаксиса — как раньше
+- [Phase 15]: Backend-трек без переключателя языка: Kotlin + Spring Boot only (решение заказчика 2026-11-07)
+- [Phase 16]: каталог `bk/index.json` ручной (смешивает reviewed и verified уроки); генератор лишь проверяет, что bk-id в нём есть (G4)
+- [Phase 16]: verified bk-уроки берут эталон из заметки «04 Тренажёр Backend» (kb/nd0d126e5.md) по той же грамматике, что заметка 05
+- [Phase 16]: reviewed bk-уроки собираются `tools/build_bk_reviewed.py` со строгим правилом «у каждого неверного облачка в каждой дырке есть объяснение»
 
 ### Roadmap Evolution
 
@@ -138,6 +143,7 @@ Recent decisions affecting current work:
 
 - Phase 11 added: Client-Server Basics Notes (12 заметок «Основы» в Obsidian → KB)
 - Phase 12 added: Client-Server Basics Lessons (SD-уроки на закрепление)
+- Phases 15–16 added: Backend Track Skeleton + Backend Slice (спека docs/superpowers/specs/2026-11-07-backend-kotlin-track-design.md); фазы 17–22 — пары «заметки → уроки» по уровням BK1–BK11
 - Phase 14 added: Level 2 Easy Lessons — два указателя и окно (LeetCode Easy 283, 26, 88, 977, 392, 643; Kotlin + Python; эталоны сначала в заметке 05)
 
 ### Pending Todos

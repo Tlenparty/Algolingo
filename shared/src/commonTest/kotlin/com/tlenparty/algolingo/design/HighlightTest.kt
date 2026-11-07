@@ -56,6 +56,33 @@ class HighlightTest {
         assertEquals(emptyList(), py.with(colors.comment))
     }
 
+    @Test fun sqlKeywordsAnyCaseAndDashComment() {
+        val s = highlight("select name FROM users -- всё\nWHERE city = 'Москва' LIMIT 10", colors, SyntaxLang.Sql)
+        assertEquals(listOf("select", "FROM", "WHERE", "LIMIT"), s.with(colors.keyword))
+        assertEquals(listOf("-- всё"), s.with(colors.comment))
+        assertEquals(listOf("'Москва'"), s.with(colors.string))
+        assertEquals(listOf("10"), s.with(colors.number))
+    }
+
+    @Test fun yamlKeysAndLiterals() {
+        val s = highlight("spring:\n  datasource:\n    url: jdbc:h2:mem # c\n  - name: x\nenabled: true\nport: 8080", colors, SyntaxLang.Yaml)
+        assertEquals(listOf("spring", "datasource", "url", "name", "enabled", "true", "port"), s.with(colors.keyword))
+        assertEquals(listOf("# c"), s.with(colors.comment))
+        assertEquals(listOf("8080"), s.with(colors.number))
+    }
+
+    @Test fun httpMethodsHeadersAndStatus() {
+        val s = highlight("GET /users?limit=20 HTTP/1.1\nContent-Type: application/json\n\n201 Created", colors, SyntaxLang.Http)
+        assertEquals(listOf("GET", "HTTP", "Content-Type"), s.with(colors.keyword))
+        assertEquals(listOf("20", "1.1", "201"), s.with(colors.number))
+    }
+
+    @Test fun kotlinAnnotationsAreKeywords() {
+        val s = highlight("@GetMapping(\"/{id}\")\nfun byId(@PathVariable id: Long)", colors, SyntaxLang.Kotlin)
+        assertEquals(listOf("@GetMapping", "fun", "@PathVariable"), s.with(colors.keyword))
+        assertEquals(listOf("\"/{id}\""), s.with(colors.string))
+    }
+
     @Test fun ids() {
         assertEquals(listOf("kotlin", "python"), CodeLang.entries.map { it.id })
     }

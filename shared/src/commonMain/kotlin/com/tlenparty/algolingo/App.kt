@@ -37,6 +37,9 @@ object Home
 object SdHome
 
 @Serializable
+object BkHome
+
+@Serializable
 object KbList
 
 @Serializable
@@ -74,6 +77,12 @@ fun App(dataDir: String, unlockAll: Boolean = false) {
                             icon = {},
                             label = { Text("System Design") },
                         )
+                        NavigationBarItem(
+                            selected = dest?.hasRoute<BkHome>() == true,
+                            onClick = { nav.switchTab(BkHome) },
+                            icon = {},
+                            label = { Text("Backend") },
+                        )
                     }
                 }
             },
@@ -81,6 +90,7 @@ fun App(dataDir: String, unlockAll: Boolean = false) {
             NavHost(nav, startDestination = Home, modifier = Modifier.padding(pad)) {
                 composable<Home> { entry -> HomeTab(entry, graph, nav, Track.Code) }
                 composable<SdHome> { entry -> HomeTab(entry, graph, nav, Track.SystemDesign) }
+                composable<BkHome> { entry -> HomeTab(entry, graph, nav, Track.Backend) }
                 composable<LessonRoute> { entry ->
                     val route = entry.toRoute<LessonRoute>()
                     // Language is frozen in the route at start: switching it on Home never reloads an open lesson.

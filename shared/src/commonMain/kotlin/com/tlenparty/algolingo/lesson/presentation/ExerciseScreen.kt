@@ -38,7 +38,6 @@ import com.tlenparty.algolingo.design.components.ChunkyButton
 import com.tlenparty.algolingo.design.components.TokenChip
 import com.tlenparty.algolingo.design.AlgoTheme
 import com.tlenparty.algolingo.lesson.domain.CheckResult
-import com.tlenparty.algolingo.lesson.domain.LessonKind
 import com.tlenparty.algolingo.lesson.domain.Verdict
 import com.tlenparty.algolingo.lesson.presentation.components.CodeTemplate
 import com.tlenparty.algolingo.lesson.presentation.components.ResultPanel
@@ -61,7 +60,7 @@ fun ExerciseScreen(state: LessonState, on: (LessonAction) -> Unit, modifier: Mod
     val outline = MaterialTheme.colorScheme.outline
     val shown = (state.hintsShown[ex.id] ?: 0).coerceIn(0, ex.hints.size)
     val scroll = rememberScrollState()
-    val code = state.lesson.kind == LessonKind.Code
+    val code = state.lesson.highlights
 
     LaunchedEffect(shown) { if (shown > 0) scroll.animateScrollTo(0) } // new card is appended near the top
     val haptic = LocalHapticFeedback.current

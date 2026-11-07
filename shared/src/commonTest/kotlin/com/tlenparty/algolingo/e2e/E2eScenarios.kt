@@ -42,6 +42,7 @@ import com.tlenparty.algolingo.lesson.domain.LessonState
 import com.tlenparty.algolingo.lesson.domain.Phase
 import com.tlenparty.algolingo.lesson.presentation.panelModel
 import com.tlenparty.algolingo.lesson.domain.screenKey
+import com.tlenparty.algolingo.progress.data.BK_CATALOG_PATH
 import com.tlenparty.algolingo.progress.data.CATALOG_PATH
 import com.tlenparty.algolingo.progress.data.SD_CATALOG_PATH
 import com.tlenparty.algolingo.progress.data.loadCatalog
@@ -261,6 +262,13 @@ private fun assertLevel2Order(ids: List<String>, where: String) {
 fun ComposeUiTest.scenarioSystemDesign(startXp: Int): Int {
     click(hasText("System Design") and hasClickAction(), "sd tab")
     return playCatalog(nodes(SD_CATALOG_PATH), startXp)
+}
+
+/** Backend tab: every bk lesson (Spring steps, SQL, generated Kotlin), same checks; XP continues from [startXp]. */
+@OptIn(ExperimentalTestApi::class)
+fun ComposeUiTest.scenarioBackend(startXp: Int): Int {
+    click(hasText("Backend") and hasClickAction(), "backend tab")
+    return playCatalog(nodes(BK_CATALOG_PATH), startXp)
 }
 
 @OptIn(ExperimentalTestApi::class)

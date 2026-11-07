@@ -25,7 +25,9 @@ import com.tlenparty.algolingo.design.LocalSyntaxLang
 @Composable
 fun LessonHost(vm: LessonViewModel, lang: CodeLang, onHome: () -> Unit) {
     val state by vm.state.collectAsStateWithLifecycle()
-    CompositionLocalProvider(LocalSyntaxLang provides lang.syntax) {
+    // Backend lessons carry their own syntax (Spring Kotlin, SQL, YAML); everything else follows the route language.
+    val syntax = (state as? LessonUiState.Content)?.state?.lesson?.syntaxLang(lang) ?: lang.syntax
+    CompositionLocalProvider(LocalSyntaxLang provides syntax) {
         when (val s = state) {
             LessonUiState.Loading -> Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
             LessonUiState.Error -> LessonErrorScreen(onHome)

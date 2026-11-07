@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "id": "bk6.1",
+  "level": 6,
+  "title": "Token bucket",
+  "statement": "Напиши ограничитель запросов «ведро токенов»: ведро вмещает `capacity` токенов и пополняется на `refillPerSec` токенов в секунду. Запрос в момент `nowMs` проходит, если в ведре есть целый токен, и забирает его. Так выглядит rate limiter из System Design (`sd1.2`) в коде.",
+  "trains": "состояние с временем, ленивое пополнение «сколько прошло × скорость», ограничение сверху",
+  "targetTimeSec": 300,
+  "theory": [
+    {
+      "title": "Когда token bucket",
+      "signals": [
+        "«Не больше N запросов в секунду / минуту»",
+        "«Всплески допустимы, но средняя скорость ограничена»",
+        "«Защитить API от спама» (урок `sd1.2`)"
+      ],
+      "body": "Ведро вмещает `capacity` токенов и пополняется со скоростью `refillPerSec`; запрос забирает токен или получает отказ. Всплеск до `capacity` проходит разом, дальше ровно `refillPerSec` в секунду. Пополнение ленивое: считается в момент запроса, таймер не нужен."
+    },
+    {
+      "title": "Каркас",
+      "skeleton": "// долить за прошедшее время\nval elapsed = (nowMs - lastMs) / 1000.0\ntokens = minOf(capacity.toDouble(), tokens + elapsed * refillPerSec)\nlastMs = nowMs\n// есть целый токен — тратим\nif (tokens < 1.0) return false\ntokens -= 1.0\nreturn true",
+      "body": "Токены дробные (`Double`): за 500 мс при 1 токене/с наливается 0.5. `minOf(capacity, …)` не даёт накопить больше ёмкости за долгую паузу. Состояние одного ведра живёт в памяти инстанса: за балансером ×N общий счётчик уезжает в Redis."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`tokens <= 1.0`: при ровно одном токене откажет — ведро на 1 токен не пропустит даже первый запрос",
+        "`tokens == 0.0` вместо `< 1.0`: дробный остаток 0.5 сойдёт за токен",
+        "Без `minOf(capacity, …)` после паузы ведро «накопит» тысячи токенов и лимит исчезнет",
+        "`elapsed` в миллисекундах: долив в тысячу раз быстрее"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "bk6.1.e1",
+      "segments": [
+        "// Случай 1: ведро 2, 1 токен/с: 0 мс → true, 0 мс → true, 0 мс → false\n// Случай 2: ведро 1, 1 токен/с: 0 мс → true, 500 мс → false, 1000 мс → true\n// Случай 3: ведро 1, 2 токена/с: 0 мс → true, 500 мс → true\nclass TokenBucket(private val capacity: Int, private val refillPerSec: Double) {\n    // токенов в ведре сейчас (дробно)\n    private var tokens = capacity.toDouble()\n    // когда доливали в последний раз, мс\n    private var lastMs = 0L\n\n    // долить за прошедшее время\n    private fun refill(nowMs: Long) {\n        // сколько секунд прошло\n        val elapsed = (nowMs - lastMs) / 1000.0\n        // долив, но не выше ёмкости\n        tokens = minOf(capacity.toDouble(), tokens + elapsed * refillPerSec)\n        lastMs = nowMs\n    }\n\n    // пропустить запрос в момент nowMs?\n    fun allow(nowMs: Long): Boolean {\n        // сначала долить\n        refill(nowMs)\n        // меньше токена — отказ\n        if (",
+        ") return false\n        // тратим один токен\n        tokens -= 1.0\n        return true\n    }\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "tokens < 1.0"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "tokens < 1.0"
+        },
+        {
+          "text": "tokens <= 1.0",
+          "why": "при ровно одном токене откажет: `TokenBucket(1, 1.0).allow(0)` → `false`, ведро на 1 токен не пропустит ничего"
+        },
+        {
+          "text": "tokens == 0.0",
+          "why": "дробный остаток сойдёт за токен: `TokenBucket(1, 1.0)` после `allow(0)` пропустит `allow(500)` с 0.5 токена"
+        },
+        {
+          "text": "tokens > 1.0",
+          "why": "условие перевёрнуто, пустое ведро не отказывает: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`"
+        }
+      ],
+      "hints": [
+        "Пропускаем, только если в ведре есть целый токен.",
+        "Ровно один токен — тоже пропускаем: нужен строгий `<`."
+      ]
+    },
+    {
+      "id": "bk6.1.e2",
+      "segments": [
+        "// Случай 1: ведро 2, 1 токен/с: 0 мс → true, 0 мс → true, 0 мс → false\n// Случай 2: ведро 1, 1 токен/с: 0 мс → true, 500 мс → false, 1000 мс → true\n// Случай 3: ведро 1, 2 токена/с: 0 мс → true, 500 мс → true\nclass TokenBucket(private val capacity: Int, private val refillPerSec: Double) {\n    // токенов в ведре сейчас (дробно)\n    private var tokens = capacity.toDouble()\n    // когда доливали в последний раз, мс\n    private var lastMs = 0L\n\n    // долить за прошедшее время\n    private fun refill(nowMs: Long) {\n        // сколько секунд прошло\n        val elapsed = (nowMs - lastMs) / 1000.0\n        // долив, но не выше ёмкости\n        tokens = minOf(",
+        ", tokens + ",
+        ")\n        lastMs = nowMs\n    }\n\n    // пропустить запрос в момент nowMs?\n    fun allow(nowMs: Long): Boolean {\n        // сначала долить\n        refill(nowMs)\n        // меньше токена — отказ\n        if (tokens < 1.0) return false\n        // тратим один токен\n        tokens -= 1.0\n        return true\n    }\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "capacity.toDouble()"
+          ],
+          "wrongWhy": {
+            "elapsed / refillPerSec": "потолок равен прошедшему времени, а не ёмкости: первый же `TokenBucket(1, 1.0).allow(0)` → `false`",
+            "refillPerSec": "потолок равен скорости, а не ёмкости: `TokenBucket(2, 1.0)` откажет на втором `allow(0)`",
+            "elapsed * refillPerSec": "потолок — ёмкость ведра, а долив стоит справа: при первом запросе `elapsed = 0`, и `TokenBucket(1, 1.0).allow(0)` → `false`"
+          }
+        },
+        {
+          "ok": [
+            "elapsed * refillPerSec"
+          ],
+          "wrongWhy": {
+            "capacity": "прибавляет всю ёмкость при каждом запросе, ведро всегда полное: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`",
+            "tokens": "`tokens + tokens` удваивает запас вместо долива: `TokenBucket(2, 1.0)` пропустит три `allow(0)` подряд",
+            "capacity.toDouble()": "справа должен быть долив за время, а ёмкость — это потолок: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "capacity.toDouble()"
+        },
+        {
+          "text": "elapsed * refillPerSec"
+        },
+        {
+          "text": "capacity",
+          "why": "`minOf(capacity, tokens + …)` смешивает `Int` и `Double`: не скомпилируется"
+        },
+        {
+          "text": "tokens",
+          "why": "`minOf(tokens, …)` никогда не доливает: `TokenBucket(1, 1.0)` после `allow(0)` откажет даже на `allow(5000)`"
+        },
+        {
+          "text": "elapsed / refillPerSec",
+          "why": "при 2 токенах/с долив вдвое медленнее: `TokenBucket(1, 2.0)` после `allow(0)` откажет на `allow(500)`"
+        },
+        {
+          "text": "refillPerSec",
+          "why": "доливает скорость за любой интервал, даже нулевой: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`"
+        }
+      ],
+      "hints": [
+        "Долив = прошедшие секунды × скорость.",
+        "Потолок — ёмкость ведра, приведённая к `Double`."
+      ]
+    },
+    {
+      "id": "bk6.1.e3",
+      "segments": [
+        "// Случай 1: ведро 2, 1 токен/с: 0 мс → true, 0 мс → true, 0 мс → false\n// Случай 2: ведро 1, 1 токен/с: 0 мс → true, 500 мс → false, 1000 мс → true\n// Случай 3: ведро 1, 2 токена/с: 0 мс → true, 500 мс → true\nclass TokenBucket(private val capacity: Int, private val refillPerSec: Double) {\n    // токенов в ведре сейчас (дробно)\n    private var tokens = capacity.toDouble()\n    // когда доливали в последний раз, мс\n    private var lastMs = 0L\n\n    // долить за прошедшее время\n    private fun refill(nowMs: Long) {\n        // сколько секунд прошло\n        val elapsed = ",
+        "\n        // долив, но не выше ёмкости\n        tokens = minOf(capacity.toDouble(), tokens + elapsed * refillPerSec)\n        lastMs = nowMs\n    }\n\n    // пропустить запрос в момент nowMs?\n    fun allow(nowMs: Long): Boolean {\n        // сначала долить\n        refill(nowMs)\n        // меньше токена — отказ\n        if (",
+        ") return false\n        // тратим один токен\n        ",
+        "\n        return true\n    }\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "(nowMs - lastMs) / 1000.0"
+          ],
+          "wrongWhy": {
+            "tokens <= 1.0": "`elapsed` станет `Boolean`, и `elapsed * refillPerSec` не скомпилируется",
+            "tokens == 0.0": "`elapsed` станет `Boolean`, и `elapsed * refillPerSec` не скомпилируется",
+            "tokens = 0.0": "присваивание — не выражение, `val elapsed = tokens = 0.0` не скомпилируется",
+            "tokens < 1.0": "`elapsed` станет `Boolean`, и `elapsed * refillPerSec` не скомпилируется",
+            "tokens -= 1.0": "присваивание — не выражение, `val elapsed = tokens -= 1.0` не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "tokens < 1.0"
+          ],
+          "wrongWhy": {
+            "(nowMs - lastMs)": "в `if` нужен `Boolean`, а разность времени — `Long`: не скомпилируется",
+            "tokens = 0.0": "в `if` присваивание недопустимо: не скомпилируется",
+            "(nowMs - lastMs) / 1000.0": "в `if` нужен `Boolean`, а секунды — `Double`: не скомпилируется",
+            "tokens -= 1.0": "в `if` присваивание недопустимо: не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "tokens -= 1.0"
+          ],
+          "wrongWhy": {
+            "(nowMs - lastMs)": "токен не тратится, разность просто вычисляется и выбрасывается: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`",
+            "tokens <= 1.0": "сравнение вместо траты, токен остаётся: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`",
+            "tokens == 0.0": "сравнение вместо траты, токен остаётся: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`",
+            "(nowMs - lastMs) / 1000.0": "токен не тратится, секунды просто вычисляются и выбрасываются: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`",
+            "tokens < 1.0": "сравнение вместо траты, токен остаётся: `TokenBucket(1, 1.0)` пропустит `allow(0)` и ещё раз `allow(0)`"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "(nowMs - lastMs) / 1000.0"
+        },
+        {
+          "text": "tokens < 1.0"
+        },
+        {
+          "text": "tokens -= 1.0"
+        },
+        {
+          "text": "(nowMs - lastMs)",
+          "why": "миллисекунды вместо секунд, долив в 1000 раз быстрее: `TokenBucket(1, 1.0)` после `allow(0)` пропустит `allow(1)`"
+        },
+        {
+          "text": "tokens <= 1.0",
+          "why": "при ровно одном токене откажет: `TokenBucket(1, 1.0).allow(0)` → `false`"
+        },
+        {
+          "text": "tokens == 0.0",
+          "why": "дробный остаток сойдёт за токен: `TokenBucket(1, 1.0)` после `allow(0)` пропустит `allow(500)`"
+        },
+        {
+          "text": "tokens = 0.0",
+          "why": "сжигает весь запас одним запросом: `TokenBucket(2, 1.0)` откажет на втором `allow(0)`"
+        }
+      ],
+      "hints": [
+        "Сначала секунды, потом проверка целого токена, потом трата.",
+        "Тратим ровно один токен: `-= 1.0`, а не обнуляем."
+      ]
+    },
+    {
+      "id": "bk6.1.e4",
+      "segments": [
+        "// Случай 1: ведро 2, 1 токен/с: 0 мс → true, 0 мс → true, 0 мс → false\n// Случай 2: ведро 1, 1 токен/с: 0 мс → true, 500 мс → false, 1000 мс → true\n// Случай 3: ведро 1, 2 токена/с: 0 мс → true, 500 мс → true\nclass TokenBucket(private val capacity: Int, private val refillPerSec: Double) {\n    // токенов в ведре сейчас (дробно)\n    private var tokens = capacity.toDouble()\n    // когда доливали в последний раз, мс\n    private var lastMs = 0L\n\n    // долить за прошедшее время\n    private fun refill(nowMs: Long) {\n        // сколько секунд прошло\n        val elapsed = (nowMs - lastMs) / 1000.0\n        // долив, но не выше ёмкости\n        tokens = minOf(capacity.toDouble(), tokens + elapsed * refillPerSec)\n        lastMs = nowMs\n    }\n\n    // пропустить запрос в момент nowMs?\n    fun allow(nowMs: Long): Boolean {\n        // сначала долить\n        ",
+        "\n        // меньше токена — отказ\n        ",
+        "\n        // тратим один токен\n        ",
+        "\n        ",
+        "\n    }\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "refill(nowMs)"
+          ]
+        },
+        {
+          "ok": [
+            "if (tokens < 1.0) return false"
+          ]
+        },
+        {
+          "ok": [
+            "tokens -= 1.0"
+          ]
+        },
+        {
+          "ok": [
+            "return true"
+          ]
+        }
+      ],
+      "bank": [
+        {
+          "text": "refill(nowMs)"
+        },
+        {
+          "text": "if (tokens < 1.0) return false"
+        },
+        {
+          "text": "tokens -= 1.0"
+        },
+        {
+          "text": "return true"
+        }
+      ],
+      "hints": [
+        "Комментарий над дыркой подсказывает, какая строка под ним.",
+        "Долить, проверить, потратить, вернуть `true`."
+      ],
+      "title": "Собери решение из строк",
+      "lines": true
+    }
+  ],
+  "solution": {
+    "code": "// Случай 1: ведро 2, 1 токен/с: 0 мс → true, 0 мс → true, 0 мс → false\n// Случай 2: ведро 1, 1 токен/с: 0 мс → true, 500 мс → false, 1000 мс → true\n// Случай 3: ведро 1, 2 токена/с: 0 мс → true, 500 мс → true\nclass TokenBucket(private val capacity: Int, private val refillPerSec: Double) {\n    // токенов в ведре сейчас (дробно)\n    private var tokens = capacity.toDouble()\n    // когда доливали в последний раз, мс\n    private var lastMs = 0L\n\n    // долить за прошедшее время\n    private fun refill(nowMs: Long) {\n        // сколько секунд прошло\n        val elapsed = (nowMs - lastMs) / 1000.0\n        // долив, но не выше ёмкости\n        tokens = minOf(capacity.toDouble(), tokens + elapsed * refillPerSec)\n        lastMs = nowMs\n    }\n\n    // пропустить запрос в момент nowMs?\n    fun allow(nowMs: Long): Boolean {\n        // сначала долить\n        refill(nowMs)\n        // меньше токена — отказ\n        if (tokens < 1.0) return false\n        // тратим один токен\n        tokens -= 1.0\n        return true\n    }\n}",
+    "time": "O(1)",
+    "space": "O(1)",
+    "pitfalls": [
+      "`tokens <= 1.0` откажет при ровно одном токене — ведро на 1 токен не пропустит ничего",
+      "`tokens == 0.0` вместо `< 1.0` пропустит запрос на дробном остатке",
+      "забыть `minOf(capacity, …)` — после долгой паузы ведро «накопит» тысячи токенов и лимит исчезнет",
+      "считать `elapsed` в миллисекундах — долив в тысячу раз быстрее",
+      "на одном инстансе в памяти лимит не общий — за балансером ×N, общий счётчик живёт в Redis (`sd1.2`)"
+    ],
+    "variations": [
+      "leaky bucket (ровный поток вместо всплесков)",
+      "sliding window log (точный, но хранит время каждого запроса)",
+      "лимит на пользователя — `Map<UserId, TokenBucket>` с выселением неактивных",
+      "общий лимит на N инстансов — `INCR` + `EXPIRE` в Redis"
+    ]
+  },
+  "syntax": "kotlin"
+}

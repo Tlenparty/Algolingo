@@ -1,0 +1,406 @@
+{
+  "schema": 1,
+  "id": "bk3.1",
+  "kind": "design",
+  "level": 3,
+  "title": "Контроллер и роутинг",
+  "statement": "Сделай REST-ручки для пользователей на Spring Boot: `GET /users/{id}`, `GET /users?limit=20`, `POST /users`.\n🎯 Тренирует: аннотации маршрутов, откуда берётся параметр, статус ответа",
+  "theory": [
+    {
+      "title": "Что есть что",
+      "body": "**Контроллер** — класс, который принимает HTTP-запрос, достаёт параметры, зовёт сервис и отдаёт ответ.\n\n**`@RestController`** — пометка «это контроллер, результат метода уходит в тело ответа как JSON». Голый `@Controller` вместо JSON ищет HTML-шаблон.\n\n**`@RequestMapping(\"/users\")`** — общий префикс пути для всех методов класса.\n\n**`@GetMapping`, `@PostMapping`** — метод HTTP плюс хвост пути: `@GetMapping(\"/{id}\")` это `GET /users/{id}`. Без аргумента — сам `/users`.\n\n**Бин** — объект, которым управляет Spring. `UserService` в конструкторе Spring подставит сам: это внедрение зависимостей (DI).\n\n**DTO** — класс только для передачи данных по сети: `UserDto`, `CreateUser`. Подробнее — заметка «01 Словарь Spring» в базе знаний."
+    },
+    {
+      "title": "Откуда берётся параметр",
+      "body": "**В пути** `GET /users/7` → `@PathVariable id: Long`. Имя параметра совпадает с `{id}`.\n\n**В строке запроса** `GET /users?limit=20` → `@RequestParam limit: Int`. По умолчанию обязателен: без `defaultValue` запрос без параметра получит 400.\n\n**В теле** `POST /users` + JSON → `@RequestBody body: CreateUser`. Jackson соберёт объект из JSON.\n\nЗначения аннотаций — строки: `defaultValue = \"20\"`, а не `20`."
+    },
+    {
+      "title": "Статус ответа",
+      "body": "По умолчанию контроллер отвечает **200 OK**. Для созданного ресурса принято **201 Created**: `@ResponseStatus(HttpStatus.CREATED)` на методе или `ResponseEntity.status(201).body(dto)`.\n\n**202 Accepted** — «принял, сделаю позже», для фоновой обработки. **405 Method Not Allowed** — путь есть, а метода такого нет: `POST` на `@GetMapping`.\n\nКогда статус зависит от результата (нашли / не нашли), метод возвращает `ResponseEntity`. Чаще сервис бросает исключение, а один `@ControllerAdvice` превращает его в 404 для всех ручек — это урок `bk3.4`."
+    },
+    {
+      "title": "Грабли",
+      "pitfalls": [
+        "`@Controller` без `@ResponseBody`: вместо JSON — поиск HTML-шаблона",
+        "`@RequestParam` для `/users/7`: Spring ищет `?id=7` и отвечает 400",
+        "`@RequestParam` без `defaultValue`: клиенты без параметра получают 400",
+        "`@PostMapping` без `@RequestBody`: тело игнорируется, поля объекта пустые",
+        "Имя в `{id}` и имя параметра разошлись: 500 при каждом запросе"
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "bk3.1.e1",
+      "title": "Шаг 1 · Класс и первый GET",
+      "segments": [
+        "",
+        "\n@RequestMapping(\"/users\")\nclass UserController(private val users: UserService) {\n\n    // GET /users/7\n    @GetMapping(\"/{id}\")\n    fun byId(",
+        " id: Long): UserDto =\n        users.byId(id)\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "@RestController"
+          ],
+          "wrongWhy": {
+            "@PathVariable": "это аннотация параметра: на класс её не повесить, не скомпилируется",
+            "@RequestParam": "это аннотация параметра: на класс её не повесить, не скомпилируется",
+            "@RequestBody": "это аннотация параметра: на класс её не повесить, не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "@PathVariable"
+          ],
+          "wrongWhy": {
+            "@RestController": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@Controller": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@Service": "это аннотация класса: параметр ею не пометить, не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "@RestController"
+        },
+        {
+          "text": "@PathVariable"
+        },
+        {
+          "text": "@Controller",
+          "why": "без `@ResponseBody` Spring ищет HTML-шаблон по имени результата, а не отдаёт JSON"
+        },
+        {
+          "text": "@Service",
+          "why": "это слой бизнес-логики: HTTP-запросы в `@Service` не приходят"
+        },
+        {
+          "text": "@RequestParam",
+          "why": "`?id=7` в строке запроса, а `7` в `/users/7` — часть пути: будет 400 `Required parameter 'id'`"
+        },
+        {
+          "text": "@RequestBody",
+          "why": "тело у GET пустое: 400 `Required request body is missing`"
+        }
+      ],
+      "hints": [
+        "Класс, который отдаёт JSON, помечают одной аннотацией — и это не `@Controller`.",
+        "`7` в `/users/7` — часть пути, а не строки запроса."
+      ]
+    },
+    {
+      "id": "bk3.1.e2",
+      "title": "Шаг 2 · Список с параметром",
+      "segments": [
+        "// GET /users?limit=20\n",
+        "\nfun list(\n    ",
+        "(defaultValue = ",
+        ") limit: Int\n): List<UserDto> = users.list(limit)"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "@GetMapping"
+          ],
+          "wrongWhy": {
+            "@RequestParam": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@PathVariable": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "\"20\"": "над методом стоит аннотация, а не строка: не скомпилируется",
+            "20": "над методом стоит аннотация, а не число: не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "@RequestParam"
+          ],
+          "wrongWhy": {
+            "@GetMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@PostMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@GetMapping(\"/{id}\")": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "\"20\"": "перед скобками нужна аннотация параметра, а не строка: не скомпилируется",
+            "20": "перед скобками нужна аннотация параметра, а не число: не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "\"20\""
+          ],
+          "wrongWhy": {
+            "@GetMapping": "внутри `defaultValue = …` ждут строку, а не аннотацию: не скомпилируется",
+            "@PostMapping": "внутри `defaultValue = …` ждут строку, а не аннотацию: не скомпилируется",
+            "@GetMapping(\"/{id}\")": "внутри `defaultValue = …` ждут строку, а не аннотацию: не скомпилируется",
+            "@RequestParam": "внутри `defaultValue = …` ждут строку, а не аннотацию: не скомпилируется",
+            "@PathVariable": "внутри `defaultValue = …` ждут строку, а не аннотацию: не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "@GetMapping"
+        },
+        {
+          "text": "@RequestParam"
+        },
+        {
+          "text": "\"20\""
+        },
+        {
+          "text": "@PostMapping",
+          "why": "чтение делают GET: `GET /users` на `@PostMapping` ответит 405"
+        },
+        {
+          "text": "@GetMapping(\"/{id}\")",
+          "why": "это маршрут одного пользователя; список живёт на самом `/users`, и `/users?limit=20` сюда не попадёт"
+        },
+        {
+          "text": "@PathVariable",
+          "why": "в пути `/users` нет `{limit}`: Spring не найдёт переменную и упадёт с 500"
+        },
+        {
+          "text": "20",
+          "why": "значение аннотации — строка: `defaultValue = 20` не скомпилируется"
+        }
+      ],
+      "hints": [
+        "Список читают, а не создают; хвоста пути у него нет.",
+        "`?limit=20` — строка запроса, и значение по умолчанию пишется в кавычках."
+      ]
+    },
+    {
+      "id": "bk3.1.e3",
+      "title": "Шаг 3 · Создание",
+      "segments": [
+        "// POST /users + JSON в теле\n",
+        "\n",
+        "\nfun create(",
+        " body: CreateUser): UserDto =\n    users.create(body)"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "@PostMapping"
+          ],
+          "wrongWhy": {
+            "@ResponseStatus(HttpStatus.CREATED)": "статус без маршрута: сначала скажи Spring, что это `POST /users`",
+            "@ResponseStatus(HttpStatus.OK)": "статус без маршрута: сначала скажи Spring, что это `POST /users`",
+            "@ResponseStatus(HttpStatus.ACCEPTED)": "статус без маршрута: сначала скажи Spring, что это `POST /users`",
+            "@RequestBody": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@RequestParam": "это аннотация параметра: на метод её не повесить, не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "@ResponseStatus(HttpStatus.CREATED)"
+          ],
+          "wrongWhy": {
+            "@PostMapping": "маршрут уже задан строкой выше; здесь нужен статус 201 для созданного ресурса",
+            "@GetMapping": "маршрут уже задан строкой выше; здесь нужен статус 201 для созданного ресурса",
+            "@RequestBody": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@RequestParam": "это аннотация параметра: на метод её не повесить, не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "@RequestBody"
+          ],
+          "wrongWhy": {
+            "@PostMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@GetMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.CREATED)": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.OK)": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.ACCEPTED)": "это аннотация метода: на параметр её не повесить, не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "@PostMapping"
+        },
+        {
+          "text": "@ResponseStatus(HttpStatus.CREATED)"
+        },
+        {
+          "text": "@RequestBody"
+        },
+        {
+          "text": "@GetMapping",
+          "why": "GET тело не несёт, и клиент с `POST /users` получит 405 Method Not Allowed"
+        },
+        {
+          "text": "@ResponseStatus(HttpStatus.OK)",
+          "why": "200 — ответ по умолчанию; о созданном ресурсе клиенту говорят 201 Created"
+        },
+        {
+          "text": "@ResponseStatus(HttpStatus.ACCEPTED)",
+          "why": "202 значит «принял, сделаю позже»; для синхронного создания это неправда"
+        },
+        {
+          "text": "@RequestParam",
+          "why": "JSON лежит в теле, а не в `?body=`: будет 400, объект не соберётся"
+        }
+      ],
+      "hints": [
+        "Создают через POST, созданному ресурсу отвечают 201.",
+        "JSON приходит в теле запроса — есть ровно одна аннотация для тела."
+      ]
+    },
+    {
+      "id": "bk3.1.e4",
+      "title": "Шаг 4 · Весь контроллер",
+      "segments": [
+        "",
+        "\n@RequestMapping(\"/users\")\nclass UserController(private val users: UserService) {\n\n    // GET /users/7\n    @GetMapping(\"/{id}\")\n    fun byId(",
+        " id: Long): UserDto =\n        users.byId(id)\n\n    // GET /users?limit=20\n    @GetMapping\n    fun list(\n        ",
+        "(defaultValue = \"20\") limit: Int\n    ): List<UserDto> = users.list(limit)\n\n    // POST /users + JSON в теле\n    ",
+        "\n    ",
+        "\n    fun create(",
+        " body: CreateUser): UserDto =\n        users.create(body)\n}"
+      ],
+      "holes": [
+        {
+          "ok": [
+            "@RestController"
+          ],
+          "wrongWhy": {
+            "@PathVariable": "это аннотация параметра: на класс её не повесить, не скомпилируется",
+            "@RequestParam": "это аннотация параметра: на класс её не повесить, не скомпилируется",
+            "@RequestBody": "это аннотация параметра: на класс её не повесить, не скомпилируется",
+            "@PostMapping": "это аннотация метода: на класс её не повесить, не скомпилируется",
+            "@GetMapping": "это аннотация метода: на класс её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.CREATED)": "статус без контроллера: класс сначала надо объявить `@RestController`",
+            "@ResponseStatus(HttpStatus.OK)": "статус без контроллера: класс сначала надо объявить `@RestController`"
+          }
+        },
+        {
+          "ok": [
+            "@PathVariable"
+          ],
+          "wrongWhy": {
+            "@RestController": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@Controller": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@RequestParam": "`?id=7` в строке запроса, а `7` в `/users/7` — часть пути: будет 400 `Required parameter 'id'`",
+            "@RequestBody": "тело у GET пустое: 400 `Required request body is missing`",
+            "@PostMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@GetMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.CREATED)": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.OK)": "это аннотация метода: на параметр её не повесить, не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "@RequestParam"
+          ],
+          "wrongWhy": {
+            "@RestController": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@Controller": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@PathVariable": "в пути `/users` нет `{limit}`: Spring не найдёт переменную и упадёт с 500",
+            "@RequestBody": "`?limit=20` — строка запроса, а не тело: GET без тела даст 400",
+            "@PostMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@GetMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.CREATED)": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.OK)": "это аннотация метода: на параметр её не повесить, не скомпилируется"
+          }
+        },
+        {
+          "ok": [
+            "@PostMapping"
+          ],
+          "wrongWhy": {
+            "@RestController": "контроллер уже объявлен на классе; здесь нужен маршрут `POST /users`",
+            "@Controller": "контроллер уже объявлен на классе; здесь нужен маршрут `POST /users`",
+            "@PathVariable": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@RequestParam": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@RequestBody": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.CREATED)": "статус без маршрута: сначала скажи Spring, что это `POST /users`",
+            "@ResponseStatus(HttpStatus.OK)": "статус без маршрута: сначала скажи Spring, что это `POST /users`"
+          }
+        },
+        {
+          "ok": [
+            "@ResponseStatus(HttpStatus.CREATED)"
+          ],
+          "wrongWhy": {
+            "@RestController": "контроллер уже объявлен на классе; здесь нужен статус 201 для созданного ресурса",
+            "@Controller": "контроллер уже объявлен на классе; здесь нужен статус 201 для созданного ресурса",
+            "@PathVariable": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@RequestParam": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@RequestBody": "это аннотация параметра: на метод её не повесить, не скомпилируется",
+            "@PostMapping": "маршрут уже задан строкой выше; здесь нужен статус 201 для созданного ресурса",
+            "@GetMapping": "маршрут уже задан строкой выше; здесь нужен статус 201 для созданного ресурса"
+          }
+        },
+        {
+          "ok": [
+            "@RequestBody"
+          ],
+          "wrongWhy": {
+            "@RestController": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@Controller": "это аннотация класса: параметр ею не пометить, не скомпилируется",
+            "@PathVariable": "в пути `/users` нет переменной: Spring не найдёт её и упадёт с 500",
+            "@RequestParam": "JSON лежит в теле, а не в `?body=`: будет 400, объект не соберётся",
+            "@PostMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@GetMapping": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.CREATED)": "это аннотация метода: на параметр её не повесить, не скомпилируется",
+            "@ResponseStatus(HttpStatus.OK)": "это аннотация метода: на параметр её не повесить, не скомпилируется"
+          }
+        }
+      ],
+      "bank": [
+        {
+          "text": "@RestController"
+        },
+        {
+          "text": "@PathVariable"
+        },
+        {
+          "text": "@RequestParam"
+        },
+        {
+          "text": "@PostMapping"
+        },
+        {
+          "text": "@ResponseStatus(HttpStatus.CREATED)"
+        },
+        {
+          "text": "@RequestBody"
+        },
+        {
+          "text": "@Controller",
+          "why": "без `@ResponseBody` Spring ищет HTML-шаблон по имени результата, а не отдаёт JSON"
+        },
+        {
+          "text": "@GetMapping",
+          "why": "GET тело не несёт, и клиент с `POST /users` получит 405 Method Not Allowed"
+        },
+        {
+          "text": "@ResponseStatus(HttpStatus.OK)",
+          "why": "200 — ответ по умолчанию; о созданном ресурсе клиенту говорят 201 Created"
+        }
+      ],
+      "hints": [
+        "Класс → контроллер; путь → `@PathVariable`; строка запроса → `@RequestParam`; тело → `@RequestBody`.",
+        "Создание: `POST` и 201."
+      ]
+    }
+  ],
+  "solution": {
+    "code": "@RestController\n@RequestMapping(\"/users\")\nclass UserController(private val users: UserService) {\n\n    // GET /users/7\n    @GetMapping(\"/{id}\")\n    fun byId(@PathVariable id: Long): UserDto =\n        users.byId(id)\n\n    // GET /users?limit=20\n    @GetMapping\n    fun list(\n        @RequestParam(defaultValue = \"20\") limit: Int\n    ): List<UserDto> = users.list(limit)\n\n    // POST /users + JSON в теле\n    @PostMapping\n    @ResponseStatus(HttpStatus.CREATED)\n    fun create(@RequestBody body: CreateUser): UserDto =\n        users.create(body)\n}",
+    "time": "",
+    "space": "",
+    "pitfalls": [
+      "`@Controller` без `@ResponseBody`: вместо JSON — поиск HTML-шаблона",
+      "`@RequestParam` для `/users/7`: Spring ищет `?id=7` и отвечает 400",
+      "`@RequestParam` без `defaultValue`: клиенты без параметра получают 400",
+      "`@PostMapping` без `@RequestBody`: тело игнорируется",
+      "Контроллер ходит в репозиторий напрямую: логика расползается по ручкам (урок `bk3.2`)"
+    ],
+    "variations": [
+      "Как вернуть 404, если пользователя нет, не трогая каждый метод?",
+      "Как проверить `CreateUser` на пустое имя до вызова сервиса?",
+      "Чем `PUT` отличается от `PATCH`, и какой статус у `DELETE`?",
+      "Как сделать `byId` suspend и что это даёт на Spring WebFlux?"
+    ]
+  },
+  "syntax": "kotlin"
+}

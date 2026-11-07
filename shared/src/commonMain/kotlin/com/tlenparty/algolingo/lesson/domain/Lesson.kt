@@ -5,6 +5,19 @@ enum class LessonKind {
     Design,
 }
 
+/**
+ * How the template, chips and reference are colored. Null = by kind: a code lesson follows the solution language,
+ * a design lesson is a plain scheme. Backend lessons set it explicitly (Spring code, SQL, YAML, HTTP).
+ */
+enum class LessonSyntax {
+    Kotlin,
+    Python,
+    Sql,
+    Yaml,
+    Http,
+    Plain,
+}
+
 data class Lesson(
     val schema: Int = 1,
     val id: String,
@@ -17,7 +30,14 @@ data class Lesson(
     val theory: List<TheoryCard> = emptyList(),
     val exercises: List<Exercise>,
     val solution: Solution,
-)
+    val syntax: LessonSyntax? = null,
+) {
+    /** False only for a plain scheme (design without a code syntax): no coloring anywhere in the lesson. */
+    val highlights: Boolean get() = (syntax ?: if (kind == LessonKind.Code) LessonSyntax.Kotlin else LessonSyntax.Plain) != LessonSyntax.Plain
+
+    /** A design lesson with no code syntax is a monospace scheme that must fit the phone width without scrolling. */
+    val isScheme: Boolean get() = kind == LessonKind.Design && (syntax == null || syntax == LessonSyntax.Plain)
+}
 
 data class TheoryCard(
     val title: String,

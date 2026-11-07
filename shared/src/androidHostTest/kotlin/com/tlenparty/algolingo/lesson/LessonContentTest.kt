@@ -10,6 +10,7 @@ import com.tlenparty.algolingo.lesson.data.lessonPath
 import com.tlenparty.algolingo.lesson.data.parseLesson
 import com.tlenparty.algolingo.lesson.domain.Lesson
 import com.tlenparty.algolingo.lesson.domain.LessonKind
+import com.tlenparty.algolingo.lesson.domain.LessonSyntax
 import com.tlenparty.algolingo.lesson.domain.validate
 import com.tlenparty.algolingo.progress.domain.Catalog
 import com.tlenparty.algolingo.lesson.data.LessonDto
@@ -98,5 +99,39 @@ class LessonContentTest {
         val mainIds = Json { ignoreUnknownKeys = true }.decodeFromString<CatalogDto>(File(dir, "index.json").readText()).toDomain().lessons.map { it.id }
         assertEquals(emptySet(), ids.toSet() intersect mainIds.toSet())
         assertTrue(ids.none { File(dir, "lessons/$it.json").exists() })
+    }
+
+    /**
+     * Backend track: hand-written design steps with a code syntax (Spring, SQL) and generated code lessons (token bucket)
+     * share one hand-maintained catalog; every lesson is strict, valid, sets its syntax and lives only under bk/.
+     */
+    @Test
+    fun everyBkLessonIsStrictAndValid() {
+        val dir = File("src/commonMain/composeResources/files/content")
+        val entries = Json { ignoreUnknownKeys = true }.decodeFromString<CatalogDto>(File(dir, "bk/index.json").readText()).toDomain().lessons
+        val ids = entries.map { it.id }
+        assertTrue(ids.isNotEmpty())
+        assertEquals(ids.size, ids.toSet().size)
+        entries.forEach { assertTrue(!it.caption.isNullOrBlank(), "${it.id}: caption") }
+        val strict = Json { ignoreUnknownKeys = false }
+        ids.forEach { id ->
+            val f = File(dir, "bk/$id.json")
+            assertTrue(f.isFile, "missing bk/$id.json")
+            assertTrue(id.startsWith("bk"), id)
+            assertEquals("files/content/bk/$id.json", lessonPath(id, CodeLang.Python))
+            val l = strict.decodeFromString<LessonDto>(f.readText()).toDomain()
+            assertEquals(emptyList(), validate(l), id)
+            assertEquals(id, l.id)
+            assertTrue(l.syntax != null && l.syntax != LessonSyntax.Plain, "$id: backend lessons set a code syntax")
+            if (l.kind == LessonKind.Code) assertTrue(l.exercises.map { it.holes.size }.zipWithNext().all { (a, b) -> b > a }, id)
+        }
+        val others = listOf("index.json" to "lessons", "sd/index.json" to "sd").flatMap { (idx, folder) ->
+            Json { ignoreUnknownKeys = true }.decodeFromString<CatalogDto>(File(dir, idx).readText()).toDomain().lessons.map { it.id }
+                .also { o -> o.forEach { assertTrue(!File(dir, "bk/$it.json").exists(), "$it leaked into bk/") } }
+        }
+        assertEquals(emptySet(), ids.toSet() intersect others.toSet())
+        File(dir, "bk").listFiles { f -> f.extension == "json" && f.name != "index.json" }!!.forEach {
+            assertTrue(it.nameWithoutExtension in ids, "bk/${it.name} is not in bk/index.json")
+        }
     }
 }

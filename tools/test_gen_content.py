@@ -598,6 +598,61 @@ class NoPending(unittest.TestCase):
         self.assertFalse((ROOT / "content/authoring/pending.txt").exists())
 
 
+class BackendTrack(unittest.TestCase):
+    """bk<level>.<n> sidecars: own note, own output folder, hand-maintained catalog, syntax field, BK object prefix."""
+    BK_NOTE_REL = "shared/src/commonMain/composeResources/files/kb/nd0d126e5.md"
+    BK_INDEX_REL = "shared/src/commonMain/composeResources/files/content/bk/index.json"
+
+    def root(self, index='{"schema":1,"lessons":[{"id":"bk6.1","title":"x","caption":"BK6.1 x"}]}'):
+        tmp = Path(tempfile.mkdtemp())
+        for rel in (NOTE_REL, self.BK_NOTE_REL):
+            (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(str(ROOT / rel), str(tmp / rel))
+        (tmp / "content/authoring/bk").mkdir(parents=True)
+        shutil.copy(str(ROOT / "content/authoring/bk/bk6.1.md"), str(tmp / "content/authoring/bk/bk6.1.md"))
+        (tmp / self.BK_INDEX_REL).parent.mkdir(parents=True)
+        (tmp / self.BK_INDEX_REL).write_text(index, encoding="utf-8")
+        return tmp
+
+    def test_id_prefix_follows_track(self):
+        text = (ROOT / "content/authoring/bk/bk6.1.md").read_text(encoding="utf-8")
+        with self.assertRaises(gen_content.GenError) as cm:
+            gen_content.parse_sidecar(text, "bk6.1")  # code track wants l<level>.<n>
+        self.assertEqual("G7", cm.exception.rule)
+        sc = gen_content.parse_sidecar(text, "bk6.1", "kotlin", "backend")
+        self.assertEqual(("bk6.1", "backend", "content/authoring/bk/bk6.1.md"), (sc["id"], sc["track"], sc["file"]))
+
+    def test_render_writes_bk_json_with_syntax_and_leaves_catalog_alone(self):
+        tmp = self.root()
+        try:
+            out = gen_content.render_all(tmp)
+            rel = "shared/src/commonMain/composeResources/files/content/bk/bk6.1.json"
+            self.assertIn(rel, out)
+            lesson = json.loads(out[rel])
+            self.assertEqual(("bk6.1", 6, "kotlin"), (lesson["id"], lesson["level"], lesson["syntax"]))
+            self.assertEqual([1, 2, 3, 4], [len(e["holes"]) for e in lesson["exercises"]])
+            self.assertTrue(lesson["exercises"][-1]["lines"])
+            self.assertNotIn(self.BK_INDEX_REL, out)
+            self.assertIn("private object BK6_1_v0", out[gen_content.TEST_KT])
+            self.assertTrue(any(e["lesson"] == "bk6.1" and e.get("control") for e in json.loads(out[gen_content.WRONG_JSON])))
+        finally:
+            shutil.rmtree(str(tmp))
+
+    def test_bk_id_missing_from_catalog_fails(self):
+        tmp = self.root('{"schema":1,"lessons":[]}')
+        try:
+            with self.assertRaises(gen_content.GenError) as cm:
+                gen_content.render_all(tmp)
+            self.assertEqual("G4", cm.exception.rule)
+        finally:
+            shutil.rmtree(str(tmp))
+
+    def test_line_holes_in_an_indented_last_fun(self):
+        code = "class A {\n    fun f(): Int {\n        // c\n        val x = 1\n        return x\n    }\n}"
+        self.assertEqual("class A {\n    fun f(): Int {\n        // c\n        ⟦val x = 1⟧\n        ⟦return x⟧\n    }\n}",
+                         gen_content.line_holes(code))
+
+
 class RenderKt(unittest.TestCase):
     CODE = "data class E(val a: Int)\nfun g(xs: List<E>): Int = xs.sumOf { it.a }"
 

@@ -48,7 +48,7 @@ class KbContentTest {
         assertEquals(
             listOf(
                 "Обзор", "Алгоритмы", "Kotlin / Java", "Многопоточность", "Корутины и Flow", "Compose", "Android",
-                "Архитектура", "Performance", "KMP", "System Design", "Исключения", "Вопросы с собесов", "Общие вопросы",
+                "Архитектура", "Performance", "KMP", "System Design", "Backend", "Исключения", "Вопросы с собесов", "Общие вопросы",
             ),
             entries.map { it.section }.distinct(),
         )

@@ -38,6 +38,14 @@ fun parseCatalog(text: String): Catalog? = try {
 
 const val CATALOG_PATH = "files/content/index.json"
 const val SD_CATALOG_PATH = "files/content/sd/index.json"
+const val BK_CATALOG_PATH = "files/content/bk/index.json"
+
+/** One fixed catalog file per track; the bk/ and sd/ indexes are hand-written, index.json comes from the generator. */
+fun catalogPath(track: Track): String = when (track) {
+    Track.Code -> CATALOG_PATH
+    Track.SystemDesign -> SD_CATALOG_PATH
+    Track.Backend -> BK_CATALOG_PATH
+}
 
 /** Any read/parse failure gives an empty catalog (Home empty state), never a crash. */
 suspend fun loadCatalog(path: String = CATALOG_PATH): Catalog = try {
@@ -53,5 +61,5 @@ class CatalogRepositoryImpl(private val load: suspend (String) -> Catalog = ::lo
     private val loaded = mutableMapOf<Track, Catalog>()
 
     override suspend fun catalog(track: Track): Catalog =
-        loaded[track] ?: load(if (track == Track.Code) CATALOG_PATH else SD_CATALOG_PATH).also { loaded[track] = it }
+        loaded[track] ?: load(catalogPath(track)).also { loaded[track] = it }
 }

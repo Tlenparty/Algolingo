@@ -1134,6 +1134,36 @@
   "file": "n5dbb3805.md"
  },
  {
+  "id": "nc2e84ad0",
+  "title": "00 Программа трека Backend",
+  "section": "Backend",
+  "file": "nc2e84ad0.md"
+ },
+ {
+  "id": "n75db2eb9",
+  "title": "01 Словарь Spring",
+  "section": "Backend",
+  "file": "n75db2eb9.md"
+ },
+ {
+  "id": "n55334960",
+  "title": "02 Spring: контроллер и роутинг",
+  "section": "Backend",
+  "file": "n55334960.md"
+ },
+ {
+  "id": "nbca10892",
+  "title": "03 SQL: SELECT, JOIN, GROUP BY",
+  "section": "Backend",
+  "file": "nbca10892.md"
+ },
+ {
+  "id": "nd0d126e5",
+  "title": "04 Тренажёр Backend: задачи на Kotlin",
+  "section": "Backend",
+  "file": "nd0d126e5.md"
+ },
+ {
   "id": "n75bbb185",
   "title": "Иерархия",
   "section": "Исключения",

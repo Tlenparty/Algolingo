@@ -68,6 +68,12 @@ class HomeViewModelTest {
         assertEquals(HomeEffect.OpenLesson("a", false, CodeLang.Kotlin), vm.effects.first())
     }
 
+    @Test fun backendIgnoresLanguage() = runTest {
+        val vm = vm(FakeProgressRepository(Progress(lang = CodeLang.Python)), Track.Backend)
+        vm.on(HomeAction.StartLesson("a"))
+        assertEquals(HomeEffect.OpenLesson("a", false, CodeLang.Kotlin), vm.effects.first())
+    }
+
     @Test fun reviewOpensFirstDueLesson() = runTest {
         val vm = vm(FakeProgressRepository(Progress(lessons = mapOf("a" to LessonProgress(0, day)))))
         vm.on(HomeAction.StartReview)
@@ -86,6 +92,7 @@ class HomeViewModelTest {
     @Test fun selectLangWritesProgressOnCodeTrackOnly() {
         val progress = FakeProgressRepository()
         vm(progress, Track.SystemDesign).on(HomeAction.SelectLang(CodeLang.Python))
+        vm(progress, Track.Backend).on(HomeAction.SelectLang(CodeLang.Python))
         assertEquals(0, progress.writes)
         val vm = vm(progress)
         vm.on(HomeAction.SelectLang(CodeLang.Python))

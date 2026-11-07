@@ -50,6 +50,8 @@ class LessonRepositoryTest {
         assertEquals("files/content/lessons/py/l1.1.json", lessonPath("l1.1", CodeLang.Python))
         assertEquals("files/content/sd/sd1.1.json", lessonPath("sd1.1", CodeLang.Kotlin))
         assertEquals("files/content/sd/sd1.1.json", lessonPath("sd1.1", CodeLang.Python))
+        assertEquals("files/content/bk/bk3.1.json", lessonPath("bk3.1", CodeLang.Kotlin))
+        assertEquals("files/content/bk/bk3.1.json", lessonPath("bk3.1", CodeLang.Python))
         // T-09-04: a hostile id stays under the fixed prefix and just misses the file
         assertTrue(lessonPath("../x", CodeLang.Python).startsWith("files/content/lessons/py/"))
     }

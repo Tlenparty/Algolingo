@@ -20,7 +20,7 @@ class E2eSmokeTest {
         scenarioLaunch()
         scenarioWrongChip() // exits without saving: progress stays clean for the full run
         scenarioKb()
-        scenarioSystemDesign(startXp = scenarioAllLessons())
+        scenarioBackend(startXp = scenarioSystemDesign(startXp = scenarioAllLessons()))
     }
 
     /** System Design tab alone: every SD lesson from clean progress, without the code catalog first. */
@@ -28,6 +28,13 @@ class E2eSmokeTest {
     fun systemDesign() = runComposeUiTest(testTimeout = 10.minutes) {
         launchApp(freshDir())
         scenarioSystemDesign(startXp = 0)
+    }
+
+    /** Backend tab alone: every bk lesson from clean progress. */
+    @Test
+    fun backend() = runComposeUiTest(testTimeout = 5.minutes) {
+        launchApp(freshDir())
+        scenarioBackend(startXp = 0)
     }
 
     @Test

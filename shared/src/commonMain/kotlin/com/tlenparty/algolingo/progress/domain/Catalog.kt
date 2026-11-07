@@ -6,9 +6,10 @@ import kotlinx.datetime.LocalDate
 /** One tab of Home with its own lesson path. */
 enum class Track {
     Code,
-    SystemDesign;
+    SystemDesign,
+    Backend;
 
-    /** Code follows the selected language; [SystemDesign] has no language filter and always routes Kotlin. */
+    /** Code follows the selected language; [SystemDesign] and [Backend] have no language filter and always route Kotlin. */
     fun langFilter(lang: CodeLang): CodeLang? = if (this == Code) lang else null
 }
 

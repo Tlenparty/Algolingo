@@ -102,6 +102,13 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 - **SD-06**: SD-уроки с облачками закрепляют заметки «Основы» (Phase 12)
 - **SD-07**: 8 SD-уроков «Классика» (sd1.3–sd1.7) и «Надёжность» (sd2.1–sd2.3) проходятся на вкладке System Design
 
+### Backend Track
+
+- **BK-01**: Четвёртая вкладка «Backend» показывает путь уроков из каталога `files/content/bk/`; XP, streak и повторы общие; сегмента Kotlin | Python нет
+- **BK-02**: Урок задаёт `syntax` (kotlin | python | sql | yaml | http | plain); шаблон, облачка, эталон и теория красятся по нему; design-урок с кодовым синтаксисом скроллится, а не режется по 34 символам
+- **BK-03**: Раздел «Backend» в базе знаний: программа трека, словарь Spring, заметки по урокам, тренажёр Backend (источник для генератора)
+- **BK-04**: Три урока среза проходятся на вкладке Backend: bk3.1 контроллер Spring (reviewed), bk5.1 SQL (reviewed, подсветка sql), bk6.1 token bucket (verified генератором)
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -169,6 +176,10 @@ MVP = уровень 0 «Разминка» (0.1 сумма и максимум,
 | SD-07 | Phase 13 | Complete |
 | SD-06 | Phase 12 | Complete |
 | SD-04 | Phase 8 | Complete |
+| BK-01 | Phase 15 | Complete |
+| BK-02 | Phase 15 | Complete |
+| BK-03 | Phase 16 | Complete |
+| BK-04 | Phase 16 | Partial (ревью заказчика и прогон на устройствах открыты) |
 
 **Coverage:**
 - v1 requirements: 38 total

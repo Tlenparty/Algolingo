@@ -1759,6 +1759,78 @@ private object L5_1_v0 { // reference
     }
 }
 
+private object BK6_1_v0 { // reference
+    // Случай 1: ведро 2, 1 токен/с: 0 мс → true, 0 мс → true, 0 мс → false
+    // Случай 2: ведро 1, 1 токен/с: 0 мс → true, 500 мс → false, 1000 мс → true
+    // Случай 3: ведро 1, 2 токена/с: 0 мс → true, 500 мс → true
+    class TokenBucket(private val capacity: Int, private val refillPerSec: Double) {
+        // токенов в ведре сейчас (дробно)
+        private var tokens = capacity.toDouble()
+        // когда доливали в последний раз, мс
+        private var lastMs = 0L
+
+        // долить за прошедшее время
+        private fun refill(nowMs: Long) {
+            // сколько секунд прошло
+            val elapsed = (nowMs - lastMs) / 1000.0
+            // долив, но не выше ёмкости
+            tokens = minOf(capacity.toDouble(), tokens + elapsed * refillPerSec)
+            lastMs = nowMs
+        }
+
+        // пропустить запрос в момент nowMs?
+        fun allow(nowMs: Long): Boolean {
+            // сначала долить
+            refill(nowMs)
+            // меньше токена — отказ
+            if (tokens < 1.0) return false
+            // тратим один токен
+            tokens -= 1.0
+            return true
+        }
+    }
+
+    fun run() {
+        case { assertEquals(listOf(true, true, false), TokenBucket(2, 1.0).let { b -> listOf(b.allow(0), b.allow(0), b.allow(0)) }) }
+        case { assertEquals(listOf(true, false, true), TokenBucket(1, 1.0).let { b -> listOf(b.allow(0), b.allow(500), b.allow(1000)) }) }
+        case { assertEquals(listOf(true, true), TokenBucket(1, 2.0).let { b -> listOf(b.allow(0), b.allow(500)) }) }
+        checks()
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    private fun checks() {
+        val rnd = kotlin.random.Random(1234)
+        // оракул: миллитокены на Long; шаг времени кратен 250 мс, скорости 1/2/4 — ни одного округления в Double
+        for (cap in 1..3) for (rate in listOf(1.0, 2.0, 4.0)) case {
+            val b = TokenBucket(cap, rate)
+            var milli = cap * 1000L
+            var last = 0L
+            var t = 0L
+            for (i in 0 until 40) {
+                t += (i * 7 % 5) * 250L
+                milli = minOf(cap * 1000L, milli + (t - last) * rate.toLong())
+                last = t
+                val expected = milli >= 1000L
+                if (expected) milli -= 1000L
+                assertEquals(expected, b.allow(t), "cap=$cap rate=$rate t=$t")
+            }
+        }
+        // ровно одна секунда — ровно один токен
+        case { assertFalse(TokenBucket(1, 1.0).let { b -> b.allow(0); b.allow(999) }) }
+        case { assertTrue(TokenBucket(1, 1.0).let { b -> b.allow(0); b.allow(1000) }) }
+        // всплеск до ёмкости проходит, следующий нет
+        case { assertEquals(listOf(true, true, true, false), TokenBucket(3, 1.0).let { b -> listOf(b.allow(5), b.allow(5), b.allow(5), b.allow(5)) }) }
+        // долгая пауза не копит больше ёмкости
+        case { assertEquals(listOf(true, true, false), TokenBucket(2, 1.0).let { b -> b.allow(0); b.allow(0); listOf(b.allow(60_000), b.allow(60_000), b.allow(60_000)) }) }
+        // контрпримеры из причин
+        case { assertTrue(TokenBucket(1, 1.0).allow(0)) }
+        case { assertEquals(listOf(true, false), TokenBucket(1, 1.0).let { b -> listOf(b.allow(0), b.allow(0)) }) }
+        case { assertEquals(listOf(true, false), TokenBucket(1, 1.0).let { b -> listOf(b.allow(0), b.allow(1)) }) }
+        case { assertEquals(listOf(true, false, true), TokenBucket(1, 1.0).let { b -> listOf(b.allow(0), b.allow(0), b.allow(5000)) }) }
+        case { assertEquals(listOf(true, true, false), TokenBucket(2, 1.0).let { b -> listOf(b.allow(0), b.allow(0), b.allow(0)) }) }
+    }
+}
+
 class ReferenceSolutionsTest {
     @Test
     fun l0_1_v0() {
@@ -1981,6 +2053,13 @@ class ReferenceSolutionsTest {
     fun l5_1_v0() {
         Probe.reset()
         L5_1_v0.run()
+        assertEquals(emptySet<String>(), Probe.kinds)
+    }
+
+    @Test
+    fun bk6_1_v0() {
+        Probe.reset()
+        BK6_1_v0.run()
         assertEquals(emptySet<String>(), Probe.kinds)
     }
 }

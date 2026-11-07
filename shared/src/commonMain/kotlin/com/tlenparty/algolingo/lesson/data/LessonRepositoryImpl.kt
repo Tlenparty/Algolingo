@@ -25,9 +25,10 @@ fun parseLesson(text: String): Result<Lesson> {
     else Result.failure(IllegalArgumentException(errors.joinToString("; ")))
 }
 
-/** Only fixed folders; the id comes from a route, never a free path. SD lessons ignore the language. The single language branch for content. */
+/** Only fixed folders; the id comes from a route, never a free path. SD and Backend lessons ignore the language. The single language branch for content. */
 internal fun lessonPath(id: String, lang: CodeLang): String = when {
     id.startsWith("sd") -> "files/content/sd/$id.json"
+    id.startsWith("bk") -> "files/content/bk/$id.json"
     else -> when (lang) {
         CodeLang.Kotlin -> "files/content/lessons/$id.json"
         CodeLang.Python -> "files/content/lessons/py/$id.json"

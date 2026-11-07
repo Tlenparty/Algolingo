@@ -6,6 +6,7 @@ import com.tlenparty.algolingo.lesson.domain.Exercise
 import com.tlenparty.algolingo.lesson.domain.Hole
 import com.tlenparty.algolingo.lesson.domain.Lesson
 import com.tlenparty.algolingo.lesson.domain.LessonKind
+import com.tlenparty.algolingo.lesson.domain.LessonSyntax
 import com.tlenparty.algolingo.lesson.domain.Solution
 import com.tlenparty.algolingo.lesson.domain.TheoryCard
 import kotlinx.serialization.SerialName
@@ -17,6 +18,16 @@ import kotlinx.serialization.Serializable
 enum class LessonKindDto {
     @SerialName("code") Code,
     @SerialName("design") Design,
+}
+
+@Serializable
+enum class LessonSyntaxDto {
+    @SerialName("kotlin") Kotlin,
+    @SerialName("python") Python,
+    @SerialName("sql") Sql,
+    @SerialName("yaml") Yaml,
+    @SerialName("http") Http,
+    @SerialName("plain") Plain,
 }
 
 @Serializable
@@ -32,6 +43,8 @@ data class LessonDto(
     val theory: List<TheoryCardDto> = emptyList(),
     val exercises: List<ExerciseDto>,
     val solution: SolutionDto,
+    /** Null = by kind (code → solution language, design → plain scheme). Backend lessons set it. */
+    val syntax: LessonSyntaxDto? = null,
 )
 
 @Serializable
@@ -78,12 +91,21 @@ data class SolutionDto(
 
 fun LessonDto.toDomain() = Lesson(
     schema, id, kind.toDomain(), level, title, statement, trains, targetTimeSec,
-    theory.map { it.toDomain() }, exercises.map { it.toDomain() }, solution.toDomain(),
+    theory.map { it.toDomain() }, exercises.map { it.toDomain() }, solution.toDomain(), syntax?.toDomain(),
 )
 
 private fun LessonKindDto.toDomain() = when (this) {
     LessonKindDto.Code -> LessonKind.Code
     LessonKindDto.Design -> LessonKind.Design
+}
+
+private fun LessonSyntaxDto.toDomain() = when (this) {
+    LessonSyntaxDto.Kotlin -> LessonSyntax.Kotlin
+    LessonSyntaxDto.Python -> LessonSyntax.Python
+    LessonSyntaxDto.Sql -> LessonSyntax.Sql
+    LessonSyntaxDto.Yaml -> LessonSyntax.Yaml
+    LessonSyntaxDto.Http -> LessonSyntax.Http
+    LessonSyntaxDto.Plain -> LessonSyntax.Plain
 }
 
 private fun TheoryCardDto.toDomain() = TheoryCard(title, body, signals, skeleton, pitfalls)
