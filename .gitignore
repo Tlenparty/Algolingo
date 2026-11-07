@@ -28,3 +28,6 @@ androidApp/release/
 
 # agent git worktrees (Claude Code)
 .claude/worktrees/
+
+# python bytecode from tools/test_gen_content.py
+__pycache__/
