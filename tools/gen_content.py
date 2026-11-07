@@ -850,9 +850,20 @@ def render_all(repo_root, allow_removed=()):
         python_gates(lesson, sc)
         py_items.append((lesson, sc))
     py_ids = set(lesson["id"] for lesson, _ in py_items)
+    old = root / INDEX
+    if old.is_file():
+        try:
+            old_ids = [e["id"] for e in json.loads(old.read_text(encoding="utf-8"))["lessons"]]
+        except (ValueError, KeyError, TypeError) as e:
+            raise GenError(INDEX, "syntax", "cannot read lesson ids: %r" % e)
+        for oid in old_ids:
+            if oid not in ids and oid not in allow_removed:
+                raise GenError(INDEX, "G4", "lesson id %s disappeared (pass --allow-removed %s)" % (oid, oid))
     bk_items = []
     bk_dir = root / AUTHORING_BK
     if bk_dir.is_dir() and any(bk_dir.glob("*.md")):
+        if not (root / NOTE_BK).is_file():
+            raise GenError(NOTE_BK, "G7", "backend trainer note not found (needed by %s)" % AUTHORING_BK)
         bk_note = (root / NOTE_BK).read_text(encoding="utf-8").splitlines()
         try:
             bk_index = [e["id"] for e in json.loads((root / INDEX_BK).read_text(encoding="utf-8"))["lessons"]]
@@ -863,15 +874,6 @@ def render_all(repo_root, allow_removed=()):
             if sc["id"] not in bk_index:
                 raise GenError(sc["file"], "G4", "lesson id %s is not in %s (the bk catalog is hand-maintained)" % (sc["id"], INDEX_BK))
             bk_items.append((build_lesson(sc, bk_note), sc))
-    old = root / INDEX
-    if old.is_file():
-        try:
-            old_ids = [e["id"] for e in json.loads(old.read_text(encoding="utf-8"))["lessons"]]
-        except (ValueError, KeyError, TypeError) as e:
-            raise GenError(INDEX, "syntax", "cannot read lesson ids: %r" % e)
-        for oid in old_ids:
-            if oid not in ids and oid not in allow_removed:
-                raise GenError(INDEX, "G4", "lesson id %s disappeared (pass --allow-removed %s)" % (oid, oid))
     entries = [{"id": l["id"], "title": l["title"]} for l, _ in items]
     for e in entries:
         if e["id"] in py_ids:
